@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WebAPI</name>
+    </assembly>
+    <members>
+        <member name="M:WebAPI.Configuration.WebAPIContextFactory.CreateDbContext(System.String[])">
+            <summary>
+            Se for necessario, remover <PrivateAssets>all</PrivateAssets> da referência ao pacote Microsoft.EntityFrameworkCore.Design no arquivo de projeto. Assim a referência a este pacote ficou definida assim:
+            <PackageReference Include = "Microsoft.EntityFrameworkCore.Design" Version="5.0.3">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            </PackageReference>
+            </summary>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WebAPI.Configuration.SwaggerAuthorizedMiddleware">
+            <summary>
+            Com esse middleware podemos deixar a documentação do swagger privada, sem deixar a documentação da API publica
+            </summary>
+        </member>
+        <member name="T:WebAPI.Configuration.Middleware.ApiLoggingMiddleware">
+            <summary>
+            Net Core 2.2
+            Link de refêrencia: https://salslab.com/a/safely-logging-api-requests-and-responses-in-asp-net-core/
+            Link de referência: https://elanderson.net/2017/02/log-requests-and-responses-in-asp-net-core/
+            </summary>
+        </member>
+        <member name="T:WebAPI.Configuration.Middleware.HttpLoggingMiddleware">
+            <summary>
+            Net Core 5.0
+            Link de referência: https://alexbierhaus.medium.com/api-request-and-response-logging-middleware-using-net-5-c-a0af639920da
+            Link de referência: https://exceptionnotfound.net/using-middleware-to-log-requests-and-responses-in-asp-net-core/
+            </summary>
+        </member>
+        <member name="T:WebAPI.Configuration.Middleware.RequestResponseLoggingMiddleware">
+            <summary>
+            Net Core 3.0
+            Link de referência: https://elanderson.net/2019/12/log-requests-and-responses-in-asp-net-core-3/
+            </summary>
+        </member>
+        <member name="M:WebAPI.Controllers.Base.BaseController.ReturnErrorDetail(System.String,System.String,System.Int32,System.String,System.String)">
+            <summary>
+            Exemplo de um retorno detalhado de uma ocorrência de erro, ao invès de BadRequest, NotFound ou InternalError
+            Segue o padrão RFC 7807
+            Exemplo de um retorno detalhado caso um Registro não exista
+            </summary>
+            <param name="detail">"A categoria não existe."</param>
+            <param name="instance">$"/categoria//{id}"</param>
+            <param name="statusCode">400,404 ou 500</param>
+            <param name="title">Não foi possível encontrar a categoria.</param>
+            <param name="type">"http://exemplo.com/problemas/nao-encontrada"</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPI.V1.Controllers.UsersController.Add(WebAPI.Domain.DTO.UserSendDto)">
+            <summary>
+            Realiza o processo de inserção do usuário
+            </summary>
+            <param name="userSendDto"></param>
+            <returns></returns>
+            <response code = "201">Sucesso</response>
+            <response code = "500">Erro interno no servidor</response>
+        </member>
+        <!-- Badly formed XML comment ignored for member "T:WebAPI.Configuration.SessionExtensions" -->
+    </members>
+</doc>

@@ -1,0 +1,14 @@
+﻿global using AutoMapper;
+global using WebAPI.Domain.Entities;
+global using WebAPI.Domain.Models;
+global using Microsoft.AspNetCore.Authorization;
+global using Microsoft.AspNetCore.Mvc;
+global using WebAPI.Application.Interfaces;
+global using WebAPI.Domain;
+global using Microsoft.IdentityModel.Tokens;
+global using WebAPI.Controllers.Base;
+global using System.Threading.Tasks;
+global using WebAPI.Domain.DTO;
+global using WebAPI.Domain.Filters;
+global using System;
+global using System.Collections.Generic;
