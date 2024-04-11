@@ -5,7 +5,8 @@ TITULO
 
 STATUS
   - Responsavel >> Roberto Meneghelli (Fullstack Developer C# NET)
-  - Data >> 11/04/2024
+  - Criado em 06/12/2022
+  - Atualizado em 11/04/2024
   - Tempo de entrega >> Nenhum, projeto de escopo aberto
 
 CONTEXTO
@@ -13,7 +14,7 @@ CONTEXTO
 
 DECISÃO
   - Para desenvolvimento desse software foi escolhido as seguintes tecnologias:
-    - NET 8.0 e C# 12
+    - NET 6.0 e C# 10, Atualizado para NET 8.0 e C# 12
     - Arquiterura >> REST API
     - Modelo de Dominio >> Domain Driven Design (DDD)
     - Banco de dados >> SQL Server 2018
@@ -24,7 +25,7 @@ DECISÃO
     - Servidor >> IIS
     
   - Motivo da decisão
-    - Devido ao contexto do software optei por decidir o desenvolvimento a partir de tecnologias e ferramentas em que tenho experiencia e conhecimento tecnico               aprimorado
+    - Devido ao contexto do software optei por decidir o desenvolvimento a partir de tecnologias e ferramentas em que tenho experiencia e conhecimento tecnico aprimorado
     
   - Limitações
     - Não possui modelo de dominio TDD para testes unitarios das funcionalidades criadas
