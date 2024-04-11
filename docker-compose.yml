@@ -6,3 +6,57 @@ services:
     build:
       context: .
       dockerfile: WebAPI/Dockerfile
+    ports:
+      - "8081:80"
+    depends_on:
+      - sqldata
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  sqldata:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      - SA_PASSWORD=Numsey#2024
+      - ACCEPT_EULA=Y
+    volumes:
+      - c:\dados\volumes\mssql:/var/opt/mssql/data
+    ports:
+      - "1450:1433"
+    healthcheck:
+      test: ["CMD-SHELL", "pidof sqlservr"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  healthcheck:
+    image: curlimages/curl
+    command: ["curl", "-f", "http://webapi:8081/health"]
+    depends_on:
+      - webapi
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://webapi:8081/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  hangfire:
+    image: ${DOCKER_REGISTRY-}hangfire
+    build:
+      context: .
+      dockerfile: Hangfire/Dockerfile
+    depends_on:
+      - webapi
+    ports:
+      - "5000:5000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/hangfire"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
