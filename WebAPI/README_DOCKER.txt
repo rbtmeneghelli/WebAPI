@@ -11,6 +11,7 @@ docker images >> Lista as imagens que temos criadas
 docker-compose up -d --build  >> Esse comando faz a geração da imagem quanto a subida para o container de uma vez só!
 docker build -t WebApiImage . >> Cria a imagem a partir do arquivo DockerFile desse projeto
 docker-compose down >> É feito a exclusão de todos os containers que foram criados
+docker exec -it nome_container /bin/bash (Pode executar comandos dentro do container criado)
 
 Imagem do SQL Server para baixar >> https://hub.docker.com/_/microsoft-mssql-server
 Tem imagem para o Serilog e também para RabbitMQ

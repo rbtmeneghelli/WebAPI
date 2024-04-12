@@ -30,27 +30,55 @@ public sealed class KafkaService<TEntity> : IKafkaService<TEntity> where TEntity
 
     public async Task SendMessageToQueue(TEntity entity)
     {
-        using var producer = new ProducerBuilder<Null, string>(GetProducerConfig()).Build();
+        var producerConfig = GetProducerConfig();
+        using var producer = new ProducerBuilder<Null, string>(producerConfig).Build();
 
-        var message = new Message<Null, string>
+        try
         {
-            Value = entity.SerializeObject()
-        };
+            // Nesse exemplo abaixo estamos enviando uma mensagem sem chave
+            // Para enviar com chave, basta informar o valor na propriedade Key
+            var message = new Message<Null, string>
+            {
+                Value = entity.SerializeObject()
+            };
 
-        await producer.ProduceAsync(_TopicName, message);
+            var deliveryReport = await producer.ProduceAsync(_TopicName, message);
+
+            if (deliveryReport.Status == PersistenceStatus.Persisted)
+            {
+                Console.WriteLine($"Mensagem entregue com sucesso: {deliveryReport.TopicPartitionOffset}");
+            }
+            else
+            {
+                Console.WriteLine($"Falha ao entregar a mensagem");
+            }
+        }
+        catch (ProduceException<Null, string> e)
+        {
+            Console.WriteLine($"Falha ao produzir a mensagem: {e.Error.Reason}");
+        }
     }
 
     public async Task ReceiveMessageFromQueue()
     {
-        using var consumer = new ConsumerBuilder<Ignore, string>(GetConsumerConfig()).Build();
+        var consumerConfig = GetConsumerConfig();
+
+        using var consumer = new ConsumerBuilder<Ignore, string>(consumerConfig).Build();
 
         consumer.Subscribe(_TopicName);
 
-        while (true)
+        try
         {
-            var message = consumer.Consume();
-            var objectResult = message.Message.Value.DeserializeObject<TEntity>();
-            await Task.CompletedTask;
+            while (true)
+            {
+                var message = consumer.Consume();
+                var objectResult = message.Message.Value.DeserializeObject<TEntity>();
+                await Task.CompletedTask;
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            consumer.Close();
         }
     }
 
