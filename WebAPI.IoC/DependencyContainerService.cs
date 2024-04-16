@@ -40,6 +40,8 @@ using System.Reflection;
 using System.Text;
 using System.Threading.RateLimiting;
 using SqlConnection = Microsoft.Data.SqlClient.SqlConnection;
+using WebAPI.Application.Interfaces.NfService;
+using WebAPI.Application.Services.NfService;
 
 namespace WebAPI.Infra.Structure.IoC;
 
@@ -171,7 +173,6 @@ public static class DependencyContainerService
         services.AddScoped(typeof(IRepositoryDapper<>), typeof(RepositoryDapper<>));
         services.AddScoped(typeof(ILoggerService<>), typeof(LoggerService<>));
         services.AddScoped(typeof(IFileService<>), typeof(FileService<>));
-
         services.AddScoped<WebAPIContext>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ICepRepository, CepRepository>();
@@ -195,10 +196,9 @@ public static class DependencyContainerService
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IQRCodeService, QRCodeService>();
         services.AddScoped<IMemoryCacheService, MemoryCacheService>();
-
         services.AddScoped<IUnitofWorkService, UnitOfWorkService>();
-
         services.AddTransient<IIpAddressService, IpAddressService>();
+        services.AddScoped<INfService, NfService>();
     }
 
     public static void RegisterMapperConfig(this IServiceCollection services)
