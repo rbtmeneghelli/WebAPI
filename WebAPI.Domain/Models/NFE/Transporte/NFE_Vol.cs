@@ -17,5 +17,5 @@ public class NFE_Vol
     [JsonProperty("pesoB")]
     public string PesoB { get; set; }
     [JsonProperty("lacre")]
-    public Lacre Lacre { get; set; }
+    public NFE_Lacre Lacre { get; set; }
 }

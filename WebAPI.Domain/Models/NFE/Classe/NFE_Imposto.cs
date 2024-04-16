@@ -1,6 +1,6 @@
 ﻿using WebAPI.Domain.Models.NFE.Impostos;
 
-namespace WebAPI.Domain.Models.NFE;
+namespace WebAPI.Domain.Models.NFE.Classe;
 
 public sealed record NFE_Imposto
 {

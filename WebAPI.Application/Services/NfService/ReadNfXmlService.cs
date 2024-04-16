@@ -1,17 +1,300 @@
 ﻿using System.Xml;
 using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Domain.Models.NFE.Classe;
-using WebAPI.Domain.Models.NFE.Outros;
+using WebAPI.Domain.Models.NFE.Impostos;
+using WebAPI.Domain.Models.NFE.Transporte;
 
 namespace WebAPI.Application.Services.NfService;
 
-public class maptest
+public sealed class ReadNfXmlService : GenericNfService<NFE_Model>
 {
-    public string text { get; set; }
-    public int number { get; set; }
-}
-public class ReadNfXmlService : GenericNfService<NFE_Model>
-{
+    private string GetMatrizValue(int row, int column)
+    {
+        var matrizXml = new string[0, 0];
+        matrizXml[0, 0] = "cUF";
+        matrizXml[0, 1] = "cNF";
+        matrizXml[0, 2] = "natOp";
+        matrizXml[0, 3] = "indPag";
+        matrizXml[0, 4] = "mod";
+        matrizXml[0, 5] = "serie";
+        matrizXml[0, 6] = "nNF";
+        matrizXml[0, 7] = "dEmi";
+        matrizXml[0, 8] = "dSaiEnt";
+        matrizXml[0, 9] = "tpNF";
+        matrizXml[0, 10] = "cMunFG";
+        matrizXml[0, 11] = "tpImp";
+        matrizXml[0, 12] = "tpEmis";
+        matrizXml[0, 13] = "cDV";
+        matrizXml[0, 14] = "tpAmb";
+        matrizXml[0, 15] = "finNFe";
+        matrizXml[0, 16] = "procEmi";
+        matrizXml[0, 17] = "verProc";
+
+        matrizXml[1, 0] = "CNPJ";
+        matrizXml[1, 1] = "xNome";
+        matrizXml[1, 2] = "xFant";
+        matrizXml[1, 3] = "xLgr";
+        matrizXml[1, 4] = "nro";
+        matrizXml[1, 5] = "xCpl";
+        matrizXml[1, 6] = "xBairro";
+        matrizXml[1, 7] = "cMun";
+        matrizXml[1, 8] = "xMun";
+        matrizXml[1, 9] = "UF";
+        matrizXml[1, 10] = "CEP";
+        matrizXml[1, 11] = "cPais";
+        matrizXml[1, 12] = "xPais";
+        matrizXml[1, 13] = "fone";
+        matrizXml[1, 14] = "IE";
+
+        matrizXml[2, 0] = "CNPJ";
+        matrizXml[2, 1] = "xNome";
+        matrizXml[2, 2] = "xLgr";
+        matrizXml[2, 3] = "nro";
+        matrizXml[2, 4] = "xCpl";
+        matrizXml[2, 5] = "xBairro";
+        matrizXml[2, 6] = "cMun";
+        matrizXml[2, 7] = "xMun";
+        matrizXml[2, 8] = "UF";
+        matrizXml[2, 9] = "CEP";
+        matrizXml[2, 10] = "cPais";
+        matrizXml[2, 11] = "xPais";
+        matrizXml[2, 12] = "fone";
+        matrizXml[2, 13] = "IE";
+
+        matrizXml[3, 0] = "CNPJ";
+        matrizXml[3, 1] = "xLgr";
+        matrizXml[3, 2] = "nro";
+        matrizXml[3, 3] = "xCpl";
+        matrizXml[3, 4] = "xBairro";
+        matrizXml[3, 5] = "cMun";
+        matrizXml[3, 6] = "xMun";
+        matrizXml[3, 7] = "UF";
+
+        matrizXml[4, 0] = "CNPJ";
+        matrizXml[4, 1] = "xLgr";
+        matrizXml[4, 2] = "nro";
+        matrizXml[4, 3] = "xCpl";
+        matrizXml[4, 4] = "xBairro";
+        matrizXml[4, 5] = "cMun";
+        matrizXml[4, 6] = "xMun";
+        matrizXml[4, 7] = "UF";
+
+        matrizXml[5, 0] = "modFrete";
+        matrizXml[5, 1] = "CNPJ";
+        matrizXml[5, 2] = "xNome";
+        matrizXml[5, 3] = "IE";
+        matrizXml[5, 4] = "xEnder";
+        matrizXml[5, 5] = "xMun";
+        matrizXml[5, 6] = "UF";
+        matrizXml[5, 7] = "placa";
+        matrizXml[5, 8] = "RNTC";
+        matrizXml[5, 9] = "qVol";
+        matrizXml[5, 10] = "esp";
+        matrizXml[5, 11] = "marca";
+        matrizXml[5, 12] = "nVol";
+        matrizXml[5, 13] = "pesoL";
+        matrizXml[5, 14] = "pesoB";
+        matrizXml[5, 15] = "nLacre";
+
+        matrizXml[6, 0] = "infAdFisco";
+
+        matrizXml[7, 0] = "cProd";
+        matrizXml[7, 1] = "xProd";
+        matrizXml[7, 2] = "CFOP";
+        matrizXml[7, 3] = "uCom";
+        matrizXml[7, 4] = "qCom";
+        matrizXml[7, 5] = "vUnCom";
+        matrizXml[7, 6] = "vProd";
+        matrizXml[7, 7] = "uTrib";
+        matrizXml[7, 8] = "qTrib";
+        matrizXml[7, 9] = "vUnTrib";
+        matrizXml[7, 10] = "orig";
+        matrizXml[7, 11] = "CST";
+
+        matrizXml[8, 0] = "vBC";
+        matrizXml[8, 1] = "vICMS";
+        matrizXml[8, 2] = "vBCST";
+        matrizXml[8, 3] = "vST";
+        matrizXml[8, 4] = "vProd";
+        matrizXml[8, 5] = "vUnCom";
+        matrizXml[8, 6] = "vProd";
+        matrizXml[8, 7] = "uTrib";
+        matrizXml[8, 8] = "qTrib";
+        matrizXml[8, 9] = "vUnTrib";
+        matrizXml[8, 10] = "orig";
+        matrizXml[8, 11] = "CST";
+
+        //                    vBC = nodo.GetElementsByTagName("vBC")[0].InnerText.Trim(),
+        //                    vICMS = nodo.GetElementsByTagName("vICMS")[0].InnerText.Trim(),
+        //                    vBCST = nodo.GetElementsByTagName("vBCST")[0].InnerText.Trim(),
+        //                    vST = nodo.GetElementsByTagName("vST")[0].InnerText.Trim(),
+        //                    vProd = nodo.GetElementsByTagName("vProd")[0].InnerText.Trim(),
+        //                    vFrete = nodo.GetElementsByTagName("vFrete")[0].InnerText.Trim(),
+        //                    vSeg = nodo.GetElementsByTagName("vSeg")[0].InnerText.Trim(),
+        //                    vDesc = nodo.GetElementsByTagName("vDesc")[0].InnerText.Trim(),
+        //                    vII = nodo.GetElementsByTagName("vII")[0].InnerText.Trim(),
+        //                    vIPI = nodo.GetElementsByTagName("vIPI")[0].InnerText.Trim(),
+        //                    vPIS = nodo.GetElementsByTagName("vPIS")[0].InnerText.Trim(),
+        //                    vCOFINS = nodo.GetElementsByTagName("vCOFINS")[0].InnerText.Trim(),
+        //                    vOutro = nodo.GetElementsByTagName("vOutro")[0].InnerText.Trim(),
+        //                    vNF = nodo.GetElementsByTagName("vNF")[0].InnerText.Trim()
+
+        return matrizXml[row, column];
+    }
+
+    private string GetValueFromXML(XmlElement nodo, string tagName)
+    {
+        if (string.IsNullOrWhiteSpace(tagName))
+            return "Vazio";
+
+        string value = nodo.GetElementsByTagName(tagName)[0].InnerText.Trim();
+        return string.IsNullOrEmpty(value) ? "Vazio" : value;
+    }
+
+    private NFE_Transp GetDataTransportadoraFromXML(XmlElement nodo)
+    {
+        NFE_Transp dadosTransportadora = new();
+
+        //Conta a quantidade de tags filhos dentro do pai
+        int countXmlNodes = nodo.ChildNodes.Count;
+
+        for (int i = 0; i < countXmlNodes; i++)
+        {
+            switch (nodo.ChildNodes[i].Name)
+            {
+                case "modFrete":
+                    dadosTransportadora.ModFrete = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.transp, 0));
+                    break;
+                case "transporta":
+                    dadosTransportadora.Transporta = new NFE_Transporta()
+                    {
+                        Cnpj = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.transp, 1)),
+                        Nome = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.transp, 2)),
+                        IE = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.transp, 3)),
+                        Endereco = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.transp, 4)),
+                        Municipio = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.transp, 5)),
+                        UF = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.transp, 6))
+                    };
+                    break;
+                case "veicTransp":
+                    dadosTransportadora.VeicTransp = new NFE_VeicTransp()
+                    {
+                        Placa = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.transp, 7)),
+                        RNTC = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.transp, 8)),
+                        UF = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.transp, 6))
+                    };
+                    break;
+                case "reboque":
+                    dadosTransportadora.Reboque = new NFE_Reboque
+                    {
+                        Placa = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.transp, 7)),
+                        RNTC = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.transp, 8)),
+                        UF = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.transp, 6))
+                    };
+                    break;
+                case "vol":
+                    dadosTransportadora.Vol = new NFE_Vol()
+                    {
+                        Qvol = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.transp, 9)),
+                        Esp = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.transp, 10)),
+                        Marca = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.transp, 11)),
+                        Nvol = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.transp, 12)),
+                        PesoL = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.transp, 13)),
+                        PesoB = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.transp, 14)),
+                        Lacre = new NFE_Lacre()
+                        {
+                            Nlacre = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.transp, 15)),
+                        }
+                    };
+                    break;
+            }
+        }
+
+        return dadosTransportadora;
+    }
+
+    private NFE_Imposto GetDataImpostoFromXML(XmlElement nodo)
+    {
+        NFE_Imposto dadosImposto = new();
+        dadosImposto.Produto = new();
+        dadosImposto.ICMS = new();
+        dadosImposto.PIS = new();
+        dadosImposto.COFINS = new();
+
+        List<NFE_Produto> produtos = new();
+        List<NFE_ICMS> listaICMS = new();
+        List<NFE_PIS> listaPIS = new();
+        List<NFE_COFINS> listaCOFINS = new();
+
+        NFE_ICMS imposto_ICMS = new();
+        NFE_PIS imposto_PIS = new();
+        NFE_COFINS imposto_COFINS = new();
+
+        //Conta a quantidade de tags filhos dentro do pai
+        int countXmlNodes = nodo.ChildNodes.Count;
+
+        for (int i = 0; i < countXmlNodes; i++)
+        {
+            switch (nodo.ChildNodes[i].Name)
+            {
+                case "prod":
+                    produtos.Add(new NFE_Produto()
+                    {
+                        Produto_Cprod = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.det, 0)),
+                        Produto_Xprod = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.det, 1)),
+                        Produto_Cfop = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.det, 2)),
+                        Produto_Ucom = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.det, 3)),
+                        Produto_Qcom = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.det, 4)),
+                        Produto_Vuncom = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.det, 5)),
+                        Produto_Vprod = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.det, 6)),
+                        Produto_Utrib = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.det, 7)),
+                        Produto_Qtrib = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.det, 8)),
+                        Produto_Vuntrib = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.det, 9))
+                    });
+                    break;
+                case "imposto":
+                    var xmlNode = nodo.ChildNodes[i];
+
+                    foreach (XmlElement novoNodo in xmlNode)
+                    {
+                        foreach (XmlElement nodoImposto in novoNodo)
+                        {
+                            switch (nodoImposto.Name)
+                            {
+                                case "ICMS00":
+                                case "ICMS40":
+                                case "ICMS50":
+                                case "ICMS60":
+                                    imposto_ICMS.Icms_Orig = GetValueFromXML(nodoImposto, GetMatrizValue((int)EnumNfeTag.det, 10));
+                                    listaICMS.Add(new NFE_ICMS() { Icms_Tipo = nodoImposto.Name, Icms_Orig = imposto_ICMS.Icms_Orig });
+                                    imposto_ICMS = new();
+                                    break;
+                                case "PISAliq":
+                                    imposto_PIS.Pis_CST = GetValueFromXML(nodoImposto, GetMatrizValue((int)EnumNfeTag.det, 11));
+                                    listaPIS.Add(new NFE_PIS() { Pis_Tipo = nodoImposto.Name, Pis_CST = imposto_ICMS.Icms_Cst });
+                                    imposto_PIS = new();
+                                    break;
+                                case "COFINSAliq":
+                                    imposto_COFINS.Cofins_Cst = GetValueFromXML(nodoImposto, GetMatrizValue((int)EnumNfeTag.det, 11));
+                                    listaCOFINS.Add(new NFE_COFINS() { Cofins_Tipo = nodoImposto.Name, Cofins_Cst = imposto_COFINS.Cofins_Cst });
+                                    imposto_COFINS = new();
+                                    break;
+                            }
+                        }
+                    }
+
+                    break;
+            }
+        }
+
+        dadosImposto.Produto = produtos;
+        dadosImposto.ICMS = listaICMS;
+        dadosImposto.PIS = listaPIS;
+        dadosImposto.COFINS = listaCOFINS;
+
+        return dadosImposto;
+    }
+
     protected override IEnumerable<NFE_Model> ReadNf()
     {
         XmlDocument xmlDocument = new();
@@ -29,287 +312,94 @@ public class ReadNfXmlService : GenericNfService<NFE_Model>
         return PrintXml(listXml);
     }
 
-    private string GetTagFromXML((string nodoName, int nodoLevel) nodoData)
+    private IEnumerable<NFE_Model> PrintXml(List<XmlNodeList> listXml)
     {
-        var matrizXml = new string[0, 0];
-        matrizXml[0, 0] = "16"; // primeira linha, coluna um
-        matrizXml[0, 1] = "52"; // primeira linha, coluna dois
-        matrizXml[1, 0] = "91"; // segunda linha, coluna um
-        matrizXml[1, 1] = "43"; // segunda linha, coluna dois
-        matrizXml[2, 0] = "77"; // terceira linha, coluna um
-        matrizXml[2, 1] = "28"; // terceira linha, coluna dois
-        //"2", "cNF" ,
-        //"3", "natOp" ,
-        //"4", "indPag" ,
-        //"5", "mod" ,
-        //"6", "serie" ,
-        //"7", "nNF" ,
-        //"8", "dEmi" ,
-        //"9", "dSaiEnt" ,
-        //"1", "tpNF" ,
-        //"1", "cMunFG" ,
-        //"1", "tpImp" ,
-        //"1", "tpEmis" ,
-        //"1", "cDV" ,
-        //"1", "tpAmb" ,
-        //"1", "finNFe" ,
-        //"1", "procEmi" ,
-        //"1", "verProc" ,
-    };
+        string valueIde = Constants.GetEmptyString();
+        string valueEmit = Constants.GetEmptyString();
+        string valueDest = Constants.GetEmptyString();
+        string valueRetirada = Constants.GetEmptyString();
+        string valueEntrega = Constants.GetEmptyString();
+        string valueInfAdic = Constants.GetEmptyString();
 
-    dictionary.TryGetValue(nodoData, out var result);
-        return result ?? string.Empty;
-    }
+        NFE_Transp dadosTransportadora;
+        NFE_Imposto dadosImposto;
 
-private string GetValueFromXML(XmlElement nodo, string tagName)
-{
-    if (string.IsNullOrWhiteSpace(tagName))
-        return "Vazio";
-
-    string value = nodo.GetElementsByTagName(tagName)[0].InnerText.Trim();
-    return string.IsNullOrEmpty(value) ? "Vazio" : value;
-}
-
-
-protected IEnumerable<NFE_Model> PrintXml(List<XmlNodeList> listXml)
-{
-    foreach (XmlNodeList xnl in listXml)
-    {
-        foreach (XmlElement nodo in xnl)
+        foreach (XmlNodeList xnl in listXml)
         {
-            //EnumNfeTag.ide.GetDisplayShortName(),
-            //EnumNfeTag.ide.GetDisplayShortName(),
-            //EnumNfeTag.ide.GetDisplayShortName(),
-            //EnumNfeTag.ide.GetDisplayShortName(),
-            //EnumNfeTag.ide.GetDisplayShortName(),
-            //EnumNfeTag.ide.GetDisplayShortName(),
-            //EnumNfeTag.ide.GetDisplayShortName(),
-            //EnumNfeTag.ide.GetDisplayShortName(),
-            //EnumNfeTag.ide.GetDisplayShortName(),
-            //EnumNfeTag.ide.GetDisplayShortName(),
-            //EnumNfeTag.ide.GetDisplayShortName(),
-            //EnumNfeTag.ide.GetDisplayShortName(),
-            //EnumNfeTag.ide.GetDisplayShortName(),
-            //EnumNfeTag.ide.GetDisplayShortName(),
-            //EnumNfeTag.ide.GetDisplayShortName(),
-            //EnumNfeTag.ide.GetDisplayShortName(),
-            //EnumNfeTag.ide.GetDisplayShortName(),
-            //EnumNfeTag.ide.GetDisplayShortName(),
-
-            string value = GetValueFromXML(nodo, GetData_IDE_FromXML(nodo.Name));
-
-            if (nodo.Name == "emit")
+            foreach (XmlElement nodo in xnl)
             {
-                objEmit.CNPJ = nodo.GetElementsByTagName("CNPJ")[0].InnerText.Trim();
-                objEmit.xNome = nodo.GetElementsByTagName("xNome")[0].InnerText.Trim();
-                objEmit.xFant = nodo.GetElementsByTagName("xFant")[0].InnerText.Trim();
-                objEmit.xLgr = nodo.GetElementsByTagName("xLgr")[0].InnerText.Trim();
-                objEmit.nro = nodo.GetElementsByTagName("nro")[0].InnerText.Trim();
-                objEmit.xCpl = nodo.GetElementsByTagName("xCpl")[0].InnerText.Trim();
-                objEmit.xBairro = nodo.GetElementsByTagName("xBairro")[0].InnerText.Trim();
-                objEmit.cMun = nodo.GetElementsByTagName("cMun")[0].InnerText.Trim();
-                objEmit.xMun = nodo.GetElementsByTagName("xMun")[0].InnerText.Trim();
-                objEmit.UF = nodo.GetElementsByTagName("UF")[0].InnerText.Trim();
-                objEmit.CEP = nodo.GetElementsByTagName("CEP")[0].InnerText.Trim();
-                objEmit.cPais = nodo.GetElementsByTagName("cPais")[0].InnerText.Trim();
-                objEmit.xPais = nodo.GetElementsByTagName("xPais")[0].InnerText.Trim();
-                objEmit.fone = nodo.GetElementsByTagName("fone")[0].InnerText.Trim();
-                objEmit.IE = nodo.GetElementsByTagName("IE")[0].InnerText.Trim();
-            }
-
-            else if (nodo.Name == "dest")
-            {
-                objDest.CNPJ = nodo.GetElementsByTagName("CNPJ")[0].InnerText.Trim();
-                objDest.xNome = nodo.GetElementsByTagName("xNome")[0].InnerText.Trim();
-                objDest.xLgr = nodo.GetElementsByTagName("xLgr")[0].InnerText.Trim();
-                objDest.nro = nodo.GetElementsByTagName("nro")[0].InnerText.Trim();
-                objDest.xCpl = nodo.GetElementsByTagName("xCpl")[0].InnerText.Trim();
-                objDest.xBairro = nodo.GetElementsByTagName("xBairro")[0].InnerText.Trim();
-                objDest.cMun = nodo.GetElementsByTagName("cMun")[0].InnerText.Trim();
-                objDest.xMun = nodo.GetElementsByTagName("xMun")[0].InnerText.Trim();
-                objDest.UF = nodo.GetElementsByTagName("UF")[0].InnerText.Trim();
-                objDest.CEP = nodo.GetElementsByTagName("CEP")[0].InnerText.Trim();
-                objDest.cPais = nodo.GetElementsByTagName("cPais")[0].InnerText.Trim();
-                objDest.xPais = nodo.GetElementsByTagName("xPais")[0].InnerText.Trim();
-                objDest.fone = nodo.GetElementsByTagName("fone")[0].InnerText.Trim();
-                objDest.IE = nodo.GetElementsByTagName("IE")[0].InnerText.Trim();
-            }
-
-            else if (nodo.Name == "retirada")
-            {
-                objRet.CNPJ = nodo.GetElementsByTagName("CNPJ")[0].InnerText.Trim();
-                objRet.xLgr = nodo.GetElementsByTagName("xLgr")[0].InnerText.Trim();
-                objRet.nro = nodo.GetElementsByTagName("nro")[0].InnerText.Trim();
-                objRet.xCpl = nodo.GetElementsByTagName("xCpl")[0].InnerText.Trim();
-                objRet.xBairro = nodo.GetElementsByTagName("xBairro")[0].InnerText.Trim();
-                objRet.cMun = nodo.GetElementsByTagName("cMun")[0].InnerText.Trim();
-                objRet.xMun = nodo.GetElementsByTagName("xMun")[0].InnerText.Trim();
-                objRet.UF = nodo.GetElementsByTagName("UF")[0].InnerText.Trim();
-            }
-
-            else if (nodo.Name == "entrega")
-            {
-                objEntr.CNPJ = nodo.GetElementsByTagName("CNPJ")[0].InnerText.Trim();
-                objEntr.xLgr = nodo.GetElementsByTagName("xLgr")[0].InnerText.Trim();
-                objEntr.nro = nodo.GetElementsByTagName("nro")[0].InnerText.Trim();
-                objEntr.xCpl = nodo.GetElementsByTagName("xCpl")[0].InnerText.Trim();
-                objEntr.xBairro = nodo.GetElementsByTagName("xBairro")[0].InnerText.Trim();
-                objEntr.cMun = nodo.GetElementsByTagName("cMun")[0].InnerText.Trim();
-                objEntr.xMun = nodo.GetElementsByTagName("xMun")[0].InnerText.Trim();
-                objEntr.UF = nodo.GetElementsByTagName("UF")[0].InnerText.Trim();
-            }
-
-            else if (nodo.Name == "transp")
-            {
-                //Conta a quantidade de tags filhos dentro do pai
-                countXmlNodes = nodo.ChildNodes.Count;
-
-                for (int i = 0; i < countXmlNodes; i++)
+                if (nodo.Name.Equals(EnumNfeTag.ide.GetDisplayName()))
                 {
-                    switch (nodo.ChildNodes[i].Name)
-                    {
-                        case "modFrete":
-                            objTransp.modFrete = nodo.GetElementsByTagName("modFrete")[0].InnerText.Trim();
-                            break;
-
-                        case "transporta":
-                            objTransp.transporta = new Transporte.Transporta()
-                            {
-                                CNPJ = nodo.GetElementsByTagName("placa")[0].InnerText.Trim(),
-                                xNome = nodo.GetElementsByTagName("xNome")[0].InnerText.Trim(),
-                                IE = nodo.GetElementsByTagName("IE")[0].InnerText.Trim(),
-                                xEnder = nodo.GetElementsByTagName("xEnder")[0].InnerText.Trim(),
-                                xMun = nodo.GetElementsByTagName("xMun")[0].InnerText.Trim(),
-                                UF = nodo.GetElementsByTagName("UF")[0].InnerText.Trim()
-                            };
-                            break;
-
-                        case "veicTransp":
-                            objTransp.veicTransp = new Transporte.VeicTransp()
-                            {
-                                placa = nodo.GetElementsByTagName("placa")[0].InnerText.Trim(),
-                                RNTC = nodo.GetElementsByTagName("RNTC")[0].InnerText.Trim(),
-                                UF = nodo.GetElementsByTagName("UF")[0].InnerText.Trim()
-                            };
-                            break;
-
-                        case "reboque":
-                            objTransp.reboque = new Transporte.Reboque()
-                            {
-                                placa = nodo.GetElementsByTagName("placa")[0].InnerText.Trim(),
-                                RNTC = nodo.GetElementsByTagName("RNTC")[0].InnerText.Trim(),
-                                UF = nodo.GetElementsByTagName("UF")[0].InnerText.Trim()
-                            };
-                            break;
-
-                        case "vol":
-                            objTransp.vol = new Transporte.Vol()
-                            {
-                                qVol = nodo.GetElementsByTagName("qVol")[0].InnerText.Trim(),
-                                esp = nodo.GetElementsByTagName("esp")[0].InnerText.Trim(),
-                                marca = nodo.GetElementsByTagName("marca")[0].InnerText.Trim(),
-                                nVol = nodo.GetElementsByTagName("nVol")[0].InnerText.Trim(),
-                                pesoL = nodo.GetElementsByTagName("pesoL")[0].InnerText.Trim(),
-                                pesoB = nodo.GetElementsByTagName("pesoB")[0].InnerText.Trim(),
-                                lacre = new Transporte.Lacres()
-                                {
-                                    nLacre = nodo.GetElementsByTagName("nLacre")[0].InnerText.Trim()
-                                }
-                            };
-                            break;
-                    }
+                    valueIde = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.ide, 0));
                 }
-            }
-
-            else if (nodo.Name == "infAdic")
-            {
-                objInfAdic.infAdFisco = nodo.GetElementsByTagName("infAdFisco")[0].InnerText.Trim();
-            }
-
-            else if (nodo.Name == "det")
-            {
-
-                //Conta a quantidade de tags filhos dentro do pai
-                countXmlNodes = nodo.ChildNodes.Count;
-
-                for (int i = 0; i < countXmlNodes; i++)
+                else if (nodo.Name.Equals(EnumNfeTag.emit.GetDisplayName()))
                 {
-                    switch (nodo.ChildNodes[i].Name)
-                    {
-                        case "prod":
-                            listaProd.Add(new Prod()
-                            {
-                                cProd = nodo.GetElementsByTagName("cProd")[0].InnerText.Trim(),
-                                xProd = nodo.GetElementsByTagName("xProd")[0].InnerText.Trim(),
-                                CFOP = nodo.GetElementsByTagName("CFOP")[0].InnerText.Trim(),
-                                uCom = nodo.GetElementsByTagName("uCom")[0].InnerText.Trim(),
-                                qCom = nodo.GetElementsByTagName("qCom")[0].InnerText.Trim(),
-                                vUnCom = nodo.GetElementsByTagName("vUnCom")[0].InnerText.Trim(),
-                                vProd = nodo.GetElementsByTagName("vProd")[0].InnerText.Trim(),
-                                uTrib = nodo.GetElementsByTagName("uTrib")[0].InnerText.Trim(),
-                                qTrib = nodo.GetElementsByTagName("qTrib")[0].InnerText.Trim(),
-                                vUnTrib = nodo.GetElementsByTagName("vUnTrib")[0].InnerText.Trim()
-                            });
-                            break;
-                        case "imposto":
-                            xmlNode = nodo.ChildNodes[i];
-
-                            foreach (XmlElement novoNodo in xmlNode)
-                            {
-                                if (novoNodo.Name == "ICMS")
-                                    listaICMS.AddRange(objTributo.TribICMS(novoNodo));
-
-                                else if (novoNodo.Name == "PIS")
-                                    listaPIS.AddRange(objTributo.TribPIS(novoNodo));
-
-                                else if (novoNodo.Name == "COFINS")
-                                    listaCOFINS.AddRange(objTributo.TribCOFINS(novoNodo));
-                            }
-
-                            break;
-                    }
+                    valueEmit = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.emit, 0));
                 }
-            }
-
-            else if (nodo.Name == "total")
-            {
-                //Conta a quantidade de tags filhos dentro do pai
-                countXmlNodes = nodo.ChildNodes.Count;
-
-                for (int i = 0; i < countXmlNodes; i++)
+                else if (nodo.Name.Equals(EnumNfeTag.dest.GetDisplayName()))
                 {
-                    switch (nodo.ChildNodes[i].Name)
-                    {
-
-                        case "ICMSTot":
-
-                            objTotal.TotalICMS = new Total.ICMSTot()
-                            {
-                                vBC = nodo.GetElementsByTagName("vBC")[0].InnerText.Trim(),
-                                vICMS = nodo.GetElementsByTagName("vICMS")[0].InnerText.Trim(),
-                                vBCST = nodo.GetElementsByTagName("vBCST")[0].InnerText.Trim(),
-                                vST = nodo.GetElementsByTagName("vST")[0].InnerText.Trim(),
-                                vProd = nodo.GetElementsByTagName("vProd")[0].InnerText.Trim(),
-                                vFrete = nodo.GetElementsByTagName("vFrete")[0].InnerText.Trim(),
-                                vSeg = nodo.GetElementsByTagName("vSeg")[0].InnerText.Trim(),
-                                vDesc = nodo.GetElementsByTagName("vDesc")[0].InnerText.Trim(),
-                                vII = nodo.GetElementsByTagName("vII")[0].InnerText.Trim(),
-                                vIPI = nodo.GetElementsByTagName("vIPI")[0].InnerText.Trim(),
-                                vPIS = nodo.GetElementsByTagName("vPIS")[0].InnerText.Trim(),
-                                vCOFINS = nodo.GetElementsByTagName("vCOFINS")[0].InnerText.Trim(),
-                                vOutro = nodo.GetElementsByTagName("vOutro")[0].InnerText.Trim(),
-                                vNF = nodo.GetElementsByTagName("vNF")[0].InnerText.Trim()
-                            };
-
-                            break;
-                    }
+                    valueDest = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.dest, 0));
                 }
-            }
+                else if (nodo.Name.Equals(EnumNfeTag.retirada.GetDisplayName()))
+                {
+                    valueRetirada = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.retirada, 0));
+                }
+                else if (nodo.Name.Equals(EnumNfeTag.entrega.GetDisplayName()))
+                {
+                    valueEntrega = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.entrega, 0));
+                }
+                else if (nodo.Name.Equals(EnumNfeTag.transp.GetDisplayName()))
+                {
+                    dadosTransportadora = GetDataTransportadoraFromXML(nodo);
+                }
+                else if (nodo.Name.Equals(EnumNfeTag.infAdic.GetDisplayName()))
+                {
+                    valueInfAdic = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.infAdic, 0));
+                }
+                else if (nodo.Name.Equals(EnumNfeTag.det.GetDisplayName()))
+                {
+                    dadosImposto = GetDataImpostoFromXML(nodo);
+                }
 
+                //else if (nodo.Name == "total")
+                //{
+                //    //Conta a quantidade de tags filhos dentro do pai
+                //    countXmlNodes = nodo.ChildNodes.Count;
+
+                //    for (int i = 0; i < countXmlNodes; i++)
+                //    {
+                //        switch (nodo.ChildNodes[i].Name)
+                //        {
+
+                //            case "ICMSTot":
+
+                //                objTotal.TotalICMS = new Total.ICMSTot()
+                //                {
+                //                    vBC = nodo.GetElementsByTagName("vBC")[0].InnerText.Trim(),
+                //                    vICMS = nodo.GetElementsByTagName("vICMS")[0].InnerText.Trim(),
+                //                    vBCST = nodo.GetElementsByTagName("vBCST")[0].InnerText.Trim(),
+                //                    vST = nodo.GetElementsByTagName("vST")[0].InnerText.Trim(),
+                //                    vProd = nodo.GetElementsByTagName("vProd")[0].InnerText.Trim(),
+                //                    vFrete = nodo.GetElementsByTagName("vFrete")[0].InnerText.Trim(),
+                //                    vSeg = nodo.GetElementsByTagName("vSeg")[0].InnerText.Trim(),
+                //                    vDesc = nodo.GetElementsByTagName("vDesc")[0].InnerText.Trim(),
+                //                    vII = nodo.GetElementsByTagName("vII")[0].InnerText.Trim(),
+                //                    vIPI = nodo.GetElementsByTagName("vIPI")[0].InnerText.Trim(),
+                //                    vPIS = nodo.GetElementsByTagName("vPIS")[0].InnerText.Trim(),
+                //                    vCOFINS = nodo.GetElementsByTagName("vCOFINS")[0].InnerText.Trim(),
+                //                    vOutro = nodo.GetElementsByTagName("vOutro")[0].InnerText.Trim(),
+                //                    vNF = nodo.GetElementsByTagName("vNF")[0].InnerText.Trim()
+                //                };
+
+                //                break;
+                //        }
+                //    }
+                //}
+
+            } //Fim do foreach
         } //Fim do foreach
-    } //Fim do foreach
 
-    //Montagem da NFE
-    return Enumerable.Empty<NFE_Model>();
-}
+        //Montagem da NFE
+        return Enumerable.Empty<NFE_Model>();
+    }
 }
