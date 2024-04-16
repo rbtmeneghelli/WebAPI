@@ -2,6 +2,7 @@
 using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Domain.Models.NFE.Classe;
 using WebAPI.Domain.Models.NFE.Impostos;
+using WebAPI.Domain.Models.NFE.Total;
 using WebAPI.Domain.Models.NFE.Transporte;
 
 namespace WebAPI.Application.Services.NfService;
@@ -116,28 +117,15 @@ public sealed class ReadNfXmlService : GenericNfService<NFE_Model>
         matrizXml[8, 2] = "vBCST";
         matrizXml[8, 3] = "vST";
         matrizXml[8, 4] = "vProd";
-        matrizXml[8, 5] = "vUnCom";
-        matrizXml[8, 6] = "vProd";
-        matrizXml[8, 7] = "uTrib";
-        matrizXml[8, 8] = "qTrib";
-        matrizXml[8, 9] = "vUnTrib";
-        matrizXml[8, 10] = "orig";
-        matrizXml[8, 11] = "CST";
-
-        //                    vBC = nodo.GetElementsByTagName("vBC")[0].InnerText.Trim(),
-        //                    vICMS = nodo.GetElementsByTagName("vICMS")[0].InnerText.Trim(),
-        //                    vBCST = nodo.GetElementsByTagName("vBCST")[0].InnerText.Trim(),
-        //                    vST = nodo.GetElementsByTagName("vST")[0].InnerText.Trim(),
-        //                    vProd = nodo.GetElementsByTagName("vProd")[0].InnerText.Trim(),
-        //                    vFrete = nodo.GetElementsByTagName("vFrete")[0].InnerText.Trim(),
-        //                    vSeg = nodo.GetElementsByTagName("vSeg")[0].InnerText.Trim(),
-        //                    vDesc = nodo.GetElementsByTagName("vDesc")[0].InnerText.Trim(),
-        //                    vII = nodo.GetElementsByTagName("vII")[0].InnerText.Trim(),
-        //                    vIPI = nodo.GetElementsByTagName("vIPI")[0].InnerText.Trim(),
-        //                    vPIS = nodo.GetElementsByTagName("vPIS")[0].InnerText.Trim(),
-        //                    vCOFINS = nodo.GetElementsByTagName("vCOFINS")[0].InnerText.Trim(),
-        //                    vOutro = nodo.GetElementsByTagName("vOutro")[0].InnerText.Trim(),
-        //                    vNF = nodo.GetElementsByTagName("vNF")[0].InnerText.Trim()
+        matrizXml[8, 5] = "vFrete";
+        matrizXml[8, 6] = "vSeg";
+        matrizXml[8, 7] = "vDesc";
+        matrizXml[8, 8] = "vII";
+        matrizXml[8, 9] = "vIPI";
+        matrizXml[8, 10] = "vPIS";
+        matrizXml[8, 11] = "vCOFINS";
+        matrizXml[8, 12] = "vOutro";
+        matrizXml[8, 13] = "vNF";
 
         return matrizXml[row, column];
     }
@@ -295,6 +283,42 @@ public sealed class ReadNfXmlService : GenericNfService<NFE_Model>
         return dadosImposto;
     }
 
+    private NFE_IcmsTot GetDataICMSTotFromXML(XmlElement nodo)
+    {
+        NFE_IcmsTot dadosIcmsTot = new();
+
+        //Conta a quantidade de tags filhos dentro do pai
+        int countXmlNodes = nodo.ChildNodes.Count;
+
+        for (int i = 0; i < countXmlNodes; i++)
+        {
+            switch (nodo.ChildNodes[i].Name)
+            {
+                case "ICMSTot":
+                    dadosIcmsTot = new NFE_IcmsTot()
+                    {
+                        Vbc = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.total, 0)),
+                        Vicms = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.total, 1)),
+                        Vbcst = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.total, 2)),
+                        Vst = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.total, 3)),
+                        Vprod = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.total, 4)),
+                        Vfrete = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.total, 5)),
+                        Vseg = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.total, 6)),
+                        Vdesc = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.total, 7)),
+                        Vii = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.total, 8)),
+                        Vipi = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.total, 9)),
+                        Vpis = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.total, 10)),
+                        Vcofins = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.total, 11)),
+                        Voutro = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.total, 12)),
+                        Vnf = GetValueFromXML(nodo, GetMatrizValue((int)EnumNfeTag.total, 13)),
+                    };
+                    break;
+            }
+        }
+
+        return dadosIcmsTot;
+    }
+
     protected override IEnumerable<NFE_Model> ReadNf()
     {
         XmlDocument xmlDocument = new();
@@ -323,6 +347,8 @@ public sealed class ReadNfXmlService : GenericNfService<NFE_Model>
 
         NFE_Transp dadosTransportadora;
         NFE_Imposto dadosImposto;
+        NFE_IcmsTot dadosIcmsTot;
+        NFE_Model nFE_Model = new();
 
         foreach (XmlNodeList xnl in listXml)
         {
@@ -360,44 +386,12 @@ public sealed class ReadNfXmlService : GenericNfService<NFE_Model>
                 {
                     dadosImposto = GetDataImpostoFromXML(nodo);
                 }
-
-                //else if (nodo.Name == "total")
-                //{
-                //    //Conta a quantidade de tags filhos dentro do pai
-                //    countXmlNodes = nodo.ChildNodes.Count;
-
-                //    for (int i = 0; i < countXmlNodes; i++)
-                //    {
-                //        switch (nodo.ChildNodes[i].Name)
-                //        {
-
-                //            case "ICMSTot":
-
-                //                objTotal.TotalICMS = new Total.ICMSTot()
-                //                {
-                //                    vBC = nodo.GetElementsByTagName("vBC")[0].InnerText.Trim(),
-                //                    vICMS = nodo.GetElementsByTagName("vICMS")[0].InnerText.Trim(),
-                //                    vBCST = nodo.GetElementsByTagName("vBCST")[0].InnerText.Trim(),
-                //                    vST = nodo.GetElementsByTagName("vST")[0].InnerText.Trim(),
-                //                    vProd = nodo.GetElementsByTagName("vProd")[0].InnerText.Trim(),
-                //                    vFrete = nodo.GetElementsByTagName("vFrete")[0].InnerText.Trim(),
-                //                    vSeg = nodo.GetElementsByTagName("vSeg")[0].InnerText.Trim(),
-                //                    vDesc = nodo.GetElementsByTagName("vDesc")[0].InnerText.Trim(),
-                //                    vII = nodo.GetElementsByTagName("vII")[0].InnerText.Trim(),
-                //                    vIPI = nodo.GetElementsByTagName("vIPI")[0].InnerText.Trim(),
-                //                    vPIS = nodo.GetElementsByTagName("vPIS")[0].InnerText.Trim(),
-                //                    vCOFINS = nodo.GetElementsByTagName("vCOFINS")[0].InnerText.Trim(),
-                //                    vOutro = nodo.GetElementsByTagName("vOutro")[0].InnerText.Trim(),
-                //                    vNF = nodo.GetElementsByTagName("vNF")[0].InnerText.Trim()
-                //                };
-
-                //                break;
-                //        }
-                //    }
-                //}
-
-            } //Fim do foreach
-        } //Fim do foreach
+                else if (nodo.Name.Equals(EnumNfeTag.total.GetDisplayName()))
+                {
+                    dadosIcmsTot = GetDataICMSTotFromXML(nodo);
+                }
+            }
+        }
 
         //Montagem da NFE
         return Enumerable.Empty<NFE_Model>();
