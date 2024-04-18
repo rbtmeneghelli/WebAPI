@@ -11,8 +11,7 @@ using Gehtsoft.PDFFlow.Utils;
 using LicenseContext = OfficeOpenXml.LicenseContext;
 using Microsoft.AspNetCore.Http;
 using NPOI.HSSF.UserModel;
-using System.IO;
-using System.Collections.Generic;
+using CsvHelper;
 
 namespace WebAPI.Application.Services;
 
@@ -315,6 +314,18 @@ public class FileService<TModel> : IFileService<TModel> where TModel : class
 
     #endregion
 
+    #region Metodos para Ler CSV
+
+    public IEnumerable<TModel> ParseCsv<T>(string csvFilePath)
+    {
+        using var reader = new StreamReader(csvFilePath);
+        using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+        foreach (var registro in csv.GetRecords<TModel>())
+            yield return registro;
+    }
+
+    #endregion
+
     public async Task<MemoryStream> CreateExcelFileEPPLUS(IEnumerable<TModel> list, string excelName)
     {
         ExcelPackage excelPackage = new();
@@ -427,6 +438,13 @@ public class FileService<TModel> : IFileService<TModel> where TModel : class
         }
 
         return Enumerable.Empty<TModel>();
+    }
+
+    public async Task<IEnumerable<TModel>> ReadCsvData(string csvFilePath)
+    {
+        var result = ParseCsv<TModel>(csvFilePath);
+        await Task.CompletedTask;
+        return result;
     }
 
     public void Dispose()

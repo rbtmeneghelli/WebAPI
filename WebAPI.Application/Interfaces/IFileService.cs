@@ -12,4 +12,5 @@ public interface IFileService<TModel> : IDisposable where TModel : class
     Task<IEnumerable<TModel>> ReadExcelDataFromFolderNPOI(FileInfo fileInfo);
     Task<IEnumerable<TModel>> ReadExcelDataFromUploadEPPLUS(IFormFile formFile);
     Task<IEnumerable<TModel>> ReadExcelDataFromFolderEPPLUS(FileInfo fileInfo);
+    Task<IEnumerable<TModel>> ReadCsvData(string csvFilePath);
 }
