@@ -79,7 +79,7 @@ public class FileService<TModel> : IFileService<TModel> where TModel : class
                 {
                     if (bool.TryParse(dataRow[col.ColumnName].ToString(), out _))
                     {
-                        workSheet.Cells[indexRow, indexColumn].Value = bool.Parse(dataRow[col.ColumnName].ToString()) ? Constants.STATUS_ACTIVE : Constants.STATUS_INACTIVE;
+                        workSheet.Cells[indexRow, indexColumn].Value = bool.Parse(dataRow[col.ColumnName].ToString()) ? FixConstants.STATUS_ACTIVE : FixConstants.STATUS_INACTIVE;
                     }
                     else if (DateTime.TryParse(dataRow[col.ColumnName].ToString(), out _))
                     {
@@ -101,7 +101,7 @@ public class FileService<TModel> : IFileService<TModel> where TModel : class
                 }
                 else
                 {
-                    workSheet.Cells[indexRow, indexColumn].Value = Constants.GetEmptyString();
+                    workSheet.Cells[indexRow, indexColumn].Value = FixConstants.GetEmptyString();
                 }
                 indexColumn++;
             }
@@ -210,7 +210,7 @@ public class FileService<TModel> : IFileService<TModel> where TModel : class
                 {
                     if (bool.TryParse(dataRow[col.ColumnName].ToString(), out _))
                     {
-                        row.CreateCell(indexColumn).SetCellValue(bool.Parse(dataRow[col.ColumnName].ToString()) ? Constants.STATUS_ACTIVE : Constants.STATUS_INACTIVE);
+                        row.CreateCell(indexColumn).SetCellValue(bool.Parse(dataRow[col.ColumnName].ToString()) ? FixConstants.STATUS_ACTIVE : FixConstants.STATUS_INACTIVE);
                     }
                     else if (DateTime.TryParse(dataRow[col.ColumnName].ToString(), out _))
                     {
@@ -232,7 +232,7 @@ public class FileService<TModel> : IFileService<TModel> where TModel : class
                 }
                 else
                 {
-                    row.CreateCell(indexColumn).SetCellValue(Constants.GetEmptyString());
+                    row.CreateCell(indexColumn).SetCellValue(FixConstants.GetEmptyString());
                 }
                 indexColumn++;
             }

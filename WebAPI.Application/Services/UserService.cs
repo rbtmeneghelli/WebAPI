@@ -65,7 +65,7 @@ public class UserService : GenericService, IUserService
         }
         catch
         {
-            Notify(Constants.ERROR_IN_GETALL);
+            Notify(FixConstants.ERROR_IN_GETALL);
             return Enumerable.Empty<UserResponseDTO>().ToList();
         }
         finally
@@ -126,7 +126,7 @@ public class UserService : GenericService, IUserService
         }
         catch
         {
-            Notify(Constants.ERROR_IN_GETID);
+            Notify(FixConstants.ERROR_IN_GETID);
             return default;
         }
         finally
@@ -181,7 +181,7 @@ public class UserService : GenericService, IUserService
         }
         catch
         {
-            Notify(Constants.ERROR_IN_GETDDL);
+            Notify(FixConstants.ERROR_IN_GETDDL);
             return Enumerable.Empty<DropDownList>();
         }
         finally
@@ -197,13 +197,13 @@ public class UserService : GenericService, IUserService
             var result = _userRepository.Exist(x => x.Id == id);
 
             if (result == false)
-                Notify(Constants.ERROR_IN_GETID);
+                Notify(FixConstants.ERROR_IN_GETID);
 
             return result;
         }
         catch
         {
-            Notify(Constants.ERROR_IN_GETID);
+            Notify(FixConstants.ERROR_IN_GETID);
             return false;
         }
         finally
@@ -253,7 +253,7 @@ public class UserService : GenericService, IUserService
             else if (_userRepository.Exist(x => x.Login == user.Login) == false)
             {
                 user.Password = HashingManager.GetLoadHashingManager().HashToString(user.Password);
-                user.CreatedTime = Constants.GetDateTimeNowFromBrazil();
+                user.CreatedTime = FixConstants.GetDateTimeNowFromBrazil();
                 _userRepository.Add(user);
                 return true;
             }
@@ -263,7 +263,7 @@ public class UserService : GenericService, IUserService
         }
         catch (Exception ex)
         {
-            Notify(Constants.ERROR_IN_ADD);
+            Notify(FixConstants.ERROR_IN_ADD);
             return false;
         }
         finally
@@ -282,16 +282,16 @@ public class UserService : GenericService, IUserService
             {
                 userDb.LastPassword = userDb.Password;
                 userDb.Password = HashingManager.GetLoadHashingManager().HashToString(user.Password);
-                userDb.UpdateTime = Constants.GetDateTimeNowFromBrazil();
+                userDb.UpdateTime = FixConstants.GetDateTimeNowFromBrazil();
                 _userRepository.Update(userDb);
                 return true;
             }
-            Notify(Constants.ERROR_IN_UPDATE);
+            Notify(FixConstants.ERROR_IN_UPDATE);
             return false;
         }
         catch (Exception ex)
         {
-            Notify(Constants.ERROR_IN_UPDATE);
+            Notify(FixConstants.ERROR_IN_UPDATE);
             return false;
         }
         finally
@@ -313,13 +313,13 @@ public class UserService : GenericService, IUserService
             }
             else
             {
-                Notify(Constants.ERROR_IN_DELETEPHYSICAL);
+                Notify(FixConstants.ERROR_IN_DELETEPHYSICAL);
                 return false;
             }
         }
         catch (Exception)
         {
-            Notify(Constants.ERROR_IN_DELETEPHYSICAL);
+            Notify(FixConstants.ERROR_IN_DELETEPHYSICAL);
             return false;
         }
         finally
@@ -336,20 +336,20 @@ public class UserService : GenericService, IUserService
 
             if (GuardClauses.ObjectIsNotNull(user))
             {
-                user.UpdateTime = Constants.GetDateTimeNowFromBrazil();
+                user.UpdateTime = FixConstants.GetDateTimeNowFromBrazil();
                 user.IsActive = false;
                 _userRepository.Update(user);
                 return true;
             }
             else
             {
-                Notify(Constants.ERROR_IN_DELETELOGIC);
+                Notify(FixConstants.ERROR_IN_DELETELOGIC);
                 return false;
             }
         }
         catch (Exception)
         {
-            Notify(Constants.ERROR_IN_DELETELOGIC);
+            Notify(FixConstants.ERROR_IN_DELETELOGIC);
             return false;
         }
         finally
@@ -366,7 +366,7 @@ public class UserService : GenericService, IUserService
         }
         catch
         {
-            Notify(Constants.ERROR_IN_DELETEPHYSICAL);
+            Notify(FixConstants.ERROR_IN_DELETEPHYSICAL);
             return false;
         }
         finally
@@ -383,7 +383,7 @@ public class UserService : GenericService, IUserService
 
             if (GuardClauses.ObjectIsNotNull(user))
             {
-                user.UpdateTime = Constants.GetDateTimeNowFromBrazil();
+                user.UpdateTime = FixConstants.GetDateTimeNowFromBrazil();
                 user.IsActive = true;
                 _userRepository.Update(user);
                 return true;
@@ -393,7 +393,7 @@ public class UserService : GenericService, IUserService
         }
         catch (Exception)
         {
-            Notify(Constants.ERROR_IN_ACTIVERECORD);
+            Notify(FixConstants.ERROR_IN_ACTIVERECORD);
             return false;
         }
         finally

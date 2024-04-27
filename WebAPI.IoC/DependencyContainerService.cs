@@ -42,6 +42,7 @@ using System.Threading.RateLimiting;
 using SqlConnection = Microsoft.Data.SqlClient.SqlConnection;
 using WebAPI.Application.Interfaces.NfService;
 using WebAPI.Application.Services.NfService;
+using FixConstants = WebAPI.Domain.FixConstants;
 
 namespace WebAPI.Infra.Structure.IoC;
 
@@ -143,8 +144,10 @@ public static class DependencyContainerService
     /// <returns></returns>
     public static void RegisterDbConnection(this IServiceCollection services, IConfiguration configuration)
     {
+        var connectionString = FixConstants.GetConnectionString(configuration.GetConnectionString("DefaultConnection"));
+        
         services.AddDbContext<WebAPIContext>(opts =>
-        opts.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
+        opts.UseSqlServer(connectionString,
         b => b.MinBatchSize(5).MaxBatchSize(50).MigrationsAssembly(typeof(WebAPIContext).Assembly.FullName)).
         LogTo(Console.WriteLine, new[] { RelationalEventId.CommandExecuting })
         .EnableSensitiveDataLogging());
@@ -153,7 +156,7 @@ public static class DependencyContainerService
         // Referência >> https://macoratti.net/22/10/efc_errevitdesmp1.htm
 
         //services.AddDbContextPool<WebAPIContext>(opts =>
-        //opts.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
+        //opts.UseSqlServer(connectionString,
         //b => b.MinBatchSize(5).MaxBatchSize(50).MigrationsAssembly(typeof(WebAPIContext).Assembly.FullName)).
         //LogTo(Console.WriteLine, new[] { RelationalEventId.CommandExecuting })
         //.EnableSensitiveDataLogging());
@@ -161,7 +164,7 @@ public static class DependencyContainerService
         //Aplica DI para uso do Dapper
         services.AddSingleton<IDbConnection>(provider =>
         {
-            var connection = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
+            var connection = new SqlConnection(connectionString);
             connection.Open();
             return connection;
         });
@@ -217,10 +220,6 @@ public static class DependencyContainerService
         configuration.Bind("TokenConfiguration", tokenConfiguration);
         services.AddSingleton(tokenConfiguration);
 
-        var kissLogSettings = new KissLogSettings();
-        configuration.Bind("KissLogSettings", kissLogSettings);
-        services.AddSingleton(kissLogSettings);
-
         var cacheConfiguration = new CacheConfiguration();
         configuration.Bind("CacheConfiguration", cacheConfiguration);
         services.AddSingleton(cacheConfiguration);
@@ -236,12 +235,11 @@ public static class DependencyContainerService
 
             config.Filters.Add(new AuthorizeFilter(policy));
         }).AddApiExplorer();
-        //.SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
     }
 
     public static void RegisterCorsConfigRestriction(this IServiceCollection services, IConfiguration configuration)
     {
-        var origins = configuration["ConnectionStrings:CorsOrigins"].Split(',');
+        var origins = FixConstants.GetEnvironmentVariableToStringArray<string[]>(configuration, "WebAPI_Settings:corsSettings");
         services.AddCors(options =>
         {
             options.AddPolicy("EnableCORS", builder =>
@@ -408,11 +406,12 @@ public static class DependencyContainerService
 
     public static void RegisterHangFireConfig(this IServiceCollection services, IConfiguration configuration)
     {
-        //services.AddHangfire(x => x.UseSimpleAssemblyNameTypeSerializer()
-        //                           .UseRecommendedSerializerSettings()
-        //                           .UseSqlServerStorage(Configuration["ConnectionString:DefaultConnection"]));
-        //services.AddHangfireServer();
-        //return services;
+        var connectionString = FixConstants.GetConnectionString(configuration.GetConnectionString("DefaultConnection"));
+
+        services.AddHangfire(x => x.UseSimpleAssemblyNameTypeSerializer()
+                                   .UseRecommendedSerializerSettings()
+                                   .UseSqlServerStorage(connectionString));
+        services.AddHangfireServer();
     }
 
     public static IServiceCollection CreateRedisConfig(this IServiceCollection services, IConfiguration configuration)
@@ -523,13 +522,15 @@ public static class DependencyContainerService
 
     public static void RegisterSeriLog(this IServiceCollection services, IConfiguration configuration)
     {
+        var connectionStringLogs = FixConstants.GetConnectionString(configuration.GetConnectionString("DefaultConnectionLogs"));
+
         Serilog.Debugging.SelfLog.Enable(msg => Console.WriteLine(msg));
         var filterExpr = "@Properties['SourceContext'] like 'WebAPI%'";
 
         Log.Logger = new LoggerConfiguration()
             .Enrich.WithProperty("CreatedDate", DateTime.Now)
             .Filter.ByIncludingOnly(Matching.WithProperty("Object"))
-            .WriteTo.MSSqlServer(connectionString: configuration.GetConnectionString("DefaultConnectionLogs"),
+            .WriteTo.MSSqlServer(connectionString: connectionStringLogs,
             sinkOptions: new Serilog.Sinks.MSSqlServer.MSSqlServerSinkOptions
             {
                 AutoCreateSqlDatabase = false,
@@ -609,8 +610,8 @@ public static class DependencyContainerService
                 .Build();
 
             var builder = new DbContextOptionsBuilder<WebAPIContext>();
-            var connectionString = configuration.GetConnectionString("DefaultConnection");
-            builder.UseSqlServer(connectionString);
+            var connectionStringLogs = FixConstants.GetConnectionString(configuration.GetConnectionString("DefaultConnection"));
+            builder.UseSqlServer(connectionStringLogs);
 
             return new WebAPIContext(builder.Options);
         }

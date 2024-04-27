@@ -15,7 +15,7 @@ public abstract class BaseJobService<T> where T : class
 
     protected virtual string RemoveSpaces(string name)
     {
-        return GuardClauses.IsNullOrWhiteSpace(name) ? Constants.GetEmptyString() : name;
+        return GuardClauses.IsNullOrWhiteSpace(name) ? FixConstants.GetEmptyString() : name;
     }
 
     protected virtual int GenerateId()

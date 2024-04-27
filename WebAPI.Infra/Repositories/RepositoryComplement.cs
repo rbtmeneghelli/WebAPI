@@ -32,12 +32,12 @@ namespace WebAPI.Infra.Data.Repositories
 
         private void SaveLogError(string[] values, string entity, string method, string messageError)
         {
-            _context.Database.ExecuteSqlRaw(string.Format(Constants.SAVE_LOG, entity, method, messageError, Constants.GetDateTimeNowFromBrazil().ToString("yyyy-MM-dd"), string.Join(",", values)));
+            _context.Database.ExecuteSqlRaw(string.Format(FixConstants.SAVE_LOG, entity, method, messageError, FixConstants.GetDateTimeNowFromBrazil().ToString("yyyy-MM-dd"), string.Join(",", values)));
         }
 
         private void SaveLogErrorSql(string sql, string entity, string method, string messageError)
         {
-            _context.Database.ExecuteSqlRaw(string.Format(Constants.SAVE_LOG, entity, method, messageError, Constants.GetDateTimeNowFromBrazil().ToString("yyyy-MM-dd"), sql));
+            _context.Database.ExecuteSqlRaw(string.Format(FixConstants.SAVE_LOG, entity, method, messageError, FixConstants.GetDateTimeNowFromBrazil().ToString("yyyy-MM-dd"), sql));
         }
     }
 }

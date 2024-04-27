@@ -1,5 +1,5 @@
 ﻿using KissLog;
-using Constants = WebAPI.Domain.Constants;
+using FixConstants = WebAPI.Domain.FixConstants;
 
 namespace WebAPI.V1.Controllers;
 
@@ -24,7 +24,7 @@ public sealed class AuditController : GenericController
 
         var model = _mapperService.Map<AuditResponseDTO>(await _auditService.GetByIdAsync(id));
 
-        return CustomResponse(model, Constants.SUCCESS_IN_GETID);
+        return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
     }
 
     [HttpPost("GetAllPaginate")]
@@ -35,6 +35,6 @@ public sealed class AuditController : GenericController
 
         var model = await _auditService.GetAllPaginateAsync(filter);
 
-        return CustomResponse(model, Constants.SUCCESS_IN_GETALLPAGINATE);
+        return CustomResponse(model, FixConstants.SUCCESS_IN_GETALLPAGINATE);
     }
 }

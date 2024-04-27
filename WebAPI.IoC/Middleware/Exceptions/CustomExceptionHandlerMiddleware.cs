@@ -34,37 +34,37 @@ public sealed class CustomExceptionHandlerMiddleware
             if (expection.Error is UnauthorizedAccessException)
             {
                 responseError.ExceptionError = expection.Error.GetType().ToString();
-                responseError.Errors = Constants.MESSAGE_ERROR_UNAUTH_EX;
-                responseError.StatusCode = Constants.UNAUTHORIZED_ERROR_CODE;
+                responseError.Errors = FixConstants.MESSAGE_ERROR_UNAUTH_EX;
+                responseError.StatusCode = FixConstants.UNAUTHORIZED_ERROR_CODE;
 
             }
 
             else if (expection.Error is ArgumentNullException)
             {
                 responseError.ExceptionError = expection.Error.GetType().ToString();
-                responseError.Errors = Constants.MESSAGE_ERROR_APP_EX;
-                responseError.StatusCode = Constants.INTERNAL_ERROR_CODE;
+                responseError.Errors = FixConstants.MESSAGE_ERROR_APP_EX;
+                responseError.StatusCode = FixConstants.INTERNAL_ERROR_CODE;
             }
 
             else if (expection.Error is InvalidOperationException)
             {
                 responseError.ExceptionError = expection.Error.GetType().ToString();
-                responseError.Errors = Constants.MESSAGE_ERROR_APP_EX;
-                responseError.StatusCode = Constants.INTERNAL_ERROR_CODE;
+                responseError.Errors = FixConstants.MESSAGE_ERROR_APP_EX;
+                responseError.StatusCode = FixConstants.INTERNAL_ERROR_CODE;
             }
 
             else if (expection.Error is ApplicationException || expection.Error is Exception)
             {
                 responseError.ExceptionError = expection.Error.GetType().ToString();
-                responseError.Errors = Constants.MESSAGE_ERROR_APP_EX;
-                responseError.StatusCode = Constants.INTERNAL_ERROR_CODE;
+                responseError.Errors = FixConstants.MESSAGE_ERROR_APP_EX;
+                responseError.StatusCode = FixConstants.INTERNAL_ERROR_CODE;
             }
 
             else
             {
                 responseError.ExceptionError = expection.Error.GetType().ToString();
-                responseError.Errors = Constants.MESSAGE_ERROR_APP_EX;
-                responseError.StatusCode = Constants.INTERNAL_ERROR_CODE;
+                responseError.Errors = FixConstants.MESSAGE_ERROR_APP_EX;
+                responseError.StatusCode = FixConstants.INTERNAL_ERROR_CODE;
             }
 
             context.Response.ContentType = "application/json";

@@ -11,7 +11,7 @@ public abstract record GenericDTO
 
     public long? GetId() => Id.HasValue ? (Id > 0 ? Id : null) : null;
 
-    public string GetStatus() => IsActive ? Constants.STATUS_ACTIVE : Constants.STATUS_INACTIVE;
+    public string GetStatus() => IsActive ? FixConstants.STATUS_ACTIVE : FixConstants.STATUS_INACTIVE;
 
     /// <summary>
     /// Vai Copiar o objeto e suas propriedades, porém a unica propriedade alterada no objeto novo criado será o campo IsActive

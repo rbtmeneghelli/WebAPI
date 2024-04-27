@@ -73,7 +73,7 @@ public class EmailDisplay : GenericEntity
 
     public static string GetBodyTextResetPsw()
     {
-        return $"Caro Administrador, <br> Sua senha de administrador foi resetada com sucesso. <br> Segue a sua nova senha: {Constants.DEFAULT_PASSWORD} ";
+        return $"Caro Administrador, <br> Sua senha de administrador foi resetada com sucesso. <br> Segue a sua nova senha: {FixConstants.DEFAULT_PASSWORD} ";
     }
 
     public static string GetBodyTextWelcome()
@@ -98,7 +98,7 @@ public class EmailDisplay : GenericEntity
     public static string GetBodyTextConfirmPsw()
     {
         return "<center>Olá, {0}</center>" +
-        $"<center>Quero reporta-lo que a sua confirmação de senha foi realizada com sucesso no periodo das {Constants.GetDateTimeNowFromBrazil().ToShortDateString()} - {Constants.GetDateTimeNowFromBrazil().ToShortTimeString()}</center>" + "<br> ";
+        $"<center>Quero reporta-lo que a sua confirmação de senha foi realizada com sucesso no periodo das {FixConstants.GetDateTimeNowFromBrazil().ToShortDateString()} - {FixConstants.GetDateTimeNowFromBrazil().ToShortTimeString()}</center>" + "<br> ";
     }
 
     public static string GetBodyTextReport()

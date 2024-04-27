@@ -69,7 +69,7 @@ public class CityRepository : ICityRepository
                 .SetProperty(p => p.IBGE, long.Parse(stIBGE))
                 .SetProperty(p => p.StateId, city.StateId)
                 .SetProperty(p => p.IsActive, true)
-                .SetProperty(p => p.UpdateTime, Constants.GetDateTimeNowFromBrazil()));
+                .SetProperty(p => p.UpdateTime, FixConstants.GetDateTimeNowFromBrazil()));
     }
 
     public void Dispose()

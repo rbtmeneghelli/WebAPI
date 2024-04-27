@@ -15,7 +15,7 @@ public sealed class DateOnlyExtensionMethods
 
     #endregion
 
-    public DateOnly GetDate() => DateOnly.FromDateTime(Constants.GetDateTimeNowFromBrazil());
+    public DateOnly GetDate() => DateOnly.FromDateTime(FixConstants.GetDateTimeNowFromBrazil());
     public DateOnly SetDateOnly(int year, int month, int day) => new DateOnly(year, month, day);
     public DateOnly ConvertDateTimeToDateOnly(DateTime dateTime) => DateOnly.FromDateTime(dateTime);
     public int NumberDaysOfLife(DateOnly birthDay) => GetDate().DayNumber - birthDay.DayNumber;
@@ -24,7 +24,7 @@ public sealed class DateOnlyExtensionMethods
     public DateTime GetDateTimeFromString(string dateTime) => DateTime.ParseExact(dateTime, "yyyy-MM-dd", CultureInfo.InvariantCulture);
     public DateTime FirstDayCurrentMonth()
     {
-        return DateTime.Parse($"01/{Constants.GetDateTimeNowFromBrazil().Month}/{Constants.GetDateTimeNowFromBrazil().Year}");
+        return DateTime.Parse($"01/{FixConstants.GetDateTimeNowFromBrazil().Month}/{FixConstants.GetDateTimeNowFromBrazil().Year}");
     }
     public DateTime GetNextUtilDay(DateTime dateTime)
     {

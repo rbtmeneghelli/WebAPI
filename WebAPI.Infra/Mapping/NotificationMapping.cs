@@ -22,7 +22,7 @@ public class NotificationMapping : IEntityTypeConfiguration<Notification>
         _builder.HasKey(x => x.Id);
         _builder.Property(x => x.Id).ValueGeneratedOnAdd().UseIdentityColumn(1, 1).HasColumnName("Id");
         _builder.Property(x => x.Description).IsRequired().HasMaxLength(100).HasColumnName("Description");
-        _builder.Property(x => x.CreatedTime).HasDefaultValue(Constants.GetDateTimeNowFromBrazil()).HasColumnName("Created_Time").ValueGeneratedOnAdd();
+        _builder.Property(x => x.CreatedTime).HasDefaultValue(FixConstants.GetDateTimeNowFromBrazil()).HasColumnName("Created_Time").ValueGeneratedOnAdd();
         _builder.Property(x => x.IsActive).IsRequired().HasDefaultValue(true).HasColumnName("Is_Active").HasColumnType("bit");
     }
 }

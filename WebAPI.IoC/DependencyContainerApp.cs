@@ -8,6 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Runtime.CompilerServices;
+using WebAPI.Domain;
+using WebAPI.Domain.Models;
 
 namespace WebAPI.Infra.Structure.IoC;
 
@@ -29,11 +31,13 @@ public static class DependencyContainerApp
 
     private static void ConfigureKissLog(IConfiguration configuration)
     {
-        var configs = configuration.GetSection("KissLogSettings:OrganizationId");
+        var configKissLog = FixConstants.GetEnvironmentVariableToObject<KissLogSettings>(configuration, "WebAPI_Settings:kissLogSettings");
+
+        var configs = configKissLog.OrganizationId;
         KissLogConfiguration.Listeners
-            .Add(new RequestLogsApiListener(new KissLog.CloudListeners.Auth.Application(configuration.GetSection("KissLogSettings:OrganizationId").Value, configuration.GetSection("KissLogSettings:ApplicationId").Value))
+            .Add(new RequestLogsApiListener(new KissLog.CloudListeners.Auth.Application(configKissLog.OrganizationId, configKissLog.ApplicationId))
             {
-                ApiUrl = configuration.GetSection("KissLogSettings:ApiUrl").Value
+                ApiUrl = configKissLog.ApiUrl
             });
     }
 

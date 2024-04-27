@@ -58,7 +58,7 @@ namespace WebAPI.Application.Services
             }
             catch
             {
-                Notify(Constants.ERROR_IN_GETALL);
+                Notify(FixConstants.ERROR_IN_GETALL);
                 return PagedFactory.GetPaged(Enumerable.Empty<LogResponseDTO>().AsQueryable(), filter.PageIndex, filter.PageSize);
             }
         }
@@ -70,13 +70,13 @@ namespace WebAPI.Application.Services
                 var result = _logRepository.Exist(x => x.Id == id);
 
                 if (result == false)
-                    Notify(Constants.ERROR_IN_GETID);
+                    Notify(FixConstants.ERROR_IN_GETID);
 
                 return result;
             }
             catch
             {
-                Notify(Constants.ERROR_IN_GETID);
+                Notify(FixConstants.ERROR_IN_GETID);
                 return false;
             }
             finally

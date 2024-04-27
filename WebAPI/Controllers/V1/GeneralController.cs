@@ -2,7 +2,7 @@
 using WebAPI.Domain.ExtensionMethods;
 using KissLog;
 using Microsoft.AspNetCore.Cors;
-using Constants = WebAPI.Domain.Constants;
+using FixConstants = WebAPI.Domain.FixConstants;
 using Region = WebAPI.Domain.Entities.Region;
 
 namespace WebAPI.V1.Controllers;
@@ -60,7 +60,7 @@ public sealed class GeneralController : GenericController
             if (refreshCep && GuardClauses.IsNullOrWhiteSpace(cep) == false)
             {
                 modelCep = await _cepsService.GetByCepAsync(cep);
-                RequestData requestData = await _generalService.RequestDataToExternalAPIAsync($"{Constants.URL_TO_GET_CEP}{cep}/json/");
+                RequestData requestData = await _generalService.RequestDataToExternalAPIAsync($"{FixConstants.URL_TO_GET_CEP}{cep}/json/");
                 if (requestData.IsSuccess)
                 {
                     Domain.ValueObject.AddressData modelCepAPI = requestData.Data.DeserializeObject<Domain.ValueObject.AddressData>();
@@ -80,7 +80,7 @@ public sealed class GeneralController : GenericController
         }
         catch (Exception)
         {
-            NotificationError($"{Constants.EXCEPTION_REQUEST_API} {Constants.URL_TO_GET_CEP}");
+            NotificationError($"{FixConstants.EXCEPTION_REQUEST_API} {FixConstants.URL_TO_GET_CEP}");
             return CustomResponse();
         }
     }
@@ -96,7 +96,7 @@ public sealed class GeneralController : GenericController
             {
                 if (GuardClauses.ObjectIsNotNull(listStates) && GuardClauses.HaveDataOnList(listStates))
                 {
-                    RequestData requestData = await _generalService.RequestDataToExternalAPIAsync(Constants.URL_TO_GET_STATES);
+                    RequestData requestData = await _generalService.RequestDataToExternalAPIAsync(FixConstants.URL_TO_GET_STATES);
                     if (requestData.IsSuccess)
                     {
                         List<States> listStatesAPI = requestData.Data.DeserializeObject<List<States>>();
@@ -113,7 +113,7 @@ public sealed class GeneralController : GenericController
         }
         catch (Exception)
         {
-            NotificationError($"{Constants.EXCEPTION_REQUEST_API} {Constants.URL_TO_GET_STATES}");
+            NotificationError($"{FixConstants.EXCEPTION_REQUEST_API} {FixConstants.URL_TO_GET_STATES}");
             return CustomResponse();
         }
     }
@@ -137,7 +137,7 @@ public sealed class GeneralController : GenericController
             foreach (States state in states.Where(x => x.Initials is not "DF"))
             {
 
-                requestData = await _generalService.RequestDataToExternalAPIAsync(string.Format(Constants.URL_TO_GET_CITIES, state.Initials));
+                requestData = await _generalService.RequestDataToExternalAPIAsync(string.Format(FixConstants.URL_TO_GET_CITIES, state.Initials));
 
                 if (requestData.IsSuccess)
                 {
@@ -183,7 +183,7 @@ public sealed class GeneralController : GenericController
         try
         {
             List<Region> list = new List<Region>();
-            RequestData requestData = await _generalService.RequestDataToExternalAPIAsync(Constants.URL_TO_GET_STATES);
+            RequestData requestData = await _generalService.RequestDataToExternalAPIAsync(FixConstants.URL_TO_GET_STATES);
             if (requestData.IsSuccess)
             {
                 List<States> listStatesAPI = requestData.Data.DeserializeObject<List<States>>();
@@ -199,7 +199,7 @@ public sealed class GeneralController : GenericController
                         Name = z.Nome,
                         IsActive = true,
                         Initials = z.Sigla,
-                        CreatedTime = Constants.GetDateTimeNowFromBrazil()
+                        CreatedTime = FixConstants.GetDateTimeNowFromBrazil()
                     }).ToList();
 
                     await _regionService.AddRegionsAsync(list);
@@ -210,7 +210,7 @@ public sealed class GeneralController : GenericController
         }
         catch (Exception)
         {
-            NotificationError($"{Constants.EXCEPTION_REQUEST_API} {Constants.URL_TO_GET_STATES}");
+            NotificationError($"{FixConstants.EXCEPTION_REQUEST_API} {FixConstants.URL_TO_GET_STATES}");
             return CustomResponse();
         }
     }
@@ -222,7 +222,7 @@ public sealed class GeneralController : GenericController
         {
             List<Region> listRegion = await _regionService.GetAllRegionAsync();
             List<States> listStates = new List<States>();
-            RequestData requestData = await _generalService.RequestDataToExternalAPIAsync(Constants.URL_TO_GET_STATES);
+            RequestData requestData = await _generalService.RequestDataToExternalAPIAsync(FixConstants.URL_TO_GET_STATES);
             if (requestData.IsSuccess)
             {
                 List<States> listStatesAPI = requestData.Data.DeserializeObject<List<States>>();
@@ -231,7 +231,7 @@ public sealed class GeneralController : GenericController
                 {
                     listStates = listStatesAPI.Select(x => new States()
                     {
-                        CreatedTime = Constants.GetDateTimeNowFromBrazil(),
+                        CreatedTime = FixConstants.GetDateTimeNowFromBrazil(),
                         IsActive = true,
                         Name = x.Name,
                         Initials = x.Initials,
@@ -246,7 +246,7 @@ public sealed class GeneralController : GenericController
         }
         catch (Exception)
         {
-            NotificationError($"{Constants.EXCEPTION_REQUEST_API} {Constants.URL_TO_GET_STATES}");
+            NotificationError($"{FixConstants.EXCEPTION_REQUEST_API} {FixConstants.URL_TO_GET_STATES}");
             return CustomResponse();
         }
     }

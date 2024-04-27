@@ -3,7 +3,7 @@ using Microsoft.Extensions.Hosting;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Threading;
-using Constants = WebAPI.Domain.Constants;
+using FixConstants = WebAPI.Domain.FixConstants;
 
 namespace WebAPI.Application.BackgroundServices.RabbitMQ.Consumers;
 
@@ -61,7 +61,7 @@ public sealed class QueueExcelFileConsumer
         #endregion
 
         var consumer = new AsyncEventingBasicConsumer(channel);
-        string messages = Constants.GetEmptyString();
+        string messages = FixConstants.GetEmptyString();
 
         consumer.Received += async (model, ea) =>
         {

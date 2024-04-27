@@ -3,7 +3,7 @@ using WebAPI.Domain.ExtensionMethods;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Threading;
-using Constants = WebAPI.Domain.Constants;
+using Constants = WebAPI.Domain.FixConstants;
 
 namespace WebAPI.Application.BackgroundServices.RabbitMQ.Generic;
 

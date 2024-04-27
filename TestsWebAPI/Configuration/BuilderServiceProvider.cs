@@ -6,8 +6,6 @@ public class BuilderServiceProvider
 
     public BuilderServiceProvider()
     {
-        string defaultConnection = "Data Source=.\\SQLExpress;Initial Catalog=DefaultMemoryAPI;Integrated Security=True;trustservercertificate=true;";
-
         var serviceCollection = new ServiceCollection();
         serviceCollection.AddHttpClient();
         serviceCollection.AddDbContext<WebAPITestContext>(opt => opt.UseInMemoryDatabase("DefaultMemoryAPI"));

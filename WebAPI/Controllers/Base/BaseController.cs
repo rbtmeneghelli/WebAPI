@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Serilog.Events;
-using Constants = WebAPI.Domain.Constants;
+using FixConstants = WebAPI.Domain.FixConstants;
 using ILogger = Serilog.ILogger;
 
 namespace WebAPI.Controllers.Base
@@ -73,7 +73,7 @@ namespace WebAPI.Controllers.Base
 
         private string GetCurrentUserName()
         {
-            return _accessor.HttpContext.User.Identity.Name ?? Constants.GetEmptyString();
+            return _accessor.HttpContext.User.Identity.Name ?? FixConstants.GetEmptyString();
         }
 
         private bool IsAuthenticated()
@@ -141,22 +141,22 @@ namespace WebAPI.Controllers.Base
             if (contextException.Error is UnauthorizedAccessException)
             {
                 responseError.ExceptionError = contextException.Error.GetType().Name.ToString();
-                responseError.Errors = Constants.MESSAGE_ERROR_UNAUTH_EX;
-                responseError.StatusCode = Constants.UNAUTHORIZED_ERROR_CODE;
+                responseError.Errors = FixConstants.MESSAGE_ERROR_UNAUTH_EX;
+                responseError.StatusCode = FixConstants.UNAUTHORIZED_ERROR_CODE;
             }
 
             else if (contextException.Error is ApplicationException || contextException.Error is Exception)
             {
                 responseError.ExceptionError = contextException.Error.GetType().Name.ToString();
-                responseError.Errors = Constants.MESSAGE_ERROR_APP_EX;
-                responseError.StatusCode = Constants.INTERNAL_ERROR_CODE;
+                responseError.Errors = FixConstants.MESSAGE_ERROR_APP_EX;
+                responseError.StatusCode = FixConstants.INTERNAL_ERROR_CODE;
             }
 
             else
             {
                 responseError.ExceptionError = contextException.Error.GetType().Name.ToString();
-                responseError.Errors = Constants.MESSAGE_ERROR_APP_EX;
-                responseError.StatusCode = Constants.INTERNAL_ERROR_CODE;
+                responseError.Errors = FixConstants.MESSAGE_ERROR_APP_EX;
+                responseError.StatusCode = FixConstants.INTERNAL_ERROR_CODE;
             }
 
             return ReturnErrorDetail($"Ocorreu um erro interno - {responseError.Errors}, Entre em contato com o administrador.", "", responseError.StatusCode);
@@ -183,7 +183,7 @@ namespace WebAPI.Controllers.Base
                 methodName,
                 messageError,
                 obj,
-                Constants.GetDateTimeNowFromBrazil()
+                FixConstants.GetDateTimeNowFromBrazil()
             );
         }
     }

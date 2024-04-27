@@ -1,9 +1,12 @@
 ﻿using WebAPI.Domain.Enums;
 using System.Net;
+using Microsoft.Extensions.Configuration;
+using WebAPI.Domain.Models;
+using WebAPI.Domain.ExtensionMethods;
 
 namespace WebAPI.Domain;
 
-public static class Constants
+public static class FixConstants
 {
     public const int SALT_SIZE = 16;
     public const int HASH_SIZE = 20;
@@ -106,5 +109,23 @@ public static class Constants
     public static string GetEmptyString()
     {
         return string.Empty;
+    }
+
+    public static string GetConnectionString(string varName)
+    {
+        return Environment.GetEnvironmentVariable(varName)
+        .Replace("\\\\", "\\") ?? string.Empty;
+    }
+
+    public static TSource GetEnvironmentVariableToObject<TSource>(IConfiguration configuration, string varName)
+    {
+        var data = Environment.GetEnvironmentVariable(configuration[varName]) ?? string.Empty;
+        return !string.IsNullOrWhiteSpace(data) ? data.DeserializeObject<TSource>() : default;
+    }
+
+    public static string[] GetEnvironmentVariableToStringArray<TSource>(IConfiguration configuration, string varName)
+    {
+        var data = Environment.GetEnvironmentVariable(configuration[varName]) ?? string.Empty;
+        return !string.IsNullOrWhiteSpace(data) ? data.Split(',') : default;
     }
 }

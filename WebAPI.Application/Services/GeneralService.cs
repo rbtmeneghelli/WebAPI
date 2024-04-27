@@ -21,7 +21,7 @@ public class GeneralService : GenericService, IGeneralService
     private SqlConnection GetSqlConnection()
     {
         return null;
-        //return new SqlConnection(_configuration["ConnectionString:DefaultConnection"]);
+        //return new SqlConnection(_configuration["WebAPI_Settings:DefaultConnection"]);
     }
 
     public string CreateJwtToken(Credentials credentials)
@@ -67,7 +67,7 @@ public class GeneralService : GenericService, IGeneralService
         }
         catch
         {
-            requestDataDto.Data = $"{Constants.EXCEPTION_REQUEST_API} {url}";
+            requestDataDto.Data = $"{FixConstants.EXCEPTION_REQUEST_API} {url}";
             requestDataDto.IsSuccess = false;
         }
         return requestDataDto;
@@ -92,14 +92,14 @@ public class GeneralService : GenericService, IGeneralService
             }
             else
             {
-                requestDataDto.Data = $"{Constants.EXCEPTION_REQUEST_API} {url}";
+                requestDataDto.Data = $"{FixConstants.EXCEPTION_REQUEST_API} {url}";
                 requestDataDto.IsSuccess = false;
             }
             return requestDataDto;
         }
         catch
         {
-            requestDataDto.Data = $"{Constants.EXCEPTION_REQUEST_API} {url}";
+            requestDataDto.Data = $"{FixConstants.EXCEPTION_REQUEST_API} {url}";
             requestDataDto.IsSuccess = false;
         }
         return requestDataDto;
@@ -118,7 +118,7 @@ public class GeneralService : GenericService, IGeneralService
         }
         catch
         {
-            Notify(string.Format(Constants.ERROR_IN_PROCEDURE, procName));
+            Notify(string.Format(FixConstants.ERROR_IN_PROCEDURE, procName));
             return false;
         }
         finally
@@ -135,7 +135,7 @@ public class GeneralService : GenericService, IGeneralService
         SqlConnection sqlConnObj = GetSqlConnection();
         try
         {
-            string nomeArquivo = $"DefaultAPI_{Constants.GetDateTimeNowFromBrazil().ToString("ddMMyyyy")}.bak";
+            string nomeArquivo = $"DefaultAPI_{FixConstants.GetDateTimeNowFromBrazil().ToString("ddMMyyyy")}.bak";
             if (File.Exists(Path.Combine(dir, nomeArquivo)))
             {
                 File.Delete(Path.Combine(dir, nomeArquivo));
@@ -147,7 +147,7 @@ public class GeneralService : GenericService, IGeneralService
         }
         catch
         {
-            Notify(Constants.ERROR_IN_BACKUP);
+            Notify(FixConstants.ERROR_IN_BACKUP);
             return false;
         }
         finally
@@ -200,12 +200,12 @@ public class GeneralService : GenericService, IGeneralService
 
         try
         {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Constants.URL_TO_GET_FIREBASE);
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(FixConstants.URL_TO_GET_FIREBASE);
             request.Method = "post";
             request.KeepAlive = false;
             request.ContentType = "application/json";
-            request.Headers.Add($"Authorization: key={Constants.SERVER_API_KEY}");
-            request.Headers.Add($"Sender: id={Constants.SENDER_ID}");
+            request.Headers.Add($"Authorization: key={FixConstants.SERVER_API_KEY}");
+            request.Headers.Add($"Sender: id={FixConstants.SENDER_ID}");
             request.ContentLength = byteArray.Length;
 
             Stream dataStream = request.GetRequestStream();
@@ -272,10 +272,10 @@ public class GeneralService : GenericService, IGeneralService
         var tokenHandler = new JwtSecurityTokenHandler();
         var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var securityToken);
         if (!(securityToken is JwtSecurityToken jwtSecurityToken))
-            throw new SecurityTokenException(Constants.ERROR_IN_REFRESHTOKEN);
+            throw new SecurityTokenException(FixConstants.ERROR_IN_REFRESHTOKEN);
         else if (!jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
                 StringComparison.InvariantCultureIgnoreCase))
-            throw new SecurityTokenException(Constants.ERROR_IN_REFRESHTOKEN);
+            throw new SecurityTokenException(FixConstants.ERROR_IN_REFRESHTOKEN);
 
         return principal;
     }
@@ -305,7 +305,7 @@ public class GeneralService : GenericService, IGeneralService
         StringBuilder builder = new StringBuilder();
         //obtem o nome do tipo
         builder.AppendLine("Log do " + tipo.Name);
-        builder.AppendLine("Data: " + Constants.GetDateTimeNowFromBrazil());
+        builder.AppendLine("Data: " + FixConstants.GetDateTimeNowFromBrazil());
 
         //Vamos obter agora todas as propriedades do tipo
         //Usamos o método GetProperties para obter

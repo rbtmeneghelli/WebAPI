@@ -47,7 +47,7 @@ public class CepService : GenericService, ICepService
         }
         catch
         {
-            Notify(Constants.ERROR_IN_REFRESHCEP);
+            Notify(FixConstants.ERROR_IN_REFRESHCEP);
         }
         finally
         {
@@ -75,7 +75,7 @@ public class CepService : GenericService, ICepService
         }
         catch
         {
-            Notify(Constants.ERROR_IN_UPDATESTATUS);
+            Notify(FixConstants.ERROR_IN_UPDATESTATUS);
             return false;
         }
     }
@@ -111,7 +111,7 @@ public class CepService : GenericService, ICepService
         }
         catch (Exception ex)
         {
-            Notify(Constants.ERROR_IN_GETALL);
+            Notify(FixConstants.ERROR_IN_GETALL);
             return PagedFactory.GetPaged(Enumerable.Empty<AddressData>().AsQueryable(), filter.PageIndex, filter.PageSize);
         }
     }

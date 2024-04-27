@@ -35,7 +35,7 @@ public class CityService : GenericService, ICityService
         }
         catch
         {
-            Notify(Constants.ERROR_IN_GETALL);
+            Notify(FixConstants.ERROR_IN_GETALL);
             return PagedFactory.GetPaged(Enumerable.Empty<CityResponseDTO>().AsQueryable(), PagedFactory.GetDefaultPageIndex(page), PagedFactory.GetDefaultPageSize(limit));
         }
         finally
@@ -76,7 +76,7 @@ public class CityService : GenericService, ICityService
 
     public Task AddAsync(City city)
     {
-        city.CreatedTime = Constants.GetDateTimeNowFromBrazil();
+        city.CreatedTime = FixConstants.GetDateTimeNowFromBrazil();
         _cityRepository.Add(city);
         return Task.CompletedTask;
     }
@@ -122,7 +122,7 @@ public class CityService : GenericService, ICityService
                     entityBase.Name = city.Name;
                     entityBase.IBGE = city.IBGE.HasValue ? city.IBGE.Value : long.Parse("00000000");
                     entityBase.StateId = city.StateId;
-                    entityBase.CreatedTime = Constants.GetDateTimeNowFromBrazil();
+                    entityBase.CreatedTime = FixConstants.GetDateTimeNowFromBrazil();
                     _cityRepository.Add(entityBase);
                 }
                 else
@@ -135,7 +135,7 @@ public class CityService : GenericService, ICityService
         }
         catch
         {
-            Notify(Constants.ERROR_IN_ADDCITY);
+            Notify(FixConstants.ERROR_IN_ADDCITY);
             return false;
         }
     }

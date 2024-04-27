@@ -22,5 +22,5 @@ public abstract class GenericEntity
 
     public bool IsActive { get; set; }
 
-    public string GetStatus() => IsActive ? Constants.STATUS_ACTIVE : Constants.STATUS_INACTIVE;
+    public string GetStatus() => IsActive ? FixConstants.STATUS_ACTIVE : FixConstants.STATUS_INACTIVE;
 }

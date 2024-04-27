@@ -38,7 +38,7 @@ public class RegionService : GenericService, IRegionService
                 Name = x.Region.Name,
                 Initials = x.Region.Initials,
                 IsActive = true,
-                CreatedTime = Constants.GetDateTimeNowFromBrazil()
+                CreatedTime = FixConstants.GetDateTimeNowFromBrazil()
             });
 
             IEnumerable<Region> listaRegiaoAPI = tmpRegion.GroupBy(x => new { x.Name, x.Initials }).Select(g => g.First());
@@ -49,7 +49,7 @@ public class RegionService : GenericService, IRegionService
                 Region region = regions.FirstOrDefault(x => x.Initials == item.Initials && x.IsActive == true);
                 if (GuardClauses.ObjectIsNotNull(region))
                 {
-                    region.UpdateTime = Constants.GetDateTimeNowFromBrazil();
+                    region.UpdateTime = FixConstants.GetDateTimeNowFromBrazil();
                     region.Name = item.Name;
                     region.Initials = item.Initials;
                     _regionRepository.Update(region);
@@ -62,7 +62,7 @@ public class RegionService : GenericService, IRegionService
         }
         catch
         {
-            Notify(Constants.ERROR_IN_REFRESHREGION);
+            Notify(FixConstants.ERROR_IN_REFRESHREGION);
         }
     }
 
@@ -81,7 +81,7 @@ public class RegionService : GenericService, IRegionService
         }
         catch
         {
-            Notify(Constants.ERROR_IN_UPDATESTATUS);
+            Notify(FixConstants.ERROR_IN_UPDATESTATUS);
             return false;
         }
     }
@@ -109,7 +109,7 @@ public class RegionService : GenericService, IRegionService
         }
         catch (Exception ex)
         {
-            Notify(Constants.ERROR_IN_GETALL);
+            Notify(FixConstants.ERROR_IN_GETALL);
             return PagedFactory.GetPaged(Enumerable.Empty<Region>().AsQueryable(), filter.PageIndex, filter.PageSize);
         }
     }

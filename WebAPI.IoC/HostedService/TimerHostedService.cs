@@ -33,13 +33,13 @@ public class TimerHostedService : IHostedService
     public Task StopAsync(CancellationToken cancellationToken)
     {
         _logger.LogInformation("...Process Stopping...");
-        _logger.LogInformation($"{Constants.GetDateTimeNowFromBrazil()}");
+        _logger.LogInformation($"{FixConstants.GetDateTimeNowFromBrazil()}");
         return Task.CompletedTask;
     }
 
     private void ExecuteProcess(object state)
     {
         _logger.LogInformation("...Process Executing...");
-        _logger.LogInformation($"{Constants.GetDateTimeNowFromBrazil()}");
+        _logger.LogInformation($"{FixConstants.GetDateTimeNowFromBrazil()}");
     }
 }

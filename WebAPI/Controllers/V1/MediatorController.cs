@@ -1,7 +1,7 @@
 ﻿using WebAPI.Domain.CQRS.Command;
 using KissLog;
 using MediatR;
-using Constants = WebAPI.Domain.Constants;
+using FixConstants = WebAPI.Domain.FixConstants;
 
 namespace WebAPI.V1.Controllers;
 
@@ -29,7 +29,7 @@ public sealed class MediatorController : GenericController
 
         var result = ApplyMapToEntity<IEnumerable<Region>, IEnumerable<RegionQueryFilterResponse>>(model);
 
-        return CustomResponse(result, Constants.SUCCESS_IN_GETALLPAGINATE);
+        return CustomResponse(result, FixConstants.SUCCESS_IN_GETALLPAGINATE);
     }
 
     [HttpPost("GetById")]
@@ -39,7 +39,7 @@ public sealed class MediatorController : GenericController
 
         var result = ApplyMapToEntity<Region, RegionQueryFilterResponse>(model);
 
-        return CustomResponse(result, Constants.SUCCESS_IN_GETID);
+        return CustomResponse(result, FixConstants.SUCCESS_IN_GETID);
     }
 
     [ProducesResponseType(StatusCodes.Status201Created)]

@@ -20,7 +20,7 @@ public class CreateRegionCommandHandler : GenericService, IRequestHandler<Create
             Initials = "XPTO",
             IsActive = true,
             Name = "XPTO",
-            CreatedTime = Constants.GetDateTimeNowFromBrazil()
+            CreatedTime = FixConstants.GetDateTimeNowFromBrazil()
         });
 
         return Task.FromResult(true);

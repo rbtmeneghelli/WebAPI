@@ -54,7 +54,7 @@ namespace WebAPI.Application.Services
                     States state = refreshStates.ListState.FirstOrDefault(x => x.Initials == item.Initials && x.IsActive == true);
                     if (GuardClauses.ObjectIsNotNull(state))
                     {
-                        state.UpdateTime = Constants.GetDateTimeNowFromBrazil();
+                        state.UpdateTime = FixConstants.GetDateTimeNowFromBrazil();
                         state.Name = item.Name;
                         state.Initials = item.Initials;
                         _stateRepository.Update(state);
@@ -63,7 +63,7 @@ namespace WebAPI.Application.Services
                     {
                         state = new States();
                         state.IsActive = true;
-                        state.CreatedTime = Constants.GetDateTimeNowFromBrazil();
+                        state.CreatedTime = FixConstants.GetDateTimeNowFromBrazil();
                         state.Name = item.Name;
                         state.Initials = item.Initials;
                         state.RegionId = refreshStates.ListRegion.FirstOrDefault(x => x.Initials == item.Region.Initials).Id ?? 0;
@@ -73,7 +73,7 @@ namespace WebAPI.Application.Services
             }
             catch
             {
-                Notify(Constants.ERROR_IN_REFRESHSTATE);
+                Notify(FixConstants.ERROR_IN_REFRESHSTATE);
             }
             finally
             {
@@ -96,7 +96,7 @@ namespace WebAPI.Application.Services
             }
             catch
             {
-                Notify(Constants.ERROR_IN_UPDATESTATUS);
+                Notify(FixConstants.ERROR_IN_UPDATESTATUS);
                 return false;
             }
         }
@@ -124,7 +124,7 @@ namespace WebAPI.Application.Services
             }
             catch
             {
-                Notify(Constants.ERROR_IN_GETALL);
+                Notify(FixConstants.ERROR_IN_GETALL);
                 return PagedFactory.GetPaged(Enumerable.Empty<States>().AsQueryable(), filter.PageIndex, filter.PageSize);
             }
         }

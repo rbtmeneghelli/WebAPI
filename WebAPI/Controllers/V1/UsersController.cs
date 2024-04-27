@@ -1,5 +1,5 @@
 ﻿using KissLog;
-using Constants = WebAPI.Domain.Constants;
+using FixConstants = WebAPI.Domain.FixConstants;
 
 namespace WebAPI.V1.Controllers;
 
@@ -25,7 +25,7 @@ public sealed class UsersController : GenericController
     {
         var model = _mapperService.Map<List<UserResponseDTO>>(await _userService.GetAllAsync());
 
-        return CustomResponse(model, Constants.SUCCESS_IN_GETALL);
+        return CustomResponse(model, FixConstants.SUCCESS_IN_GETALL);
     }
 
     [HttpPost("GetAllPaginate")]
@@ -35,7 +35,7 @@ public sealed class UsersController : GenericController
 
         var model = await _userService.GetAllPaginateAsync(userFilter);
 
-        return CustomResponse(model, Constants.SUCCESS_IN_GETALLPAGINATE);
+        return CustomResponse(model, FixConstants.SUCCESS_IN_GETALLPAGINATE);
     }
 
     [HttpGet("GetById/{id:long}")]
@@ -46,7 +46,7 @@ public sealed class UsersController : GenericController
 
         var model = _mapperService.Map<UserResponseDTO>(await _userService.GetByIdAsync(id));
 
-        return CustomResponse(model, Constants.SUCCESS_IN_GETID);
+        return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
     }
 
     [HttpGet("GetByLogin/{login}")]
@@ -57,13 +57,13 @@ public sealed class UsersController : GenericController
 
         var model = _mapperService.Map<UserResponseDTO>(await _userService.GetByLoginAsync(login));
 
-        return CustomResponse(model, Constants.SUCCESS_IN_GETID);
+        return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
     }
 
     [HttpGet("GetUsers")]
     public async Task<IActionResult> GetUsers()
     {
-        return CustomResponse(await _userService.GetUsersAsync(), Constants.SUCCESS_IN_DDL);
+        return CustomResponse(await _userService.GetUsersAsync(), FixConstants.SUCCESS_IN_DDL);
     }
 
     /// <summary>
@@ -99,7 +99,7 @@ public sealed class UsersController : GenericController
 
         if (id != userRequestDTO.Id)
         {
-            NotificationError(Constants.ERROR_IN_GETID);
+            NotificationError(FixConstants.ERROR_IN_GETID);
             return CustomResponse();
         }
 
@@ -123,13 +123,13 @@ public sealed class UsersController : GenericController
         {
             bool result = await _userService.DeleteLogicAsync(id);
             if (result)
-                NotificationError(Constants.ERROR_IN_DELETELOGIC);
+                NotificationError(FixConstants.ERROR_IN_DELETELOGIC);
 
             return CustomResponse();
         }
         catch
         {
-            NotificationError(Constants.NO_AUTHORIZATION);
+            NotificationError(FixConstants.NO_AUTHORIZATION);
             return CustomResponse();
         }
     }
@@ -148,7 +148,7 @@ public sealed class UsersController : GenericController
             {
                 bool result = await _userService.DeletePhysicalAsync(id);
                 if (result)
-                    NotificationError(Constants.ERROR_IN_DELETEPHYSICAL);
+                    NotificationError(FixConstants.ERROR_IN_DELETEPHYSICAL);
             }
 
             return CustomResponse();
@@ -156,9 +156,9 @@ public sealed class UsersController : GenericController
         catch
         {
             if (ProfileId == 1)
-                NotificationError(Constants.ERROR_IN_DELETEPHYSICAL);
+                NotificationError(FixConstants.ERROR_IN_DELETEPHYSICAL);
             else
-                NotificationError(Constants.NO_AUTHORIZATION);
+                NotificationError(FixConstants.NO_AUTHORIZATION);
 
             return CustomResponse();
         }
@@ -176,7 +176,7 @@ public sealed class UsersController : GenericController
         {
             var excelData = _mapperService.Map<IEnumerable<UserExcelDTO>>(list.Results);
             var memoryStreamExcel = await _FileService.CreateExcelFileEPPLUS(excelData, excelName);
-            return File(memoryStreamExcel.ToArray(), Constants.OFFICE_STREAM, excelName);
+            return File(memoryStreamExcel.ToArray(), FixConstants.OFFICE_STREAM, excelName);
         }
 
         return NotFound();

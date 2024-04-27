@@ -348,3 +348,10 @@ var serviceC = _serviceProvider.GetRequiredKeyedService<InterfaceXPTO>("ChaveC")
 -- O middleware de Authenticação na config do startup vem primeiro e a autorização vem em segundo
 app.UseAuthentication();
 app.UseAuthorization();
+
+-- Configurando variavel de ambiente no servidor IIS
+Abrir o IIS
+No servidor principal procurar a opção chamada editor de configuração
+acessar a opção chamada variaveis de ambiente
+adicionar as variaveis de ambiente
+Parar o IIS e Iniciar o IIS novamente

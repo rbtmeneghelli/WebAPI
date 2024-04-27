@@ -83,7 +83,7 @@ public class AuditService : GenericService, IAuditService
         }
         catch
         {
-            Notify(Constants.ERROR_IN_GETALL);
+            Notify(FixConstants.ERROR_IN_GETALL);
             return PagedFactory.GetPaged(Enumerable.Empty<AuditResponseDTO>().AsQueryable(), filter.PageIndex, filter.PageSize);
         }
     }
@@ -95,13 +95,13 @@ public class AuditService : GenericService, IAuditService
             var result = _auditRepository.Exist(x => x.Id == id);
 
             if (result == false)
-                Notify(Constants.ERROR_IN_GETID);
+                Notify(FixConstants.ERROR_IN_GETID);
 
             return result;
         }
         catch
         {
-            Notify(Constants.ERROR_IN_GETID);
+            Notify(FixConstants.ERROR_IN_GETID);
             return false;
         }
         finally

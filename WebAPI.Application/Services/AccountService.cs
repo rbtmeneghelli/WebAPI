@@ -86,7 +86,7 @@ public class AccountService : GenericService, IAccountService
         }
         catch
         {
-            Notify(Constants.ERROR_IN_LOGIN);
+            Notify(FixConstants.ERROR_IN_LOGIN);
             return default;
         }
         finally
@@ -107,19 +107,19 @@ public class AccountService : GenericService, IAccountService
                     dbUser.LastPassword = dbUser.Password;
                     dbUser.Password = HashingManager.GetLoadHashingManager().HashToString(user.Password);
                     dbUser.IsAuthenticated = true;
-                    dbUser.UpdateTime = Constants.GetDateTimeNowFromBrazil();
+                    dbUser.UpdateTime = FixConstants.GetDateTimeNowFromBrazil();
                     _userRepository.Update(dbUser);
                     await Task.CompletedTask;
                     return true;
                 }
             }
 
-            Notify(Constants.ERROR_IN_CHANGEPASSWORD);
+            Notify(FixConstants.ERROR_IN_CHANGEPASSWORD);
             return false;
         }
         catch
         {
-            Notify(Constants.ERROR_IN_CHANGEPASSWORD);
+            Notify(FixConstants.ERROR_IN_CHANGEPASSWORD);
             return false;
         }
         finally
@@ -138,23 +138,23 @@ public class AccountService : GenericService, IAccountService
                 if (GuardClauses.ObjectIsNotNull(user))
                 {
                     user.LastPassword = user.Password;
-                    user.Password = HashingManager.GetLoadHashingManager().HashToString(Constants.DEFAULT_PASSWORD);
+                    user.Password = HashingManager.GetLoadHashingManager().HashToString(FixConstants.DEFAULT_PASSWORD);
                     user.IsAuthenticated = false;
                     user.IsActive = true;
-                    user.CreatedTime = Constants.GetDateTimeNowFromBrazil();
+                    user.CreatedTime = FixConstants.GetDateTimeNowFromBrazil();
                     _emailService.SendEmailToResetPswAsync("Roberto", _hostingEnvironment.ContentRootPath).Wait();
                     _userRepository.Update(user);
                     return true;
                 }
 
-                Notify(Constants.ERROR_IN_RESETPASSWORD);
+                Notify(FixConstants.ERROR_IN_RESETPASSWORD);
             }
-            Notify(Constants.ERROR_IN_RESETPASSWORD);
+            Notify(FixConstants.ERROR_IN_RESETPASSWORD);
             return false;
         }
         catch
         {
-            Notify(Constants.ERROR_IN_RESETPASSWORD);
+            Notify(FixConstants.ERROR_IN_RESETPASSWORD);
             return false;
         }
         finally
@@ -187,7 +187,7 @@ public class AccountService : GenericService, IAccountService
         }
         catch
         {
-            Notify(Constants.ERROR_IN_LOGIN);
+            Notify(FixConstants.ERROR_IN_LOGIN);
             return default;
         }
         finally
