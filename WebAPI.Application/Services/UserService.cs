@@ -253,7 +253,7 @@ public class UserService : GenericService, IUserService
             else if (_userRepository.Exist(x => x.Login == user.Login) == false)
             {
                 user.Password = HashingManager.GetLoadHashingManager().HashToString(user.Password);
-                user.CreatedTime = FixConstants.GetDateTimeNowFromBrazil();
+                user.CreatedTime = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
                 _userRepository.Add(user);
                 return true;
             }
@@ -282,7 +282,7 @@ public class UserService : GenericService, IUserService
             {
                 userDb.LastPassword = userDb.Password;
                 userDb.Password = HashingManager.GetLoadHashingManager().HashToString(user.Password);
-                userDb.UpdateTime = FixConstants.GetDateTimeNowFromBrazil();
+                userDb.UpdateTime = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
                 _userRepository.Update(userDb);
                 return true;
             }
@@ -336,7 +336,7 @@ public class UserService : GenericService, IUserService
 
             if (GuardClauses.ObjectIsNotNull(user))
             {
-                user.UpdateTime = FixConstants.GetDateTimeNowFromBrazil();
+                user.UpdateTime = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
                 user.IsActive = false;
                 _userRepository.Update(user);
                 return true;
@@ -383,7 +383,7 @@ public class UserService : GenericService, IUserService
 
             if (GuardClauses.ObjectIsNotNull(user))
             {
-                user.UpdateTime = FixConstants.GetDateTimeNowFromBrazil();
+                user.UpdateTime = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
                 user.IsActive = true;
                 _userRepository.Update(user);
                 return true;

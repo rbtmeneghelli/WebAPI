@@ -61,14 +61,14 @@ public partial class WebAPIContext : DbContext
         {
             if (entry.State == EntityState.Added)
             {
-                entry.Property("CreatedTime").CurrentValue = FixConstants.GetDateTimeNowFromBrazil();
+                entry.Property("CreatedTime").CurrentValue = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
                 entry.Property("UpdateTime").IsModified = false;
             }
 
             if (entry.State == EntityState.Modified)
             {
                 entry.Property("CreatedTime").IsModified = false;
-                entry.Property("UpdateTime").CurrentValue = FixConstants.GetDateTimeNowFromBrazil();
+                entry.Property("UpdateTime").CurrentValue = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
             }
         }
 

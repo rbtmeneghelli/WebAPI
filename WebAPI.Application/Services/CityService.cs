@@ -1,5 +1,6 @@
 ﻿using WebAPI.Application.Factory;
 using System.Collections.Generic;
+using WebAPI.Domain.ExtensionMethods;
 
 namespace WebAPI.Application.Services;
 
@@ -76,7 +77,7 @@ public class CityService : GenericService, ICityService
 
     public Task AddAsync(City city)
     {
-        city.CreatedTime = FixConstants.GetDateTimeNowFromBrazil();
+        city.CreatedTime = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
         _cityRepository.Add(city);
         return Task.CompletedTask;
     }
@@ -122,7 +123,7 @@ public class CityService : GenericService, ICityService
                     entityBase.Name = city.Name;
                     entityBase.IBGE = city.IBGE.HasValue ? city.IBGE.Value : long.Parse("00000000");
                     entityBase.StateId = city.StateId;
-                    entityBase.CreatedTime = FixConstants.GetDateTimeNowFromBrazil();
+                    entityBase.CreatedTime = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
                     _cityRepository.Add(entityBase);
                 }
                 else

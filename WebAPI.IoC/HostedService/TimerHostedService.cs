@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
+using WebAPI.Domain.ExtensionMethods;
 
 namespace WebAPI.Infra.Structure.IoC.HostedService;
 
@@ -33,13 +34,13 @@ public class TimerHostedService : IHostedService
     public Task StopAsync(CancellationToken cancellationToken)
     {
         _logger.LogInformation("...Process Stopping...");
-        _logger.LogInformation($"{FixConstants.GetDateTimeNowFromBrazil()}");
+        _logger.LogInformation($"{DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()}");
         return Task.CompletedTask;
     }
 
     private void ExecuteProcess(object state)
     {
         _logger.LogInformation("...Process Executing...");
-        _logger.LogInformation($"{FixConstants.GetDateTimeNowFromBrazil()}");
+        _logger.LogInformation($"{DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()}");
     }
 }

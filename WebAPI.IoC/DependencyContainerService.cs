@@ -122,7 +122,7 @@ public static class DependencyContainerService
         var claimList = policyWithClaim.ClaimValue.Split(',').ToList();
         var userPermissions = string.Join("", authorizationHandlerContext.User.FindAll(policyWithClaim.ClaimType).Select(c => c.Value)).Split(',');
 
-        for (int i=0; i<= userPermissions.Length; i++)
+        for (int i = 0; i <= userPermissions.Length; i++)
         {
             var userPermission = userPermissions[i];
             if (claimList.Exists(x => x.Equals(userPermission, StringComparison.OrdinalIgnoreCase)))
@@ -144,8 +144,8 @@ public static class DependencyContainerService
     /// <returns></returns>
     public static void RegisterDbConnection(this IServiceCollection services, IConfiguration configuration)
     {
-        var connectionString = ConnectionStringSettings.GetConnectionString(configuration.GetConnectionString("DefaultConnection"));
-        
+        var connectionString = EnvironmentVariablesExtension.GetDatabaseFromEnvVar(configuration.GetConnectionString("DefaultConnection"));
+
         services.AddDbContext<WebAPIContext>(opts =>
         opts.UseSqlServer(connectionString,
         b => b.MinBatchSize(5).MaxBatchSize(50).MigrationsAssembly(typeof(WebAPIContext).Assembly.FullName)).
@@ -410,7 +410,7 @@ public static class DependencyContainerService
 
     public static void RegisterHangFireConfig(this IServiceCollection services, IConfiguration configuration)
     {
-        var connectionString = ConnectionStringSettings.GetConnectionString(configuration.GetConnectionString("DefaultConnection"));
+        var connectionString = EnvironmentVariablesExtension.GetDatabaseFromEnvVar(configuration.GetConnectionString("DefaultConnection"));
 
         services.AddHangfire(x => x.UseSimpleAssemblyNameTypeSerializer()
                                    .UseRecommendedSerializerSettings()
@@ -526,7 +526,7 @@ public static class DependencyContainerService
 
     public static void RegisterSeriLog(this IServiceCollection services, IConfiguration configuration)
     {
-        var connectionStringLogs = ConnectionStringSettings.GetConnectionString(configuration.GetConnectionString("DefaultConnectionLogs"));
+        var connectionStringLogs = EnvironmentVariablesExtension.GetDatabaseFromEnvVar(configuration.GetConnectionString("DefaultConnectionLogs"));
 
         Serilog.Debugging.SelfLog.Enable(msg => Console.WriteLine(msg));
         var filterExpr = "@Properties['SourceContext'] like 'WebAPI%'";
@@ -572,28 +572,26 @@ public static class DependencyContainerService
 
     #endregion
 
-    public static void RegisterEnvironmentVariables(this IServiceCollection services)
+    public static void RegisterEnvironmentVariables(this IServiceCollection services, IConfiguration configuration)
     {
-        if (!EnvironmentVariables.LoadEnvironmentVariables())
+        if (!EnvironmentVariables.LoadEnvironmentVariables(configuration))
         {
             throw new ApplicationException("Application End. Erro: Váriaveis de ambiente ausentes.");
         }
 
+        var data = EnvironmentVariablesExtension.GetEnvironmentVariablesList(configuration);
+
         Action<EnvironmentVariables> resultValues = (opt =>
         {
-
             #region Variavel do JSON da APP
-            opt.varJson = Environment.GetEnvironmentVariable("variavelJson").ToString();
-            #endregion
-
-            #region Variavel registrada na maquina
-            opt.varJson = Environment.GetEnvironmentVariable("variavelMachine").ToString();
+            opt.ConnectionStringSettings.DefaultConnection = data["WebAPI_Sql"];
+            opt.ConnectionStringSettings.DefaultConnectionLogs = data["WebAPI_Logs"];
+            opt.ConnectionStringSettings.DefaultConnectionToDocker = data["WebAPI_Docker"];
             #endregion
         });
 
         services.Configure(resultValues);
         services.AddSingleton(resolver => resolver.GetRequiredService<IOptions<EnvironmentVariables>>().Value);
-
     }
 
     public class WebAPIContextFactory : IDesignTimeDbContextFactory<WebAPIContext>
@@ -614,7 +612,7 @@ public static class DependencyContainerService
                 .Build();
 
             var builder = new DbContextOptionsBuilder<WebAPIContext>();
-            var connectionStringLogs = ConnectionStringSettings.GetConnectionString(configuration.GetConnectionString("DefaultConnection"));
+            var connectionStringLogs = EnvironmentVariablesExtension.GetDatabaseFromEnvVar(configuration.GetConnectionString("DefaultConnection"));
             builder.UseSqlServer(connectionStringLogs);
 
             return new WebAPIContext(builder.Options);

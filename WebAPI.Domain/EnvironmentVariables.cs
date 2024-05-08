@@ -1,67 +1,68 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using WebAPI.Domain.ExtensionMethods;
+using WebAPI.Domain.Models;
 
 namespace WebAPI.Domain;
 
-public static class EnvironmentVariableConfig
-{
-    public static void AddEnvironmentVariablesValues(this IServiceCollection services)
-    {
-        if (!EnvironmentVariables.LoadEnvironmentVariables())
-        {
-            throw new ApplicationException("Application End. Erro: Váriaveis de ambiente ausentes.");
-        }
-
-        Action<EnvironmentVariables> resultValues = (opt =>
-        {
-
-            #region Variavel do JSON da APP
-            opt.varJson = Environment.GetEnvironmentVariable("variavelJson").ToString();
-            #endregion
-
-            #region Variavel registrada na maquina
-            opt.varJson = Environment.GetEnvironmentVariable("variavelMachine").ToString();
-            #endregion
-        });
-
-        services.Configure(resultValues);
-        services.AddSingleton(resolver => resolver.GetRequiredService<IOptions<EnvironmentVariables>>().Value);
-    }
-}
-
 public class EnvironmentVariables
 {
-    public string varJson { get; set; }
-    public string varMachine { get; set; }
+    public ConnectionStringSettings ConnectionStringSettings { get; set; }
 
-    public static bool LoadEnvironmentVariables()
+    public EnvironmentVariables()
     {
-        bool variaveisAmbValidas = true;
+        ConnectionStringSettings = new ConnectionStringSettings();
+    }
 
-        Dictionary<string, string> variaveisAmbiente = new Dictionary<string, string>
-        {
-            { "variavelJson", Environment.GetEnvironmentVariable("variavelJson", EnvironmentVariableTarget.Process) },
-            { "variavelMachine", Environment.GetEnvironmentVariable("variavelMachine", EnvironmentVariableTarget.User) }
-        };
+    public static bool LoadEnvironmentVariables(IConfiguration configuration)
+    {
+        bool environmentVariables_IsOK = true;
+        Dictionary<string, string> envVariables = new Dictionary<string, string>();
+        var connectionStringSettings = new ConnectionStringSettings();
 
-        variaveisAmbiente.AsParallel().ForAll(variavel =>
+        EnvironmentVariablesExtension.GetEnvironmentVariablesList(configuration).AsParallel().ForAll(variavel =>
         {
             if (string.IsNullOrEmpty(variavel.Value))
             {
-                variaveisAmbValidas = false;
+                environmentVariables_IsOK = false;
                 Console.WriteLine($"Variável de ambiente {variavel.Key} ausente.");
             }
         });
 
-        return variaveisAmbValidas;
+        return environmentVariables_IsOK;
+    }
+}
+
+public static class EnvironmentVariablesExtension
+{
+    public static Dictionary<string, string> GetEnvironmentVariablesList(IConfiguration configuration)
+    {
+        Dictionary<string, string> envVariables = new Dictionary<string, string>
+        {
+            { configuration.GetSection($"ConnectionStrings:DefaultConnection").Value, GetDatabaseFromEnvVar(configuration.GetSection($"ConnectionStrings:DefaultConnection").Value).ToString() },
+            { configuration.GetSection($"ConnectionStrings:DefaultConnectionLogs").Value, GetDatabaseFromEnvVar(configuration.GetSection($"ConnectionStrings:DefaultConnectionLogs").Value).ToString() },
+            { configuration.GetSection($"ConnectionStrings:DefaultConnectionToDocker").Value, GetDatabaseFromEnvVar(configuration.GetSection($"ConnectionStrings:DefaultConnectionToDocker").Value).ToString() },
+        };
+
+        return envVariables;
     }
 
-    public static void SetEnvironmentVariables()
+    public static string GetDatabaseFromEnvVar(string varName)
     {
-        // Escrevendo variáveis de ambiente do JSON
-        Environment.SetEnvironmentVariable("variavelJson", "valor da variavel json", EnvironmentVariableTarget.Process);
+        return Environment.GetEnvironmentVariable(varName).Replace("\\\\", "\\") ?? StringExtensionMethod.GetEmptyString();
+    }
 
-        // Lendo variáveis de ambiente da maquina
-        Environment.SetEnvironmentVariable("variavelMachine", "valor da variavel maquina", EnvironmentVariableTarget.User);
+    public static TSource GetEnvironmentVariableToObject<TSource>(IConfiguration configuration, string varName)
+    {
+        var data = Environment.GetEnvironmentVariable(configuration[varName]) ?? StringExtensionMethod.GetEmptyString();
+        return !string.IsNullOrWhiteSpace(data) ? data.DeserializeObject<TSource>() : default;
+    }
+
+    public static string[] GetEnvironmentVariableToStringArray<TSource>(IConfiguration configuration, string varName)
+    {
+        var data = Environment.GetEnvironmentVariable(configuration[varName]) ?? StringExtensionMethod.GetEmptyString();
+        return !string.IsNullOrWhiteSpace(data) ? data.Split(',') : default;
     }
 }

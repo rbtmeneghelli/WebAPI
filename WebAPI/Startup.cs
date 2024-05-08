@@ -55,6 +55,7 @@ public class Startup
         {
             options.SuppressModelStateInvalidFilter = true;
         });
+        services.RegisterEnvironmentVariables(_configuration);
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider, IConfiguration configuration)
@@ -64,7 +65,3 @@ public class Startup
     }
 }
 
-//ServiceCollection serviceCollection = new ServiceCollection();
-//BootsTrapper.AddEnvironmentVariablesValues(serviceCollection);
-//ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
-//EnvironmentVariables environmentVariables = serviceProvider.GetService<EnvironmentVariables>();

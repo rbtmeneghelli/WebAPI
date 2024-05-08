@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Domain.Generic;
 using WebAPI.Domain;
+using WebAPI.Domain.ExtensionMethods;
 
 namespace WebAPI.Infra.Data.Mapping;
 
@@ -15,7 +16,7 @@ public abstract class GenericMapping<T> : IEntityTypeConfiguration<T> where T : 
     {
         _builder.HasKey(x => x.Id);
         _builder.Property(x => x.Id).ValueGeneratedOnAdd().UseIdentityColumn(1, 1).HasColumnName("Id");
-        _builder.Property(x => x.CreatedTime).HasDefaultValue(FixConstants.GetDateTimeNowFromBrazil()).HasColumnName("Created_Time");
+        _builder.Property(x => x.CreatedTime).HasDefaultValue(DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()).HasColumnName("Created_Time");
         _builder.Property(x => x.UpdateTime).HasColumnName("Update_Time");
         _builder.Property(x => x.IsActive).IsRequired().HasDefaultValue(true).HasColumnName("Is_Active");
 

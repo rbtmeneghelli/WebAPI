@@ -184,7 +184,7 @@ namespace WebAPI.Controllers.Base
                 methodName,
                 messageError,
                 obj,
-                FixConstants.GetDateTimeNowFromBrazil()
+                DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()
             );
         }
     }

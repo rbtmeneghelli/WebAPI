@@ -1,7 +1,5 @@
-﻿using WebAPI.Domain.Enums;
-using System.Net;
+﻿using System.Net;
 using Microsoft.Extensions.Configuration;
-using WebAPI.Domain.Models;
 using WebAPI.Domain.ExtensionMethods;
 
 namespace WebAPI.Domain;
@@ -92,19 +90,6 @@ public static class FixConstants
 
     public const string OFFICE_STREAM = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     public const string PDF_STREAM = "application/pdf";
-
-    /// <summary>
-    /// Primeiro irei Obter a data e hora atual em GMT,
-    /// Definir o fuso horário de São Paulo,
-    /// Converte a data e hora atual para o fuso horário de São Paulo
-    /// </summary>
-    /// <returns></returns>
-    public static DateTime GetDateTimeNowFromBrazil()
-    {
-        TimeZoneInfo tz = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time");
-        DateTime dateTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, tz);
-        return dateTime;
-    }
 
     public static TSource GetEnvironmentVariableToObject<TSource>(IConfiguration configuration, string varName)
     {

@@ -38,7 +38,7 @@ public class RegionService : GenericService, IRegionService
                 Name = x.Region.Name,
                 Initials = x.Region.Initials,
                 IsActive = true,
-                CreatedTime = FixConstants.GetDateTimeNowFromBrazil()
+                CreatedTime = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()
             });
 
             IEnumerable<Region> listaRegiaoAPI = tmpRegion.GroupBy(x => new { x.Name, x.Initials }).Select(g => g.First());
@@ -49,7 +49,7 @@ public class RegionService : GenericService, IRegionService
                 Region region = regions.FirstOrDefault(x => x.Initials == item.Initials && x.IsActive == true);
                 if (GuardClauses.ObjectIsNotNull(region))
                 {
-                    region.UpdateTime = FixConstants.GetDateTimeNowFromBrazil();
+                    region.UpdateTime = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
                     region.Name = item.Name;
                     region.Initials = item.Initials;
                     _regionRepository.Update(region);

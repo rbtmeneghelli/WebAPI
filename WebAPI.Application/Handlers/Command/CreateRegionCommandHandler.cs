@@ -1,6 +1,7 @@
 ﻿using WebAPI.Application.Services;
 using WebAPI.Domain.CQRS.Command;
 using MediatR;
+using WebAPI.Domain.ExtensionMethods;
 
 namespace WebAPI.Application.Handlers.Command;
 
@@ -20,7 +21,7 @@ public class CreateRegionCommandHandler : GenericService, IRequestHandler<Create
             Initials = "XPTO",
             IsActive = true,
             Name = "XPTO",
-            CreatedTime = FixConstants.GetDateTimeNowFromBrazil()
+            CreatedTime = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()
         });
 
         return Task.FromResult(true);

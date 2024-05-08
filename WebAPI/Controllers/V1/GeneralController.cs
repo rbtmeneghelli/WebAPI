@@ -4,6 +4,7 @@ using KissLog;
 using Microsoft.AspNetCore.Cors;
 using FixConstants = WebAPI.Domain.FixConstants;
 using Region = WebAPI.Domain.Entities.Region;
+using Newtonsoft.Json;
 
 namespace WebAPI.V1.Controllers;
 
@@ -20,8 +21,9 @@ public sealed class GeneralController : GenericController
     private readonly IGeneralService _generalService;
     private readonly IMemoryCacheService _memoryCacheService;
     private readonly IQRCodeService _qRCodeService;
+    private EnvironmentVariables _environmentVariables { get; }
 
-    public GeneralController(IMapper mapper, IHttpContextAccessor accessor, ICepService cepsService, IStatesService statesService, IRegionService regionService, ICityService cityService, INotificationMessageService notificationMessageService, IGeneralService generalService, IMemoryCacheService memoryCacheService, IKLogger iKLogger, IQRCodeService qRCodeService) : base(mapper, accessor, notificationMessageService, iKLogger)
+    public GeneralController(IMapper mapper, IHttpContextAccessor accessor, ICepService cepsService, IStatesService statesService, IRegionService regionService, ICityService cityService, INotificationMessageService notificationMessageService, IGeneralService generalService, IMemoryCacheService memoryCacheService, IKLogger iKLogger, IQRCodeService qRCodeService, EnvironmentVariables environmentVariables) : base(mapper, accessor, notificationMessageService, iKLogger)
     {
         _cepsService = cepsService;
         _statesService = statesService;
@@ -30,6 +32,7 @@ public sealed class GeneralController : GenericController
         _generalService = generalService;
         _memoryCacheService = memoryCacheService;
         _qRCodeService = qRCodeService;
+        _environmentVariables = environmentVariables;
     }
 
     [HttpGet("export2Zip/{directory}/{typeFile:int}")]
@@ -37,7 +40,8 @@ public sealed class GeneralController : GenericController
     {
         GeneralExtensionMethod extensionMethods = GeneralExtensionMethod.GetLoadExtensionMethods();
         MemoryStream memoryStream = await _generalService.Export2ZipAsync(directory, typeFile);
-        return File(await Task.FromResult(memoryStream.ToArray()), extensionMethods.GetMemoryStreamType(typeFile), $"Archive.{extensionMethods.GetMemoryStreamExtension(typeFile)}");
+        var memoryStreamResult = extensionMethods.GetMemoryStream(typeFile);
+        return File(await Task.FromResult(memoryStream.ToArray()), memoryStreamResult.Type, $"Archive.{memoryStreamResult.Extension}");
     }
 
     [HttpGet("backup/{directory}")]
@@ -189,7 +193,7 @@ public sealed class GeneralController : GenericController
                         Name = z.Nome,
                         IsActive = true,
                         Initials = z.Sigla,
-                        CreatedTime = FixConstants.GetDateTimeNowFromBrazil()
+                        CreatedTime = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()
                     }).ToList();
 
                     await _regionService.AddRegionsAsync(list);
@@ -221,7 +225,7 @@ public sealed class GeneralController : GenericController
                 {
                     listStates = listStatesAPI.Select(x => new States()
                     {
-                        CreatedTime = FixConstants.GetDateTimeNowFromBrazil(),
+                        CreatedTime = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil(),
                         IsActive = true,
                         Name = x.Name,
                         Initials = x.Initials,
@@ -307,6 +311,7 @@ public sealed class GeneralController : GenericController
     [HttpGet("bloqueado")]
     public string Bloqueado()
     {
+        var teste = _environmentVariables;
         return $"Acesso BLOQUEADO para este endpoint : {DateTime.Now}";
     }
 
@@ -321,5 +326,19 @@ public sealed class GeneralController : GenericController
         }
 
         return CustomResponse();
+    }
+
+    [HttpGet("loadEnvironmentVariables")]
+    public IActionResult LoadEnvironmentVariables()
+    {
+        try
+        {
+            return CustomResponse(_environmentVariables.ConnectionStringSettings.SerializeObject(), "Variaveis de ambiente");
+        }
+        catch(Exception ex)
+        {
+            NotificationError("Ocorreu um erro durante a leitura das var de ambiente");
+            return CustomResponse();
+        }
     }
 }

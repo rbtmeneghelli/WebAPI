@@ -135,7 +135,7 @@ public class GeneralService : GenericService, IGeneralService
         SqlConnection sqlConnObj = GetSqlConnection();
         try
         {
-            string nomeArquivo = $"DefaultAPI_{FixConstants.GetDateTimeNowFromBrazil().ToString("ddMMyyyy")}.bak";
+            string nomeArquivo = $"DefaultAPI_{DateOnlyExtensionMethods.GetDateTimeNowFromBrazil().ToString("ddMMyyyy")}.bak";
             if (File.Exists(Path.Combine(dir, nomeArquivo)))
             {
                 File.Delete(Path.Combine(dir, nomeArquivo));
@@ -163,7 +163,7 @@ public class GeneralService : GenericService, IGeneralService
         GeneralExtensionMethod extensionMethods = GeneralExtensionMethod.GetLoadExtensionMethods();
         List<string> archives = new List<string>();
         int count = 0;
-        foreach (string arquivo in Directory.GetFiles(directory, $"*.{extensionMethods.GetMemoryStreamExtension(typeFile)}"))
+        foreach (string arquivo in Directory.GetFiles(directory, $"*.{extensionMethods.GetMemoryStream(typeFile).Type}"))
         {
             archives.Add(arquivo);
         }
@@ -305,7 +305,7 @@ public class GeneralService : GenericService, IGeneralService
         StringBuilder builder = new StringBuilder();
         //obtem o nome do tipo
         builder.AppendLine("Log do " + tipo.Name);
-        builder.AppendLine("Data: " + FixConstants.GetDateTimeNowFromBrazil());
+        builder.AppendLine("Data: " + DateOnlyExtensionMethods.GetDateTimeNowFromBrazil());
 
         //Vamos obter agora todas as propriedades do tipo
         //Usamos o método GetProperties para obter

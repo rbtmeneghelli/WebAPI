@@ -12,7 +12,7 @@ public static class StringExtensionMethod
 
     public static string ApplyReplace(this string text, string oldChar, string newChar) => GuardClauses.IsNullOrWhiteSpace(text) == false ? text.Replace(oldChar, newChar) : text;
 
-    public static string SerializeObject(this object data) => JsonConvert.SerializeObject(data.SerializeObject(), Formatting.Indented);
+    public static string SerializeObject(this object data) => JsonConvert.SerializeObject(data, Formatting.Indented);
     
     public static TSource DeserializeObject<TSource>(this string data) => JsonConvert.DeserializeObject<TSource>(data);
     

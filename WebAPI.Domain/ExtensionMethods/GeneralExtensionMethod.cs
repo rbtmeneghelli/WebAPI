@@ -7,7 +7,6 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
-using System.Globalization;
 using System.IO.Compression;
 using System.Net;
 using System.Net.Mail;
@@ -826,23 +825,16 @@ public sealed class GeneralExtensionMethod
         };
     }
 
-    public string GetMemoryStreamType(int key)
+    public (string Type, string Extension) GetMemoryStream(int key)
     {
-        Dictionary<int, string> dictionary = new Dictionary<int, string>();
-        dictionary.Add(1, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        dictionary.Add(2, "application/pdf");
-        dictionary.Add(3, "application/octet-stream");
-        dictionary.Add(4, "application/zip");
-        return dictionary[key];
-    }
+        Dictionary<int, (string,string)> dictionary = new Dictionary<int, (string, string)>
+        {
+            { 1, ("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "xlsx") },
+            { 2, ("application/pdf", "pdf") },
+            { 3, ("application/octet-stream", "docx") },
+            { 4, ("application/zip", "zip") }
+        };
 
-    public string GetMemoryStreamExtension(int key)
-    {
-        Dictionary<int, string> dictionary = new Dictionary<int, string>();
-        dictionary.Add(1, "xlsx");
-        dictionary.Add(2, "pdf");
-        dictionary.Add(3, "docx");
-        dictionary.Add(4, "zip");
         return dictionary[key];
     }
 
@@ -859,25 +851,29 @@ public sealed class GeneralExtensionMethod
 
     public string StartDateToJob(EnumJobTypeExecution key)
     {
-        DateTime currentDate = FixConstants.GetDateTimeNowFromBrazil();
-        Dictionary<EnumJobTypeExecution, string> dictionary = new Dictionary<EnumJobTypeExecution, string>();
-        dictionary.Add(EnumJobTypeExecution.Daily, currentDate.ToString("yyyy-MM-dd"));
-        dictionary.Add(EnumJobTypeExecution.Weekly, GetFirstDayOfWeek(currentDate).ToString("yyyy-MM-dd"));
-        dictionary.Add(EnumJobTypeExecution.Monthly, new DateTime(currentDate.Year, currentDate.Month, 1).ToString("yyyy-MM-dd"));
-        dictionary.Add(EnumJobTypeExecution.Yearly, new DateTime(currentDate.Year, 1, 1).ToString("yyyy-MM-dd"));
-        dictionary.Add(EnumJobTypeExecution.Never, "");
+        DateTime currentDate = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
+        Dictionary<EnumJobTypeExecution, string> dictionary = new Dictionary<EnumJobTypeExecution, string>
+        {
+            { EnumJobTypeExecution.Daily, currentDate.ToString("yyyy-MM-dd") },
+            { EnumJobTypeExecution.Weekly, GetFirstDayOfWeek(currentDate).ToString("yyyy-MM-dd") },
+            { EnumJobTypeExecution.Monthly, new DateTime(currentDate.Year, currentDate.Month, 1).ToString("yyyy-MM-dd") },
+            { EnumJobTypeExecution.Yearly, new DateTime(currentDate.Year, 1, 1).ToString("yyyy-MM-dd") },
+            { EnumJobTypeExecution.Never, "" }
+        };
         return dictionary[key];
     }
 
     public string EndDateToJob(EnumJobTypeExecution key)
     {
-        DateTime currentDate = FixConstants.GetDateTimeNowFromBrazil();
-        Dictionary<EnumJobTypeExecution, string> dictionary = new Dictionary<EnumJobTypeExecution, string>();
-        dictionary.Add(EnumJobTypeExecution.Daily, currentDate.ToString("yyyy-MM-dd"));
-        dictionary.Add(EnumJobTypeExecution.Weekly, GetLasttDayOfWeek(currentDate).ToString("yyyy-MM-dd"));
-        dictionary.Add(EnumJobTypeExecution.Monthly, new DateTime(currentDate.Year, currentDate.Month, 1).AddMonths(1).AddDays(-1).ToString("yyyy-MM-dd"));
-        dictionary.Add(EnumJobTypeExecution.Yearly, new DateTime(currentDate.Year, 12, 31).ToString("yyyy-MM-dd"));
-        dictionary.Add(EnumJobTypeExecution.Never, "");
+        DateTime currentDate = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
+        Dictionary<EnumJobTypeExecution, string> dictionary = new Dictionary<EnumJobTypeExecution, string>
+        {
+            { EnumJobTypeExecution.Daily, currentDate.ToString("yyyy-MM-dd") },
+            { EnumJobTypeExecution.Weekly, GetLasttDayOfWeek(currentDate).ToString("yyyy-MM-dd") },
+            { EnumJobTypeExecution.Monthly, new DateTime(currentDate.Year, currentDate.Month, 1).AddMonths(1).AddDays(-1).ToString("yyyy-MM-dd") },
+            { EnumJobTypeExecution.Yearly, new DateTime(currentDate.Year, 12, 31).ToString("yyyy-MM-dd") },
+            { EnumJobTypeExecution.Never, "" }
+        };
         return dictionary[key];
     }
 

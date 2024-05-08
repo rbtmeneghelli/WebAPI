@@ -1,4 +1,5 @@
 ﻿using WebAPI.Domain.Entities;
+using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Domain.Generic;
 
 namespace WebAPI.Domain.ValueObject;
@@ -26,7 +27,7 @@ public class AddressData : GenericEntity
     //Expression Body Constructor
     public AddressData(long id, string cep, AddressData modelCepAPI, long stateId, DateTime? createdTime)
     => (Id, District, Cep, Complement, Ddd, Gia, UpdateTime, Ibge, Location, Street, Siafi, Uf, StateId, CreatedTime)
-    = (id, modelCepAPI.District, cep, modelCepAPI.Complement, modelCepAPI.Ddd, modelCepAPI.Gia, FixConstants.GetDateTimeNowFromBrazil(), modelCepAPI.Ibge, modelCepAPI.Location,
+    = (id, modelCepAPI.District, cep, modelCepAPI.Complement, modelCepAPI.Ddd, modelCepAPI.Gia, DateOnlyExtensionMethods.GetDateTimeNowFromBrazil(), modelCepAPI.Ibge, modelCepAPI.Location,
        modelCepAPI.Street, modelCepAPI.Siafi, modelCepAPI.Uf, stateId, createdTime);
 
     public AddressData(string cep, AddressData modelCepAPI)
@@ -36,14 +37,14 @@ public class AddressData : GenericEntity
         Complement = modelCepAPI.Complement;
         Ddd = modelCepAPI.Ddd;
         Gia = modelCepAPI.Gia;
-        UpdateTime = FixConstants.GetDateTimeNowFromBrazil();
+        UpdateTime = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
         Ibge = modelCepAPI.Ibge;
         Location = modelCepAPI.Location;
         Street = modelCepAPI.Street;
         Siafi = modelCepAPI.Siafi;
         Uf = modelCepAPI.Uf;
         IsActive = true;
-        CreatedTime = FixConstants.GetDateTimeNowFromBrazil();
+        CreatedTime = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
         StateId = modelCepAPI.StateId;
     }
 }

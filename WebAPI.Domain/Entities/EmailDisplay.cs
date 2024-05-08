@@ -1,5 +1,6 @@
 ﻿using WebAPI.Domain.Generic;
 using MimeKit;
+using WebAPI.Domain.ExtensionMethods;
 
 namespace WebAPI.Domain.Entities;
 
@@ -98,11 +99,6 @@ public class EmailDisplay : GenericEntity
     public static string GetBodyTextConfirmPsw()
     {
         return "<center>Olá, {0}</center>" +
-        $"<center>Quero reporta-lo que a sua confirmação de senha foi realizada com sucesso no periodo das {FixConstants.GetDateTimeNowFromBrazil().ToShortDateString()} - {FixConstants.GetDateTimeNowFromBrazil().ToShortTimeString()}</center>" + "<br> ";
-    }
-
-    public static string GetBodyTextReport()
-    {
-        return string.Empty;
+        $"<center>Quero reporta-lo que a sua confirmação de senha foi realizada com sucesso no periodo das {DateOnlyExtensionMethods.GetShortDate()} - {DateOnlyExtensionMethods.GetShortTime()}</center>" + "<br> ";
     }
 }
