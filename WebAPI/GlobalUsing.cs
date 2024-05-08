@@ -8,7 +8,7 @@ global using WebAPI.Domain;
 global using Microsoft.IdentityModel.Tokens;
 global using WebAPI.Controllers.Base;
 global using System.Threading.Tasks;
-global using WebAPI.Domain.DTO;
+global using WebAPI.Domain.EntitiesDTO;
 global using WebAPI.Domain.Filters;
 global using System;
 global using System.Collections.Generic;

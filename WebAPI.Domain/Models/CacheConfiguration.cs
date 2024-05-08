@@ -1,7 +1,7 @@
 ﻿namespace WebAPI.Domain.Models;
 
-public record CacheConfiguration
+public sealed record CacheSettings
 {
-    public int AbsoluteExpirationInHours { get; set; }
-    public int SlidingExpirationInMinutes { get; set; }
+    public int AbsoluteExpirationInHours { get; init; }
+    public int SlidingExpirationInMinutes { get; init; }
 }

@@ -23,8 +23,6 @@ public class Startup
         // Utilizar dessa forma, caso seja feita de parte a parte, ao inves de integral
         // Add functionality to inject IOptions<T> (Fazer o IOptions<T> na controller)
         // services.AddOptions();
-        // Add our Config object so it can be injected
-        // services.Configure<EmailSettings>(_configuration.GetSection("EmailSettings"));
 
         DependencyContainerService.RegisterDbConnection(services, _configuration);
         DependencyContainerService.RegisterServices(services);

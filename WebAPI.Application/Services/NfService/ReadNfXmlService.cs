@@ -338,12 +338,12 @@ public sealed class ReadNfXmlService : GenericNfService<NFE_Model>
 
     private IEnumerable<NFE_Model> PrintXml(List<XmlNodeList> listXml)
     {
-        string valueIde = FixConstants.GetEmptyString();
-        string valueEmit = FixConstants.GetEmptyString();
-        string valueDest = FixConstants.GetEmptyString();
-        string valueRetirada = FixConstants.GetEmptyString();
-        string valueEntrega = FixConstants.GetEmptyString();
-        string valueInfAdic = FixConstants.GetEmptyString();
+        string valueIde = StringExtensionMethod.GetEmptyString();
+        string valueEmit = StringExtensionMethod.GetEmptyString();
+        string valueDest = StringExtensionMethod.GetEmptyString();
+        string valueRetirada = StringExtensionMethod.GetEmptyString();
+        string valueEntrega = StringExtensionMethod.GetEmptyString();
+        string valueInfAdic = StringExtensionMethod.GetEmptyString();
 
         NFE_Transp dadosTransportadora;
         NFE_Imposto dadosImposto;

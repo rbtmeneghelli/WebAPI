@@ -151,16 +151,6 @@ public sealed class GeneralController : GenericController
                             Name = item.Nome,
                             StateId = state.Id.Value
                         }).ToList());
-
-                        //foreach (var item in mesoRegions)
-                        //{
-                        //    cities.Add(new City()
-                        //    {
-                        //        IBGE = (long)item.Id,
-                        //        Name = item.Nome,
-                        //        IdState = state.Id.Value
-                        //    });
-                        //}
                     }
                 }
             }

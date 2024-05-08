@@ -106,17 +106,6 @@ public static class FixConstants
         return dateTime;
     }
 
-    public static string GetEmptyString()
-    {
-        return string.Empty;
-    }
-
-    public static string GetConnectionString(string varName)
-    {
-        return Environment.GetEnvironmentVariable(varName)
-        .Replace("\\\\", "\\") ?? string.Empty;
-    }
-
     public static TSource GetEnvironmentVariableToObject<TSource>(IConfiguration configuration, string varName)
     {
         var data = Environment.GetEnvironmentVariable(configuration[varName]) ?? string.Empty;

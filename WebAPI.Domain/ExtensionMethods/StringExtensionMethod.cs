@@ -82,4 +82,9 @@ public static class StringExtensionMethod
     public static string setLiteralString(this string textQuotationMarks) => $""" Este e o seu "Token": {textQuotationMarks}""";
 
     #endregion
+
+    public static string GetEmptyString()
+    {
+        return string.Empty;
+    }
 }

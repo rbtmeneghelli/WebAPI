@@ -144,7 +144,7 @@ public static class DependencyContainerService
     /// <returns></returns>
     public static void RegisterDbConnection(this IServiceCollection services, IConfiguration configuration)
     {
-        var connectionString = FixConstants.GetConnectionString(configuration.GetConnectionString("DefaultConnection"));
+        var connectionString = ConnectionStringSettings.GetConnectionString(configuration.GetConnectionString("DefaultConnection"));
         
         services.AddDbContext<WebAPIContext>(opts =>
         opts.UseSqlServer(connectionString,
@@ -216,13 +216,17 @@ public static class DependencyContainerService
         configuration.Bind("EmailSettings", configEmail);
         services.AddSingleton(configEmail);
 
-        var tokenConfiguration = new TokenConfiguration();
-        configuration.Bind("TokenConfiguration", tokenConfiguration);
+        var tokenConfiguration = new TokenSettings();
+        configuration.Bind("TokenSettings", tokenConfiguration);
         services.AddSingleton(tokenConfiguration);
 
-        var cacheConfiguration = new CacheConfiguration();
-        configuration.Bind("CacheConfiguration", cacheConfiguration);
+        var cacheConfiguration = new CacheSettings();
+        configuration.Bind("CacheSettings", cacheConfiguration);
         services.AddSingleton(cacheConfiguration);
+
+        var connectionStringSettings = new ConnectionStringSettings();
+        configuration.Bind("ConnectionStrings", connectionStringSettings);
+        services.AddSingleton(connectionStringSettings);
     }
 
     public static void RegisterPolicy(this IServiceCollection services)
@@ -292,10 +296,10 @@ public static class DependencyContainerService
                       ValidateLifetime = true,
                       ValidateIssuerSigningKey = true,
                       ClockSkew = TimeSpan.Zero,
-                      ValidIssuer = configuration["TokenConfiguration:Issuer"],
-                      ValidAudience = configuration["TokenConfiguration:Audience"],
+                      ValidIssuer = configuration["TokenSettings:Issuer"],
+                      ValidAudience = configuration["TokenSettings:Audience"],
                       IssuerSigningKey = new SymmetricSecurityKey
-                      (Encoding.UTF8.GetBytes(configuration["TokenConfiguration:Key"]))
+                      (Encoding.UTF8.GetBytes(configuration["TokenSettings:Key"]))
                   };
               });
 
@@ -406,7 +410,7 @@ public static class DependencyContainerService
 
     public static void RegisterHangFireConfig(this IServiceCollection services, IConfiguration configuration)
     {
-        var connectionString = FixConstants.GetConnectionString(configuration.GetConnectionString("DefaultConnection"));
+        var connectionString = ConnectionStringSettings.GetConnectionString(configuration.GetConnectionString("DefaultConnection"));
 
         services.AddHangfire(x => x.UseSimpleAssemblyNameTypeSerializer()
                                    .UseRecommendedSerializerSettings()
@@ -522,7 +526,7 @@ public static class DependencyContainerService
 
     public static void RegisterSeriLog(this IServiceCollection services, IConfiguration configuration)
     {
-        var connectionStringLogs = FixConstants.GetConnectionString(configuration.GetConnectionString("DefaultConnectionLogs"));
+        var connectionStringLogs = ConnectionStringSettings.GetConnectionString(configuration.GetConnectionString("DefaultConnectionLogs"));
 
         Serilog.Debugging.SelfLog.Enable(msg => Console.WriteLine(msg));
         var filterExpr = "@Properties['SourceContext'] like 'WebAPI%'";
@@ -610,7 +614,7 @@ public static class DependencyContainerService
                 .Build();
 
             var builder = new DbContextOptionsBuilder<WebAPIContext>();
-            var connectionStringLogs = FixConstants.GetConnectionString(configuration.GetConnectionString("DefaultConnection"));
+            var connectionStringLogs = ConnectionStringSettings.GetConnectionString(configuration.GetConnectionString("DefaultConnection"));
             builder.UseSqlServer(connectionStringLogs);
 
             return new WebAPIContext(builder.Options);

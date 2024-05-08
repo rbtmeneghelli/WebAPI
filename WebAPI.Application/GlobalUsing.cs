@@ -17,6 +17,6 @@ global using WebAPI.Application.Interfaces;
 global using WebAPI.Domain;
 global using WebAPI.Domain.Enums;
 global using WebAPI.Domain.Models;
-global using WebAPI.Domain.DTO;
+global using WebAPI.Domain.EntitiesDTO;
 global using WebAPI.Domain.Entities;
 global using WebAPI.Domain.Filters;

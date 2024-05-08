@@ -1,4 +1,4 @@
-﻿namespace WebAPI.Domain.DTO;
+﻿namespace WebAPI.Domain.EntitiesDTO;
 
 public class RegionResponseDTO
 {

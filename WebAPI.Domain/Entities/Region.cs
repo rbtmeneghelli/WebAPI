@@ -1,4 +1,4 @@
-﻿using WebAPI.Domain.DTO;
+﻿using WebAPI.Domain.EntitiesDTO;
 using WebAPI.Domain.Generic;
 using Newtonsoft.Json;
 using System.Diagnostics;

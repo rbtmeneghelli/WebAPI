@@ -5,21 +5,21 @@ namespace WebAPI.Application.Services;
 public class MemoryCacheService : IMemoryCacheService
 {
     private readonly IMemoryCache _memoryCache;
-    private CacheConfiguration _cacheConfig { get; }
+    private CacheSettings _cacheSettings { get; }
     private MemoryCacheEntryOptions _cacheOptions;
 
-    public MemoryCacheService(IMemoryCache memoryCache, CacheConfiguration cacheConfig)
+    public MemoryCacheService(IMemoryCache memoryCache, CacheSettings cacheSettings)
     {
         _memoryCache = memoryCache;
-        _cacheConfig = cacheConfig;
+        _cacheSettings = cacheSettings;
 
-        if (GuardClauses.ObjectIsNotNull(_cacheConfig))
+        if (GuardClauses.ObjectIsNotNull(_cacheSettings))
         {
             _cacheOptions = new MemoryCacheEntryOptions
             {
-                AbsoluteExpiration = DateTime.Now.AddHours(_cacheConfig.AbsoluteExpirationInHours),
+                AbsoluteExpiration = DateTime.Now.AddHours(_cacheSettings.AbsoluteExpirationInHours),
                 Priority = CacheItemPriority.High,
-                SlidingExpiration = TimeSpan.FromMinutes(_cacheConfig.SlidingExpirationInMinutes),
+                SlidingExpiration = TimeSpan.FromMinutes(_cacheSettings.SlidingExpirationInMinutes),
                 Size = 1024
             };
         }

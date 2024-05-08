@@ -1,13 +1,8 @@
 ﻿using WebAPI.Domain.Generic;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace WebAPI.Domain.DTO;
+namespace WebAPI.Domain.EntitiesDTO;
 
 public record UserResponseDTO : GenericDTO
 {

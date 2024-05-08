@@ -1,6 +1,6 @@
 ﻿using WebAPI.Domain.Generic;
 
-namespace WebAPI.Domain.DTO;
+namespace WebAPI.Domain.EntitiesDTO;
 
 public record LogResponseDTO : GenericDTO
 {

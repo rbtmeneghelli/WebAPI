@@ -1,7 +1,7 @@
 ﻿using WebAPI.Domain.Generic;
 using System.ComponentModel;
 
-namespace WebAPI.Domain.DTO;
+namespace WebAPI.Domain.EntitiesDTO;
 
 public record CityResponseDTO : GenericDTO
 {

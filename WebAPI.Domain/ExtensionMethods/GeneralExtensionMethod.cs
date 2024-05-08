@@ -102,11 +102,11 @@ public sealed class GeneralExtensionMethod
     public string GetOnlyNumbers(string text)
     {
         if (GuardClauses.IsNullOrWhiteSpace(text))
-            return FixConstants.GetEmptyString();
+            return StringExtensionMethod.GetEmptyString();
 
         var numbers = text.Where(char.IsDigit).ToArray();
         if (GuardClauses.ObjectIsNull(numbers) || numbers.Length == 0)
-            return FixConstants.GetEmptyString();
+            return StringExtensionMethod.GetEmptyString();
 
         return new string(numbers);
     }
@@ -114,8 +114,8 @@ public sealed class GeneralExtensionMethod
     public string RemoveSpecialCharacters(string text)
     {
         string[] specialCharacters = { "=", ":", "%", "/" };
-        string result = FixConstants.GetEmptyString();
-        string partText = FixConstants.GetEmptyString();
+        string result = StringExtensionMethod.GetEmptyString();
+        string partText = StringExtensionMethod.GetEmptyString();
         if (GuardClauses.IsNullOrWhiteSpace(text) == false)
         {
             for (int i = 0; i < text.Length; i++)
@@ -161,7 +161,7 @@ public sealed class GeneralExtensionMethod
 
     public string StripHTML(string input)
     {
-        return Regex.Replace(input, "<.*?>", FixConstants.GetEmptyString());
+        return Regex.Replace(input, "<.*?>", StringExtensionMethod.GetEmptyString());
     }
 
     public string RemoveQuotationMarks(string value)
@@ -407,7 +407,7 @@ public sealed class GeneralExtensionMethod
 
     public string GetColorHex(string[] arrColorUsed)
     {
-        string color = FixConstants.GetEmptyString();
+        string color = StringExtensionMethod.GetEmptyString();
         while (true)
         {
             color = GetColorHex();
@@ -430,7 +430,7 @@ public sealed class GeneralExtensionMethod
 
     public string GetColorRgb(string[] arrColorUsed)
     {
-        string color = FixConstants.GetEmptyString();
+        string color = StringExtensionMethod.GetEmptyString();
         while (true)
         {
             color = GetColorRgb().ToString();
@@ -662,7 +662,7 @@ public sealed class GeneralExtensionMethod
                 return $"{hour.Hours}:{hour.Minutes}";
         }
 
-        return FixConstants.GetEmptyString();
+        return StringExtensionMethod.GetEmptyString();
     }
 
     public string AddZeroToLeftOrRight(string text, int qty = 8, bool isLeft = true)
@@ -922,7 +922,7 @@ public sealed class GeneralExtensionMethod
         if (GuardClauses.IsNullOrWhiteSpace(text) == false)
             return Regex.Replace(text.ApplyTrim(), @"\s+", "");
 
-        return FixConstants.GetEmptyString();
+        return StringExtensionMethod.GetEmptyString();
     }
 
     public string[] RepeatValues(int times, string word)
@@ -1149,7 +1149,7 @@ public sealed class GeneralExtensionMethod
     public string GenerateTokenNumbers()
     {
         int count = 0;
-        string token = FixConstants.GetEmptyString();
+        string token = StringExtensionMethod.GetEmptyString();
 
         while (count < 8)
         {
@@ -1334,7 +1334,7 @@ public sealed class GeneralExtensionMethod
 
     public string ConvertNumberToRomanNumber(int number)
     {
-        string result = FixConstants.GetEmptyString();
+        string result = StringExtensionMethod.GetEmptyString();
 
         string[] arrRoman = { "I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M" };
         int[] arrArabic = { 1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000 };

@@ -101,7 +101,7 @@ public class FileService<TModel> : IFileService<TModel> where TModel : class
                 }
                 else
                 {
-                    workSheet.Cells[indexRow, indexColumn].Value = FixConstants.GetEmptyString();
+                    workSheet.Cells[indexRow, indexColumn].Value = StringExtensionMethod.GetEmptyString();
                 }
                 indexColumn++;
             }
@@ -232,7 +232,7 @@ public class FileService<TModel> : IFileService<TModel> where TModel : class
                 }
                 else
                 {
-                    row.CreateCell(indexColumn).SetCellValue(FixConstants.GetEmptyString());
+                    row.CreateCell(indexColumn).SetCellValue(StringExtensionMethod.GetEmptyString());
                 }
                 indexColumn++;
             }

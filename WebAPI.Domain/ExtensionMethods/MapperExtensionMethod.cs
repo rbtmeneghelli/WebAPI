@@ -1,4 +1,4 @@
-﻿using WebAPI.Domain.DTO;
+﻿using WebAPI.Domain.EntitiesDTO;
 using WebAPI.Domain.Entities;
 
 namespace WebAPI.Domain.ExtensionMethods;

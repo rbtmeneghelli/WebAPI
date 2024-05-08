@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Serilog.Events;
+using WebAPI.Domain.ExtensionMethods;
 using FixConstants = WebAPI.Domain.FixConstants;
 using ILogger = Serilog.ILogger;
 
@@ -73,7 +74,7 @@ namespace WebAPI.Controllers.Base
 
         private string GetCurrentUserName()
         {
-            return _accessor.HttpContext.User.Identity.Name ?? FixConstants.GetEmptyString();
+            return _accessor.HttpContext.User.Identity.Name ?? StringExtensionMethod.GetEmptyString();
         }
 
         private bool IsAuthenticated()

@@ -1,6 +1,6 @@
 ﻿namespace WebAPI.Domain.Models;
 
-public class EmailSettings
+public sealed class EmailSettings
 {
     public string Host { get; set; }
 

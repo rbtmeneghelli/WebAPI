@@ -8,13 +8,13 @@ namespace WebAPI.Application.Services;
 public class GeneralService : GenericService, IGeneralService
 {
     private List<RefreshTokens> _refreshTokens = new List<RefreshTokens>();
-    TokenConfiguration _tokenConfiguration { get; }
+    private TokenSettings _tokenSettings { get; }
 
     private readonly IHttpClientFactory _httpClientFactory;
 
-    public GeneralService(TokenConfiguration tokenConfiguration, INotificationMessageService notificationMessageService, IHttpClientFactory httpClientFactory) : base(notificationMessageService)
+    public GeneralService(TokenSettings tokenSettings, INotificationMessageService notificationMessageService, IHttpClientFactory httpClientFactory) : base(notificationMessageService)
     {
-        _tokenConfiguration = tokenConfiguration;
+        _tokenSettings = tokenSettings;
         _httpClientFactory = httpClientFactory;
     }
 
@@ -27,11 +27,11 @@ public class GeneralService : GenericService, IGeneralService
     public string CreateJwtToken(Credentials credentials)
     {
         JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(_tokenConfiguration.Key);
+        var key = Encoding.ASCII.GetBytes(_tokenSettings.Key);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
-            Issuer = _tokenConfiguration.Issuer,
-            Audience = _tokenConfiguration.Audience,
+            Issuer = _tokenSettings.Issuer,
+            Audience = _tokenSettings.Audience,
             Subject = new ClaimsIdentity(new Claim[]
             {
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
@@ -39,7 +39,7 @@ public class GeneralService : GenericService, IGeneralService
                     new Claim(ClaimTypes.Name, credentials.Login.ToString()),
                     new Claim(ClaimTypes.Role, string.Join(",",credentials.Roles)) // são as permissões do usuario, onde podemos restringir os endpoints a partir da tag >>  No Authorize(Roles = "ROLE_AUDIT") por exemplo
             }),
-            Expires = DateTime.UtcNow.AddSeconds(_tokenConfiguration.Seconds),
+            Expires = DateTime.UtcNow.AddSeconds(_tokenSettings.Seconds),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
         var token = tokenHandler.CreateToken(tokenDescriptor);
@@ -236,7 +236,7 @@ public class GeneralService : GenericService, IGeneralService
     public string GenerateToken(IEnumerable<Claim> claims)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(_tokenConfiguration.Key);
+        var key = Encoding.ASCII.GetBytes(_tokenSettings.Key);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
@@ -258,7 +258,7 @@ public class GeneralService : GenericService, IGeneralService
 
     public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
     {
-        var key = Encoding.ASCII.GetBytes(_tokenConfiguration.Key);
+        var key = Encoding.ASCII.GetBytes(_tokenSettings.Key);
 
         var tokenValidationParameters = new TokenValidationParameters
         {
@@ -330,8 +330,8 @@ public class GeneralService : GenericService, IGeneralService
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
             ClockSkew = TimeSpan.Zero,
-            ValidIssuer = _tokenConfiguration.Issuer,
-            ValidAudience = _tokenConfiguration.Audience,
+            ValidIssuer = _tokenSettings.Issuer,
+            ValidAudience = _tokenSettings.Audience,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtToken))
         };
 
