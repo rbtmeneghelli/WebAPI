@@ -83,5 +83,19 @@ namespace WebAPI.Domain.ExtensionMethods
                 return objT;
             }).ToList();
         }
+
+        public bool CompareLists(List<int> listNumber, List<int> listNumbers)
+        {
+            return listNumber.Except(listNumbers).Any() &&
+            listNumbers.Except(listNumber).Any();
+        }
+
+        public bool CompareAllLinq(List<int> numeros1, List<int> numeros2)
+        {
+            bool isEqual = numeros1.All(numeros2.Contains)
+                           && numeros2.All(numeros1.Contains);
+
+            return isEqual;
+        }
     }
 }
