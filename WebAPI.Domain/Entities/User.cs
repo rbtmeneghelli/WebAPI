@@ -10,15 +10,18 @@ public class User : GenericEntity
 {
     public string Login { get; set; }
     [JsonIgnore]
+
     public string Password { get; set; }
-    [JsonIgnore]
+    [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
+
     public string LastPassword { get; set; }
     public bool IsAuthenticated { get; set; }
     public long IdProfile { get; set; }
     public Profile Profile { get; set; }
 
     [NotMapped]
-    [JsonIgnore]
+    [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
+
     public string NewPassword { get; set; }
 
     public override string ToString() => $"Login: {Login}";
