@@ -14,7 +14,17 @@
             return result;
         }
 
+        public static string GetPagedTSqlPagination(string query, int page, int pageSize)
+        {
+            var newQuery = $"{query} " +
+                           $"OFFSET ({page}-1) * {pageSize} ROWS " +
+                           $"FETCH NEXT {pageSize} ROWS ONLY";
+
+            return newQuery;
+        }
+
         public static int GetDefaultPageIndex(int? pageIndex) => pageIndex.HasValue ? pageIndex.Value : 1;
         public static int GetDefaultPageSize(int? pageSize) => pageSize.HasValue ? pageSize.Value : 10;
+
     }
 }
