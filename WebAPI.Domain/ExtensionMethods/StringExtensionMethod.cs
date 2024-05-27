@@ -87,4 +87,27 @@ public static class StringExtensionMethod
     {
         return string.Empty;
     }
+
+    public static string FormatCpfOrCnpj(this string text)
+    {
+        if(string.IsNullOrEmpty(text))
+            return GetEmptyString();
+
+        if (text.Length == 11)
+            return text.Insert(3, ".").Insert(7, ".").Insert(11, "-");
+        else if (text.Length == 14)
+            return text.Insert(2, ".").Insert(6, ".").Insert(10, "/").Insert(15, "-");
+        else
+            return text;
+    }
+
+    public static string RemoveFormatCpfCnpj(this string text)
+    {
+        string[] arrSpecialChar = [".", "-", "/"];
+        for(int i = 0; i < arrSpecialChar.Length -1; i++)
+        {
+            text = text.ApplyReplace(arrSpecialChar[i],GetEmptyString());
+        }
+        return text;
+    }
 }
