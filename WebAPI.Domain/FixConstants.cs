@@ -13,7 +13,7 @@ public static class FixConstants
     public const string SERVER_API_KEY = "AIzaSyD2i3-nX8RkclUxWPFwirDHKN_D0x2h4Pc"; // Get this from your Firebase Developer Console Login  
     public const string SENDER_ID = "AAAANLjaZwE:APA91bFAfv1CviU_8WyiL971mnqBXi2m6qJax9VwWvmUOnMepnShnGeZmw_sBYAAe3YH5CW370xJm-LZrWCMNt5CMK_Hn8fhigbtc5OaJd0_rqubiHK4hEI4CFh179hfTmwMoHOk9QkW"; // Get this from your Firebase Developer Console Login  
 
-    public const string URL_TO_GET_FIREBASE = "https://fcm.googleapis.com/fcm/send";
+    public const string URL_TO_GET_FIREBASE = "https://fcm.googleapis.com/v1/projects/webapi-ce363/messages:send";
     public const string URL_TO_GET_CEP = "http://viacep.com.br/ws/{0}/json"; //Param >> Cep
     public const string URL_TO_GET_STATES = "https://servicodados.ibge.gov.br/api/v1/localidades/estados";
     public const string URL_TO_GET_CITIES = "https://servicodados.ibge.gov.br/api/v1/localidades/estados/{0}/municipios";

@@ -21,9 +21,11 @@ public sealed class GeneralController : GenericController
     private readonly IGeneralService _generalService;
     private readonly IMemoryCacheService _memoryCacheService;
     private readonly IQRCodeService _qRCodeService;
+    private readonly IFirebaseService _fireBaseService;
+
     private EnvironmentVariables _environmentVariables { get; }
 
-    public GeneralController(IMapper mapper, IHttpContextAccessor accessor, ICepService cepsService, IStatesService statesService, IRegionService regionService, ICityService cityService, INotificationMessageService notificationMessageService, IGeneralService generalService, IMemoryCacheService memoryCacheService, IKLogger iKLogger, IQRCodeService qRCodeService, EnvironmentVariables environmentVariables) : base(mapper, accessor, notificationMessageService, iKLogger)
+    public GeneralController(IMapper mapper, IHttpContextAccessor accessor, ICepService cepsService, IStatesService statesService, IRegionService regionService, ICityService cityService, INotificationMessageService notificationMessageService, IGeneralService generalService, IMemoryCacheService memoryCacheService, IKLogger iKLogger, IQRCodeService qRCodeService, EnvironmentVariables environmentVariables, IFirebaseService fireBaseService) : base(mapper, accessor, notificationMessageService, iKLogger)
     {
         _cepsService = cepsService;
         _statesService = statesService;
@@ -33,6 +35,7 @@ public sealed class GeneralController : GenericController
         _memoryCacheService = memoryCacheService;
         _qRCodeService = qRCodeService;
         _environmentVariables = environmentVariables;
+        _fireBaseService = fireBaseService;
     }
 
     [HttpGet("export2Zip/{directory}/{typeFile:int}")]
@@ -340,5 +343,12 @@ public sealed class GeneralController : GenericController
             NotificationError("Ocorreu um erro durante a leitura das var de ambiente");
             return CustomResponse();
         }
+    }
+
+    [HttpGet("SendPushNotification")]
+    public async Task<IActionResult> SendPushNotification()
+    {
+        await _fireBaseService.SendPushNotification("Xpto", "isso e um teste");
+        return CustomResponse();
     }
 }

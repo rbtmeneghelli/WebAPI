@@ -202,6 +202,7 @@ public static class DependencyContainerService
         services.AddScoped<IUnitofWorkService, UnitOfWorkService>();
         services.AddTransient<IIpAddressService, IpAddressService>();
         services.AddScoped<INfService, NfService>();
+        services.AddScoped<IFirebaseService, FirebaseService>();
     }
 
     public static void RegisterMapperConfig(this IServiceCollection services)
