@@ -66,23 +66,24 @@ public class AccountService : GenericService, IAccountService
     {
         try
         {
-            Credentials credenciais = new Credentials();
+            Credentials credentials = new Credentials();
             User user = await _userRepository.GetUserCredentialsByLogin(login);
 
             if (GuardClauses.ObjectIsNotNull(user))
             {
-                credenciais.Id = user.Id;
-                credenciais.Login = user.Login;
-                credenciais.Perfil = user.Profile.Description;
-                credenciais.Roles = Enumerable.Empty<string>().ToList();
+                credentials.Id = user.Id;
+                credentials.Login = user.Login;
+                credentials.Perfil = user.Profile.Description;
+                credentials.Roles = Enumerable.Empty<string>().ToList();
+                credentials.AccessDate = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
                 foreach (var item in user.Profile.ProfileOperations)
                 {
                     List<EnumActions> condition = GetActions(item);
-                    credenciais.Roles.AddRange(item.Operation.Roles.Where(y => condition.Contains(y.Action)).Select(z => z.RoleTag).ToList());
+                    credentials.Roles.AddRange(item.Operation.Roles.Where(y => condition.Contains(y.Action)).Select(z => z.RoleTag).ToList());
                 }
             }
 
-            return credenciais;
+            return credentials;
         }
         catch
         {
