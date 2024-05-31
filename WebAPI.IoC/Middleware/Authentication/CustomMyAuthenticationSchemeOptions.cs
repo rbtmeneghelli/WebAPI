@@ -7,9 +7,9 @@ namespace WebAPI.Configuration.Middleware.Authentication;
 public class CustomMyAuthenticationSchemeOptions : AuthenticationSchemeOptions
 {
     public const string SchemeName = "HUBAutenticacao";
-    public List<PolicyWithClaim> PoliciesWithClaims { get; set; }
+    public IEnumerable<PolicyWithClaim> PoliciesWithClaims { get; set; }
 
-    public static List<PolicyWithClaim> GetPolicies()
+    public static IEnumerable<PolicyWithClaim> GetPolicies()
     {
         string arrAction = "read,post,put";
         string actionPost = "post";
@@ -18,7 +18,7 @@ public class CustomMyAuthenticationSchemeOptions : AuthenticationSchemeOptions
 
         // No PolicyName definimos um nome da politica para ser utilizada no Annotation [Authorize(Policy = "")] das controllers
         // No ClaimType passamos o nome da claim e no ClaimValue o valor o valor que vai ser validado
-        List<PolicyWithClaim> PoliciesWithClaims = new List<PolicyWithClaim>
+        IEnumerable<PolicyWithClaim> PoliciesWithClaims = new List<PolicyWithClaim>
         {
         new PolicyWithClaim { PolicyName = "GetProfileByFiltersPolicy", ClaimType = "EClaim.ProfileConsulta.GetDescription()", ClaimValue = arrAction },
         new PolicyWithClaim { PolicyName = "InsuredJudicial", ClaimType = string.Empty, ClaimValue = string.Empty, HasMultiplePolicies = true,

@@ -12,7 +12,7 @@ public class Region : GenericEntity
     public string Name { get; set; }
     [JsonProperty("Sigla")]
     public string Initials { get; set; }
-    public List<States> States { get; set; }
+    public IEnumerable<States> States { get; set; }
 
     /// <summary>
     /// Faz a conversão implicita do objeto Region para RegionDto, ao passar a entidade

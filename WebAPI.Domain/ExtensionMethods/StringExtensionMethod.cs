@@ -16,7 +16,7 @@ public static class StringExtensionMethod
     
     public static TSource DeserializeObject<TSource>(this string data) => JsonConvert.DeserializeObject<TSource>(data);
     
-    public static StringBuilder BuildString(List<string> listStrings, bool hasWordBreak)
+    public static StringBuilder BuildString(IEnumerable<string> listStrings, bool hasWordBreak)
     {
         StringBuilder sb = new StringBuilder();
 
@@ -53,7 +53,7 @@ public static class StringExtensionMethod
         return -1;
     }
 
-    public static string TransformListOrArrayInString(List<string> list)
+    public static string TransformListOrArrayInString(IEnumerable<string> list)
     {
         if (list is not null)
             return string.Join(",", list);

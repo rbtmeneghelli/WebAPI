@@ -4,5 +4,5 @@ public interface IThreadService : IDisposable
 {
     bool RunMethodWithThreadPool(int value);
 
-    bool RunMethodWithThreadParallel(List<int> list);
+    bool RunMethodWithThreadParallel(IEnumerable<int> list);
 }

@@ -44,7 +44,7 @@ public class UserService : GenericService, IUserService
                (!filter.IdProfile.HasValue || filter.IdProfile == p.IdProfile);
     }
 
-    public async Task<List<UserResponseDTO>> GetAllAsync()
+    public async Task<IEnumerable<UserResponseDTO>> GetAllAsync()
     {
         try
         {
@@ -99,7 +99,7 @@ public class UserService : GenericService, IUserService
         catch (Exception ex)
         {
             Notify(ex.Message);
-            return PagedFactory.GetPaged(new List<UserResponseDTO>().AsQueryable(), filter.PageIndex, filter.PageSize);
+            return PagedFactory.GetPaged(Enumerable.Empty<UserResponseDTO>().AsQueryable(), filter.PageIndex, filter.PageSize);
         }
         finally
         {

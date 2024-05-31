@@ -36,6 +36,11 @@ public static class GuardClauses
         return ObjectIsNotNull(list) ? list.Count > 0 : false;
     }
 
+    public static bool HaveDataOnList<T>(IEnumerable<T> list)
+    {
+        return ObjectIsNotNull(list) ? list.Count() > 0 : false;
+    }
+
     public static bool IsNumberOnInterval(int minInterval, int number, int maxInterval) => number >= minInterval && number <= maxInterval;
 
     public static bool ValidatePropertyObject(DropDownList dropDownList) => dropDownList is { Id : > 0, Id: <= 100 };

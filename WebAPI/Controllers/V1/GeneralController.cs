@@ -97,8 +97,9 @@ public sealed class GeneralController : GenericController
     {
         try
         {
-            List<Region> listRegion = await _regionService.GetAllRegionAsync();
-            List<States> listStates = await _statesService.GetAllStatesAsync();
+            IEnumerable<Region> listRegion = await _regionService.GetAllRegionAsync();
+            IEnumerable<States> listStates = await _statesService.GetAllStatesAsync();
+
             if (refreshEstados)
             {
                 if (GuardClauses.ObjectIsNotNull(listStates) && GuardClauses.HaveDataOnList(listStates))
@@ -106,7 +107,7 @@ public sealed class GeneralController : GenericController
                     RequestData requestData = await _generalService.RequestDataToExternalAPIAsync(FixConstants.URL_TO_GET_STATES);
                     if (requestData.IsSuccess)
                     {
-                        List<States> listStatesAPI = requestData.Data.DeserializeObject<List<States>>();
+                        IEnumerable<States> listStatesAPI = requestData.Data.DeserializeObject<IEnumerable<States>>();
                         if (GuardClauses.ObjectIsNotNull(listStatesAPI) && GuardClauses.HaveDataOnList(listStatesAPI))
                         {
                             await _regionService.RefreshRegionAsync(listStatesAPI);
@@ -128,7 +129,7 @@ public sealed class GeneralController : GenericController
     [HttpGet("addCities")]
     public async Task<IActionResult> GetCities()
     {
-        List<MesoRegion> mesoRegions = new List<MesoRegion>();
+        IEnumerable<MesoRegion> mesoRegions = Enumerable.Empty<MesoRegion>();
         List<City> cities = new List<City>();
         RequestData requestData = new RequestData();
 
@@ -148,7 +149,7 @@ public sealed class GeneralController : GenericController
 
                 if (requestData.IsSuccess)
                 {
-                    mesoRegions = requestData.Data.DeserializeObject<List<MesoRegion>>();
+                    mesoRegions = requestData.Data.DeserializeObject<IEnumerable<MesoRegion>>();
 
                     if (GuardClauses.ObjectIsNotNull(mesoRegions) && mesoRegions.Count() > 0)
                     {
@@ -183,7 +184,7 @@ public sealed class GeneralController : GenericController
             RequestData requestData = await _generalService.RequestDataToExternalAPIAsync(FixConstants.URL_TO_GET_STATES);
             if (requestData.IsSuccess)
             {
-                List<States> listStatesAPI = requestData.Data.DeserializeObject<List<States>>();
+                IEnumerable<States> listStatesAPI = requestData.Data.DeserializeObject<IEnumerable<States>>();
 
                 if (_regionService.GetCount(p => p.IsActive == true) < 4 && GuardClauses.ObjectIsNotNull(listStatesAPI) && GuardClauses.HaveDataOnList(listStatesAPI))
                 {
@@ -217,12 +218,12 @@ public sealed class GeneralController : GenericController
     {
         try
         {
-            List<Region> listRegion = await _regionService.GetAllRegionAsync();
+            IEnumerable<Region> listRegion = await _regionService.GetAllRegionAsync();
             List<States> listStates = new List<States>();
             RequestData requestData = await _generalService.RequestDataToExternalAPIAsync(FixConstants.URL_TO_GET_STATES);
             if (requestData.IsSuccess)
             {
-                List<States> listStatesAPI = requestData.Data.DeserializeObject<List<States>>();
+                IEnumerable<States> listStatesAPI = requestData.Data.DeserializeObject<IEnumerable<States>>();
                 if (GuardClauses.ObjectIsNotNull(listStatesAPI) && GuardClauses.HaveDataOnList(listStatesAPI) &&
                     GuardClauses.ObjectIsNotNull(listRegion) && GuardClauses.HaveDataOnList(listRegion))
                 {
@@ -251,15 +252,13 @@ public sealed class GeneralController : GenericController
     private async Task<List<States>> GetListStateWithoutCities()
     {
         List<States> listState = await _statesService.GetAllStatesAsync();
+
         if (listState is not null)
         {
-            if (listState.Count() > 0)
+            IEnumerable<long> listIdState = await _cityService.GetIdStatesAsync();
+            foreach (long idState in listIdState)
             {
-                IEnumerable<long> listIdState = await _cityService.GetIdStatesAsync();
-                foreach (long idState in listIdState)
-                {
-                    listState.RemoveAll(x => x.Id == idState);
-                }
+                listState.RemoveAll(x => x.Id == idState);
             }
         }
         return listState;
@@ -291,7 +290,7 @@ public sealed class GeneralController : GenericController
     [HttpGet("loadBanners")]
     public async Task<IActionResult> LoadBanners()
     {
-        if (!_memoryCacheService.TryGet<List<Region>>("FilesCache", out var cached))
+        if (!_memoryCacheService.TryGet<IEnumerable<Region>>("FilesCache", out var cached))
         {
             var files = await _regionService.GetAllRegionAsync();
 
@@ -301,7 +300,7 @@ public sealed class GeneralController : GenericController
         }
         else
         {
-            var files = _memoryCacheService.Get<List<Region>>("FilesCache");
+            var files = _memoryCacheService.Get<IEnumerable<Region>>("FilesCache");
             return CustomResponse(files);
         }
     }
@@ -320,7 +319,7 @@ public sealed class GeneralController : GenericController
 
     [EnableCors("EnableCORS")]
     [HttpPost("uploadMultFiles")]
-    public IActionResult UploadFiles([FromForm] List<MultFiles> multFiles)
+    public IActionResult UploadFiles([FromForm] IEnumerable<MultFiles> multFiles)
     {
         if (multFiles is null)
         {
@@ -338,7 +337,7 @@ public sealed class GeneralController : GenericController
         {
             return CustomResponse(_environmentVariables.ConnectionStringSettings.SerializeObject(), "Variaveis de ambiente");
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             NotificationError("Ocorreu um erro durante a leitura das var de ambiente");
             return CustomResponse();

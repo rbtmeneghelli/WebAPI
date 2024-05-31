@@ -33,7 +33,7 @@ namespace WebAPI.Application.Services
             return await Task.FromResult(_logRepository.GetById(id));
         }
 
-        public async Task<List<Log>> GetAllWithLikeAsync(string parametro) => await _logRepository.FindBy(x => EF.Functions.Like(x.Class, $"%{parametro}%")).ToListAsync();
+        public async Task<IEnumerable<Log>> GetAllWithLikeAsync(string parameter) => await _logRepository.FindBy(x => EF.Functions.Like(x.Class, $"%{parameter}%")).ToListAsync();
 
         public async Task<PagedResult<LogResponseDTO>> GetAllPaginateAsync(LogFilter filter)
         {

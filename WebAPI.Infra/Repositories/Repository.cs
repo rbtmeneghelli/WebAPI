@@ -180,15 +180,16 @@ public partial class GenericRepository<TEntity> : IGenericRepository<TEntity> wh
         }
     }
 
-    public virtual List<dynamic> ExecuteDynamicSQL(string sql, Dictionary<string, object> parameters = null)
+    public virtual IEnumerable<dynamic> ExecuteDynamicSQL(string sql, Dictionary<string, object> parameters = null)
     {
-        List<dynamic> list = new List<dynamic>();
+        IEnumerable<dynamic> list = Enumerable.Empty<dynamic>();
+        
         try
         {
             if (GuardClauses.ObjectIsNull(parameters))
                 parameters = new Dictionary<string, object>();
 
-            list = _context.CollectionFromSql(sql, parameters).ToList();
+            list = _context.CollectionFromSql(sql, parameters);
         }
         catch (Exception ex)
         {

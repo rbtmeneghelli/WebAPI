@@ -17,7 +17,7 @@ public interface IGenericRepository<TEntity> : IDisposable where TEntity : class
     void RemoveRange(IEnumerable<TEntity> entities);
     long SaveChanges();
     bool ExecuteSql(string sql, params object[] parameters);
-    List<dynamic> ExecuteDynamicSQL(string sql, Dictionary<string, object> parameters = null);
+    IEnumerable<dynamic> ExecuteDynamicSQL(string sql, Dictionary<string, object> parameters = null);
     void SetCommandTimeout(int timeout);
     bool ExecuteProcedureSql(string sql);
     bool Exist(Expression<Func<TEntity, bool>> predicate);

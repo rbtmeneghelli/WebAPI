@@ -80,7 +80,10 @@ public class CepService : GenericService, ICepService
         }
     }
 
-    public async Task<List<AddressData>> GetAllWithLikeAsync(string parametro) => await _cepRepository.FindBy(x => EF.Functions.Like(x.Cep, $"%{parametro}%")).ToListAsync();
+    public async Task<IEnumerable<AddressData>> GetAllWithLikeAsync(string parameter)
+    { 
+        return await _cepRepository.FindBy(x => EF.Functions.Like(x.Cep, $"%{parameter}%")).ToListAsync();
+    }
 
     public async Task<PagedResult<AddressData>> GetAllWithPaginateAsync(CepFilter filter)
     {

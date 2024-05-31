@@ -6,11 +6,11 @@ namespace WebAPI.Domain.Models
 {
     public class LineChart
     {
-        public List<ChartDataSets> ArrDataSets { get; set; }
+        public IEnumerable<ChartDataSets> ArrDataSets { get; set; }
         public string[] Labels { get; set; }
         public ChartOptions Options { get; set; }
         public bool ChartLegend { get; set; }
         public string ChartType { get; set; }
-        public List<ChartColors> ArrColors { get; set; }
+        public IEnumerable<ChartColors> ArrColors { get; set; }
     }
 }

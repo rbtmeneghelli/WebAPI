@@ -17,9 +17,9 @@ public class AccountService : GenericService, IAccountService
         _hostingEnvironment = hostingEnvironment;
     }
 
-    private List<EnumActions> GetActions(ProfileOperation profileOperation)
+    private IEnumerable<EnumActions> GetActions(ProfileOperation profileOperation)
     {
-        List<EnumActions> condition = new List<EnumActions>
+        IEnumerable<EnumActions> condition = new List<EnumActions>
         {
             profileOperation.CanCreate ? EnumActions.Insert : EnumActions.None,
             profileOperation.CanResearch ? EnumActions.Research : EnumActions.None,
@@ -78,7 +78,7 @@ public class AccountService : GenericService, IAccountService
                 credentials.AccessDate = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
                 foreach (var item in user.Profile.ProfileOperations)
                 {
-                    List<EnumActions> condition = GetActions(item);
+                    IEnumerable<EnumActions> condition = GetActions(item);
                     credentials.Roles.AddRange(item.Operation.Roles.Where(y => condition.Contains(y.Action)).Select(z => z.RoleTag).ToList());
                 }
             }
@@ -179,7 +179,7 @@ public class AccountService : GenericService, IAccountService
                 credenciais.Roles = Enumerable.Empty<string>().ToList();
                 foreach (var item in user.Profile.ProfileOperations)
                 {
-                    List<EnumActions> condition = GetActions(item);
+                    IEnumerable<EnumActions> condition = GetActions(item);
                     credenciais.Roles.AddRange(item.Operation.Roles.Where(y => condition.Contains(y.Action)).Select(z => z.RoleTag).ToList());
                 }
             }

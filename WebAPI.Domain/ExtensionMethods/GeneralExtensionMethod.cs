@@ -461,7 +461,7 @@ public sealed class GeneralExtensionMethod
         return lastMonthDay;
     }
 
-    public DataTable ConvertDynamicListToDataTable(List<dynamic> list)
+    public DataTable ConvertDynamicListToDataTable(IEnumerable<dynamic> list)
     {
         var json = JsonConvert.SerializeObject(list);
         DataTable dt = (DataTable)JsonConvert.DeserializeObject(json, (typeof(DataTable)));
@@ -671,7 +671,7 @@ public sealed class GeneralExtensionMethod
         return text;
     }
 
-    public List<DropDownList> GetListDrivers()
+    public IEnumerable<DropDownList> GetListDrivers()
     {
         int count = 0;
         List<DropDownList> list = new List<DropDownList>();
@@ -807,7 +807,7 @@ public sealed class GeneralExtensionMethod
         return result;
     }
 
-    public List<DropDownList> ReadCsvFile(string path)
+    public IEnumerable<DropDownList> ReadCsvFile(string path)
     {
         return File.ReadAllLines(path)
         .Skip(1)
@@ -997,7 +997,7 @@ public sealed class GeneralExtensionMethod
         return (correspondencias[ocorrencia]);
     }
 
-    public List<Match> EncontrarCadaOcorrenciaDe(string fonte, string criterio, int ocorrencia)
+    public IEnumerable<Match> EncontrarCadaOcorrenciaDe(string fonte, string criterio, int ocorrencia)
     {
         List<Match> ocorrencias = new List<Match>();
         Regex RE = new Regex(criterio, RegexOptions.Multiline);
@@ -1426,7 +1426,7 @@ public sealed class GeneralExtensionMethod
     //    }
     //}
 
-    public List<PropertyDescriptor> GetDataProperties<T>() where T : class
+    public IEnumerable<PropertyDescriptor> GetDataProperties<T>() where T : class
     {
         var listaPropriedades = TypeDescriptor.GetProperties(typeof(T)).Cast<PropertyDescriptor>().ToList();
         var listaPropriedadesNome = typeof(T).GetProperties().Select(x => x.GetCustomAttribute<DisplayNameAttribute>()).Where(x => x != null).Select(x => x.DisplayName);

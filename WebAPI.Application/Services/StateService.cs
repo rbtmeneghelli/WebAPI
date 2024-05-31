@@ -28,7 +28,7 @@ namespace WebAPI.Application.Services
                    (GuardClauses.IsNullOrWhiteSpace(filter.Nome) || p.Name.StartsWith(filter.Nome.ApplyTrim()));
         }
 
-        public Task AddStatesAsync(List<States> list)
+        public Task AddStatesAsync(IEnumerable<States> list)
         {
             _stateRepository.AddRange(list);
             return Task.CompletedTask;
@@ -101,7 +101,7 @@ namespace WebAPI.Application.Services
             }
         }
 
-        public async Task<List<States>> GetAllWithLikeAsync(string stateName) => await _stateRepository.FindBy(x => EF.Functions.Like(x.Name, $"%{stateName}%")).ToListAsync();
+        public async Task<IEnumerable<States>> GetAllWithLikeAsync(string stateName) => await _stateRepository.FindBy(x => EF.Functions.Like(x.Name, $"%{stateName}%")).ToListAsync();
 
         public async Task<PagedResult<States>> GetAllWithPaginateAsync(StateFilter filter)
         {

@@ -7,6 +7,6 @@ public class Profile : GenericEntity
 {
     public string Description { get; set; }
     public int ProfileTypeId { get; set; }
-    public List<User> Users { get; set; }
-    public List<ProfileOperation> ProfileOperations { get; set; }
+    public IEnumerable<User> Users { get; set; }
+    public IEnumerable<ProfileOperation> ProfileOperations { get; set; }
 }

@@ -32,13 +32,13 @@ namespace WebAPI.Infra.CrossCutting
             try
             {
                 var client = _httpClientFactory.CreateClient("Signed");
-                var response = await client.GetFromJsonAsync<List<T>>(apiPath);
+                var response = await client.GetFromJsonAsync<IEnumerable<T>>(apiPath);
                 return response;
             }
             catch (GenericException ex)
             {
                 ex.ShowDefaultExceptionMessage();
-                return default(List<T>);
+                return Enumerable.Empty<T>();
             }
         }
 

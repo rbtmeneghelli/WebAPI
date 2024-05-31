@@ -9,7 +9,7 @@ public class AuditService : GenericService, IAuditService
     private readonly IAuditRepository _auditRepository;
     private readonly IRepositoryDapper<Audit> _auditDapper;
 
-    public AuditService(IAuditRepository auditRepository, IRepositoryDapper<Audit> auditDapper, INotificationMessageService notificationMessageService): base(notificationMessageService)
+    public AuditService(IAuditRepository auditRepository, IRepositoryDapper<Audit> auditDapper, INotificationMessageService notificationMessageService) : base(notificationMessageService)
     {
         _auditRepository = auditRepository;
         _auditDapper = auditDapper;
@@ -35,7 +35,10 @@ public class AuditService : GenericService, IAuditService
         return await Task.FromResult(_auditRepository.GetById(id));
     }
 
-    public async Task<List<Audit>> GetAllWithLikeAsync(string parametro) => await _auditRepository.FindBy(x => EF.Functions.Like(x.TableName, $"%{parametro}%")).ToListAsync();
+    public async Task<IEnumerable<Audit>> GetAllWithLikeAsync(string parameter)
+    {
+        return await _auditRepository.FindBy(x => EF.Functions.Like(x.TableName, $"%{parameter}%")).ToListAsync();
+    }
 
     public async Task<PagedResult<AuditResponseDTO>> GetAllDapperAsync(AuditFilter filter)
     {

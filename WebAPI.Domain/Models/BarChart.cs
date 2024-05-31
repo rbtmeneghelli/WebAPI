@@ -9,6 +9,6 @@ namespace WebAPI.Domain.Models
         public string[] Labels { get; set; }
         public string ChartType { get; set; }
         public bool ChartLegend { get; set; }
-        public List<ChartDataSets> ArrDataSets { get; set; }
+        public IEnumerable<ChartDataSets> ArrDataSets { get; set; }
     };
 }

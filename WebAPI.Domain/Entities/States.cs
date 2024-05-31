@@ -14,6 +14,6 @@ public class States : GenericEntity
     [JsonProperty("Regiao")]
     public Region Region { get; set; }
     public long RegionId { get; set; }
-    public virtual List<ValueObject.AddressData> Ceps { get; set; }
-    public virtual List<City> City { get; set; }
+    public virtual IEnumerable<ValueObject.AddressData> Ceps { get; set; }
+    public virtual IEnumerable<City> City { get; set; }
 }

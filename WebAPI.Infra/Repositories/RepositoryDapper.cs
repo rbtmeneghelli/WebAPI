@@ -16,10 +16,9 @@ namespace WebAPI.Infra.Data.Repositories
             _idbConnection = idbConnection;
         }
 
-        public async Task<List<TEntity>> QueryToGetAll(string sqlQuery)
+        public async Task<IEnumerable<TEntity>> QueryToGetAll(string sqlQuery)
         {
-            var list = new List<TEntity>();
-            list = (await _idbConnection.QueryAsync<TEntity>(sql: sqlQuery)).AsList();
+            var list = await _idbConnection.QueryAsync<TEntity>(sql: sqlQuery);
             return list;
         }
 
@@ -35,7 +34,7 @@ namespace WebAPI.Infra.Data.Repositories
             return new QueryResult<TEntity>
             {
                 Count = reader.Read<int>().FirstOrDefault(),
-                Result = reader.Read<TEntity>().ToList()
+                Result = reader.Read<TEntity>()
             };
         }
 

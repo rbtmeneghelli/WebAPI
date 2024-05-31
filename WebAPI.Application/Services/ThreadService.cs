@@ -23,7 +23,7 @@ namespace WebAPI.Infra.CrossCutting
             return result;
         }
 
-        public bool RunMethodWithThreadParallel(List<int> list)
+        public bool RunMethodWithThreadParallel(IEnumerable<int> list)
         {
             bool result = false;
 

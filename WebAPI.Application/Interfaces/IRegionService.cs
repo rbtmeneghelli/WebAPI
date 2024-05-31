@@ -2,15 +2,15 @@
 {
     public interface IRegionService
     {
-        Task AddRegionsAsync(List<Region> list);
+        Task AddRegionsAsync(IEnumerable<Region> list);
 
-        Task<List<Region>> GetAllRegionAsync();
+        Task<IEnumerable<Region>> GetAllRegionAsync();
 
-        Task RefreshRegionAsync(List<States> listStatesAPI);
+        Task RefreshRegionAsync(IEnumerable<States> listStatesAPI);
 
         Task<bool> UpdateStatusByIdAsync(long id);
 
-        Task<List<Region>> GetAllWithLikeAsync(string parametro);
+        Task<IEnumerable<Region>> GetAllWithLikeAsync(string parameter);
 
         Task<PagedResult<Region>> GetAllWithPaginateAsync(RegionFilter filter);
         bool ExistRegionById(long regionId);

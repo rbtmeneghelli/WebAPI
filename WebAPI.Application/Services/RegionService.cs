@@ -12,7 +12,7 @@ public class RegionService : GenericService, IRegionService
         _regionRepository = regionRepository;
     }
 
-    public async Task<List<Region>> GetAllRegionAsync()
+    public async Task<IEnumerable<Region>> GetAllRegionAsync()
     {
         return await _regionRepository.GetAll().ToListAsync();
     }
@@ -22,17 +22,17 @@ public class RegionService : GenericService, IRegionService
         return _regionRepository.Exist(param => param.Id.Value == regionId);
     }
 
-    public Task AddRegionsAsync(List<Region> list)
+    public Task AddRegionsAsync(IEnumerable<Region> list)
     {
         _regionRepository.AddRange(list);
         return Task.CompletedTask;
     }
 
-    public async Task RefreshRegionAsync(List<States> listStatesAPI)
+    public async Task RefreshRegionAsync(IEnumerable<States> listStatesAPI)
     {
         try
         {
-            List<Region> regions = await _regionRepository.GetAll().ToListAsync();
+            IEnumerable<Region> regions = await _regionRepository.GetAll().ToListAsync();
             IEnumerable<Region> tmpRegion = listStatesAPI.Select(x => new Region()
             {
                 Name = x.Region.Name,
@@ -86,7 +86,7 @@ public class RegionService : GenericService, IRegionService
         }
     }
 
-    public async Task<List<Region>> GetAllWithLikeAsync(string parametro) => await _regionRepository.FindBy(x => EF.Functions.Like(x.Name, $"%{parametro}%")).ToListAsync();
+    public async Task<IEnumerable<Region>> GetAllWithLikeAsync(string parameter) => await _regionRepository.FindBy(x => EF.Functions.Like(x.Name, $"%{parameter}%")).ToListAsync();
 
     public async Task<PagedResult<Region>> GetAllWithPaginateAsync(RegionFilter filter)
     {

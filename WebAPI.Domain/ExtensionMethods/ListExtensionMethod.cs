@@ -21,7 +21,7 @@ namespace WebAPI.Domain.ExtensionMethods
         /// <param name="list1"></param>
         /// <param name="list2"></param>
         /// <returns></returns>
-        public List<T> CombineLists<T>(List<T> list1, List<T> list2) => [.. list1, .. list2];
+        public IEnumerable<T> CombineLists<T>(IEnumerable<T> list1, IEnumerable<T> list2) => [.. list1, .. list2];
 
         public T[] GetAllElements<T>(T[] list) => list[Range.All];
 
@@ -39,29 +39,29 @@ namespace WebAPI.Domain.ExtensionMethods
             return array;
         }
 
-        public List<T> GetReverseList<T>(List<T> list) => Enumerable.Reverse(list).ToList();
+        public IEnumerable<T> GetReverseList<T>(IEnumerable<T> list) => Enumerable.Reverse(list);
 
-        public List<T> ReturnListOrEmptyList<T>(List<T> source) => source is not null ? source : Enumerable.Empty<T>().ToList();
+        public IEnumerable<T> ReturnListOrEmptyList<T>(IEnumerable<T> source) => source is not null ? source : Enumerable.Empty<T>();
 
-        public List<DropDownList> ConvertEnumToList<T>() where T : Enum
+        public IEnumerable<DropDownList> ConvertEnumToList<T>() where T : Enum
         {
-            List<DropDownList> list = Enum.GetValues(typeof(EnumSystem))
+            IEnumerable<DropDownList> list = Enum.GetValues(typeof(EnumSystem))
               .Cast<EnumSystem>()
               .Select(x => new DropDownList
               {
                   Id = ((long)x),
                   Description = x.ToString()
-              }).ToList();
+              });
 
             return list;
         }
 
-        public List<string> CloneList(List<string> list)
+        public IEnumerable<string> CloneList(List<string> list)
         {
             return list.GetRange(0, list.Count);
         }
 
-        public List<T> ConvertToList<T>(DataTable dt)
+        public IEnumerable<T> ConvertToList<T>(DataTable dt)
         {
             var columnNames = dt.Columns.Cast<DataColumn>().Select(c => c.ColumnName.ToLower()).ToList();
             var properties = typeof(T).GetProperties();
@@ -84,13 +84,13 @@ namespace WebAPI.Domain.ExtensionMethods
             }).ToList();
         }
 
-        public bool CompareLists(List<int> listNumber, List<int> listNumbers)
+        public bool CompareLists(IEnumerable<int> listNumber, IEnumerable<int> listNumbers)
         {
             return listNumber.Except(listNumbers).Any() &&
             listNumbers.Except(listNumber).Any();
         }
 
-        public bool CompareAllLinq(List<int> numeros1, List<int> numeros2)
+        public bool CompareAllLinq(IEnumerable<int> numeros1, IEnumerable<int> numeros2)
         {
             bool isEqual = numeros1.All(numeros2.Contains)
                            && numeros2.All(numeros1.Contains);

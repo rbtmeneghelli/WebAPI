@@ -9,13 +9,13 @@ namespace WebAPI.Domain.Models
 {
     public class RefreshStates
     {
-        public List<States> ListState { get; set; }
+        public IEnumerable<States> ListState { get; set; }
         
-        public List<States> ListStateAPI { get; set; }
+        public IEnumerable<States> ListStateAPI { get; set; }
 
-        public List<Region> ListRegion { get; set; }
+        public IEnumerable<Region> ListRegion { get; set; }
 
-        public RefreshStates(List<States> listState, List<States> listStateAPI, List<Region> listRegion)
+        public RefreshStates(IEnumerable<States> listState, IEnumerable<States> listStateAPI, IEnumerable<Region> listRegion)
         {
             ListState = listState;
             ListStateAPI = listStateAPI;

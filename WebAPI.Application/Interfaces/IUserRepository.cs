@@ -11,11 +11,11 @@ public interface IUserRepository
     Task<User> GetUserCredentialsByLogin(string login);
     Task<User> GetUserCredentialsById(long id);
     Task<bool> CanDelete(long userId);
-    Task<List<User>> UserProfileJoinLinq();
-    Task<List<User>> UserProfileJoinLinqAndLambda();
-    Task<List<User>> UserProfileLeftJoinLinq();
-    Task<List<User>> UserProfileRightJoinLinq();
-    Task<List<User>> UserProfileFullJoinLinq();
+    Task<IEnumerable<User>> UserProfileJoinLinq();
+    Task<IEnumerable<User>> UserProfileJoinLinqAndLambda();
+    Task<IEnumerable<User>> UserProfileLeftJoinLinq();
+    Task<IEnumerable<User>> UserProfileRightJoinLinq();
+    Task<IEnumerable<User>> UserProfileFullJoinLinq();
     bool Exist(Expression<Func<User, bool>> predicate);
     void Add(User user);
     void Remove(User user);

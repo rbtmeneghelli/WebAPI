@@ -84,7 +84,7 @@ public class UserRepository : IUserRepository
 
     #region Operações de junções
 
-    public async Task<List<User>> UserProfileJoinLinq()
+    public async Task<IEnumerable<User>> UserProfileJoinLinq()
     {
         return await (from _user in _userRepository.GetAll()
                       join _profile in _profileRepository.GetAll()
@@ -97,7 +97,7 @@ public class UserRepository : IUserRepository
                       }).ToListAsync();
     }
 
-    public async Task<List<User>> UserProfileJoinLinqAndLambda()
+    public async Task<IEnumerable<User>> UserProfileJoinLinqAndLambda()
     {
         return await _userRepository.GetAll()
                .Join(
@@ -112,7 +112,7 @@ public class UserRepository : IUserRepository
                     }).ToListAsync();
     }
 
-    public async Task<List<User>> UserProfileLeftJoinLinq()
+    public async Task<IEnumerable<User>> UserProfileLeftJoinLinq()
     {
         return await (from _user in _userRepository.GetAll()
                       join _profile in _profileRepository.GetAll()
@@ -127,7 +127,7 @@ public class UserRepository : IUserRepository
                       }).ToListAsync();
     }
 
-    public async Task<List<User>> UserProfileRightJoinLinq()
+    public async Task<IEnumerable<User>> UserProfileRightJoinLinq()
     {
         return await (from _profile in _profileRepository.GetAll()
                       join _user in _userRepository.GetAll()
@@ -142,7 +142,7 @@ public class UserRepository : IUserRepository
                       }).ToListAsync();
     }
 
-    public async Task<List<User>> UserProfileFullJoinLinq()
+    public async Task<IEnumerable<User>> UserProfileFullJoinLinq()
     {
         var _userResultLeftJoin = await UserProfileLeftJoinLinq();
         var _userResultRightJoin = await UserProfileRightJoinLinq();

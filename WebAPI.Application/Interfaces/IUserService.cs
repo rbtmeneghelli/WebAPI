@@ -3,7 +3,7 @@ namespace WebAPI.Application.Interfaces;
 
 public interface IUserService
 {
-    Task<List<UserResponseDTO>> GetAllAsync();
+    Task<IEnumerable<UserResponseDTO>> GetAllAsync();
     Task<PagedResult<UserResponseDTO>> GetAllPaginateAsync(UserFilter filter);
     Task<UserResponseDTO> GetByIdAsync(long id);
     Task<UserResponseDTO> GetByLoginAsync(string login);

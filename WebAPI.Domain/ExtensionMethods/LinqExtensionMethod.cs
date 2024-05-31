@@ -8,27 +8,27 @@ public sealed class LINQExtensionMethods
 {
     #region Função de agregação do LINQ
 
-    public string AgregateStrings(List<string> source)
+    public string AgregateStrings(IEnumerable<string> source)
     {
         return source.Aggregate((item, itemNext) => item + "," + itemNext);
     }
 
-    public string JoinStrings(List<string> source)
+    public string JoinStrings(IEnumerable<string> source)
     {
         return string.Join(",", source);
     }
 
-    public int AgregateSum(List<int> source)
+    public int AgregateSum(IEnumerable<int> source)
     {
         return source.Aggregate((item, itemNext) => item + itemNext);
     }
 
-    public decimal AgregateAverage(List<int> source)
+    public decimal AgregateAverage(IEnumerable<int> source)
     {
         return source.Aggregate(
             seed: 0,
             func: (result, item) => result + item,
-            resultSelector: result => (decimal)(result / source.Count)
+            resultSelector: result => (decimal)(result / source.Count())
         );
     }
 
@@ -36,7 +36,7 @@ public sealed class LINQExtensionMethods
 
     #region Funções de Quantificadores 
 
-    public bool ValidateAllElements<T>(List<T> source, Func<T, bool> predicate)
+    public bool ValidateAllElements<T>(IEnumerable<T> source, Func<T, bool> predicate)
     {
         // Se todos os Elementos Atender a condição predicate, será retornado TRUE. Senão FALSE
         return source.All(predicate); // predicate => x => x % 2 == 0
@@ -52,7 +52,7 @@ public sealed class LINQExtensionMethods
 
     #region Remove os duplicados da lista source
 
-    public List<DropDownList> GetDistinctBy(List<DropDownList> source)
+    public IEnumerable<DropDownList> GetDistinctBy(IEnumerable<DropDownList> source)
     {
         return source.DistinctBy(p => p.Description, StringComparer.OrdinalIgnoreCase).ToList();
     }
@@ -61,7 +61,7 @@ public sealed class LINQExtensionMethods
 
     #region Retorna os elementos da lista source que não estão na lista itens
 
-    public List<DropDownList> GetExceptBy(List<DropDownList> source, List<string> itens)
+    public IEnumerable<DropDownList> GetExceptBy(IEnumerable<DropDownList> source, IEnumerable<string> itens)
     {
         return source.ExceptBy(itens, p => p.Description, StringComparer.OrdinalIgnoreCase).ToList();
     }
@@ -70,7 +70,7 @@ public sealed class LINQExtensionMethods
 
     #region Retorna os elementos que são comuns em ambas as listas
 
-    public List<DropDownList> GetIntersectBy(List<DropDownList> source, List<DropDownList> itens)
+    public IEnumerable<DropDownList> GetIntersectBy(IEnumerable<DropDownList> source, IEnumerable<DropDownList> itens)
     {
         return source.IntersectBy(itens.Select(x => x.Description), p => p.Description, StringComparer.OrdinalIgnoreCase).ToList();
     }
@@ -79,29 +79,29 @@ public sealed class LINQExtensionMethods
 
     #region Faz a junção de ambos os conjuntos, sem geração de duplicidade
 
-    public List<DropDownList> GetUnionBy(List<DropDownList> source, List<DropDownList> itens)
+    public IEnumerable<DropDownList> GetUnionBy(IEnumerable<DropDownList> source, IEnumerable<DropDownList> itens)
     {
         return source.UnionBy(itens, p => p.Description, StringComparer.OrdinalIgnoreCase).ToList();
     }
 
     #endregion
 
-    public DropDownList GetMinValueFromList(List<DropDownList> list)
+    public DropDownList GetMinValueFromList(IEnumerable<DropDownList> list)
     {
         return list.MinBy(x => x.Id);
     }
 
-    public DropDownList GetMaxValueFromList(List<DropDownList> list)
+    public DropDownList GetMaxValueFromList(IEnumerable<DropDownList> list)
     {
         return list.MaxBy(x => x.Id);
     }
 
-    public Dictionary<long, string> ConvertListToDictionary(List<DropDownList> list)
+    public Dictionary<long, string> ConvertListToDictionary(IEnumerable<DropDownList> list)
     {
         return list.ToDictionary(item => item.Id, item => item.Description);
     }
 
-    public T GetFirstItemFromList<T>(List<T> list, Func<T, bool> predicate) where T : class
+    public T GetFirstItemFromList<T>(IEnumerable<T> list, Func<T, bool> predicate) where T : class
     {
         if (GuardClauses.ObjectIsNull(predicate))
             return list.FirstOrDefault();
@@ -109,7 +109,7 @@ public sealed class LINQExtensionMethods
             return list.FirstOrDefault(predicate);
     }
 
-    public T GetLastItemFromList<T>(List<T> list, Func<T, bool> predicate) where T : class
+    public T GetLastItemFromList<T>(IEnumerable<T> list, Func<T, bool> predicate) where T : class
     {
         if (GuardClauses.ObjectIsNull(predicate))
             return list.LastOrDefault();
@@ -117,7 +117,7 @@ public sealed class LINQExtensionMethods
             return list.LastOrDefault(predicate);
     }
 
-    public int GetQtdItensFromList<T>(List<T> list, Func<T, bool> predicate) where T : class
+    public int GetQtdItensFromList<T>(IEnumerable<T> list, Func<T, bool> predicate) where T : class
     {
         if (GuardClauses.ObjectIsNull(predicate))
             return list.Count();
@@ -125,7 +125,7 @@ public sealed class LINQExtensionMethods
             return list.Count(predicate);
     }
 
-    public long GetQtdItensFromBigList<T>(List<T> list, Func<T, bool> predicate) where T : class
+    public long GetQtdItensFromBigList<T>(IEnumerable<T> list, Func<T, bool> predicate) where T : class
     {
         if (GuardClauses.ObjectIsNull(predicate))
             return list.LongCount();
@@ -133,45 +133,45 @@ public sealed class LINQExtensionMethods
             return list.LongCount(predicate);
     }
 
-    public decimal GetTotalItensFromList<T>(List<T> list, Func<T, decimal> predicate) where T : class
+    public decimal GetTotalItensFromList<T>(IEnumerable<T> list, Func<T, decimal> predicate) where T : class
     {
         return list.Sum(predicate);
     }
 
-    public List<T> GetFirstItensFromList<T>(List<T> list, int qtyItens) where T : class
+    public IEnumerable<T> GetFirstItensFromList<T>(IEnumerable<T> list, int qtyItens) where T : class
     {
-        return list.Take(qtyItens) as List<T>;
+        return list.Take(qtyItens);
     }
 
-    public List<T> GetLastItensFromList<T>(List<T> list, int qtyItens) where T : class
+    public IEnumerable<T> GetLastItensFromList<T>(IEnumerable<T> list, int qtyItens) where T : class
     {
-        return list.TakeLast(qtyItens) as List<T>;
+        return list.TakeLast(qtyItens);
     }
 
-    public List<T> RemoveItemFromList<T>(List<T> list, T item) where T : class
+    public IEnumerable<T> RemoveItemFromList<T>(List<T> list, T item) where T : class
     {
         list.Remove(item);
         return list;
     }
 
-    public List<T> RemoveAtItemFromList<T>(List<T> list, Predicate<T> predicate) where T : class
+    public IEnumerable<T> RemoveAtItemFromList<T>(List<T> list, Predicate<T> predicate) where T : class
     {
         list.RemoveAll(predicate);
         return list;
     }
 
-    public T GetElementFromListByIndex<T>(List<T> list, int index)
+    public T GetElementFromListByIndex<T>(IEnumerable<T> list, int index)
     {
         return list.ElementAtOrDefault(index);
     }
 
-    public List<T> AddItemOnFirstPlaceOfList<T>(List<T> source, T item)
+    public IEnumerable<T> AddItemOnFirstPlaceOfList<T>(IEnumerable<T> source, T item)
     {
         var newSource = source.Prepend<T>(item).ToList();
         return newSource;
     }
 
-    public List<T> AddItemOnLastPlaceOfList<T>(List<T> source, T item)
+    public IEnumerable<T> AddItemOnLastPlaceOfList<T>(IEnumerable<T> source, T item)
     {
         var newSource = source.Append<T>(item).ToList();
         return newSource;
@@ -213,31 +213,31 @@ public sealed class LINQExtensionMethods
 
     #region Função de ordenação do LINQ
 
-    public List<T> GetListOrderAsc<T>(List<T> list)
+    public IEnumerable<T> GetListOrderAsc<T>(IEnumerable<T> list)
     {
         return list.Order().ToList();
     }
 
-    public List<DropDownList> GetListOrderByAsc(List<DropDownList> list)
+    public IEnumerable<DropDownList> GetListOrderByAsc(IEnumerable<DropDownList> list)
     {
         return list.OrderBy(x => x.Id).ToList();
     }
 
-    public List<DropDownList> GetListOrderByDesc(List<DropDownList> list)
+    public IEnumerable<DropDownList> GetListOrderByDesc(IEnumerable<DropDownList> list)
     {
         return list.OrderByDescending(x => x.Id).ToList();
     }
 
-    public List<T> GetListReverse<T>(List<T> list)
+    public IEnumerable<T> GetListReverse<T>(IEnumerable<T> list)
     {
         list.Reverse(); // Faz a inversão da ordem dos valores de uma lista
         return list;
     }
 
-    public List<T> GetListSortAsc<T>(List<T> list)
+    public IEnumerable<T> GetListSortAsc<T>(List<T> list)
     {
         list.Sort(); // Faz a ordenação da lista em ordem crescente, seguindo o algoritmo de quicksort
-        return list.ToList();
+        return list;
     }
 
     #endregion
@@ -247,7 +247,7 @@ public sealed class LINQExtensionMethods
         return source.TrueForAll(x => x.Id > 0);
     }
 
-    public IEnumerable<DropDownList> GetChunkList(List<DropDownList> list, int pageIndex, int pageSize = 10)
+    public IEnumerable<DropDownList> GetChunkList(IEnumerable<DropDownList> list, int pageIndex, int pageSize = 10)
     {
         return list.Chunk(pageSize).ElementAt(pageIndex).AsEnumerable();
     }

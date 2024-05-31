@@ -23,7 +23,7 @@ public sealed class UsersController : GenericController
     [HttpGet("GetAll")]
     public async Task<IActionResult> GetAll()
     {
-        var model = _mapperService.Map<List<UserResponseDTO>>(await _userService.GetAllAsync());
+        var model = _mapperService.Map<IEnumerable<UserResponseDTO>>(await _userService.GetAllAsync());
 
         return CustomResponse(model, FixConstants.SUCCESS_IN_GETALL);
     }

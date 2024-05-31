@@ -14,5 +14,5 @@ public class ResponseForProposalTypeDTO
     [JsonProperty("sucess")]
     public bool Success { get; set; }
     [JsonProperty("data")]
-    public List<ProposalTypeDTO> Data { get; set; }
+    public IEnumerable<ProposalTypeDTO> Data { get; set; }
 }

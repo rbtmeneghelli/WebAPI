@@ -45,7 +45,7 @@ public class CityService : GenericService, ICityService
         }
     }
 
-    public async Task<List<CityResponseDTO>> GetAllEntityAsync()
+    public async Task<IEnumerable<CityResponseDTO>> GetAllEntityAsync()
     {
         return await (from p in _cityRepository.FindBy(x => true).AsQueryable()
                       orderby p.Name ascending
@@ -108,7 +108,7 @@ public class CityService : GenericService, ICityService
         return Task.CompletedTask;
     }
 
-    public async Task<bool> AddOrUpdateCityAsync(List<City> cities)
+    public async Task<bool> AddOrUpdateCityAsync(IEnumerable<City> cities)
     {
         City entityBase = new City();
         try

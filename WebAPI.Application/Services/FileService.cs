@@ -44,7 +44,7 @@ public class FileService<TModel> : IFileService<TModel> where TModel : class
 
     #region Metodos EPPLUS
 
-    private List<TModel> ReadExcelDataEPPLUS(Stream excelFileStream)
+    private IEnumerable<TModel> ReadExcelDataEPPLUS(Stream excelFileStream)
     {
         List<TModel> list = new List<TModel>();
         var arquivoExcel = new ExcelPackage(excelFileStream);
@@ -143,7 +143,7 @@ public class FileService<TModel> : IFileService<TModel> where TModel : class
 
     #region Metodos NPOI
 
-    private List<TModel> ReadExcelDataNPOI(ISheet sheet)
+    private IEnumerable<TModel> ReadExcelDataNPOI(ISheet sheet)
     {
         List<TModel> list = new List<TModel>();
         string[] arrColunas = new string[255];
