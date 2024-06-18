@@ -4,7 +4,7 @@ using WebAPI.Domain.Generic;
 using WebAPI.Domain;
 using WebAPI.Domain.ExtensionMethods;
 
-namespace WebAPI.Infra.Data.Mapping;
+namespace WebAPI.Infra.Generic;
 
 public abstract class GenericMapping<T> : IEntityTypeConfiguration<T> where T : GenericEntity, new()
 {

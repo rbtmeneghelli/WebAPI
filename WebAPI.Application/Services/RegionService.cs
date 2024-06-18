@@ -1,4 +1,6 @@
 ﻿using WebAPI.Application.Factory;
+using WebAPI.Application.Generic;
+using WebAPI.Application.InterfacesRepository;
 using WebAPI.Domain.ExtensionMethods;
 
 namespace WebAPI.Application.Services;

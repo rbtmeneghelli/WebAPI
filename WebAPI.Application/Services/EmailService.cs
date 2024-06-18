@@ -1,6 +1,7 @@
 ﻿using MailKit.Security;
 using MimeKit.Text;
 using MimeKit;
+using WebAPI.Application.Generic;
 
 namespace WebAPI.Application.Services;
 

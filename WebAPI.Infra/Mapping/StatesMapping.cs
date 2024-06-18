@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
+using WebAPI.Infra.Generic;
 
 namespace WebAPI.Infra.Data.Mapping;
 

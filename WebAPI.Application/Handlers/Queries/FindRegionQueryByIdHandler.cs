@@ -1,6 +1,7 @@
 ﻿using WebAPI.Domain.CQRS.Command;
 using MediatR;
 using System.Threading;
+using WebAPI.Application.InterfacesRepository;
 
 namespace WebAPI.Application.Handlers.Queries;
 

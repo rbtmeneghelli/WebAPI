@@ -1,11 +1,11 @@
-﻿using WebAPI.Application;
-using WebAPI.Application.Interfaces;
-using WebAPI.Domain;
+﻿using WebAPI.Domain;
 using WebAPI.Domain.Entities;
 using WebAPI.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using WebAPI.Domain.ExtensionMethods;
+using WebAPI.Application.InterfacesRepository;
+using WebAPI.Application.Generic;
 
 namespace WebAPI.Infra.Data.Repositories;
 

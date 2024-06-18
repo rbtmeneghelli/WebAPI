@@ -2,7 +2,7 @@
 using FluentValidation;
 using ValidationResult = FluentValidation.Results.ValidationResult;
 
-namespace WebAPI.Application.Services;
+namespace WebAPI.Application.Generic;
 
 public abstract class GenericService
 {

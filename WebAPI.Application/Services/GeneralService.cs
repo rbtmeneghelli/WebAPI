@@ -2,6 +2,7 @@
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Data.SqlClient;
 using System.IdentityModel.Tokens.Jwt;
+using WebAPI.Application.Generic;
 
 namespace WebAPI.Application.Services;
 

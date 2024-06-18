@@ -1,6 +1,6 @@
-﻿namespace WebAPI.Application.Interfaces;
+﻿namespace WebAPI.Application.Generic;
 
-public interface IUnitofWorkService : IDisposable
+public interface IGenericUnitofWorkService : IDisposable
 {
     IAccountService Accounts { get; }
     IAuditService Audits { get; }

@@ -1,5 +1,4 @@
-﻿using WebAPI.Application;
-using WebAPI.Application.BackgroundServices.RabbitMQ.Consumers;
+﻿using WebAPI.Application.BackgroundServices.RabbitMQ.Consumers;
 using WebAPI.Application.Interfaces;
 using WebAPI.Application.Services;
 using WebAPI.Configuration.Middleware.Authentication;
@@ -43,6 +42,8 @@ using SqlConnection = Microsoft.Data.SqlClient.SqlConnection;
 using WebAPI.Application.Interfaces.NfService;
 using WebAPI.Application.Services.NfService;
 using FixConstants = WebAPI.Domain.FixConstants;
+using WebAPI.Application.InterfacesRepository;
+using WebAPI.Application.Generic;
 
 namespace WebAPI.Infra.Structure.IoC;
 
@@ -173,7 +174,7 @@ public static class DependencyContainerService
     public static void RegisterServices(this IServiceCollection services)
     {
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-        services.AddScoped(typeof(IRepositoryDapper<>), typeof(RepositoryDapper<>));
+        services.AddScoped(typeof(IGenericRepositoryDapper<>), typeof(GenericRepositoryDapper<>));
         services.AddScoped(typeof(ILoggerService<>), typeof(LoggerService<>));
         services.AddScoped(typeof(IFileService<>), typeof(FileService<>));
         services.AddScoped<WebAPIContext>();
@@ -199,7 +200,7 @@ public static class DependencyContainerService
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IQRCodeService, QRCodeService>();
         services.AddScoped<IMemoryCacheService, MemoryCacheService>();
-        services.AddScoped<IUnitofWorkService, UnitOfWorkService>();
+        services.AddScoped<IGenericUnitofWorkService, GenericUnitOfWorkService>();
         services.AddTransient<IIpAddressService, IpAddressService>();
         services.AddScoped<INfService, NfService>();
         services.AddScoped<IFirebaseService, FirebaseService>();

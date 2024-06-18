@@ -1,5 +1,4 @@
-﻿using WebAPI.Application;
-using WebAPI.Domain;
+﻿using WebAPI.Domain;
 using WebAPI.Domain.Entities;
 using WebAPI.Infra.Data.Context;
 using Microsoft.Data.SqlClient;
@@ -9,6 +8,7 @@ using SkiaSharp;
 using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
+using WebAPI.Application.Generic;
 
 namespace WebAPI.Infra.Data.Repositories;
 

@@ -1,9 +1,9 @@
-﻿using WebAPI.Application;
-using WebAPI.Application.Interfaces;
-using WebAPI.Domain.Entities;
+﻿using WebAPI.Domain.Entities;
 using WebAPI.Domain.ExtensionMethods;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using WebAPI.Application.InterfacesRepository;
+using WebAPI.Application.Generic;
 
 namespace WebAPI.Infra.Data.Repositories;
 

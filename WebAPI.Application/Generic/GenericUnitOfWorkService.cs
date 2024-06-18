@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WebAPI.Application.Services
+namespace WebAPI.Application.Generic
 {
-    public class UnitOfWorkService : IUnitofWorkService
+    public class GenericUnitOfWorkService : IGenericUnitofWorkService
     {
         public IAccountService Accounts { get; }
         public IAuditService Audits { get; }
@@ -16,7 +16,7 @@ namespace WebAPI.Application.Services
         public IStatesService States { get; }
         public IUserService Users { get; }
 
-        public UnitOfWorkService(
+        public GenericUnitOfWorkService(
             IAccountService Accounts,
             IAuditService Audits,
             ICepService Ceps,

@@ -1,7 +1,7 @@
-﻿using WebAPI.Application;
-using WebAPI.Application.Interfaces;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using WebAPI.Domain.ValueObject;
+using WebAPI.Application.InterfacesRepository;
+using WebAPI.Application.Generic;
 
 namespace WebAPI.Infra.Data.Repositories;
 

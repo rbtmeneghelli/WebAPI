@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Net.Http;
 using System.Net.Http.Json;
+using WebAPI.Application.Generic;
 
 namespace WebAPI.Application.Services;
 

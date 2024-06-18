@@ -1,6 +1,6 @@
-﻿namespace WebAPI.Application
+﻿namespace WebAPI.Application.Generic
 {
-    public interface IRepositoryDapper<TEntity> : IDisposable where TEntity : class
+    public interface IGenericRepositoryDapper<TEntity> : IDisposable where TEntity : class
     {
         Task<IEnumerable<TEntity>> QueryToGetAll(string sqlQuery);
         Task<TEntity> QueryToGetFirstOrDefault(string sqlQuery);

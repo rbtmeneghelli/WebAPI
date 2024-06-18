@@ -3,6 +3,7 @@ using WebAPI.Application.Services;
 using Moq;
 using NPOI.SS.Formula.Functions;
 using Region = WebAPI.Domain.Entities.Region;
+using WebAPI.Application.InterfacesRepository;
 
 namespace TestsWebAPI.Controllers.V1;
 

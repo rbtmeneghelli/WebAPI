@@ -1,4 +1,6 @@
 ﻿using WebAPI.Application.Factory;
+using WebAPI.Application.Generic;
+using WebAPI.Application.InterfacesRepository;
 using WebAPI.Domain.ExtensionMethods;
 
 
@@ -7,9 +9,9 @@ namespace WebAPI.Application.Services;
 public class AuditService : GenericService, IAuditService
 {
     private readonly IAuditRepository _auditRepository;
-    private readonly IRepositoryDapper<Audit> _auditDapper;
+    private readonly IGenericRepositoryDapper<Audit> _auditDapper;
 
-    public AuditService(IAuditRepository auditRepository, IRepositoryDapper<Audit> auditDapper, INotificationMessageService notificationMessageService) : base(notificationMessageService)
+    public AuditService(IAuditRepository auditRepository, IGenericRepositoryDapper<Audit> auditDapper, INotificationMessageService notificationMessageService) : base(notificationMessageService)
     {
         _auditRepository = auditRepository;
         _auditDapper = auditDapper;

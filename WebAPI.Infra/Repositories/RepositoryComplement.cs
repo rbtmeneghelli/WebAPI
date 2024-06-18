@@ -1,10 +1,10 @@
-﻿using WebAPI.Application;
-using WebAPI.Domain;
+﻿using WebAPI.Domain;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel;
 using System.Data;
 using System.Reflection;
 using WebAPI.Domain.ExtensionMethods;
+using WebAPI.Application.Generic;
 
 namespace WebAPI.Infra.Data.Repositories
 {

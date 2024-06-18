@@ -1,17 +1,17 @@
 ﻿using Dapper;
-using WebAPI.Application;
 using WebAPI.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using WebAPI.Application.Generic;
 
 
 namespace WebAPI.Infra.Data.Repositories
 {
-    public class RepositoryDapper<TEntity> : IRepositoryDapper<TEntity> where TEntity : class
+    public class GenericRepositoryDapper<TEntity> : IGenericRepositoryDapper<TEntity> where TEntity : class
     {
         protected readonly IDbConnection _idbConnection;
 
-        public RepositoryDapper(IDbConnection idbConnection)
+        public GenericRepositoryDapper(IDbConnection idbConnection)
         {
             _idbConnection = idbConnection;
         }

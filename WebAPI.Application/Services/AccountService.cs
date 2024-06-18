@@ -1,6 +1,8 @@
 ﻿using WebAPI.Domain.Cryptography;
 using WebAPI.Domain.ExtensionMethods;
 using Microsoft.Extensions.Hosting;
+using WebAPI.Application.InterfacesRepository;
+using WebAPI.Application.Generic;
 
 namespace WebAPI.Application.Services;
 

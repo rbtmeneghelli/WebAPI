@@ -1,6 +1,6 @@
-﻿namespace WebAPI.Application.Interfaces;
+﻿namespace WebAPI.Application.InterfacesRepository;
 
-public interface IUnitofWorkRepository : IDisposable
+public interface IGenericUnitofWorkRepository : IDisposable
 {
     IAuditRepository Audits { get; }
     ICepRepository Ceps { get; }

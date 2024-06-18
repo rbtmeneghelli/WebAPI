@@ -1,4 +1,4 @@
-﻿namespace WebAPI.Application;
+﻿namespace WebAPI.Application.Generic;
 
 public interface IGenericRepository<TEntity> : IDisposable where TEntity : class
 {

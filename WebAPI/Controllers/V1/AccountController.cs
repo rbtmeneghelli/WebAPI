@@ -1,4 +1,5 @@
 ﻿using KissLog;
+using WebAPI.Application.Generic;
 
 namespace WebAPI.V1.Controllers;
 
@@ -9,10 +10,10 @@ namespace WebAPI.V1.Controllers;
 public sealed class AccountController : GenericController
 {
     private readonly IGeneralService _generalService;
-    private readonly IUnitofWorkService _unitofWorkService;
+    private readonly IGenericUnitofWorkService _unitofWorkService;
     private readonly IGraphicLineService _baseGraphicService;
 
-    public AccountController(IKLogger iKLogger, IMapper mapper, IHttpContextAccessor accessor, INotificationMessageService notificationMessageService, IGeneralService generalService, IUnitofWorkService unitofWorkService, IGraphicLineService baseGraphicService) : base(mapper, accessor, notificationMessageService, iKLogger)
+    public AccountController(IKLogger iKLogger, IMapper mapper, IHttpContextAccessor accessor, INotificationMessageService notificationMessageService, IGeneralService generalService, IGenericUnitofWorkService unitofWorkService, IGraphicLineService baseGraphicService) : base(mapper, accessor, notificationMessageService, iKLogger)
     {
         _generalService = generalService;
         _unitofWorkService = unitofWorkService;

@@ -1,6 +1,7 @@
 ﻿using WebAPI.Domain.ValueObject;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using WebAPI.Infra.Generic;
 
 namespace WebAPI.Infra.Data.Mapping;
 

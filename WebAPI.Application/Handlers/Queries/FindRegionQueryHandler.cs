@@ -1,6 +1,7 @@
-﻿using WebAPI.Application.Services;
-using WebAPI.Domain.CQRS.Command;
+﻿using WebAPI.Domain.CQRS.Command;
 using MediatR;
+using WebAPI.Application.InterfacesRepository;
+using WebAPI.Application.Generic;
 
 namespace WebAPI.Application.Handlers.Queries;
 

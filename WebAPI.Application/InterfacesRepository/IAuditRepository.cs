@@ -1,4 +1,4 @@
-﻿namespace WebAPI.Application.Interfaces
+﻿namespace WebAPI.Application.InterfacesRepository
 {
     public interface IAuditRepository
     {

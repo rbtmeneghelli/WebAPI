@@ -1,7 +1,7 @@
 ﻿using WebAPI.Domain.Entities;
-using WebAPI.Infra.Data.Mapping;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using WebAPI.Infra.Generic;
 
 public class ClientMapping : GenericMapping<Client>
 {
