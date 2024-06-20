@@ -355,3 +355,7 @@ No servidor principal procurar a opção chamada editor de configuração
 acessar a opção chamada variaveis de ambiente
 adicionar as variaveis de ambiente
 Parar o IIS e Iniciar o IIS novamente
+
+-- ConnectionString (https://www.connectionstrings.com/)
+>> server=.\\SQLExpress;database=myDatabase;Trusted_Connection=True;MultipleActiveResultSets=true;trustservercertificate=true; (Windows)
+>> Server=myServerName\myInstanceName;Database=myDataBase;User Id=myUsername;Password=myPassword; (Sql Authentication)
