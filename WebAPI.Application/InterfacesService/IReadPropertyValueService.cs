@@ -55,7 +55,7 @@ public sealed class ReadPropertyValueGenericService<TSource, TDestination> : IRe
 
     private void makeReplaceSpecialCharactersInResponse(PropertyInfo property, object obj)
     {
-        GeneralExtensionMethod extensionMethods = GeneralExtensionMethod.GetLoadExtensionMethods();
+        GeneralMethod extensionMethods = GeneralMethod.GetLoadExtensionMethods();
         List<string> charactersStringList = new List<string>() { "%", "'", "#", "“", "”", "`", "(", ")", "\"" };
         string data = string.Empty;
 

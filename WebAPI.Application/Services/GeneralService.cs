@@ -163,7 +163,7 @@ public class GeneralService : GenericService, IGeneralService
 
     public async Task<MemoryStream> Export2ZipAsync(string directory, int typeFile = 2)
     {
-        GeneralExtensionMethod extensionMethods = GeneralExtensionMethod.GetLoadExtensionMethods();
+        GeneralMethod extensionMethods = GeneralMethod.GetLoadExtensionMethods();
         List<string> archives = new List<string>();
         int count = 0;
         foreach (string arquivo in Directory.GetFiles(directory, $"*.{extensionMethods.GetMemoryStream(typeFile).Type}"))
@@ -203,7 +203,7 @@ public class GeneralService : GenericService, IGeneralService
 
         try
         {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(FixConstants.URL_TO_GET_FIREBASE);
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(FixConstantsUrl.URL_TO_GET_FIREBASE);
             request.Method = "post";
             request.KeepAlive = false;
             request.ContentType = "application/json";

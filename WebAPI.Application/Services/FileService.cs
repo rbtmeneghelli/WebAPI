@@ -17,12 +17,12 @@ namespace WebAPI.Application.Services;
 
 public class FileService<TModel> : IFileService<TModel> where TModel : class
 {
-    private readonly GeneralExtensionMethod _InstanceGeneralExtensionMethod;
+    private readonly GeneralMethod _InstanceGeneralExtensionMethod;
 
     public FileService()
     {
         ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-        _InstanceGeneralExtensionMethod = GeneralExtensionMethod.GetLoadExtensionMethods();
+        _InstanceGeneralExtensionMethod = GeneralMethod.GetLoadExtensionMethods();
     }
 
     private async Task<MemoryStream> GetMemoryStreamByFile(string path)

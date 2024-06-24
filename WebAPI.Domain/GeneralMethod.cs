@@ -21,11 +21,11 @@ using System.Xml.Serialization;
 
 namespace WebAPI.Domain.ExtensionMethods;
 
-public sealed class GeneralExtensionMethod
+public sealed class GeneralMethod
 {
     #region [Aplicando padrão Singleton do Design Pattern]
 
-    private static readonly GeneralExtensionMethod Instance = new GeneralExtensionMethod();
+    private static readonly GeneralMethod Instance = new GeneralMethod();
 
     private static Dictionary<int, Func<UriBuilderAbstract>> DictionaryUriBuilder = new Dictionary<int, Func<UriBuilderAbstract>>
     {
@@ -33,7 +33,7 @@ public sealed class GeneralExtensionMethod
               { 2, ()=>new UriBuilderSite() },
     };
 
-    public static GeneralExtensionMethod GetLoadExtensionMethods()
+    public static GeneralMethod GetLoadExtensionMethods()
     {
         return Instance;
     }

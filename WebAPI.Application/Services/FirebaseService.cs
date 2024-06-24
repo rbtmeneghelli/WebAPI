@@ -44,7 +44,7 @@ public class FirebaseService : GenericService, IFirebaseService
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer " + "SERVER_KEY");
             client.Timeout = TimeSpan.FromMinutes(1);
-            var response = await client.PostAsync(FixConstants.URL_TO_GET_FIREBASE, content);
+            var response = await client.PostAsync(FixConstantsUrl.URL_TO_GET_FIREBASE, content);
             if (response.IsSuccessStatusCode)
             {
                 requestDataDto.Data = await response.Content.ReadAsStringAsync();
@@ -52,13 +52,13 @@ public class FirebaseService : GenericService, IFirebaseService
             }
             else
             {
-                requestDataDto.Data = $"{FixConstants.EXCEPTION_REQUEST_API} {FixConstants.URL_TO_GET_FIREBASE}";
+                requestDataDto.Data = $"{FixConstants.EXCEPTION_REQUEST_API} {FixConstantsUrl.URL_TO_GET_FIREBASE}";
                 requestDataDto.IsSuccess = false;
             }
         }
         catch
         {
-            requestDataDto.Data = $"{FixConstants.EXCEPTION_REQUEST_API} {FixConstants.URL_TO_GET_FIREBASE}";
+            requestDataDto.Data = $"{FixConstants.EXCEPTION_REQUEST_API} {FixConstantsUrl.URL_TO_GET_FIREBASE}";
             requestDataDto.IsSuccess = false;
         }
     }

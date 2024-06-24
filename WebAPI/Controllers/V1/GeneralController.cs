@@ -41,7 +41,7 @@ public sealed class GeneralController : GenericController
     [HttpGet("export2Zip/{directory}/{typeFile:int}")]
     public async Task<IActionResult> Export2Zip(string directory, int typeFile = 2)
     {
-        GeneralExtensionMethod extensionMethods = GeneralExtensionMethod.GetLoadExtensionMethods();
+        GeneralMethod extensionMethods = GeneralMethod.GetLoadExtensionMethods();
         MemoryStream memoryStream = await _generalService.Export2ZipAsync(directory, typeFile);
         var memoryStreamResult = extensionMethods.GetMemoryStream(typeFile);
         return File(await Task.FromResult(memoryStream.ToArray()), memoryStreamResult.Type, $"Archive.{memoryStreamResult.Extension}");
@@ -67,7 +67,7 @@ public sealed class GeneralController : GenericController
             if (refreshCep && GuardClauses.IsNullOrWhiteSpace(cep) == false)
             {
                 modelCep = await _cepsService.GetByCepAsync(cep);
-                RequestData requestData = await _generalService.RequestDataToExternalAPIAsync($"{FixConstants.URL_TO_GET_CEP}{cep}/json/");
+                RequestData requestData = await _generalService.RequestDataToExternalAPIAsync($"{FixConstantsUrl.URL_TO_GET_CEP}{cep}/json/");
                 if (requestData.IsSuccess)
                 {
                     Domain.ValueObject.AddressData modelCepAPI = requestData.Data.DeserializeObject<Domain.ValueObject.AddressData>();
@@ -87,7 +87,7 @@ public sealed class GeneralController : GenericController
         }
         catch (Exception)
         {
-            NotificationError($"{FixConstants.EXCEPTION_REQUEST_API} {FixConstants.URL_TO_GET_CEP}");
+            NotificationError($"{FixConstants.EXCEPTION_REQUEST_API} {FixConstantsUrl.URL_TO_GET_CEP}");
             return CustomResponse();
         }
     }
@@ -104,7 +104,7 @@ public sealed class GeneralController : GenericController
             {
                 if (GuardClauses.ObjectIsNotNull(listStates) && GuardClauses.HaveDataOnList(listStates))
                 {
-                    RequestData requestData = await _generalService.RequestDataToExternalAPIAsync(FixConstants.URL_TO_GET_STATES);
+                    RequestData requestData = await _generalService.RequestDataToExternalAPIAsync(FixConstantsUrl.URL_TO_GET_STATES);
                     if (requestData.IsSuccess)
                     {
                         IEnumerable<States> listStatesAPI = requestData.Data.DeserializeObject<IEnumerable<States>>();
@@ -121,7 +121,7 @@ public sealed class GeneralController : GenericController
         }
         catch (Exception)
         {
-            NotificationError($"{FixConstants.EXCEPTION_REQUEST_API} {FixConstants.URL_TO_GET_STATES}");
+            NotificationError($"{FixConstants.EXCEPTION_REQUEST_API} {FixConstantsUrl.URL_TO_GET_STATES}");
             return CustomResponse();
         }
     }
@@ -145,7 +145,7 @@ public sealed class GeneralController : GenericController
             foreach (States state in states.Where(x => x.Initials is not "DF"))
             {
 
-                requestData = await _generalService.RequestDataToExternalAPIAsync(string.Format(FixConstants.URL_TO_GET_CITIES, state.Initials));
+                requestData = await _generalService.RequestDataToExternalAPIAsync(string.Format(FixConstantsUrl.URL_TO_GET_CITIES, state.Initials));
 
                 if (requestData.IsSuccess)
                 {
@@ -181,7 +181,7 @@ public sealed class GeneralController : GenericController
         try
         {
             List<Region> list = new List<Region>();
-            RequestData requestData = await _generalService.RequestDataToExternalAPIAsync(FixConstants.URL_TO_GET_STATES);
+            RequestData requestData = await _generalService.RequestDataToExternalAPIAsync(FixConstantsUrl.URL_TO_GET_STATES);
             if (requestData.IsSuccess)
             {
                 IEnumerable<States> listStatesAPI = requestData.Data.DeserializeObject<IEnumerable<States>>();
@@ -208,7 +208,7 @@ public sealed class GeneralController : GenericController
         }
         catch (Exception)
         {
-            NotificationError($"{FixConstants.EXCEPTION_REQUEST_API} {FixConstants.URL_TO_GET_STATES}");
+            NotificationError($"{FixConstants.EXCEPTION_REQUEST_API} {FixConstantsUrl.URL_TO_GET_STATES}");
             return CustomResponse();
         }
     }
@@ -220,7 +220,7 @@ public sealed class GeneralController : GenericController
         {
             IEnumerable<Region> listRegion = await _regionService.GetAllRegionAsync();
             List<States> listStates = new List<States>();
-            RequestData requestData = await _generalService.RequestDataToExternalAPIAsync(FixConstants.URL_TO_GET_STATES);
+            RequestData requestData = await _generalService.RequestDataToExternalAPIAsync(FixConstantsUrl.URL_TO_GET_STATES);
             if (requestData.IsSuccess)
             {
                 IEnumerable<States> listStatesAPI = requestData.Data.DeserializeObject<IEnumerable<States>>();
@@ -244,7 +244,7 @@ public sealed class GeneralController : GenericController
         }
         catch (Exception)
         {
-            NotificationError($"{FixConstants.EXCEPTION_REQUEST_API} {FixConstants.URL_TO_GET_STATES}");
+            NotificationError($"{FixConstants.EXCEPTION_REQUEST_API} {FixConstantsUrl.URL_TO_GET_STATES}");
             return CustomResponse();
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Security.Cryptography;
 
 namespace WebAPI.Domain.ExtensionMethods;
 
@@ -23,9 +24,9 @@ public sealed class DateOnlyExtensionMethods
     public int GetAgeByYear(DateOnly birthDay) => Math.Abs(GetDate().Year - birthDay.Year);
     public DateTime GetDateTimeFromString(string dateTime) => DateTime.ParseExact(dateTime, "yyyy-MM-dd", CultureInfo.InvariantCulture);
     
-    public DateTime FirstDayCurrentMonth()
+    public static DateTime FirstDayCurrentMonth()
     {
-        return DateTime.Parse($"01/{GetDateTimeNowFromBrazil().Month}/{GetDateTimeNowFromBrazil().Year}");
+        return new DateTime(GetDateTimeNowFromBrazil().Year, GetDateTimeNowFromBrazil().Month, 1);
     }
     
     public DateTime GetNextUtilDay(DateTime dateTime)
@@ -70,5 +71,48 @@ public sealed class DateOnlyExtensionMethods
     public static string GetShortTime()
     {
         return GetDateTimeNowFromBrazil().ToShortTimeString();
+    }
+
+    public static int GetLastDayOfMonth()
+    {
+        return DateTime.DaysInMonth(GetDateTimeNowFromBrazil().Year, GetDateTimeNowFromBrazil().Month);
+    }
+
+    public static bool IsValidUntilDay(DateTime date)
+    {
+        IEnumerable<DateTime> holidayDaysOfYear = Enumerable.Empty<DateTime>();
+        return date.DayOfWeek != DayOfWeek.Saturday &&
+               date.DayOfWeek != DayOfWeek.Sunday &&
+               !holidayDaysOfYear.Contains(date);
+    }
+
+    /// <summary>
+    /// Esse metodo faz que seja retornado o 5º dia util valido do Mês
+    /// </summary>
+    /// <param name="holidayDaysOfYear"> Lista com datas que são feriados nacionais, locais ou etc... </param>
+    /// <param name="untilDay"> Dia Util</param>
+    /// <returns></returns>
+    public static DateTime GetValidDayToPay(int untilDay = 5)
+    {
+        int untilDayCount = 0;
+        int lastDayOfMonth = GetLastDayOfMonth();
+        DateTime firstDayOfMonth = FirstDayCurrentMonth();
+
+        while (untilDayCount < untilDay)
+        {
+            if (IsValidUntilDay(firstDayOfMonth))
+            {
+                untilDayCount++;
+            }
+
+            firstDayOfMonth = firstDayOfMonth.AddDays(1);
+
+            if (firstDayOfMonth.Day > lastDayOfMonth)
+            {
+                break;
+            }
+        }
+
+        return firstDayOfMonth.AddDays(-1);
     }
 }
