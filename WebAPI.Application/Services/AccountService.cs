@@ -12,12 +12,7 @@ public class AccountService : GenericService, IAccountService
     private readonly IEmailService _emailService;
     private readonly IHostEnvironment _hostingEnvironment;
 
-    public AccountService(IUserRepository userRepository, IEmailService emailService, INotificationMessageService notificationMessageService, IHostEnvironment hostingEnvironment) : base(notificationMessageService)
-    {
-        _userRepository = userRepository;
-        _emailService = emailService;
-        _hostingEnvironment = hostingEnvironment;
-    }
+    #region Metodos Privados
 
     private IEnumerable<EnumActions> GetActions(ProfileOperation profileOperation)
     {
@@ -31,6 +26,15 @@ public class AccountService : GenericService, IAccountService
             profileOperation.CanImport ? EnumActions.Import : EnumActions.None
         };
         return condition;
+    }
+
+    #endregion
+
+    public AccountService(IUserRepository userRepository, IEmailService emailService, INotificationMessageService notificationMessageService, IHostEnvironment hostingEnvironment) : base(notificationMessageService)
+    {
+        _userRepository = userRepository;
+        _emailService = emailService;
+        _hostingEnvironment = hostingEnvironment;
     }
 
     public async Task<bool> CheckUserAuthenticationAsync(LoginUser loginUser)
@@ -78,6 +82,10 @@ public class AccountService : GenericService, IAccountService
                 credentials.Perfil = user.Profile.Description;
                 credentials.Roles = Enumerable.Empty<string>().ToList();
                 credentials.AccessDate = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
+                credentials.CodeTwoFactoryCode = user.HasTwoFactoryValidation
+                                                 ? GenerateCodeTwoFactory(user.Id.Value, user.Login)
+                                                 : StringExtensionMethod.GetEmptyString();
+
                 foreach (var item in user.Profile.ProfileOperations)
                 {
                     IEnumerable<EnumActions> condition = GetActions(item);
@@ -198,5 +206,28 @@ public class AccountService : GenericService, IAccountService
             await Task.CompletedTask;
         }
     }
+
+    #region Metodos para validação de acesso em duas etapas
+
+    public string GenerateCodeTwoFactory(long userId, string username)
+    {
+        byte[] dataBytes = Encoding.UTF8.GetBytes($"{userId}//{username}:{DateTime.Now.Ticks}");
+        using SHA256 sha256 = SHA256.Create();
+        byte[] hashBytes = sha256.ComputeHash(dataBytes);
+        string codeTwoFactory = Convert.ToBase64String(hashBytes);
+        return codeTwoFactory;
+    }
+
+    public bool CheckCodeTwoFactory(long userId, string username, string inputCodeTwoFactory)
+    {
+        long expirationTime = TimeSpan.FromMinutes(10).Ticks;
+        long ticksNow = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil().Ticks;
+        string expectedCode = GenerateCodeTwoFactory(userId, username);
+        bool codesMatch = (inputCodeTwoFactory == expectedCode);
+        bool withinExpiration = (DateOnlyExtensionMethods.GetDateTimeNowFromBrazil().Ticks - ticksNow) <= expirationTime;
+        return codesMatch && withinExpiration; // Se for true o codigo da validação de duas etapas está OK
+    }
+
+    #endregion
 }
 

@@ -11,13 +11,11 @@ public sealed class AccountController : GenericController
 {
     private readonly IGeneralService _generalService;
     private readonly IGenericUnitofWorkService _unitofWorkService;
-    private readonly IGraphicLineService _baseGraphicService;
 
-    public AccountController(IKLogger iKLogger, IMapper mapper, IHttpContextAccessor accessor, INotificationMessageService notificationMessageService, IGeneralService generalService, IGenericUnitofWorkService unitofWorkService, IGraphicLineService baseGraphicService) : base(mapper, accessor, notificationMessageService, iKLogger)
+    public AccountController(IKLogger iKLogger, IMapper mapper, IHttpContextAccessor accessor, INotificationMessageService notificationMessageService, IGeneralService generalService, IGenericUnitofWorkService unitofWorkService) : base(mapper, accessor, notificationMessageService, iKLogger)
     {
         _generalService = generalService;
         _unitofWorkService = unitofWorkService;
-        _baseGraphicService = baseGraphicService;
     }
 
     [HttpPost("Login")]
@@ -30,12 +28,33 @@ public sealed class AccountController : GenericController
         if (result)
         {
             Credentials credentials = await _unitofWorkService.Accounts.GetUserCredentialsAsync(loginUser.Login);
-            return CustomResponse(_generalService.CreateJwtToken(credentials));
+            var userToken = _generalService.CreateJwtToken(credentials);
+            return CustomResponse(userToken);
         }
         else
         {
             return CustomResponse();
         }
+    }
+
+    [HttpPost("ConfirmLogin")]
+    public IActionResult ConfirmLogin([FromBody] ConfirmLoginUser confirmLoginUser)
+    {
+        if (!IsAuthenticated())
+        {
+            NotificationError("Acesso negado! Metódo permitido apenas para usuário logado");
+        }
+
+        if (ModelStateIsInvalid()) return CustomResponse(ModelState);
+
+        var result = _unitofWorkService.Accounts.CheckCodeTwoFactory(UserId, UserName, confirmLoginUser.CodeTwoFactory);
+
+        if (!result)
+        {
+            NotificationError("Código de validação duas etapas fornecido está expirado. Faça o login novamente para que um novo código seja gerado");
+        }
+
+        return CustomResponse();
     }
 
     [HttpPost("ChangePassword")]

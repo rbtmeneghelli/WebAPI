@@ -24,5 +24,7 @@ public class User : GenericEntity
 
     public string NewPassword { get; set; }
 
+    public bool HasTwoFactoryValidation { get; set; }
+
     public override string ToString() => $"Login: {Login}";
 }

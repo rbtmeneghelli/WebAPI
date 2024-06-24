@@ -14,4 +14,10 @@ namespace WebAPI.Domain.Models
         [StringLength(100, ErrorMessage = "O campo Password precisa ter entre {2} e {1} caracteres", MinimumLength = 4)]
         public string Password { get; set; }
     }
+
+    public sealed class ConfirmLoginUser
+    {
+        [Required(ErrorMessage = "O campo {0} é obrigatório")]
+        public string CodeTwoFactory { get; set; }
+    }
 }

@@ -12,5 +12,7 @@ namespace WebAPI.Domain.Models
         public List<string> Roles { get; set; }
         public string Token { get; set; }
         public DateTime AccessDate { get; set; }
+        public bool HasTwoFactoryValidation { get; set; }
+        public string CodeTwoFactoryCode { get; set; }
     }
 }

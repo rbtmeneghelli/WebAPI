@@ -77,7 +77,7 @@ namespace WebAPI.Controllers.Base
             return _accessor.HttpContext.User.Identity.Name ?? StringExtensionMethod.GetEmptyString();
         }
 
-        private bool IsAuthenticated()
+        protected bool IsAuthenticated()
         {
             return _accessor.HttpContext.User.Identity.IsAuthenticated;
         }
