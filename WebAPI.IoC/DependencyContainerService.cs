@@ -528,10 +528,11 @@ public static class DependencyContainerService
 
     public static void RegisterSeriLog(this IServiceCollection services, IConfiguration configuration)
     {
-        var connectionStringLogs = EnvironmentVariablesExtension.GetDatabaseFromEnvVar(configuration.GetConnectionString("DefaultConnectionLogs"));
+        var connectionStringLogs = "Server=.\\SQLEXPRESS;Database=DefaultAPI_Logs;User Id=sa;Password=#web_$notes&2024!;trustservercertificate=true;";
+        
+        //var connectionStringLogs = EnvironmentVariablesExtension.GetDatabaseFromEnvVar(configuration.GetConnectionString("DefaultConnectionLogs"));
 
         Serilog.Debugging.SelfLog.Enable(msg => Console.WriteLine(msg));
-        var filterExpr = "@Properties['SourceContext'] like 'WebAPI%'";
 
         Log.Logger = new LoggerConfiguration()
             .Enrich.WithProperty("CreatedDate", DateTime.Now)

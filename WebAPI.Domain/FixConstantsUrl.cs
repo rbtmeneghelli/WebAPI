@@ -5,8 +5,9 @@ public static class FixConstantsUrl
     /// <summary>
     /// Link do documentação da API dos correios >> https://www.correios.com.br/atendimento/developers/arquivos/manual-para-integracao-correios-api
     /// </summary>
-    
-    public const string URL_TO_GET_FIREBASE = "https://fcm.googleapis.com/v1/projects/webapi-ce363/messages:send";
+
+    public const string URL_TO_GET_FIREBASE = "https://fcm.googleapis.com/fcm/send";
+    public const string URL_TO_GET_FIREBASE_V2 = "https://fcm.googleapis.com/v1/projects/webapi-ce363/messages:send";
     public const string URL_TO_GET_CEP = "http://viacep.com.br/ws/{0}/json"; //Param >> Cep
     public const string URL_TO_GET_CEP_II = "https://brasilapi.com.br/api/cep/v1/{0}"; //Param >> Cep
     public const string URL_TO_GET_CEP_III = "https://api.brasilaberto.com/v1/zipcode/{0}"; //Param >> Cep

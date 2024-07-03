@@ -2,5 +2,6 @@
 
 public interface IFirebaseService : IDisposable
 {
-    Task SendPushNotification(string tokenToSend, string message);
+    Task SendPushNotification_V1(string tokenUser, FirebaseNotificationDetails firebaseNotificationDetails);
+    Task SendPushNotification_V2(string tokenToSend, string message);
 }

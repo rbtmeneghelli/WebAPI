@@ -13,6 +13,17 @@ namespace WebAPI.Domain.Models
         [JsonProperty("title")]
         public string Title { get; set; }
         [JsonProperty("body")]
-        public string Body { get; set; }    
+        public string Body { get; set; }
+
+        public FirebaseNotificationDetails()
+        {
+
+        }
+
+        public FirebaseNotificationDetails(string title, string body)
+        {
+            this.Title = title;
+            this.Body = body;
+        }
     }
 }

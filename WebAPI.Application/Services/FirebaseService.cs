@@ -2,11 +2,12 @@
 using System.Net.Http;
 using System.Net.Http.Json;
 using WebAPI.Application.Generic;
+using WebAPI.Domain.ExtensionMethods;
 
 namespace WebAPI.Application.Services;
 
 public class FirebaseService : GenericService, IFirebaseService
-{ 
+{
     private readonly IHttpClientFactory _httpClientFactory;
 
     public FirebaseService(INotificationMessageService notificationMessageService, IHttpClientFactory httpClientFactory) : base(notificationMessageService)
@@ -19,7 +20,65 @@ public class FirebaseService : GenericService, IFirebaseService
         GC.SuppressFinalize(this);
     }
 
-    public async Task SendPushNotification(string deviceClientToken, string message)
+    public async Task SendPushNotification_V1(string tokenUser, FirebaseNotificationDetails firebaseNotificationDetails)
+    {
+        //Build Header
+        string apiKey = "XPTO_KEY";
+        string postDataContentType = "application/json";
+        var currentDate = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil().ToLongDateString();
+
+        //Build Notification and Token
+        var postData = Newtonsoft.Json.JsonConvert.SerializeObject(new
+        {
+            to = tokenUser,
+            firebaseNotificationDetails,
+            data = new
+            {
+                Id = 1,
+                DataResult = "Sua mensagem foi enviada com sucesso!"
+            }
+        });
+
+        byte[] byteArray = Encoding.UTF8.GetBytes(postData.ToString());
+        HttpWebRequest Request = (HttpWebRequest)WebRequest.Create(FixConstantsUrl.URL_TO_GET_FIREBASE);
+        Request.Method = "POST";
+        Request.KeepAlive = false;
+        Request.ContentType = postDataContentType;
+        Request.Headers.Add(string.Format("Authorization: key={0}", apiKey));
+        Request.ContentLength = byteArray.Length;
+
+        Stream dataStream = Request.GetRequestStream();
+        dataStream.Write(byteArray, 0, byteArray.Length);
+        dataStream.Close();
+
+        try
+        {
+            WebResponse Response = Request.GetResponse();
+            HttpStatusCode ResponseCode = ((HttpWebResponse)Response).StatusCode;
+
+            if (ResponseCode.Equals(HttpStatusCode.Unauthorized) || ResponseCode.Equals(HttpStatusCode.Forbidden))
+            {
+                Notify($"{FixConstants.EXCEPTION_REQUEST_API} {FixConstantsUrl.URL_TO_GET_FIREBASE} \n " +
+                       $"Erro: {ResponseCode.ToString()}");
+            }
+            else if (!ResponseCode.Equals(HttpStatusCode.OK))
+            {
+                Notify($"{FixConstants.EXCEPTION_REQUEST_API} {FixConstantsUrl.URL_TO_GET_FIREBASE} \n " +
+                       $"Erro: {ResponseCode.ToString()}");
+            }
+
+            StreamReader Reader = new StreamReader(Response.GetResponseStream());
+            string responseLine = Reader.ReadToEnd();
+            Reader.Close();
+        }
+        catch (Exception ex)
+        {
+            Notify($"{FixConstants.EXCEPTION_REQUEST_API} {FixConstantsUrl.URL_TO_GET_FIREBASE} \n " +
+                      $"Erro: {ex.Message}");
+        }
+    }
+
+    public async Task SendPushNotification_V2(string deviceClientToken, string message)
     {
         RequestData requestDataDto = new RequestData();
 
@@ -52,15 +111,15 @@ public class FirebaseService : GenericService, IFirebaseService
             }
             else
             {
-                requestDataDto.Data = $"{FixConstants.EXCEPTION_REQUEST_API} {FixConstantsUrl.URL_TO_GET_FIREBASE}";
-                requestDataDto.IsSuccess = false;
+                Notify($"{FixConstants.EXCEPTION_REQUEST_API} {FixConstantsUrl.URL_TO_GET_FIREBASE} \n ");
             }
         }
-        catch
+        catch (Exception ex)
         {
-            requestDataDto.Data = $"{FixConstants.EXCEPTION_REQUEST_API} {FixConstantsUrl.URL_TO_GET_FIREBASE}";
-            requestDataDto.IsSuccess = false;
+            {
+                Notify($"{FixConstants.EXCEPTION_REQUEST_API} {FixConstantsUrl.URL_TO_GET_FIREBASE} \n " +
+                       $"Erro: {ex.Message}");
+            }
         }
     }
-
 }

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Serilog;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore;
 
 // Configuração para executar Minimal API sem a classe startup
 //var builder = WebApplication.CreateBuilder(args);

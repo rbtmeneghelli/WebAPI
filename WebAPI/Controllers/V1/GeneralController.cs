@@ -347,7 +347,7 @@ public sealed class GeneralController : GenericController
     [HttpGet("SendPushNotification")]
     public async Task<IActionResult> SendPushNotification()
     {
-        await _fireBaseService.SendPushNotification("Xpto", "isso e um teste");
+        await _fireBaseService.SendPushNotification_V2("Xpto", "isso e um teste");
         return CustomResponse();
     }
 }
