@@ -36,6 +36,14 @@ public partial class WebAPIContext : DbContext
         modelBuilder.ApplyConfiguration(new AuditMapping());
         modelBuilder.ApplyConfiguration(new LogMapping());
         modelBuilder.ApplyConfiguration(new OperationMapping());
+        modelBuilder.ApplyConfiguration(new ClientMapping());
+        modelBuilder.ApplyConfiguration(new NotificationMapping());
+        modelBuilder.ApplyConfiguration(new CityMapping());
+        modelBuilder.ApplyConfiguration(new ArchiveTypeMapping());
+        modelBuilder.ApplyConfiguration(new EmailDisplayMapping());
+        modelBuilder.ApplyConfiguration(new EmailTemplateMapping());
+        modelBuilder.ApplyConfiguration(new EmailTypeMapping());
+
         ApplyQueryFilterToTable<User>(modelBuilder);
         foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys())) 
         relationship.DeleteBehavior = DeleteBehavior.ClientSetNull;
