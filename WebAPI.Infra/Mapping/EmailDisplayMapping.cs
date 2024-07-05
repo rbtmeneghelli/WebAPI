@@ -12,7 +12,7 @@ public class EmailDisplayMapping : GenericMapping<EmailDisplay>
     {
         _builder = builder;
         base.ConfigureDefaultColumns();
-        _builder.ToTable("EmailTemplate");
+        _builder.ToTable("EmailDisplay");
         ConfigureColumns();
     }
 
@@ -23,6 +23,6 @@ public class EmailDisplayMapping : GenericMapping<EmailDisplay>
         _builder.Property(x => x.Body).IsRequired().HasMaxLength(8000).HasColumnName("Body");
         _builder.Property(x => x.Priority).IsRequired().HasColumnName("Priority");
         _builder.Property(x => x.HasAttachment).IsRequired().HasDefaultValue(false).HasColumnName("HasAttachment");
-        _builder.HasOne(x => x.EmailTemplate).WithMany(x => x.EmailDisplays).HasForeignKey(x => x.EmailTemplateId);
+        _builder.HasOne(x => x.EmailTemplates).WithMany(x => x.EmailDisplays).HasForeignKey(x => x.EmailTemplateId);
     }
 }

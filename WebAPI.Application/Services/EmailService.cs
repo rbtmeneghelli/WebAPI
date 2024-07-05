@@ -86,7 +86,7 @@ public class EmailService : GenericService, IEmailService
 
     public async Task SendEmailToResetPswAsync(string userName, string appPath)
     {
-        var emailDisplay = _iEmailDisplayRepository.GetAll().Include(x => x.EmailTemplate).Where(x => x.IsActive && x.Id == 1L).FirstOrDefault();
+        var emailDisplay = _iEmailDisplayRepository.GetAll().Include(x => x.EmailTemplates).Where(x => x.IsActive && x.Id == 1L).FirstOrDefault();
 
         if (GuardClauses.ObjectIsNotNull(emailDisplay))
         {

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
-namespace WebAPI.Infra.Data.Migrations
+namespace WebAPI.Infra.Migrations
 {
     /// <inheritdoc />
     public partial class Initial_Database : Migration
@@ -14,19 +14,19 @@ namespace WebAPI.Infra.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "ArchiveTypes",
+                name: "ArchiveType",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    UpdateTime = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    Created_Time = table.Column<DateTime>(type: "datetime2", nullable: true, defaultValue: new DateTime(2024, 7, 5, 14, 38, 15, 158, DateTimeKind.Unspecified).AddTicks(9262)),
+                    Update_Time = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Is_Active = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
+                    Description = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ArchiveTypes", x => x.Id);
+                    table.PrimaryKey("PK_ArchiveType", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -35,7 +35,7 @@ namespace WebAPI.Infra.Data.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Created_Time = table.Column<DateTime>(type: "datetime2", nullable: true, defaultValue: new DateTime(2024, 3, 27, 18, 57, 46, 479, DateTimeKind.Unspecified).AddTicks(4257)),
+                    Created_Time = table.Column<DateTime>(type: "datetime2", nullable: true, defaultValue: new DateTime(2024, 7, 5, 14, 38, 15, 158, DateTimeKind.Unspecified).AddTicks(261)),
                     Update_Time = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Is_Active = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
                     Table_Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
@@ -55,7 +55,7 @@ namespace WebAPI.Infra.Data.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Created_Time = table.Column<DateTime>(type: "datetime2", nullable: true, defaultValue: new DateTime(2024, 3, 27, 18, 57, 46, 462, DateTimeKind.Unspecified).AddTicks(1965)),
+                    Created_Time = table.Column<DateTime>(type: "datetime2", nullable: true, defaultValue: new DateTime(2024, 7, 5, 14, 38, 15, 158, DateTimeKind.Unspecified).AddTicks(4134)),
                     Update_Time = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Is_Active = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
                     Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false)
@@ -66,19 +66,19 @@ namespace WebAPI.Infra.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "EmailTemplates",
+                name: "EmailTemplate",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    UpdateTime = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    Created_Time = table.Column<DateTime>(type: "datetime2", nullable: true, defaultValue: new DateTime(2024, 7, 5, 14, 38, 15, 159, DateTimeKind.Unspecified).AddTicks(1203)),
+                    Update_Time = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Is_Active = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
+                    Description = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EmailTemplates", x => x.Id);
+                    table.PrimaryKey("PK_EmailTemplate", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -87,11 +87,11 @@ namespace WebAPI.Infra.Data.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SmtpConfig = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    UpdateTime = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    Created_Time = table.Column<DateTime>(type: "datetime2", nullable: true, defaultValue: new DateTime(2024, 7, 5, 14, 38, 15, 159, DateTimeKind.Unspecified).AddTicks(5615)),
+                    Update_Time = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Is_Active = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
+                    Description = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    SmtpConfig = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -122,7 +122,7 @@ namespace WebAPI.Infra.Data.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Description = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Created_Time = table.Column<DateTime>(type: "datetime2", nullable: true, defaultValue: new DateTime(2024, 3, 27, 18, 57, 46, 471, DateTimeKind.Unspecified).AddTicks(2986)),
+                    Created_Time = table.Column<DateTime>(type: "datetime2", nullable: true, defaultValue: new DateTime(2024, 7, 5, 14, 38, 15, 158, DateTimeKind.Unspecified).AddTicks(6247)),
                     Is_Active = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
                 },
                 constraints: table =>
@@ -136,7 +136,7 @@ namespace WebAPI.Infra.Data.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Created_Time = table.Column<DateTime>(type: "datetime2", nullable: true, defaultValue: new DateTime(2024, 3, 27, 18, 57, 46, 479, DateTimeKind.Unspecified).AddTicks(6787)),
+                    Created_Time = table.Column<DateTime>(type: "datetime2", nullable: true, defaultValue: new DateTime(2024, 7, 5, 14, 38, 15, 158, DateTimeKind.Unspecified).AddTicks(2725)),
                     Update_Time = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Is_Active = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -152,7 +152,7 @@ namespace WebAPI.Infra.Data.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Created_Time = table.Column<DateTime>(type: "datetime2", nullable: true, defaultValue: new DateTime(2024, 3, 27, 18, 57, 46, 478, DateTimeKind.Unspecified).AddTicks(1422)),
+                    Created_Time = table.Column<DateTime>(type: "datetime2", nullable: true, defaultValue: new DateTime(2024, 7, 5, 14, 38, 15, 156, DateTimeKind.Unspecified).AddTicks(8662)),
                     Update_Time = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Is_Active = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
                     Description = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
@@ -169,7 +169,7 @@ namespace WebAPI.Infra.Data.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Created_Time = table.Column<DateTime>(type: "datetime2", nullable: true, defaultValue: new DateTime(2024, 3, 27, 18, 57, 46, 479, DateTimeKind.Unspecified).AddTicks(2679)),
+                    Created_Time = table.Column<DateTime>(type: "datetime2", nullable: true, defaultValue: new DateTime(2024, 7, 5, 14, 38, 15, 157, DateTimeKind.Unspecified).AddTicks(8831)),
                     Update_Time = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Is_Active = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
@@ -217,29 +217,28 @@ namespace WebAPI.Infra.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "EmailDisplays",
+                name: "EmailDisplay",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Subject = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Body = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Created_Time = table.Column<DateTime>(type: "datetime2", nullable: true, defaultValue: new DateTime(2024, 7, 5, 14, 38, 15, 159, DateTimeKind.Unspecified).AddTicks(3231)),
+                    Update_Time = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Is_Active = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
+                    Title = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Subject = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Body = table.Column<string>(type: "nvarchar(max)", maxLength: 8000, nullable: false),
                     Priority = table.Column<int>(type: "int", nullable: false),
-                    HasAttachment = table.Column<bool>(type: "bit", nullable: false),
-                    EmailTemplateId = table.Column<int>(type: "int", nullable: false),
-                    EmailTemplateId1 = table.Column<long>(type: "bigint", nullable: true),
-                    CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    UpdateTime = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    HasAttachment = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    EmailTemplateId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EmailDisplays", x => x.Id);
+                    table.PrimaryKey("PK_EmailDisplay", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_EmailDisplays_EmailTemplates_EmailTemplateId1",
-                        column: x => x.EmailTemplateId1,
-                        principalTable: "EmailTemplates",
+                        name: "FK_EmailDisplay_EmailTemplate_EmailTemplateId",
+                        column: x => x.EmailTemplateId,
+                        principalTable: "EmailTemplate",
                         principalColumn: "Id");
                 });
 
@@ -249,7 +248,7 @@ namespace WebAPI.Infra.Data.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Created_Time = table.Column<DateTime>(type: "datetime2", nullable: true, defaultValue: new DateTime(2024, 3, 27, 18, 57, 46, 478, DateTimeKind.Unspecified).AddTicks(2934)),
+                    Created_Time = table.Column<DateTime>(type: "datetime2", nullable: true, defaultValue: new DateTime(2024, 7, 5, 14, 38, 15, 157, DateTimeKind.Unspecified).AddTicks(47)),
                     Update_Time = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Is_Active = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
                     Description = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
@@ -306,7 +305,7 @@ namespace WebAPI.Infra.Data.Migrations
                         .Annotation("SqlServer:TemporalHistoryTableSchema", null)
                         .Annotation("SqlServer:TemporalPeriodEndColumnName", "TerminoValidade")
                         .Annotation("SqlServer:TemporalPeriodStartColumnName", "InicioValidade"),
-                    Created_Time = table.Column<DateTime>(type: "datetime2", nullable: true, defaultValue: new DateTime(2024, 3, 27, 18, 57, 46, 477, DateTimeKind.Unspecified).AddTicks(8726))
+                    Created_Time = table.Column<DateTime>(type: "datetime2", nullable: true, defaultValue: new DateTime(2024, 7, 5, 14, 38, 15, 156, DateTimeKind.Unspecified).AddTicks(6245))
                         .Annotation("SqlServer:IsTemporal", true)
                         .Annotation("SqlServer:TemporalHistoryTableName", "UsersHistory")
                         .Annotation("SqlServer:TemporalHistoryTableSchema", null)
@@ -354,6 +353,12 @@ namespace WebAPI.Infra.Data.Migrations
                         .Annotation("SqlServer:TemporalHistoryTableSchema", null)
                         .Annotation("SqlServer:TemporalPeriodEndColumnName", "TerminoValidade")
                         .Annotation("SqlServer:TemporalPeriodStartColumnName", "InicioValidade"),
+                    HasTwoFactoryValidation = table.Column<bool>(type: "bit", nullable: false)
+                        .Annotation("SqlServer:IsTemporal", true)
+                        .Annotation("SqlServer:TemporalHistoryTableName", "UsersHistory")
+                        .Annotation("SqlServer:TemporalHistoryTableSchema", null)
+                        .Annotation("SqlServer:TemporalPeriodEndColumnName", "TerminoValidade")
+                        .Annotation("SqlServer:TemporalPeriodStartColumnName", "InicioValidade"),
                     InicioValidade = table.Column<DateTime>(type: "datetime2", nullable: false)
                         .Annotation("SqlServer:IsTemporal", true)
                         .Annotation("SqlServer:TemporalHistoryTableName", "UsersHistory")
@@ -388,7 +393,7 @@ namespace WebAPI.Infra.Data.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Created_Time = table.Column<DateTime>(type: "datetime2", nullable: true, defaultValue: new DateTime(2024, 3, 27, 18, 57, 46, 478, DateTimeKind.Unspecified).AddTicks(7282)),
+                    Created_Time = table.Column<DateTime>(type: "datetime2", nullable: true, defaultValue: new DateTime(2024, 7, 5, 14, 38, 15, 157, DateTimeKind.Unspecified).AddTicks(4264)),
                     Update_Time = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Is_Active = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
                     Initials = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false),
@@ -411,7 +416,7 @@ namespace WebAPI.Infra.Data.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Created_Time = table.Column<DateTime>(type: "datetime2", nullable: true, defaultValue: new DateTime(2024, 3, 27, 18, 57, 46, 478, DateTimeKind.Unspecified).AddTicks(9517)),
+                    Created_Time = table.Column<DateTime>(type: "datetime2", nullable: true, defaultValue: new DateTime(2024, 7, 5, 14, 38, 15, 157, DateTimeKind.Unspecified).AddTicks(6314)),
                     Update_Time = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Is_Active = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
                     Cep = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
@@ -442,7 +447,7 @@ namespace WebAPI.Infra.Data.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Created_Time = table.Column<DateTime>(type: "datetime2", nullable: true, defaultValue: new DateTime(2024, 3, 27, 18, 57, 46, 468, DateTimeKind.Unspecified).AddTicks(9604)),
+                    Created_Time = table.Column<DateTime>(type: "datetime2", nullable: true, defaultValue: new DateTime(2024, 7, 5, 14, 38, 15, 158, DateTimeKind.Unspecified).AddTicks(7193)),
                     Update_Time = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Is_Active = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
                     City = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
@@ -460,65 +465,69 @@ namespace WebAPI.Infra.Data.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "ArchiveTypes",
-                columns: new[] { "Id", "CreatedTime", "Description", "IsActive", "UpdateTime" },
+                table: "ArchiveType",
+                columns: new[] { "Id", "Created_Time", "Description", "Is_Active", "Update_Time" },
                 values: new object[,]
                 {
-                    { 1L, new DateTime(2024, 3, 27, 18, 57, 46, 487, DateTimeKind.Unspecified).AddTicks(5284), "Word", true, null },
-                    { 2L, new DateTime(2024, 3, 27, 18, 57, 46, 487, DateTimeKind.Unspecified).AddTicks(5311), "Excel", true, null },
-                    { 3L, new DateTime(2024, 3, 27, 18, 57, 46, 487, DateTimeKind.Unspecified).AddTicks(5315), "Pdf", true, null },
-                    { 4L, new DateTime(2024, 3, 27, 18, 57, 46, 487, DateTimeKind.Unspecified).AddTicks(5321), "Txt", true, null },
-                    { 5L, new DateTime(2024, 3, 27, 18, 57, 46, 487, DateTimeKind.Unspecified).AddTicks(5325), "Jpg", true, null },
-                    { 6L, new DateTime(2024, 3, 27, 18, 57, 46, 487, DateTimeKind.Unspecified).AddTicks(5329), "Word", true, null },
-                    { 7L, new DateTime(2024, 3, 27, 18, 57, 46, 487, DateTimeKind.Unspecified).AddTicks(5333), "Png", true, null }
+                    { 1L, new DateTime(2024, 7, 5, 14, 38, 15, 167, DateTimeKind.Unspecified).AddTicks(6475), "Word", true, null },
+                    { 2L, new DateTime(2024, 7, 5, 14, 38, 15, 167, DateTimeKind.Unspecified).AddTicks(6506), "Excel", true, null },
+                    { 3L, new DateTime(2024, 7, 5, 14, 38, 15, 167, DateTimeKind.Unspecified).AddTicks(6510), "Pdf", true, null },
+                    { 4L, new DateTime(2024, 7, 5, 14, 38, 15, 167, DateTimeKind.Unspecified).AddTicks(6513), "Txt", true, null },
+                    { 5L, new DateTime(2024, 7, 5, 14, 38, 15, 167, DateTimeKind.Unspecified).AddTicks(6520), "Jpg", true, null },
+                    { 6L, new DateTime(2024, 7, 5, 14, 38, 15, 167, DateTimeKind.Unspecified).AddTicks(6523), "Word", true, null },
+                    { 7L, new DateTime(2024, 7, 5, 14, 38, 15, 167, DateTimeKind.Unspecified).AddTicks(6526), "Png", true, null }
                 });
 
             migrationBuilder.InsertData(
-                table: "EmailDisplays",
-                columns: new[] { "Id", "Body", "CreatedTime", "EmailTemplateId", "EmailTemplateId1", "HasAttachment", "IsActive", "Priority", "Subject", "Title", "UpdateTime" },
-                values: new object[,]
-                {
-                    { 1L, "Olá, {0}<br>Seja bem vindo ao <b>{1}</b><br> Utilize a senha <b>1234</b> para acessar o sistema e usufrua de todas as ferramentas disponíveis.<br>", new DateTime(2024, 3, 27, 18, 57, 46, 487, DateTimeKind.Unspecified).AddTicks(5472), 1, null, false, true, 1, "Bem vindo ao sistema {0}", "Boas vindas", null },
-                    { 2L, "<center>Olá, {0}</center><center>Conforme sua solicitação enviamos este email para que você possa concluir sua solicitação de esqueci a senha. Clique no botão abaixo.</center><br> ", new DateTime(2024, 3, 27, 18, 57, 46, 487, DateTimeKind.Unspecified).AddTicks(5479), 1, null, false, true, 1, "{0} - Esqueci a senha", "Esqueci a senha", null },
-                    { 3L, "<center>Olá, {0}</center><center>Conforme sua solicitação enviamos este email para que você possa concluir sua solicitação de troca de senha. Clique no botão abaixo.</center><br> ", new DateTime(2024, 3, 27, 18, 57, 46, 487, DateTimeKind.Unspecified).AddTicks(5485), 1, null, false, true, 1, "{0} - Solicitação de troca de senha", "Troca de senha", null },
-                    { 4L, "<center>Olá, {0}</center><center>Quero reporta-lo que a sua confirmação de senha foi realizada com sucesso no periodo das 27/03/2024 - 18:57</center><br> ", new DateTime(2024, 3, 27, 18, 57, 46, 487, DateTimeKind.Unspecified).AddTicks(5708), 1, null, false, true, 1, "{0} - Confirmação de senha", "Confirmação de senha", null },
-                    { 5L, "", new DateTime(2024, 3, 27, 18, 57, 46, 487, DateTimeKind.Unspecified).AddTicks(5716), 1, null, true, true, 1, "{0} - Relatório", "Relatório", null }
-                });
-
-            migrationBuilder.InsertData(
-                table: "EmailTemplates",
-                columns: new[] { "Id", "CreatedTime", "Description", "IsActive", "UpdateTime" },
-                values: new object[] { 1L, new DateTime(2024, 3, 27, 18, 57, 46, 487, DateTimeKind.Unspecified).AddTicks(5391), "WebAPI", true, null });
+                table: "EmailTemplate",
+                columns: new[] { "Id", "Created_Time", "Description", "Is_Active", "Update_Time" },
+                values: new object[] { 1L, new DateTime(2024, 7, 5, 14, 38, 15, 167, DateTimeKind.Unspecified).AddTicks(6587), "WebAPI", true, null });
 
             migrationBuilder.InsertData(
                 table: "EmailType",
-                columns: new[] { "Id", "CreatedTime", "Description", "IsActive", "SmtpConfig", "UpdateTime" },
+                columns: new[] { "Id", "Created_Time", "Description", "Is_Active", "SmtpConfig", "Update_Time" },
                 values: new object[,]
                 {
-                    { 1L, new DateTime(2024, 3, 27, 18, 57, 46, 487, DateTimeKind.Unspecified).AddTicks(5425), "Gmail", true, "smtp.gmail.com", null },
-                    { 2L, new DateTime(2024, 3, 27, 18, 57, 46, 487, DateTimeKind.Unspecified).AddTicks(5429), "Outlook", true, "smtp.office365.com", null },
-                    { 3L, new DateTime(2024, 3, 27, 18, 57, 46, 487, DateTimeKind.Unspecified).AddTicks(5433), "Hotmail", true, "smtp.live.com", null }
+                    { 1L, new DateTime(2024, 7, 5, 14, 38, 15, 167, DateTimeKind.Unspecified).AddTicks(6754), "Gmail", true, "smtp.gmail.com", null },
+                    { 2L, new DateTime(2024, 7, 5, 14, 38, 15, 167, DateTimeKind.Unspecified).AddTicks(6759), "Outlook", true, "smtp.office365.com", null },
+                    { 3L, new DateTime(2024, 7, 5, 14, 38, 15, 167, DateTimeKind.Unspecified).AddTicks(6762), "Hotmail", true, "smtp.live.com", null }
                 });
 
             migrationBuilder.InsertData(
                 table: "Operation",
                 columns: new[] { "Id", "Created_Time", "Description", "Is_Active", "Update_Time" },
-                values: new object[] { 1L, new DateTime(2024, 3, 27, 18, 57, 46, 479, DateTimeKind.Unspecified).AddTicks(8412), "Auditoria", true, null });
+                values: new object[] { 1L, new DateTime(2024, 7, 5, 14, 38, 15, 159, DateTimeKind.Unspecified).AddTicks(7412), "Auditoria", true, null });
 
             migrationBuilder.InsertData(
                 table: "Profiles",
                 columns: new[] { "Id", "Created_Time", "Description", "Is_Active", "ProfileTypeId", "Update_Time" },
                 values: new object[,]
                 {
-                    { 1L, new DateTime(2024, 3, 27, 18, 57, 46, 479, DateTimeKind.Unspecified).AddTicks(7992), "Perfil Usuário", true, 0, null },
-                    { 2L, new DateTime(2024, 3, 27, 18, 57, 46, 479, DateTimeKind.Unspecified).AddTicks(8006), "Perfil Administrador", true, 0, null },
-                    { 3L, new DateTime(2024, 3, 27, 18, 57, 46, 479, DateTimeKind.Unspecified).AddTicks(8011), "Perfil Manager", true, 0, null }
+                    { 1L, new DateTime(2024, 7, 5, 14, 38, 15, 159, DateTimeKind.Unspecified).AddTicks(7230), "Perfil Usuário", true, 0, null },
+                    { 2L, new DateTime(2024, 7, 5, 14, 38, 15, 159, DateTimeKind.Unspecified).AddTicks(7242), "Perfil Administrador", true, 0, null },
+                    { 3L, new DateTime(2024, 7, 5, 14, 38, 15, 159, DateTimeKind.Unspecified).AddTicks(7246), "Perfil Manager", true, 0, null }
                 });
 
             migrationBuilder.InsertData(
                 table: "Roles",
                 columns: new[] { "Id", "Action", "Created_Time", "Description", "IdOperation", "Role", "Update_Time" },
-                values: new object[] { 1L, (byte)0, new DateTime(2024, 3, 27, 18, 57, 46, 479, DateTimeKind.Unspecified).AddTicks(8454), "Regra de acesso a tela de Auditoria", null, "ROLE_AUDIT", null });
+                values: new object[] { 1L, (byte)0, new DateTime(2024, 7, 5, 14, 38, 15, 159, DateTimeKind.Unspecified).AddTicks(7443), "Regra de acesso a tela de Auditoria", null, "ROLE_AUDIT", null });
+
+            migrationBuilder.InsertData(
+                table: "EmailDisplay",
+                columns: new[] { "Id", "Body", "Created_Time", "EmailTemplateId", "Is_Active", "Priority", "Subject", "Title", "Update_Time" },
+                values: new object[,]
+                {
+                    { 1L, "Olá, {0}<br>Seja bem vindo ao <b>{1}</b><br> Utilize a senha <b>1234</b> para acessar o sistema e usufrua de todas as ferramentas disponíveis.<br>", new DateTime(2024, 7, 5, 14, 38, 15, 167, DateTimeKind.Unspecified).AddTicks(6799), 1L, true, 1, "Bem vindo ao sistema {0}", "Boas vindas", null },
+                    { 2L, "<center>Olá, {0}</center><center>Conforme sua solicitação enviamos este email para que você possa concluir sua solicitação de esqueci a senha. Clique no botão abaixo.</center><br> ", new DateTime(2024, 7, 5, 14, 38, 15, 167, DateTimeKind.Unspecified).AddTicks(6805), 1L, true, 1, "{0} - Esqueci a senha", "Esqueci a senha", null },
+                    { 3L, "<center>Olá, {0}</center><center>Conforme sua solicitação enviamos este email para que você possa concluir sua solicitação de troca de senha. Clique no botão abaixo.</center><br> ", new DateTime(2024, 7, 5, 14, 38, 15, 167, DateTimeKind.Unspecified).AddTicks(6809), 1L, true, 1, "{0} - Solicitação de troca de senha", "Troca de senha", null },
+                    { 4L, "<center>Olá, {0}</center><center>Quero reporta-lo que a sua confirmação de senha foi realizada com sucesso no periodo das 05/07/2024 - 14:38</center><br> ", new DateTime(2024, 7, 5, 14, 38, 15, 167, DateTimeKind.Unspecified).AddTicks(7178), 1L, true, 1, "{0} - Confirmação de senha", "Confirmação de senha", null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "EmailDisplay",
+                columns: new[] { "Id", "Body", "Created_Time", "EmailTemplateId", "HasAttachment", "Is_Active", "Priority", "Subject", "Title", "Update_Time" },
+                values: new object[] { 5L, "", new DateTime(2024, 7, 5, 14, 38, 15, 167, DateTimeKind.Unspecified).AddTicks(7185), 1L, true, true, 1, "{0} - Relatório", "Relatório", null });
 
             migrationBuilder.InsertData(
                 table: "ProfileOperations",
@@ -527,8 +536,8 @@ namespace WebAPI.Infra.Data.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "Created_Time", "IdProfile", "Is_Active", "Is_Authenticated", "Last_Password", "Login", "Password", "Update_Time" },
-                values: new object[] { 1L, new DateTime(2024, 3, 27, 18, 57, 46, 479, DateTimeKind.Unspecified).AddTicks(8514), 1L, true, true, "", "admin@DefaultAPI.com.br", "AQAQJwAAUz8pBGJVQXL/+A6ZfRZPGTNPDTyMBBII2Wp46uxWjSI=", null });
+                columns: new[] { "Id", "Created_Time", "HasTwoFactoryValidation", "IdProfile", "Is_Active", "Is_Authenticated", "Last_Password", "Login", "Password", "Update_Time" },
+                values: new object[] { 1L, new DateTime(2024, 7, 5, 14, 38, 15, 159, DateTimeKind.Unspecified).AddTicks(7500), false, 1L, true, true, "", "admin@DefaultAPI.com.br", "AQAQJwAAjxT8iTYusLQKRJlPLuTjvmY7FdABjNtppC74m7Ushfo=", null });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Ceps_StateId",
@@ -541,9 +550,9 @@ namespace WebAPI.Infra.Data.Migrations
                 column: "StateId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_EmailDisplays_EmailTemplateId1",
-                table: "EmailDisplays",
-                column: "EmailTemplateId1");
+                name: "IX_EmailDisplay_EmailTemplateId",
+                table: "EmailDisplay",
+                column: "EmailTemplateId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProfileOperations_Id_Operation",
@@ -576,7 +585,7 @@ namespace WebAPI.Infra.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ArchiveTypes");
+                name: "ArchiveType");
 
             migrationBuilder.DropTable(
                 name: "Audit");
@@ -594,7 +603,7 @@ namespace WebAPI.Infra.Data.Migrations
                 name: "ClientDocument");
 
             migrationBuilder.DropTable(
-                name: "EmailDisplays");
+                name: "EmailDisplay");
 
             migrationBuilder.DropTable(
                 name: "EmailType");
@@ -626,7 +635,7 @@ namespace WebAPI.Infra.Data.Migrations
                 name: "Client");
 
             migrationBuilder.DropTable(
-                name: "EmailTemplates");
+                name: "EmailTemplate");
 
             migrationBuilder.DropTable(
                 name: "Operation");

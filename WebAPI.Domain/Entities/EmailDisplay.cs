@@ -11,8 +11,8 @@ public class EmailDisplay : GenericEntity
     public string Body { get; set; }
     public MessagePriority Priority { get; set; }
     public bool HasAttachment { get; set; }
-    public int EmailTemplateId { get; set; }
-    public virtual EmailTemplate EmailTemplate { get; set; }
+    public virtual EmailTemplate EmailTemplates { get; set; }
+    public long EmailTemplateId { get; set; }
 
     public static string GetTitleDefault()
     {

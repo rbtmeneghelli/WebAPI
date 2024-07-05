@@ -32,6 +32,6 @@ public class EmailConfig
         Priority = emailDisplay.Priority;
         UserName = userName;
         HasAttachment = emailDisplay.HasAttachment;
-        Template = emailDisplay.EmailTemplate.Description;
+        Template = emailDisplay.EmailTemplates.Description;
     }
 }

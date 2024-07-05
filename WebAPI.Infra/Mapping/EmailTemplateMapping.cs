@@ -18,6 +18,6 @@ public class EmailTemplateMapping : GenericMapping<EmailTemplate>
     private void ConfigureColumns()
     {
         _builder.Property(x => x.Description).IsRequired().HasMaxLength(255).HasColumnName("Description");
-        _builder.HasMany(x => x.EmailDisplays).WithOne(x => x.EmailTemplate).HasForeignKey(x => x.EmailTemplateId);
+        _builder.HasMany(x => x.EmailDisplays).WithOne(x => x.EmailTemplates).HasForeignKey(x => x.EmailTemplateId);
     }
 }

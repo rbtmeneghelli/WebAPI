@@ -40,8 +40,8 @@ public partial class WebAPIContext : DbContext
         modelBuilder.ApplyConfiguration(new NotificationMapping());
         modelBuilder.ApplyConfiguration(new CityMapping());
         modelBuilder.ApplyConfiguration(new ArchiveTypeMapping());
-        modelBuilder.ApplyConfiguration(new EmailDisplayMapping());
         modelBuilder.ApplyConfiguration(new EmailTemplateMapping());
+        modelBuilder.ApplyConfiguration(new EmailDisplayMapping());
         modelBuilder.ApplyConfiguration(new EmailTypeMapping());
 
         ApplyQueryFilterToTable<User>(modelBuilder);
