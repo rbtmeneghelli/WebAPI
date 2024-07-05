@@ -12,6 +12,13 @@ using LicenseContext = OfficeOpenXml.LicenseContext;
 using Microsoft.AspNetCore.Http;
 using NPOI.HSSF.UserModel;
 using CsvHelper;
+using NPOI.SS.Formula.Functions;
+using Org.BouncyCastle.Utilities;
+using System.ComponentModel;
+using System.Reflection;
+using System.Runtime.Serialization;
+using Microsoft.Identity.Client;
+using static NPOI.HSSF.Util.HSSFColor;
 
 namespace WebAPI.Application.Services;
 
@@ -326,6 +333,43 @@ public class FileService<TModel> : IFileService<TModel> where TModel : class
 
     #endregion
 
+    #region Metodos para Escrever CSV
+
+    private IEnumerable<string> GetLinesToFillCSV(PropertyInfo[] arrPropertyInfo, string headerOriginalProperty, IEnumerable<TModel> list)
+    {
+        List<string> lines = new List<string>();
+
+        foreach (var dataObject in list)
+        {
+            lines.Add(string.Join(";", arrPropertyInfo
+                 .Where(a => headerOriginalProperty.Contains(a.Name))
+                 .Select(p => p.PropertyType == typeof(decimal) ?
+                 string.Format(CultureInfo.GetCultureInfo("pt-BR"), "{0:C}", p.GetValue(dataObject)) :
+                 p.GetValue(dataObject))));
+        }
+
+        return lines;
+    }
+
+    private MemoryStream GetMemoryStreamCsv(string headerDescription, IEnumerable<string> lines)
+    {
+        using (MemoryStream ms = new MemoryStream())
+        {
+            TextWriter tw = new StreamWriter(ms, Encoding.UTF8);
+            tw.WriteLine(headerDescription);
+
+            foreach (string line in lines)
+                tw.WriteLine(line);
+
+            tw.Flush();
+            ms.Position = 0;
+
+            return ms;
+        }
+    }
+
+    #endregion
+
     public async Task<MemoryStream> CreateExcelFileEPPLUS(IEnumerable<TModel> list, string excelName)
     {
         ExcelPackage excelPackage = new();
@@ -382,6 +426,30 @@ public class FileService<TModel> : IFileService<TModel> where TModel : class
         AddDataToPdf(section, list);
         documentBuilder.Build(pdfName);
         return await GetMemoryStreamByFile(path);
+    }
+
+    public async Task<MemoryStream> CreateCsvFile(IEnumerable<TModel> list)
+    {
+        Type item = typeof(TModel);
+        var arrPropertyInfo = item.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+        arrPropertyInfo = arrPropertyInfo.OrderBy(p =>
+        {
+            var order = (Attribute.GetCustomAttribute(p, typeof(DataMemberAttribute)) as DataMemberAttribute)?.Order;
+            return order ?? 0;
+
+        }).ToArray();
+
+        var headerWithDescription = arrPropertyInfo.Where(p => Attribute.IsDefined(p, typeof(DescriptionAttribute))
+            && !string.IsNullOrWhiteSpace((Attribute.GetCustomAttribute(p, typeof(DescriptionAttribute)) as DescriptionAttribute).Description));
+        var headerOriginalProperty = string.Join(";", headerWithDescription.Select(p => p.Name));
+        var headerDescription = string.Join(";", headerWithDescription
+            .Select(p => (Attribute.GetCustomAttribute(p, typeof(DescriptionAttribute)) as DescriptionAttribute).Description));
+
+        IEnumerable<string> lines = GetLinesToFillCSV(arrPropertyInfo, headerOriginalProperty, list);
+        MemoryStream memoryStreamCsv = await Task.FromResult(GetMemoryStreamCsv(headerDescription, lines));
+
+        return memoryStreamCsv;
     }
 
     public async Task<IEnumerable<TModel>> ReadExcelDataFromUploadNPOI(IFormFile formFile)
@@ -445,6 +513,30 @@ public class FileService<TModel> : IFileService<TModel> where TModel : class
         var result = ParseCsv<TModel>(csvFilePath);
         await Task.CompletedTask;
         return result;
+    }
+
+    public async Task<IEnumerable<TModel>> ReadCsvDataFromIFormFile(IFormFile formFile)
+    {
+        var list = Enumerable.Empty<TModel>();
+
+        using (var ms = new MemoryStream())
+        {
+            await formFile.CopyToAsync(ms);
+            string base64 = Convert.ToBase64String(ms.ToArray());
+
+            using (var mss = new MemoryStream(Convert.FromBase64String(base64.Substring(base64.IndexOf(',') + 1))))
+            {
+                using (var reader = new StreamReader(ms))
+                {
+                    using (var csvReader = new CsvReader(reader, new CultureInfo("pt-BR")))
+                    {
+                        list = csvReader.GetRecords<TModel>();
+                    }
+                }
+            }
+        }
+
+        return list;
     }
 
     public void Dispose()

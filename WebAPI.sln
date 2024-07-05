@@ -31,13 +31,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAPI.IoC", "WebAPI.IoC\We
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAPI.DesignPatterns", "WebAPI.DesignPatterns\WebAPI.DesignPatterns.csproj", "{E0166369-D303-48C5-A2D0-561C605E2540}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestsWebAPI", "TestsWebAPI\TestsWebAPI.csproj", "{0FABA153-0E00-4BE1-B1E2-27612203C5F7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestsWebAPI", "TestsWebAPI\TestsWebAPI.csproj", "{0FABA153-0E00-4BE1-B1E2-27612203C5F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebJobs.WebAPI", "WebJobs.WebAPI\WebJobs.WebAPI.csproj", "{825B97CA-A626-470B-9672-32F25E7C3FC6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebJobs.WebAPI", "WebJobs.WebAPI\WebJobs.WebAPI.csproj", "{825B97CA-A626-470B-9672-32F25E7C3FC6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebJobs.Core", "WebJobs.Core\WebJobs.Core.csproj", "{E9F6622E-1220-4174-9339-A706A77C956F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebJobs.Core", "WebJobs.Core\WebJobs.Core.csproj", "{E9F6622E-1220-4174-9339-A706A77C956F}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{C1B0BE22-EFD3-4BD8-90C0-6A785337867E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "9. WebAPI_Environment", "9. WebAPI_Environment", "{FC2A7367-72D6-4E3E-9530-EA0557CC8034}"
+	ProjectSection(SolutionItems) = preProject
+		DEV.bat = DEV.bat
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
