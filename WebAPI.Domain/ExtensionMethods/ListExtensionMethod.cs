@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Buffers;
 
 namespace WebAPI.Domain.ExtensionMethods
 {
@@ -97,5 +98,20 @@ namespace WebAPI.Domain.ExtensionMethods
 
             return isEqual;
         }
+
+        /// <summary>
+        /// Esse metodo funciona a partir do NET 9
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        //public bool ExistItemOnList(IEnumerable<string> list)
+        //{
+        //    SearchValues<string> searchValues = SearchValues.Create(
+        //        ["Item1", "Item2", "Item3"],
+        //        StringComparison.OrdinalIgnoreCase
+        //    );
+
+        //    return list.Where(p => searchValues.Contains(p)).Any();
+        //}
     }
 }
