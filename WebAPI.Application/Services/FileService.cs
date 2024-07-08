@@ -337,6 +337,7 @@ public class FileService<TModel> : IFileService<TModel> where TModel : class
 
     private IEnumerable<string> GetLinesToFillCSV(PropertyInfo[] arrPropertyInfo, string headerOriginalProperty, IEnumerable<TModel> list)
     {
+        var culture = CultureInfo.GetCultureInfo("pt-BR");
         List<string> lines = new List<string>();
 
         foreach (var dataObject in list)
@@ -344,8 +345,10 @@ public class FileService<TModel> : IFileService<TModel> where TModel : class
             lines.Add(string.Join(";", arrPropertyInfo
                  .Where(a => headerOriginalProperty.Contains(a.Name))
                  .Select(p => p.PropertyType == typeof(decimal) ?
-                 string.Format(CultureInfo.GetCultureInfo("pt-BR"), "{0:C}", p.GetValue(dataObject)) :
-                 p.GetValue(dataObject))));
+                              string.Format(culture, "{0:C}", p.GetValue(dataObject))
+                              : p.PropertyType == typeof(DateTime) || p.PropertyType == typeof(DateTime?) ?
+                              string.Format(culture, "{0:dd/MM/yyyy}", p.GetValue(dataObject))
+                              : p.GetValue(dataObject))));
         }
 
         return lines;

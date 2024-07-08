@@ -5,6 +5,7 @@ using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Domain.Generic;
 using WebAPI.Infra.Data.Mapping;
 using Microsoft.EntityFrameworkCore;
+using WebAPI.Infra.Context;
 
 namespace WebAPI.Infra.Data.Context;
 
@@ -20,6 +21,9 @@ public partial class WebAPIContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
+        // This code will find slow queries in EF with the interceptor System
+        //optionsBuilder.AddInterceptors(new SlowQueryInterceptor());
+
         base.OnConfiguring(optionsBuilder);
     }
 
