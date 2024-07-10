@@ -15,5 +15,6 @@
         Task<PagedResult<Region>> GetAllWithPaginateAsync(RegionFilter filter);
         bool ExistRegionById(long regionId);
         long GetCount(Expression<Func<Region, bool>> predicate);
+        bool ExistRegion();
     }
 }

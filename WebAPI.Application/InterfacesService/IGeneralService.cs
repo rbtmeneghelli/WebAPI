@@ -7,7 +7,7 @@ public interface IGeneralService
     Task<RequestData> RequestLoginAsync(string url, string key = "");
     Task<bool> RunSqlProcedureAsync(string procName, string paramName, string paramValue);
     Task<bool> RunSqlBackupAsync(string directory);
-    Task<MemoryStream> Export2ZipAsync(string directory, int typeFile = 2);
+    Task<MemoryStream> Export2ZipAsync(string directory, EnumMemoryStreamFile typeFile = EnumMemoryStreamFile.PDF);
     Task<bool> SendPushNotificationAsync(PushNotification notification, string tokenUser);
     string GenerateToken(IEnumerable<Claim> claims);
     string GenerateRefreshToken();

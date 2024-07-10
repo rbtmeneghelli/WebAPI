@@ -4,6 +4,9 @@ using KissLog;
 using Microsoft.AspNetCore.Cors;
 using FixConstants = WebAPI.Domain.FixConstants;
 using Region = WebAPI.Domain.Entities.Region;
+using WebAPI.Domain.Enums;
+using System.Reflection;
+using SkiaSharp;
 
 namespace WebAPI.V1.Controllers;
 
@@ -21,10 +24,15 @@ public sealed class GeneralController : GenericController
     private readonly IMemoryCacheService _memoryCacheService;
     private readonly IQRCodeService _qRCodeService;
     private readonly IFirebaseService _fireBaseService;
+    private readonly GeneralMethod _generalMethod;
 
     private EnvironmentVariables _environmentVariables { get; }
 
-    public GeneralController(IMapper mapper, IHttpContextAccessor accessor, ICepService cepsService, IStatesService statesService, IRegionService regionService, ICityService cityService, INotificationMessageService notificationMessageService, IGeneralService generalService, IMemoryCacheService memoryCacheService, IKLogger iKLogger, IQRCodeService qRCodeService, EnvironmentVariables environmentVariables, IFirebaseService fireBaseService) : base(mapper, accessor, notificationMessageService, iKLogger)
+    public GeneralController(IMapper mapper, IHttpContextAccessor accessor, ICepService cepsService, IStatesService statesService, 
+                             IRegionService regionService, ICityService cityService, INotificationMessageService notificationMessageService, 
+                             IGeneralService generalService, IMemoryCacheService memoryCacheService, IKLogger iKLogger, 
+                             IQRCodeService qRCodeService, EnvironmentVariables environmentVariables,
+                             IFirebaseService fireBaseService) : base(mapper, accessor, notificationMessageService, iKLogger)
     {
         _cepsService = cepsService;
         _statesService = statesService;
@@ -35,14 +43,14 @@ public sealed class GeneralController : GenericController
         _qRCodeService = qRCodeService;
         _environmentVariables = environmentVariables;
         _fireBaseService = fireBaseService;
+        _generalMethod = GeneralMethod.GetLoadExtensionMethods();
     }
 
-    [HttpGet("export2Zip/{directory}/{typeFile:int}")]
-    public async Task<IActionResult> Export2Zip(string directory, int typeFile = 2)
+    [HttpGet("export2Zip/{directory}/{typeFile:EnumMemoryStreamFile}")]
+    public async Task<IActionResult> Export2Zip(string directory, EnumMemoryStreamFile typeFile = EnumMemoryStreamFile.PDF)
     {
-        GeneralMethod extensionMethods = GeneralMethod.GetLoadExtensionMethods();
         MemoryStream memoryStream = await _generalService.Export2ZipAsync(directory, typeFile);
-        var memoryStreamResult = extensionMethods.GetMemoryStream(typeFile);
+        var memoryStreamResult = _generalMethod.GetMemoryStream(typeFile);
         return File(await Task.FromResult(memoryStream.ToArray()), memoryStreamResult.Type, $"Archive.{memoryStreamResult.Extension}");
     }
 
@@ -66,7 +74,7 @@ public sealed class GeneralController : GenericController
             if (refreshCep && GuardClauses.IsNullOrWhiteSpace(cep) == false)
             {
                 modelCep = await _cepsService.GetByCepAsync(cep);
-                RequestData requestData = await _generalService.RequestDataToExternalAPIAsync($"{FixConstantsUrl.URL_TO_GET_CEP}{cep}/json/");
+                RequestData requestData = await _generalService.RequestDataToExternalAPIAsync(string.Format($"{FixConstantsUrl.URL_TO_GET_CEP}{0}", cep));
                 if (requestData.IsSuccess)
                 {
                     Domain.ValueObject.AddressData modelCepAPI = requestData.Data.DeserializeObject<Domain.ValueObject.AddressData>();
@@ -136,12 +144,17 @@ public sealed class GeneralController : GenericController
         {
             List<States> states = await GetListStateWithoutCities();
 
-            if (states.Exists(x => x.Initials.ApplyTrim() is "DF"))
+            if (states.Exists(x => x.Initials.ApplyTrim() == City.GetDFNickNameFromIBGE()))
             {
-                cities.Add(new City() { IBGE = 5300108, Name = "DISTRITO FEDERAL", StateId = states.FirstOrDefault(x => x.Initials.ApplyTrim() == "DF").Id.Value });
+                cities.Add(new City()
+                {
+                    IBGE = City.GetDFCodeFromIBGE(),
+                    Name = City.GetDFNameFromIBGE(),
+                    StateId = states.FirstOrDefault(x => x.Initials.ApplyTrim() == City.GetDFNickNameFromIBGE()).Id.Value
+                });
             }
 
-            foreach (States state in states.Where(x => x.Initials is not "DF"))
+            foreach (States state in states.Where(x => x.Initials != City.GetDFNickNameFromIBGE()))
             {
 
                 requestData = await _generalService.RequestDataToExternalAPIAsync(string.Format(FixConstantsUrl.URL_TO_GET_CITIES, state.Initials));
@@ -163,7 +176,7 @@ public sealed class GeneralController : GenericController
             }
 
             if (cities.Count() > 0)
-                await _cityService.AddOrUpdateCityAsync(cities.OrderBy(x => x.Name).ToList());
+                await _cityService.AddOrUpdateCityAsync(cities.OrderBy(x => x.Name));
         }
         catch (Exception)
         {
@@ -185,7 +198,7 @@ public sealed class GeneralController : GenericController
             {
                 IEnumerable<States> listStatesAPI = requestData.Data.DeserializeObject<IEnumerable<States>>();
 
-                if (_regionService.GetCount(p => p.IsActive == true) < 4 && GuardClauses.ObjectIsNotNull(listStatesAPI) && GuardClauses.HaveDataOnList(listStatesAPI))
+                if (_regionService.ExistRegion() == false && GuardClauses.ObjectIsNotNull(listStatesAPI) && GuardClauses.HaveDataOnList(listStatesAPI))
                 {
                     list = listStatesAPI.Select(x => new
                     {
@@ -266,8 +279,9 @@ public sealed class GeneralController : GenericController
     [HttpPost("createQRCode")]
     public IActionResult CreateQRCode([FromBody] QRCodeFile qRCodeFile)
     {
+        var memoryStreamResult = _generalMethod.GetMemoryStream(EnumMemoryStreamFile.PNG);
         var image = _qRCodeService.CreateQRCode(qRCodeFile);
-        return File(image, "image/png");
+        return File(image, memoryStreamResult.Type);
     }
 
     [HttpPost("readQRCode")]
@@ -313,7 +327,7 @@ public sealed class GeneralController : GenericController
     public string Bloqueado()
     {
         var teste = _environmentVariables;
-        return $"Acesso BLOQUEADO para este endpoint : {DateTime.Now}";
+        return $"Acesso BLOQUEADO para este endpoint : {DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()}";
     }
 
     [EnableCors("EnableCORS")]
@@ -362,11 +376,11 @@ public sealed class GeneralController : GenericController
                 return CustomResponse();
             }
 
-            #if DEBUG
-                _generalService.RefreshEnvironmentVarLocal(environmentVarSettings);
-            #else
+#if DEBUG
+            _generalService.RefreshEnvironmentVarLocal(environmentVarSettings);
+#else
                 _generalService.RefreshEnvironmentVarAzure(environmentVarSettings);
-            #endif
+#endif
         }
         catch (Exception ex)
         {

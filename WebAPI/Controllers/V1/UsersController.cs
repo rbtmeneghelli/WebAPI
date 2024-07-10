@@ -1,4 +1,6 @@
 ﻿using KissLog;
+using WebAPI.Domain.Enums;
+using WebAPI.Domain.ExtensionMethods;
 using FixConstants = WebAPI.Domain.FixConstants;
 
 namespace WebAPI.V1.Controllers;
@@ -14,10 +16,15 @@ public sealed class UsersController : GenericController
 {
     private readonly IUserService _userService;
     private readonly IFileService<UserExcelDTO> _FileService;
-    public UsersController(IMapper mapper, IHttpContextAccessor accessor, INotificationMessageService noticationMessageService, IUserService userService, IKLogger iKLogger, IFileService<UserExcelDTO> fileService) : base(mapper, accessor, noticationMessageService, iKLogger)
+    private readonly GeneralMethod _generalMethod;
+
+    public UsersController(IMapper mapper, IHttpContextAccessor accessor, INotificationMessageService noticationMessageService,
+                           IUserService userService, IKLogger iKLogger, IFileService<UserExcelDTO> fileService)
+                          : base(mapper, accessor, noticationMessageService, iKLogger)
     {
         _userService = userService;
         _FileService = fileService;
+        _generalMethod = GeneralMethod.GetLoadExtensionMethods();
     }
 
     [HttpGet("GetAll")]
@@ -41,23 +48,25 @@ public sealed class UsersController : GenericController
     [HttpGet("GetById/{id:long}")]
     public async Task<IActionResult> GetById(long id)
     {
-        if (await _userService.ExistByIdAsync(id) == false)
-            return CustomResponse();
+        if (await _userService.ExistByIdAsync(id))
+        {
+            var model = _mapperService.Map<UserResponseDTO>(await _userService.GetByIdAsync(id));
+            return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
+        }
 
-        var model = _mapperService.Map<UserResponseDTO>(await _userService.GetByIdAsync(id));
-
-        return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
+        return CustomResponse();
     }
 
     [HttpGet("GetByLogin/{login}")]
     public async Task<IActionResult> GetByLogin(string login)
     {
-        if (await _userService.ExistByLoginAsync(login) == false)
-            return CustomResponse();
+        if (await _userService.ExistByLoginAsync(login))
+        {
+            var model = _mapperService.Map<UserResponseDTO>(await _userService.GetByLoginAsync(login));
+            return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
+        }
 
-        var model = _mapperService.Map<UserResponseDTO>(await _userService.GetByLoginAsync(login));
-
-        return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
+        return CustomResponse();
     }
 
     [HttpGet("GetUsers")]
@@ -167,16 +176,16 @@ public sealed class UsersController : GenericController
     [HttpPost("Export2Excel")]
     public async Task<IActionResult> Export2Excel([FromBody] UserFilter filter)
     {
-        string excelName = "Usuarios.xlsx";
-
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
         var list = await _userService.GetAllPaginateAsync(filter);
         if (list?.Results?.Count() > 0)
         {
+            var memoryStreamResult = _generalMethod.GetMemoryStream(EnumMemoryStreamFile.XLSX);
             var excelData = _mapperService.Map<IEnumerable<UserExcelDTO>>(list.Results);
+            var excelName = $"Usuarios.{memoryStreamResult.Extension}";
             var memoryStreamExcel = await _FileService.CreateExcelFileEPPLUS(excelData, excelName);
-            return File(memoryStreamExcel.ToArray(), FixConstants.OFFICE_STREAM, excelName);
+            return File(memoryStreamExcel.ToArray(), memoryStreamResult.Type, excelName);
         }
 
         return NotFound();

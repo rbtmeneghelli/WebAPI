@@ -51,7 +51,7 @@ namespace WebAPI.Controllers.Base
         /// <param name="type">"http://exemplo.com/problemas/nao-encontrada"</param>
         /// <returns></returns>
 
-        private IActionResult ReturnErrorDetail(string detail, string instance = "", int statusCode = 500, string title = "", string type = "")
+        private IActionResult ReturnErrorDetail(string detail, string instance = "", int statusCode = FixConstants.INTERNAL_ERROR_CODE, string title = "", string type = "")
         {
             return Problem(detail, instance, statusCode, title, type);
         }

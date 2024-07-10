@@ -24,6 +24,11 @@ public class RegionService : GenericService, IRegionService
         return _regionRepository.Exist(param => param.Id.Value == regionId);
     }
 
+    public bool ExistRegion()
+    {
+        return _regionRepository.Exist(param => param.IsActive == true);
+    }
+
     public Task AddRegionsAsync(IEnumerable<Region> list)
     {
         _regionRepository.AddRange(list);
@@ -116,14 +121,14 @@ public class RegionService : GenericService, IRegionService
         }
     }
 
-    private async Task<IQueryable<Region>> GetAllWithFilterAsync(RegionFilter filter)
-    {
-        return await Task.FromResult(_regionRepository.GetAll().Where(GetPredicate(filter)).AsQueryable());
-    }
-
     public long GetCount(Expression<Func<Region, bool>> predicate)
     {
         return _regionRepository.GetCount(predicate);
+    }
+
+    private async Task<IQueryable<Region>> GetAllWithFilterAsync(RegionFilter filter)
+    {
+        return await Task.FromResult(_regionRepository.GetAll().Where(GetPredicate(filter)).AsQueryable());
     }
 
     private Expression<Func<Region, bool>> GetPredicate(RegionFilter filter)

@@ -76,9 +76,6 @@ public static class FixConstants
     public const string MESSAGE_ERROR_UNAUTH_EX = "Atenção! Usuário não possui privilegios de permissão para prosseguir com a requisição solicitada!";
     public const string MESSAGE_ERROR_FORB_EX = "Sua sessão expirou, faça login novamente!";
 
-    public const string OFFICE_STREAM = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-    public const string PDF_STREAM = "application/pdf";
-
     public static TSource GetEnvironmentVariableToObject<TSource>(IConfiguration configuration, string varName)
     {
         var data = Environment.GetEnvironmentVariable(configuration[varName]) ?? string.Empty;

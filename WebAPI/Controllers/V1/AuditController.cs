@@ -19,18 +19,19 @@ public sealed class AuditController : GenericController
     [HttpGet("getById/{id:long}")]
     public async Task<IActionResult> GetById(long id)
     {
-        if (await _auditService.ExistByIdAsync(id) is false)
-            return CustomResponse();
+        if (await _auditService.ExistByIdAsync(id))
+        {
+            var model = _mapperService.Map<AuditResponseDTO>(await _auditService.GetByIdAsync(id));
+            return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
+        }
 
-        var model = _mapperService.Map<AuditResponseDTO>(await _auditService.GetByIdAsync(id));
-
-        return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
+        return CustomResponse();
     }
 
     [HttpPost("GetAllPaginate")]
     public async Task<IActionResult> GetAllPaginate(AuditFilter filter)
     {
-        if(ModelStateIsInvalid())
+        if (ModelStateIsInvalid())
             return CustomResponse(ModelState);
 
         var model = await _auditService.GetAllPaginateAsync(filter);

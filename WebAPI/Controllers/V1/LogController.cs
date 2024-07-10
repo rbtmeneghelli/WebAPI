@@ -20,12 +20,13 @@ public sealed class LogController : GenericController
     [HttpGet("getById/{id:long}")]
     public async Task<IActionResult> GetById(long id)
     {
-        if (await _logService.ExistByIdAsync(id) == false)
-            return CustomResponse();
+        if (await _logService.ExistByIdAsync(id))
+        {
+            var model = _mapperService.Map<UserResponseDTO>(await _logService.GetByIdAsync(id));
+            return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
+        }
 
-        var model = _mapperService.Map<UserResponseDTO>(await _logService.GetByIdAsync(id));
-
-        return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
+        return CustomResponse();
     }
 
     [HttpPost("GetAllPaginate")]

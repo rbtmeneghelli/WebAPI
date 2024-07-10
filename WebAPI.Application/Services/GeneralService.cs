@@ -10,13 +10,14 @@ public class GeneralService : GenericService, IGeneralService
 {
     private List<RefreshTokens> _refreshTokens = new List<RefreshTokens>();
     private TokenSettings _tokenSettings { get; }
-
     private readonly IHttpClientFactory _httpClientFactory;
+    private readonly GeneralMethod _generalMethod;
 
     public GeneralService(TokenSettings tokenSettings, INotificationMessageService notificationMessageService, IHttpClientFactory httpClientFactory) : base(notificationMessageService)
     {
         _tokenSettings = tokenSettings;
         _httpClientFactory = httpClientFactory;
+        _generalMethod = GeneralMethod.GetLoadExtensionMethods();
     }
 
     private SqlConnection GetSqlConnection()
@@ -161,12 +162,13 @@ public class GeneralService : GenericService, IGeneralService
         return true;
     }
 
-    public async Task<MemoryStream> Export2ZipAsync(string directory, int typeFile = 2)
+    public async Task<MemoryStream> Export2ZipAsync(string directory, EnumMemoryStreamFile typeFile = EnumMemoryStreamFile.PDF)
     {
-        GeneralMethod extensionMethods = GeneralMethod.GetLoadExtensionMethods();
         List<string> archives = new List<string>();
+        var memoryStreamResult = _generalMethod.GetMemoryStream(typeFile);
         int count = 0;
-        foreach (string arquivo in Directory.GetFiles(directory, $"*.{extensionMethods.GetMemoryStream(typeFile).Type}"))
+
+        foreach (string arquivo in Directory.GetFiles(directory, $"*.{memoryStreamResult.Type}"))
         {
             archives.Add(arquivo);
         }
@@ -177,7 +179,7 @@ public class GeneralService : GenericService, IGeneralService
             {
                 foreach (string arquivo in archives)
                 {
-                    ZipArchiveEntry zipArchiveEntry = archive.CreateEntry($"file{count}.pdf", CompressionLevel.Fastest);
+                    ZipArchiveEntry zipArchiveEntry = archive.CreateEntry($"file{count}.{memoryStreamResult.Extension}", CompressionLevel.Fastest);
                     using (var zipStream = zipArchiveEntry.Open()) zipStream.Write(System.IO.File.ReadAllBytes(arquivo), 0, System.IO.File.ReadAllBytes(arquivo).Length);
                     count++;
                 }

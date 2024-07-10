@@ -825,14 +825,15 @@ public sealed class GeneralMethod
         };
     }
 
-    public (string Type, string Extension) GetMemoryStream(int key)
+    public (string Type, string Extension) GetMemoryStream(EnumMemoryStreamFile key)
     {
-        Dictionary<int, (string,string)> dictionary = new Dictionary<int, (string, string)>
+        Dictionary<EnumMemoryStreamFile, (string,string)> dictionary = new Dictionary<EnumMemoryStreamFile, (string, string)>
         {
-            { 1, ("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "xlsx") },
-            { 2, ("application/pdf", "pdf") },
-            { 3, ("application/octet-stream", "docx") },
-            { 4, ("application/zip", "zip") }
+            { EnumMemoryStreamFile.XLSX, ("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "xlsx") },
+            { EnumMemoryStreamFile.PDF, ("application/pdf", "pdf") },
+            { EnumMemoryStreamFile.DOCX, ("application/octet-stream", "docx") },
+            { EnumMemoryStreamFile.ZIP, ("application/zip", "zip") },
+            { EnumMemoryStreamFile.PNG, ("image/png", "png") }     
         };
 
         return dictionary[key];
@@ -840,12 +841,14 @@ public sealed class GeneralMethod
 
     public string GetCron(EnumJobTypeExecution typeExecution)
     {
-        Dictionary<EnumJobTypeExecution, string> dictionary = new Dictionary<EnumJobTypeExecution, string>();
-        dictionary.Add(EnumJobTypeExecution.Never, "0 0 31 2 *");
-        dictionary.Add(EnumJobTypeExecution.Daily, "0 0 * * *");
-        dictionary.Add(EnumJobTypeExecution.Weekly, "0 0 * * 1");
-        dictionary.Add(EnumJobTypeExecution.Monthly, "0 0 1 * *");
-        dictionary.Add(EnumJobTypeExecution.Yearly, "0 0 1 1 *");
+        Dictionary<EnumJobTypeExecution, string> dictionary = new Dictionary<EnumJobTypeExecution, string>
+        {
+            { EnumJobTypeExecution.Never, "0 0 31 2 *" },
+            { EnumJobTypeExecution.Daily, "0 0 * * *" },
+            { EnumJobTypeExecution.Weekly, "0 0 * * 1" },
+            { EnumJobTypeExecution.Monthly, "0 0 1 * *" },
+            { EnumJobTypeExecution.Yearly, "0 0 1 1 *" }
+        };
         return dictionary[typeExecution];
     }
 
