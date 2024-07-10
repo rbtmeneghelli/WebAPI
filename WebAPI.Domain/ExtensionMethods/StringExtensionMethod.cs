@@ -110,4 +110,8 @@ public static class StringExtensionMethod
         }
         return text;
     }
+
+    public static string TransformBoolToString(this bool varBoolean) => varBoolean ? "1" : "0";
+
+    public static bool TransformStringToBool(this string varString) => bool.Parse(varString);
 }

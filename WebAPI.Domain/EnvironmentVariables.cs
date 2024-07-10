@@ -1,7 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Configuration;
 using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Domain.Models;
 
@@ -19,8 +16,6 @@ public class EnvironmentVariables
     public static bool LoadEnvironmentVariables(IConfiguration configuration)
     {
         bool environmentVariables_IsOK = true;
-        Dictionary<string, string> envVariables = new Dictionary<string, string>();
-        var connectionStringSettings = new ConnectionStringSettings();
 
         EnvironmentVariablesExtension.GetEnvironmentVariablesList(configuration).AsParallel().ForAll(variavel =>
         {

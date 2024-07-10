@@ -4,7 +4,6 @@ using KissLog;
 using Microsoft.AspNetCore.Cors;
 using FixConstants = WebAPI.Domain.FixConstants;
 using Region = WebAPI.Domain.Entities.Region;
-using Newtonsoft.Json;
 
 namespace WebAPI.V1.Controllers;
 
@@ -348,6 +347,32 @@ public sealed class GeneralController : GenericController
     public async Task<IActionResult> SendPushNotification()
     {
         await _fireBaseService.SendPushNotification_V2("Xpto", "isso e um teste");
+        return CustomResponse();
+    }
+
+    [EnableCors("EnableCORS")]
+    [HttpPost("refreshEnvironmentVariables")]
+    public IActionResult RefreshEnvironmentVariables([FromBody] EnvironmentVarSettings environmentVarSettings)
+    {
+        try
+        {
+            if (_environmentVariables is null)
+            {
+                NotificationError("Ocorreu um erro durante o processo de atualização das var de ambiente");
+                return CustomResponse();
+            }
+
+            #if DEBUG
+                _generalService.RefreshEnvironmentVarLocal(environmentVarSettings);
+            #else
+                _generalService.RefreshEnvironmentVarAzure(environmentVarSettings);
+            #endif
+        }
+        catch (Exception ex)
+        {
+            NotificationError("Ocorreu um erro durante o processo de atualização das var de ambiente");
+        }
+
         return CustomResponse();
     }
 }
