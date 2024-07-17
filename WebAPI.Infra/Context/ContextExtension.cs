@@ -4,6 +4,8 @@ using System.Data;
 using System.Data.Common;
 using System.Dynamic;
 using System.Linq.Expressions;
+using WebAPI.Domain.Entities.ControlPanel;
+using WebAPI.Domain.Generic;
 
 namespace WebAPI.Infra.Data.Context;
 
@@ -42,6 +44,11 @@ public static class ContextExtension
         for (var fieldCount = 0; fieldCount < dataReader.FieldCount; fieldCount++)
             dataRow.Add(dataReader.GetName(fieldCount), dataReader[fieldCount]);
         return dataRow;
+    }
+
+    public static void ApplyQueryFilterToTable<T>(this ModelBuilder modelBuilder, Expression<Func<T, bool>> predicate) where T : GenericEntity
+    {
+        modelBuilder.Entity<T>().HasQueryFilter(predicate);
     }
 
     public static void ApplyGlobalFilters<TInterface>(this ModelBuilder modelBuilder, Expression<Func<TInterface, bool>> expression)

@@ -3,6 +3,8 @@ using WebAPI.Domain.ExtensionMethods;
 using Microsoft.Extensions.Hosting;
 using WebAPI.Application.InterfacesRepository;
 using WebAPI.Application.Generic;
+using WebAPI.Domain.Entities.ControlPanel;
+using WebAPI.Domain.Models;
 
 namespace WebAPI.Application.Services;
 
@@ -11,24 +13,6 @@ public class AccountService : GenericService, IAccountService
     private readonly IUserRepository _userRepository;
     private readonly IEmailService _emailService;
     private readonly IHostEnvironment _hostingEnvironment;
-
-    #region Metodos Privados
-
-    private IEnumerable<EnumActions> GetActions(ProfileOperation profileOperation)
-    {
-        IEnumerable<EnumActions> condition = new List<EnumActions>
-        {
-            profileOperation.CanCreate ? EnumActions.Insert : EnumActions.None,
-            profileOperation.CanResearch ? EnumActions.Research : EnumActions.None,
-            profileOperation.CanUpdate ? EnumActions.Update : EnumActions.None,
-            profileOperation.CanDelete ? EnumActions.Delete : EnumActions.None,
-            profileOperation.CanExport ? EnumActions.Export : EnumActions.None,
-            profileOperation.CanImport ? EnumActions.Import : EnumActions.None
-        };
-        return condition;
-    }
-
-    #endregion
 
     public AccountService(IUserRepository userRepository, IEmailService emailService, INotificationMessageService notificationMessageService, IHostEnvironment hostingEnvironment) : base(notificationMessageService)
     {
@@ -79,18 +63,15 @@ public class AccountService : GenericService, IAccountService
             {
                 credentials.Id = user.Id;
                 credentials.Login = user.Login;
-                credentials.Perfil = user.Profile.Description;
+                credentials.Perfil = user.Employee.Profile.Description;
                 credentials.Roles = Enumerable.Empty<string>().ToList();
                 credentials.AccessDate = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
                 credentials.CodeTwoFactoryCode = user.HasTwoFactoryValidation
                                                  ? GenerateCodeTwoFactory(user.Id.Value, user.Login)
                                                  : StringExtensionMethod.GetEmptyString();
 
-                foreach (var item in user.Profile.ProfileOperations)
-                {
-                    IEnumerable<EnumActions> condition = GetActions(item);
-                    credentials.Roles.AddRange(item.Operation.Roles.Where(y => condition.Contains(y.Action)).Select(z => z.RoleTag).ToList());
-                }
+                IEnumerable<string> userRoles = user.Employee.Profile.ProfileOperations.Where(x => x.IsEnable).Select(x => x.RoleTag);
+                credentials.Roles.AddRange(userRoles);
             }
 
             return credentials;
@@ -178,23 +159,20 @@ public class AccountService : GenericService, IAccountService
     {
         try
         {
-            Credentials credenciais = new Credentials();
+            Credentials credentials = new Credentials();
             User user = await _userRepository.GetUserCredentialsById(id);
 
             if (GuardClauses.ObjectIsNotNull(user))
             {
-                credenciais.Id = user.Id;
-                credenciais.Login = user.Login;
-                credenciais.Perfil = user.Profile.Description;
-                credenciais.Roles = Enumerable.Empty<string>().ToList();
-                foreach (var item in user.Profile.ProfileOperations)
-                {
-                    IEnumerable<EnumActions> condition = GetActions(item);
-                    credenciais.Roles.AddRange(item.Operation.Roles.Where(y => condition.Contains(y.Action)).Select(z => z.RoleTag).ToList());
-                }
+                credentials.Id = user.Id;
+                credentials.Login = user.Login;
+                credentials.Perfil = user.Employee.Profile.Description;
+                credentials.Roles = Enumerable.Empty<string>().ToList();
+                IEnumerable<string> userRoles = user.Employee.Profile.ProfileOperations.Where(x => x.IsEnable).Select(x => x.RoleTag);
+                credentials.Roles.AddRange(userRoles);
             }
 
-            return credenciais;
+            return credentials;
         }
         catch
         {

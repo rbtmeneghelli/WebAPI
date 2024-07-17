@@ -1,20 +1,22 @@
-﻿using WebAPI.Domain.Entities;
-using WebAPI.Domain.ExtensionMethods;
+﻿using WebAPI.Domain.ExtensionMethods;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using WebAPI.Application.InterfacesRepository;
 using WebAPI.Application.Generic;
+using WebAPI.Domain.Entities.ControlPanel;
 
 namespace WebAPI.Infra.Data.Repositories;
 
 public class UserRepository : IUserRepository
 {
     private readonly IGenericRepository<User> _userRepository;
+    private readonly IGenericRepository<Employee> _employeeRepository;
     private readonly IGenericRepository<Profile> _profileRepository;
 
-    public UserRepository(IGenericRepository<User> userRepository, IGenericRepository<Profile> profileRepository)
+    public UserRepository(IGenericRepository<User> userRepository, IGenericRepository<Employee> employeeRepository, IGenericRepository<Profile> profileRepository)
     {
         _userRepository = userRepository;
+        _employeeRepository = employeeRepository;
         _profileRepository = profileRepository;
     }
 
@@ -69,17 +71,17 @@ public class UserRepository : IUserRepository
 
     public async Task<User> GetUserCredentialsById(long id)
     {
-        return await _userRepository.GetAllInclude("Profile.ProfileOperations.Operation.Roles", true).FirstOrDefaultAsync(p => p.Id == id);
+        return await _userRepository.GetAllInclude("Employee.Profile.ProfileOperations.Operation", true).FirstOrDefaultAsync(p => p.Id == id);
     }
 
     public async Task<User> GetUserCredentialsByLogin(string login)
     {
-        return await _userRepository.GetAllInclude("Profile.ProfileOperations.Operation.Roles", true).FirstOrDefaultAsync(p => p.Login == login.ApplyTrim());
+        return await _userRepository.GetAllInclude("Employee.Profile.ProfileOperations.Operation", true).FirstOrDefaultAsync(p => p.Login == login.ApplyTrim());
     }
 
     public async Task<bool> CanDelete(long userId)
     {
-        return await Task.FromResult(Exist(x => x.Id == userId && x.Profile != null));
+        return await Task.FromResult(Exist(x => x.Id == userId));
     }
 
     #region Operações de junções
@@ -87,13 +89,14 @@ public class UserRepository : IUserRepository
     public async Task<IEnumerable<User>> UserProfileJoinLinq()
     {
         return await (from _user in _userRepository.GetAll()
+                      join _employee in _employeeRepository.GetAll()
+                      on _user.Id equals _employee.IdUser
                       join _profile in _profileRepository.GetAll()
-                      on _user.IdProfile equals _profile.Id
+                      on _employee.IdProfile equals _profile.Id
                       select new User
                       {
                           Id = _user.Id,
-                          Login = _user.Login,
-                          IdProfile = _profile.Id.GetValueOrDefault(0)
+                          Login = _user.Login
                       }).ToListAsync();
     }
 
@@ -101,44 +104,41 @@ public class UserRepository : IUserRepository
     {
         return await _userRepository.GetAll()
                .Join(
-                    _profileRepository.GetAll(),
-                    _user => _user.IdProfile,
-                    _profile => _profile.Id,
-                    (_user, _profile) => new User
+                    _employeeRepository.GetAll(),
+                    _user => _user.Id,
+                    _employee => _employee.IdUser,
+                    (_user, _employee) => new User
                     {
                         Id = _user.Id,
-                        Login = _user.Login,
-                        IdProfile = _profile.Id.GetValueOrDefault(0)
+                        Login = _user.Login
                     }).ToListAsync();
     }
 
     public async Task<IEnumerable<User>> UserProfileLeftJoinLinq()
     {
         return await (from _user in _userRepository.GetAll()
-                      join _profile in _profileRepository.GetAll()
-                      on _user.IdProfile equals _profile.Id
-                      into _userProfileJoin
-                      from _userProfileResult in _userProfileJoin.DefaultIfEmpty()
+                      join _employee in _employeeRepository.GetAll()
+                      on _user.Id equals _employee.IdUser
+                      into _userEmployeeJoin
+                      from _userEmployeeResult in _userEmployeeJoin.DefaultIfEmpty()
                       select new User
                       {
                           Id = _user.Id,
                           Login = _user.Login,
-                          IdProfile = _userProfileResult.Id.GetValueOrDefault(0)
                       }).ToListAsync();
     }
 
     public async Task<IEnumerable<User>> UserProfileRightJoinLinq()
     {
-        return await (from _profile in _profileRepository.GetAll()
+        return await (from _employee in _employeeRepository.GetAll()
                       join _user in _userRepository.GetAll()
-                      on _profile.Id equals _user.IdProfile
-                      into _userProfileJoin
-                      from _userProfileResult in _userProfileJoin.DefaultIfEmpty()
+                      on _employee.IdUser equals _user.Id
+                      into _userEmployeeJoin
+                      from _userEmployeeResult in _userEmployeeJoin.DefaultIfEmpty()
                       select new User
                       {
-                          Id = _userProfileResult.Id,
-                          Login = _userProfileResult.Login,
-                          IdProfile = _profile.Id.GetValueOrDefault(0)
+                          Id = _userEmployeeResult.Id,
+                          Login = _userEmployeeResult.Login,
                       }).ToListAsync();
     }
 

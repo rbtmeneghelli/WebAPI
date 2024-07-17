@@ -23,12 +23,6 @@ namespace WebAPI.Infra.Data.Seed
                 context.Database.ExecuteSqlRaw("DBCC CHECKIDENT ('Profiles', RESEED, 4)");
                 context.SaveChanges();
             }
-
-            if (context.Role.Where(x => x.Id > 1).Count() > 0)
-            {
-                context.Database.ExecuteSqlRaw("DBCC CHECKIDENT ('Roles', RESEED, 2)");
-                context.SaveChanges();
-            }
         }
     }
 }

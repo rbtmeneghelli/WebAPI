@@ -1,5 +1,6 @@
 ﻿using KissLog;
 using WebAPI.Application.Generic;
+using WebAPI.Domain.Entities.ControlPanel;
 
 namespace WebAPI.V1.Controllers;
 

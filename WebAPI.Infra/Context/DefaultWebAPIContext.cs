@@ -5,7 +5,9 @@ using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Domain.Generic;
 using WebAPI.Infra.Data.Mapping;
 using Microsoft.EntityFrameworkCore;
-using WebAPI.Infra.Context;
+using WebAPI.Domain.Entities.ControlPanel;
+using NPOI.SS.Formula.Functions;
+using System.Linq.Expressions;
 
 namespace WebAPI.Infra.Data.Context;
 
@@ -32,7 +34,6 @@ public partial class WebAPIContext : DbContext
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(WebAPIContext).Assembly);
         modelBuilder.ApplyConfiguration(new UserMapping());
         modelBuilder.ApplyConfiguration(new ProfileMapping());
-        modelBuilder.ApplyConfiguration(new RoleMapping());
         modelBuilder.ApplyConfiguration(new ProfileOperationMapping());
         modelBuilder.ApplyConfiguration(new StatesMapping());
         modelBuilder.ApplyConfiguration(new CepsMapping());
@@ -47,11 +48,19 @@ public partial class WebAPIContext : DbContext
         modelBuilder.ApplyConfiguration(new EmailTemplateMapping());
         modelBuilder.ApplyConfiguration(new EmailDisplayMapping());
         modelBuilder.ApplyConfiguration(new EmailTypeMapping());
+        modelBuilder.ApplyConfiguration(new AreaMapping());
+        modelBuilder.ApplyConfiguration(new EmployeeMapping());
 
-        ApplyQueryFilterToTable<User>(modelBuilder);
+        /* Código responsavel por impedir que os dados chaves de ADM sejam apresentados nas queries */
+        modelBuilder.ApplyQueryFilterToTable<Area>(p => p.Id > 1);
+        modelBuilder.ApplyQueryFilterToTable<Profile>(p => p.Id > 1);
+        modelBuilder.ApplyQueryFilterToTable<User>(p => p.Id > 1);
+        modelBuilder.ApplyQueryFilterToTable<Employee>(p => p.Id > 1);
+
         foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys())) 
         relationship.DeleteBehavior = DeleteBehavior.ClientSetNull;
-        modelBuilder.ExecuteSeed();
+        modelBuilder.ExecuteSeedControl();
+        modelBuilder.ExecuteSeedOperation();
         base.OnModelCreating(modelBuilder);
     }
 
@@ -66,6 +75,13 @@ public partial class WebAPIContext : DbContext
         //configurationBuilder.Properties<string>().HaveMaxLength(500);
         base.ConfigureConventions(configurationBuilder);
     }
+
+    public new DbSet<T> Set<T>() where T : class
+    {
+        return base.Set<T>();
+    }
+
+    #region Código responsavel por gravação de dados de Auditoria
 
     public override int SaveChanges()
     {
@@ -88,11 +104,6 @@ public partial class WebAPIContext : DbContext
         var result = base.SaveChanges();
         OnAfterSaveChanges(auditEntries);
         return result;
-    }
-
-    public new DbSet<T> Set<T>() where T : class
-    {
-        return base.Set<T>();
     }
 
     private List<AuditEntry> OnBeforeSaveChanges()
@@ -179,13 +190,5 @@ public partial class WebAPIContext : DbContext
         return Task.FromResult(SaveChanges());
     }
 
-    private void ApplyQueryFilterToTable<T>(ModelBuilder modelBuilder) where T : GenericEntity
-    {
-        modelBuilder.Entity<T>().HasQueryFilter(p => p.IsActive);
-    }
-
-    private void ApplyQueryFilterToAllTables(ModelBuilder modelBuilder)
-    {
-        modelBuilder.ApplyGlobalFilters<GenericEntity>(x => x.IsActive);
-    }
+    #endregion
 }

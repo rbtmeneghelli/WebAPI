@@ -1,4 +1,6 @@
 ﻿
+using WebAPI.Domain.Entities.ControlPanel;
+
 namespace WebAPI.Application.Interfaces;
 
 public interface IUserService

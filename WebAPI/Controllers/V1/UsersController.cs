@@ -1,4 +1,5 @@
 ﻿using KissLog;
+using WebAPI.Domain.Entities.ControlPanel;
 using WebAPI.Domain.Enums;
 using WebAPI.Domain.ExtensionMethods;
 using FixConstants = WebAPI.Domain.FixConstants;

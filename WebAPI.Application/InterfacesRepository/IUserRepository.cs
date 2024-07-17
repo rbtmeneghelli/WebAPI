@@ -1,4 +1,6 @@
-﻿namespace WebAPI.Application.InterfacesRepository;
+﻿using WebAPI.Domain.Entities.ControlPanel;
+
+namespace WebAPI.Application.InterfacesRepository;
 
 public interface IUserRepository
 {

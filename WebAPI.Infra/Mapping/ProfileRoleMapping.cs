@@ -1,6 +1,6 @@
-﻿using WebAPI.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using WebAPI.Domain.Entities.ControlPanel;
 
 namespace WebAPI.Infra.Data.Mapping;
 
@@ -23,12 +23,9 @@ public class ProfileOperationMapping : IEntityTypeConfiguration<ProfileOperation
     {
         _builder.Property(a => a.IdProfile).IsRequired(true).HasColumnName("Id_Profile");
         _builder.Property(a => a.IdOperation).IsRequired(true).HasColumnName("Id_Operation");
-        _builder.Property(a => a.CanCreate).HasDefaultValue(false).HasColumnName("CanCreate");
-        _builder.Property(a => a.CanResearch).HasDefaultValue(false).HasColumnName("CanResearch");
-        _builder.Property(a => a.CanUpdate).HasDefaultValue(false).HasColumnName("CanUpdate");
-        _builder.Property(a => a.CanDelete).HasDefaultValue(false).HasColumnName("CanDelete");
-        _builder.Property(a => a.CanExport).HasDefaultValue(false).HasColumnName("CanExport");
-        _builder.Property(a => a.CanImport).HasDefaultValue(false).HasColumnName("CanImport");
+        _builder.Property(a => a.Order).IsRequired(true).HasColumnName("CanCreate");
+        _builder.Property(a => a.IsEnable).IsRequired(true).HasDefaultValue(false).HasColumnName("CanResearch");
+        _builder.Property(a => a.RoleTag).IsRequired(true).HasMaxLength(255).HasColumnName("CanUpdate");
     }
 
     private void ConfigureForeignKeys()

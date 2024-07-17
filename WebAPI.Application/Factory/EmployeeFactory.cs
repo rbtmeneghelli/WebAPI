@@ -1,27 +1,27 @@
 ﻿using WebAPI.Application.FactoryInterfaces;
 using WebAPI.Application.FactoryServices;
 using WebAPI.Domain.Generic;
-using IUserService = WebAPI.Application.FactoryInterfaces.IUserService;
+using IEmployeeService = WebAPI.Application.FactoryInterfaces.IEmployeeService;
 
 namespace WebAPI.Application.Factory
 {
-    public sealed class UserFactory : IUserFactory
+    public sealed class UserFactory : IEmployeeFactory
     {
-        public static IUserService GetData(int enumProfileType)
+        public static IEmployeeService GetData(int enumProfileType)
         {
 
-            IUserService userData;
+            IEmployeeService userData;
 
             switch (enumProfileType)
             {
                 case 1:
-                    userData = new UserDefaultService();
+                    userData = new EmployeeDefaultService();
                     break;
                 case 2:
-                    userData = new UserDefaultService();
+                    userData = new EmployeeDefaultService();
                     break;
                 case 3:
-                    userData = new UserDefaultService();
+                    userData = new EmployeeDefaultService();
                     break;
                 default:
                     throw new ApplicationException();
@@ -30,16 +30,16 @@ namespace WebAPI.Application.Factory
             return userData;
         }
 
-        public override IUserService GetDataMinimal(int enumProfileType)
+        public override IEmployeeService GetDataMinimal(int enumProfileType)
         {
             try
             {
-                return UserDefaultFactory[enumProfileType]();
+                return EmployeeDefaultFactory[enumProfileType]();
             }
             catch(GenericException ex)
             {
                 ex.ShowDefaultExceptionMessage();
-                return UserDefaultFactory[1]();
+                return EmployeeDefaultFactory[1]();
             }
         }
     }

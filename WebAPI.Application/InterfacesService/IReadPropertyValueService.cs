@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using WebAPI.Domain.Entities.ControlPanel;
 
 namespace WebAPI.Application.Interfaces;
 

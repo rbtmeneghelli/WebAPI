@@ -1,4 +1,6 @@
-﻿namespace WebAPI.Application.Interfaces;
+﻿using WebAPI.Domain.Entities.ControlPanel;
+
+namespace WebAPI.Application.Interfaces;
 
 public interface IAccountService
 {

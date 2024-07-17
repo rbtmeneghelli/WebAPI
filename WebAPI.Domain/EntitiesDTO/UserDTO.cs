@@ -15,7 +15,9 @@ public record UserResponseDTO : GenericDTO
 
     [DisplayName("Autenticado")]
     public bool IsAuthenticated { get; set; }
-    public long IdProfile { get; set; }
+
+    [DisplayName("Funcionario")]
+    public string Employee { get; set; }
 
     [DisplayName("Perfil")]
     public string Profile { get; set; }
@@ -38,8 +40,6 @@ public record UserRequestDTO : GenericDTO
     public string LastPassword { get; set; }
     
     public bool IsAuthenticated { get; set; }
-    
-    public long IdProfile { get; set; }
 
     public override string ToString() => $"Login: {Login}";
 }
@@ -52,8 +52,8 @@ public record UserExcelDTO
     [DisplayName("Autenticado")]
     public bool IsAuthenticated { get; set; }
 
-    [DisplayName("Perfil")]
-    public string Profile { get; set; }
+    [DisplayName("Funcionario")]
+    public string Employee { get; set; }
 
     [DisplayName("Status")]
     public string Status { get; set; }

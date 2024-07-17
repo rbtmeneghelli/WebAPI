@@ -1,7 +1,7 @@
-﻿using WebAPI.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WebAPI.Infra.Generic;
+using WebAPI.Domain.Entities.ControlPanel;
 
 namespace WebAPI.Infra.Data.Mapping;
 
@@ -25,13 +25,13 @@ public class UserMapping : GenericMapping<User>
 
     private void ConfigureForeignKeys()
     {
-        _builder.HasOne(x => x.Profile).WithMany(x => x.Users).HasForeignKey(x => x.IdProfile);
+        _builder.HasOne(x => x.Employee).WithOne(x => x.User);
     }
 
     private void ConfigureIndexes()
     {
         // Indice exclusivo >> Permite que a coluna da tabela impede que valores duplicados existam
-        _builder.HasIndex(a => a.IdProfile).IsUnique(false);
+        //_builder.HasIndex(a => a.IdProfile).IsUnique(false);
         // Indice não exclusivo >> Permite que a coluna da tabela tenha valores duplicados, porém é apresentado uma melhora nas consultas
         //_builder.HasIndex(a => a.IdProfile);
     }

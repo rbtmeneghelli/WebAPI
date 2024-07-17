@@ -2,6 +2,7 @@
 using WebAPI.Application.Generic;
 using WebAPI.Application.InterfacesRepository;
 using WebAPI.Domain.Cryptography;
+using WebAPI.Domain.Entities.ControlPanel;
 using WebAPI.Domain.ExtensionMethods;
 
 namespace WebAPI.Application.Services;
@@ -21,9 +22,9 @@ public class UserService : GenericService, IUserService
         // var obj = UserFactory.GetData(EnumProfileType.Admin);
         // return _userRepository.GetAllTracking().Include(x => x.Profile).Where(obj.GetPredicate(filter)).AsQueryable();
         if (filter.IsActive.HasValue)
-            return _userRepository.GetAllIgnoreQueryFilter().Include(x => x.Profile).Where(GetPredicate(filter)).AsQueryable();
+            return _userRepository.GetAllIgnoreQueryFilter().Include(x => x.Employee).ThenInclude(x => x.Profile).Where(GetPredicate(filter)).AsQueryable();
         else
-            return _userRepository.GetAll().Include(x => x.Profile).Where(GetPredicate(filter)).AsQueryable();
+            return _userRepository.GetAll().Include(x => x.Employee).ThenInclude(x => x.Profile).Where(GetPredicate(filter)).AsQueryable();
     }
 
     private Expression<Func<User, bool>> GetPredicate(UserFilter filter)
@@ -36,21 +37,21 @@ public class UserService : GenericService, IUserService
             &&
             (!filter.IsActive.HasValue || filter.IsActive == p.IsActive)
             &&
-            (!filter.IdProfile.HasValue || filter.IdProfile == p.IdProfile);
+            (!filter.IdProfile.HasValue || filter.IdProfile == p.Employee.IdProfile);
         else
             return p =>
-               (GuardClauses.IsNullOrWhiteSpace(filter.Login) || p.Login.StartsWith(filter.Login.ApplyTrim()))
-               &&
-               (!filter.IsAuthenticated.HasValue || filter.IsAuthenticated == p.IsAuthenticated)
-               &&
-               (!filter.IdProfile.HasValue || filter.IdProfile == p.IdProfile);
+            (GuardClauses.IsNullOrWhiteSpace(filter.Login) || p.Login.StartsWith(filter.Login.ApplyTrim()))
+            &&
+            (!filter.IsAuthenticated.HasValue || filter.IsAuthenticated == p.IsAuthenticated)
+            &&
+            (!filter.IdProfile.HasValue || filter.IdProfile == p.Employee.IdProfile);
     }
 
     public async Task<IEnumerable<UserResponseDTO>> GetAllAsync()
     {
         try
         {
-            return await (from p in _userRepository.GetAll().Include(x => x.Profile)
+            return await (from p in _userRepository.GetAll().Include(x => x.Employee).ThenInclude(x => x.Profile)
                           orderby p.Login ascending
                           select new UserResponseDTO()
                           {
@@ -60,8 +61,8 @@ public class UserService : GenericService, IUserService
                               IsActive = p.IsActive,
                               Password = "-",
                               LastPassword = "-",
-                              Profile = p.Profile.Description,
-                              IdProfile = p.Profile.Id.Value,
+                              Employee = p.Employee.Name,
+                              Profile = p.Employee.Profile.Description,
                               Status = p.GetStatus(),
                           }).ToListAsync();
         }
@@ -92,7 +93,7 @@ public class UserService : GenericService, IUserService
                                   IsActive = p.IsActive,
                                   Password = "-",
                                   LastPassword = "-",
-                                  Profile = p.Profile.Description,
+                                  Profile = p.Employee.Profile.Description,
                                   Status = p.GetStatus(),
                               };
 
@@ -151,7 +152,7 @@ public class UserService : GenericService, IUserService
                               IsActive = p.IsActive,
                               Password = "-",
                               LastPassword = "-",
-                              Profile = p.Profile.Description,
+                              Profile = p.Employee.Profile.Description,
                               Status = p.GetStatus(),
                           }).FirstOrDefaultAsync();
         }

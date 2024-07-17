@@ -1,7 +1,7 @@
-﻿using WebAPI.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WebAPI.Infra.Generic;
+using WebAPI.Domain.Entities.ControlPanel;
 
 namespace WebAPI.Infra.Data.Mapping;
 
