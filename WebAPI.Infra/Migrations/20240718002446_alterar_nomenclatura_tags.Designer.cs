@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAPI.Infra.Data.Context;
 
@@ -11,9 +12,11 @@ using WebAPI.Infra.Data.Context;
 namespace WebAPI.Infra.Migrations
 {
     [DbContext(typeof(WebAPIContext))]
-    partial class WebAPIContextModelSnapshot : ModelSnapshot
+    [Migration("20240718002446_alterar_nomenclatura_tags")]
+    partial class alterar_nomenclatura_tags
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,7 +38,7 @@ namespace WebAPI.Infra.Migrations
                     b.Property<DateTime?>("CreatedTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 17, 21, 29, 36, 725, DateTimeKind.Unspecified).AddTicks(7721))
+                        .HasDefaultValue(new DateTime(2024, 7, 17, 21, 24, 46, 170, DateTimeKind.Unspecified).AddTicks(7423))
                         .HasColumnName("Created_Time")
                         .HasColumnOrder(1);
 
@@ -65,49 +68,49 @@ namespace WebAPI.Infra.Migrations
                         new
                         {
                             Id = 1L,
-                            CreatedTime = new DateTime(2024, 7, 17, 21, 29, 36, 734, DateTimeKind.Unspecified).AddTicks(6601),
+                            CreatedTime = new DateTime(2024, 7, 17, 21, 24, 46, 180, DateTimeKind.Unspecified).AddTicks(4104),
                             Description = "Word",
                             IsActive = true
                         },
                         new
                         {
                             Id = 2L,
-                            CreatedTime = new DateTime(2024, 7, 17, 21, 29, 36, 734, DateTimeKind.Unspecified).AddTicks(6601),
+                            CreatedTime = new DateTime(2024, 7, 17, 21, 24, 46, 180, DateTimeKind.Unspecified).AddTicks(4104),
                             Description = "Excel",
                             IsActive = true
                         },
                         new
                         {
                             Id = 3L,
-                            CreatedTime = new DateTime(2024, 7, 17, 21, 29, 36, 734, DateTimeKind.Unspecified).AddTicks(6601),
+                            CreatedTime = new DateTime(2024, 7, 17, 21, 24, 46, 180, DateTimeKind.Unspecified).AddTicks(4104),
                             Description = "Pdf",
                             IsActive = true
                         },
                         new
                         {
                             Id = 4L,
-                            CreatedTime = new DateTime(2024, 7, 17, 21, 29, 36, 734, DateTimeKind.Unspecified).AddTicks(6601),
+                            CreatedTime = new DateTime(2024, 7, 17, 21, 24, 46, 180, DateTimeKind.Unspecified).AddTicks(4104),
                             Description = "Txt",
                             IsActive = true
                         },
                         new
                         {
                             Id = 5L,
-                            CreatedTime = new DateTime(2024, 7, 17, 21, 29, 36, 734, DateTimeKind.Unspecified).AddTicks(6601),
+                            CreatedTime = new DateTime(2024, 7, 17, 21, 24, 46, 180, DateTimeKind.Unspecified).AddTicks(4104),
                             Description = "Jpg",
                             IsActive = true
                         },
                         new
                         {
                             Id = 6L,
-                            CreatedTime = new DateTime(2024, 7, 17, 21, 29, 36, 734, DateTimeKind.Unspecified).AddTicks(6601),
+                            CreatedTime = new DateTime(2024, 7, 17, 21, 24, 46, 180, DateTimeKind.Unspecified).AddTicks(4104),
                             Description = "Word",
                             IsActive = true
                         },
                         new
                         {
                             Id = 7L,
-                            CreatedTime = new DateTime(2024, 7, 17, 21, 29, 36, 734, DateTimeKind.Unspecified).AddTicks(6601),
+                            CreatedTime = new DateTime(2024, 7, 17, 21, 24, 46, 180, DateTimeKind.Unspecified).AddTicks(4104),
                             Description = "Png",
                             IsActive = true
                         });
@@ -132,7 +135,7 @@ namespace WebAPI.Infra.Migrations
                     b.Property<DateTime?>("CreatedTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 17, 21, 29, 36, 724, DateTimeKind.Unspecified).AddTicks(8642))
+                        .HasDefaultValue(new DateTime(2024, 7, 17, 21, 24, 46, 169, DateTimeKind.Unspecified).AddTicks(7899))
                         .HasColumnName("Created_Time")
                         .HasColumnOrder(1);
 
@@ -187,7 +190,7 @@ namespace WebAPI.Infra.Migrations
                     b.Property<DateTime?>("CreatedTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 17, 21, 29, 36, 725, DateTimeKind.Unspecified).AddTicks(5592))
+                        .HasDefaultValue(new DateTime(2024, 7, 17, 21, 24, 46, 170, DateTimeKind.Unspecified).AddTicks(5227))
                         .HasColumnName("Created_Time")
                         .HasColumnOrder(1);
 
@@ -243,7 +246,7 @@ namespace WebAPI.Infra.Migrations
                     b.Property<DateTime?>("CreatedTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 17, 21, 29, 36, 725, DateTimeKind.Unspecified).AddTicks(2502))
+                        .HasDefaultValue(new DateTime(2024, 7, 17, 21, 24, 46, 170, DateTimeKind.Unspecified).AddTicks(1993))
                         .HasColumnName("Created_Time")
                         .HasColumnOrder(1);
 
@@ -277,7 +280,7 @@ namespace WebAPI.Infra.Migrations
                     b.Property<DateTime?>("CreatedTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 17, 21, 29, 36, 726, DateTimeKind.Unspecified).AddTicks(4997))
+                        .HasDefaultValue(new DateTime(2024, 7, 17, 21, 24, 46, 171, DateTimeKind.Unspecified).AddTicks(5581))
                         .HasColumnName("Created_Time")
                         .HasColumnOrder(1);
 
@@ -316,7 +319,7 @@ namespace WebAPI.Infra.Migrations
                         new
                         {
                             Id = 1L,
-                            CreatedTime = new DateTime(2024, 7, 17, 21, 29, 36, 727, DateTimeKind.Unspecified).AddTicks(357),
+                            CreatedTime = new DateTime(2024, 7, 17, 21, 24, 46, 172, DateTimeKind.Unspecified).AddTicks(1440),
                             Description = "Administrador Dev",
                             HierarchyLevel = "Development",
                             IsActive = true,
@@ -325,7 +328,7 @@ namespace WebAPI.Infra.Migrations
                         new
                         {
                             Id = 2L,
-                            CreatedTime = new DateTime(2024, 7, 17, 21, 29, 36, 727, DateTimeKind.Unspecified).AddTicks(357),
+                            CreatedTime = new DateTime(2024, 7, 17, 21, 24, 46, 172, DateTimeKind.Unspecified).AddTicks(1440),
                             Description = "Administrador Sistema",
                             HierarchyLevel = "Principal",
                             IsActive = true,
@@ -334,7 +337,7 @@ namespace WebAPI.Infra.Migrations
                         new
                         {
                             Id = 3L,
-                            CreatedTime = new DateTime(2024, 7, 17, 21, 29, 36, 727, DateTimeKind.Unspecified).AddTicks(357),
+                            CreatedTime = new DateTime(2024, 7, 17, 21, 24, 46, 172, DateTimeKind.Unspecified).AddTicks(1440),
                             Description = "Setor Operacional",
                             HierarchyLevel = "Areas",
                             IsActive = true,
@@ -343,7 +346,7 @@ namespace WebAPI.Infra.Migrations
                         new
                         {
                             Id = 4L,
-                            CreatedTime = new DateTime(2024, 7, 17, 21, 29, 36, 727, DateTimeKind.Unspecified).AddTicks(357),
+                            CreatedTime = new DateTime(2024, 7, 17, 21, 24, 46, 172, DateTimeKind.Unspecified).AddTicks(1440),
                             Description = "Setor Financeiro",
                             HierarchyLevel = "Areas",
                             IsActive = true,
@@ -352,7 +355,7 @@ namespace WebAPI.Infra.Migrations
                         new
                         {
                             Id = 5L,
-                            CreatedTime = new DateTime(2024, 7, 17, 21, 29, 36, 727, DateTimeKind.Unspecified).AddTicks(357),
+                            CreatedTime = new DateTime(2024, 7, 17, 21, 24, 46, 172, DateTimeKind.Unspecified).AddTicks(1440),
                             Description = "Setor Marketing",
                             HierarchyLevel = "Areas",
                             IsActive = true,
@@ -361,7 +364,7 @@ namespace WebAPI.Infra.Migrations
                         new
                         {
                             Id = 6L,
-                            CreatedTime = new DateTime(2024, 7, 17, 21, 29, 36, 727, DateTimeKind.Unspecified).AddTicks(357),
+                            CreatedTime = new DateTime(2024, 7, 17, 21, 24, 46, 172, DateTimeKind.Unspecified).AddTicks(1440),
                             Description = "Setor Relações Humanas",
                             HierarchyLevel = "Areas",
                             IsActive = true,
@@ -388,7 +391,7 @@ namespace WebAPI.Infra.Migrations
                     b.Property<DateTime?>("CreatedTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 17, 21, 29, 36, 726, DateTimeKind.Unspecified).AddTicks(7530))
+                        .HasDefaultValue(new DateTime(2024, 7, 17, 21, 24, 46, 171, DateTimeKind.Unspecified).AddTicks(8324))
                         .HasColumnName("Created_Time")
                         .HasColumnOrder(1);
 
@@ -442,7 +445,7 @@ namespace WebAPI.Infra.Migrations
                         {
                             Id = 1L,
                             CelPhone = "12999991234",
-                            CreatedTime = new DateTime(2024, 7, 17, 21, 29, 36, 727, DateTimeKind.Unspecified).AddTicks(357),
+                            CreatedTime = new DateTime(2024, 7, 17, 21, 24, 46, 172, DateTimeKind.Unspecified).AddTicks(1440),
                             Email = "xpto@gmail.com",
                             IdProfile = 1L,
                             IdUser = 1L,
@@ -465,7 +468,7 @@ namespace WebAPI.Infra.Migrations
                     b.Property<DateTime?>("CreatedTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 17, 21, 29, 36, 725, DateTimeKind.Unspecified).AddTicks(1054))
+                        .HasDefaultValue(new DateTime(2024, 7, 17, 21, 24, 46, 170, DateTimeKind.Unspecified).AddTicks(526))
                         .HasColumnName("Created_Time")
                         .HasColumnOrder(1);
 
@@ -495,7 +498,7 @@ namespace WebAPI.Infra.Migrations
                         new
                         {
                             Id = 1L,
-                            CreatedTime = new DateTime(2024, 7, 17, 21, 29, 36, 727, DateTimeKind.Unspecified).AddTicks(357),
+                            CreatedTime = new DateTime(2024, 7, 17, 21, 24, 46, 172, DateTimeKind.Unspecified).AddTicks(1440),
                             Description = "Auditoria",
                             IsActive = true,
                             Order = 1
@@ -503,7 +506,7 @@ namespace WebAPI.Infra.Migrations
                         new
                         {
                             Id = 2L,
-                            CreatedTime = new DateTime(2024, 7, 17, 21, 29, 36, 727, DateTimeKind.Unspecified).AddTicks(357),
+                            CreatedTime = new DateTime(2024, 7, 17, 21, 24, 46, 172, DateTimeKind.Unspecified).AddTicks(1440),
                             Description = "Logs",
                             IsActive = true,
                             Order = 2
@@ -511,7 +514,7 @@ namespace WebAPI.Infra.Migrations
                         new
                         {
                             Id = 3L,
-                            CreatedTime = new DateTime(2024, 7, 17, 21, 29, 36, 727, DateTimeKind.Unspecified).AddTicks(357),
+                            CreatedTime = new DateTime(2024, 7, 17, 21, 24, 46, 172, DateTimeKind.Unspecified).AddTicks(1440),
                             Description = "Area",
                             IsActive = true,
                             Order = 3
@@ -519,7 +522,7 @@ namespace WebAPI.Infra.Migrations
                         new
                         {
                             Id = 4L,
-                            CreatedTime = new DateTime(2024, 7, 17, 21, 29, 36, 727, DateTimeKind.Unspecified).AddTicks(357),
+                            CreatedTime = new DateTime(2024, 7, 17, 21, 24, 46, 172, DateTimeKind.Unspecified).AddTicks(1440),
                             Description = "Operação",
                             IsActive = true,
                             Order = 4
@@ -527,7 +530,7 @@ namespace WebAPI.Infra.Migrations
                         new
                         {
                             Id = 5L,
-                            CreatedTime = new DateTime(2024, 7, 17, 21, 29, 36, 727, DateTimeKind.Unspecified).AddTicks(357),
+                            CreatedTime = new DateTime(2024, 7, 17, 21, 24, 46, 172, DateTimeKind.Unspecified).AddTicks(1440),
                             Description = "Perfil",
                             IsActive = true,
                             Order = 5
@@ -535,7 +538,7 @@ namespace WebAPI.Infra.Migrations
                         new
                         {
                             Id = 6L,
-                            CreatedTime = new DateTime(2024, 7, 17, 21, 29, 36, 727, DateTimeKind.Unspecified).AddTicks(357),
+                            CreatedTime = new DateTime(2024, 7, 17, 21, 24, 46, 172, DateTimeKind.Unspecified).AddTicks(1440),
                             Description = "Funcionario",
                             IsActive = true,
                             Order = 6
@@ -543,7 +546,7 @@ namespace WebAPI.Infra.Migrations
                         new
                         {
                             Id = 7L,
-                            CreatedTime = new DateTime(2024, 7, 17, 21, 29, 36, 727, DateTimeKind.Unspecified).AddTicks(357),
+                            CreatedTime = new DateTime(2024, 7, 17, 21, 24, 46, 172, DateTimeKind.Unspecified).AddTicks(1440),
                             Description = "Usuario",
                             IsActive = true,
                             Order = 7
@@ -563,7 +566,7 @@ namespace WebAPI.Infra.Migrations
                     b.Property<DateTime?>("CreatedTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 17, 21, 29, 36, 723, DateTimeKind.Unspecified).AddTicks(7643))
+                        .HasDefaultValue(new DateTime(2024, 7, 17, 21, 24, 46, 168, DateTimeKind.Unspecified).AddTicks(6944))
                         .HasColumnName("Created_Time")
                         .HasColumnOrder(1);
 
@@ -598,7 +601,7 @@ namespace WebAPI.Infra.Migrations
                         new
                         {
                             Id = 1L,
-                            CreatedTime = new DateTime(2024, 7, 17, 21, 29, 36, 727, DateTimeKind.Unspecified).AddTicks(357),
+                            CreatedTime = new DateTime(2024, 7, 17, 21, 24, 46, 172, DateTimeKind.Unspecified).AddTicks(1440),
                             Description = "Perfil Desenvolvedor",
                             IdArea = 1L,
                             IsActive = true
@@ -606,7 +609,7 @@ namespace WebAPI.Infra.Migrations
                         new
                         {
                             Id = 2L,
-                            CreatedTime = new DateTime(2024, 7, 17, 21, 29, 36, 727, DateTimeKind.Unspecified).AddTicks(357),
+                            CreatedTime = new DateTime(2024, 7, 17, 21, 24, 46, 172, DateTimeKind.Unspecified).AddTicks(1440),
                             Description = "Perfil Administrador",
                             IdArea = 2L,
                             IsActive = true
@@ -614,7 +617,7 @@ namespace WebAPI.Infra.Migrations
                         new
                         {
                             Id = 3L,
-                            CreatedTime = new DateTime(2024, 7, 17, 21, 29, 36, 727, DateTimeKind.Unspecified).AddTicks(357),
+                            CreatedTime = new DateTime(2024, 7, 17, 21, 24, 46, 172, DateTimeKind.Unspecified).AddTicks(1440),
                             Description = "Perfil Manager Operacional",
                             IdArea = 3L,
                             IsActive = true
@@ -622,7 +625,7 @@ namespace WebAPI.Infra.Migrations
                         new
                         {
                             Id = 4L,
-                            CreatedTime = new DateTime(2024, 7, 17, 21, 29, 36, 727, DateTimeKind.Unspecified).AddTicks(357),
+                            CreatedTime = new DateTime(2024, 7, 17, 21, 24, 46, 172, DateTimeKind.Unspecified).AddTicks(1440),
                             Description = "Perfil Manager Financeiro",
                             IdArea = 4L,
                             IsActive = true
@@ -687,7 +690,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 1L,
                             IsEnable = true,
                             Order = 0,
-                            RoleTag = "ROLE_AUDIT_NEW"
+                            RoleTag = "ROLE_Audit_NEW"
                         },
                         new
                         {
@@ -696,7 +699,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 1L,
                             IsEnable = true,
                             Order = 1,
-                            RoleTag = "ROLE_AUDIT_EDIT"
+                            RoleTag = "ROLE_Audit_EDIT"
                         },
                         new
                         {
@@ -705,7 +708,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 1L,
                             IsEnable = true,
                             Order = 2,
-                            RoleTag = "ROLE_AUDIT_DELETE"
+                            RoleTag = "ROLE_Audit_DELETE"
                         },
                         new
                         {
@@ -714,7 +717,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 1L,
                             IsEnable = true,
                             Order = 3,
-                            RoleTag = "ROLE_AUDIT_VIEW"
+                            RoleTag = "ROLE_Audit_VIEW"
                         },
                         new
                         {
@@ -723,7 +726,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 2L,
                             IsEnable = true,
                             Order = 0,
-                            RoleTag = "ROLE_LOG_NEW"
+                            RoleTag = "ROLE_Log_NEW"
                         },
                         new
                         {
@@ -732,7 +735,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 2L,
                             IsEnable = true,
                             Order = 1,
-                            RoleTag = "ROLE_LOG_EDIT"
+                            RoleTag = "ROLE_Log_EDIT"
                         },
                         new
                         {
@@ -741,7 +744,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 2L,
                             IsEnable = true,
                             Order = 2,
-                            RoleTag = "ROLE_LOG_DELETE"
+                            RoleTag = "ROLE_Log_DELETE"
                         },
                         new
                         {
@@ -750,7 +753,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 2L,
                             IsEnable = true,
                             Order = 3,
-                            RoleTag = "ROLE_LOG_VIEW"
+                            RoleTag = "ROLE_Log_VIEW"
                         },
                         new
                         {
@@ -759,7 +762,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 3L,
                             IsEnable = true,
                             Order = 0,
-                            RoleTag = "ROLE_AREA_NEW"
+                            RoleTag = "ROLE_Area_NEW"
                         },
                         new
                         {
@@ -768,7 +771,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 3L,
                             IsEnable = true,
                             Order = 1,
-                            RoleTag = "ROLE_AREA_EDIT"
+                            RoleTag = "ROLE_Area_EDIT"
                         },
                         new
                         {
@@ -777,7 +780,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 3L,
                             IsEnable = true,
                             Order = 2,
-                            RoleTag = "ROLE_AREA_DELETE"
+                            RoleTag = "ROLE_Area_DELETE"
                         },
                         new
                         {
@@ -786,7 +789,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 3L,
                             IsEnable = true,
                             Order = 3,
-                            RoleTag = "ROLE_AREA_VIEW"
+                            RoleTag = "ROLE_Area_VIEW"
                         },
                         new
                         {
@@ -795,7 +798,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 4L,
                             IsEnable = true,
                             Order = 0,
-                            RoleTag = "ROLE_OPERATION_NEW"
+                            RoleTag = "ROLE_Operation_NEW"
                         },
                         new
                         {
@@ -804,7 +807,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 4L,
                             IsEnable = true,
                             Order = 1,
-                            RoleTag = "ROLE_OPERATION_EDIT"
+                            RoleTag = "ROLE_Operation_EDIT"
                         },
                         new
                         {
@@ -813,7 +816,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 4L,
                             IsEnable = true,
                             Order = 2,
-                            RoleTag = "ROLE_OPERATION_DELETE"
+                            RoleTag = "ROLE_Operation_DELETE"
                         },
                         new
                         {
@@ -822,7 +825,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 4L,
                             IsEnable = true,
                             Order = 3,
-                            RoleTag = "ROLE_OPERATION_VIEW"
+                            RoleTag = "ROLE_Operation_VIEW"
                         },
                         new
                         {
@@ -831,7 +834,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 5L,
                             IsEnable = true,
                             Order = 0,
-                            RoleTag = "ROLE_PROFILE_NEW"
+                            RoleTag = "ROLE_Profile_NEW"
                         },
                         new
                         {
@@ -840,7 +843,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 5L,
                             IsEnable = true,
                             Order = 1,
-                            RoleTag = "ROLE_PROFILE_EDIT"
+                            RoleTag = "ROLE_Profile_EDIT"
                         },
                         new
                         {
@@ -849,7 +852,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 5L,
                             IsEnable = true,
                             Order = 2,
-                            RoleTag = "ROLE_PROFILE_DELETE"
+                            RoleTag = "ROLE_Profile_DELETE"
                         },
                         new
                         {
@@ -858,7 +861,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 5L,
                             IsEnable = true,
                             Order = 3,
-                            RoleTag = "ROLE_PROFILE_VIEW"
+                            RoleTag = "ROLE_Profile_VIEW"
                         },
                         new
                         {
@@ -867,7 +870,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 6L,
                             IsEnable = true,
                             Order = 0,
-                            RoleTag = "ROLE_EMPLOYEE_NEW"
+                            RoleTag = "ROLE_Employee_NEW"
                         },
                         new
                         {
@@ -876,7 +879,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 6L,
                             IsEnable = true,
                             Order = 1,
-                            RoleTag = "ROLE_EMPLOYEE_EDIT"
+                            RoleTag = "ROLE_Employee_EDIT"
                         },
                         new
                         {
@@ -885,7 +888,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 6L,
                             IsEnable = true,
                             Order = 2,
-                            RoleTag = "ROLE_EMPLOYEE_DELETE"
+                            RoleTag = "ROLE_Employee_DELETE"
                         },
                         new
                         {
@@ -894,7 +897,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 6L,
                             IsEnable = true,
                             Order = 3,
-                            RoleTag = "ROLE_EMPLOYEE_VIEW"
+                            RoleTag = "ROLE_Employee_VIEW"
                         },
                         new
                         {
@@ -903,7 +906,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 7L,
                             IsEnable = true,
                             Order = 0,
-                            RoleTag = "ROLE_USER_NEW"
+                            RoleTag = "ROLE_User_NEW"
                         },
                         new
                         {
@@ -912,7 +915,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 7L,
                             IsEnable = true,
                             Order = 1,
-                            RoleTag = "ROLE_USER_EDIT"
+                            RoleTag = "ROLE_User_EDIT"
                         },
                         new
                         {
@@ -921,7 +924,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 7L,
                             IsEnable = true,
                             Order = 2,
-                            RoleTag = "ROLE_USER_DELETE"
+                            RoleTag = "ROLE_User_DELETE"
                         },
                         new
                         {
@@ -930,7 +933,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 7L,
                             IsEnable = true,
                             Order = 3,
-                            RoleTag = "ROLE_USER_VIEW"
+                            RoleTag = "ROLE_User_VIEW"
                         },
                         new
                         {
@@ -939,7 +942,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 2L,
                             IsEnable = true,
                             Order = 0,
-                            RoleTag = "ROLE_LOG_NEW"
+                            RoleTag = "ROLE_Log_NEW"
                         },
                         new
                         {
@@ -948,7 +951,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 2L,
                             IsEnable = true,
                             Order = 1,
-                            RoleTag = "ROLE_LOG_EDIT"
+                            RoleTag = "ROLE_Log_EDIT"
                         },
                         new
                         {
@@ -957,7 +960,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 2L,
                             IsEnable = true,
                             Order = 2,
-                            RoleTag = "ROLE_LOG_DELETE"
+                            RoleTag = "ROLE_Log_DELETE"
                         },
                         new
                         {
@@ -966,7 +969,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 2L,
                             IsEnable = true,
                             Order = 3,
-                            RoleTag = "ROLE_LOG_VIEW"
+                            RoleTag = "ROLE_Log_VIEW"
                         },
                         new
                         {
@@ -975,7 +978,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 3L,
                             IsEnable = true,
                             Order = 0,
-                            RoleTag = "ROLE_AREA_NEW"
+                            RoleTag = "ROLE_Area_NEW"
                         },
                         new
                         {
@@ -984,7 +987,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 3L,
                             IsEnable = true,
                             Order = 1,
-                            RoleTag = "ROLE_AREA_EDIT"
+                            RoleTag = "ROLE_Area_EDIT"
                         },
                         new
                         {
@@ -993,7 +996,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 3L,
                             IsEnable = true,
                             Order = 2,
-                            RoleTag = "ROLE_AREA_DELETE"
+                            RoleTag = "ROLE_Area_DELETE"
                         },
                         new
                         {
@@ -1002,7 +1005,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 3L,
                             IsEnable = true,
                             Order = 3,
-                            RoleTag = "ROLE_AREA_VIEW"
+                            RoleTag = "ROLE_Area_VIEW"
                         },
                         new
                         {
@@ -1011,7 +1014,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 4L,
                             IsEnable = true,
                             Order = 0,
-                            RoleTag = "ROLE_OPERATION_NEW"
+                            RoleTag = "ROLE_Operation_NEW"
                         },
                         new
                         {
@@ -1020,7 +1023,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 4L,
                             IsEnable = true,
                             Order = 1,
-                            RoleTag = "ROLE_OPERATION_EDIT"
+                            RoleTag = "ROLE_Operation_EDIT"
                         },
                         new
                         {
@@ -1029,7 +1032,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 4L,
                             IsEnable = true,
                             Order = 2,
-                            RoleTag = "ROLE_OPERATION_DELETE"
+                            RoleTag = "ROLE_Operation_DELETE"
                         },
                         new
                         {
@@ -1038,7 +1041,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 4L,
                             IsEnable = true,
                             Order = 3,
-                            RoleTag = "ROLE_OPERATION_VIEW"
+                            RoleTag = "ROLE_Operation_VIEW"
                         },
                         new
                         {
@@ -1047,7 +1050,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 5L,
                             IsEnable = true,
                             Order = 0,
-                            RoleTag = "ROLE_PROFILE_NEW"
+                            RoleTag = "ROLE_Profile_NEW"
                         },
                         new
                         {
@@ -1056,7 +1059,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 5L,
                             IsEnable = true,
                             Order = 1,
-                            RoleTag = "ROLE_PROFILE_EDIT"
+                            RoleTag = "ROLE_Profile_EDIT"
                         },
                         new
                         {
@@ -1065,7 +1068,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 5L,
                             IsEnable = true,
                             Order = 2,
-                            RoleTag = "ROLE_PROFILE_DELETE"
+                            RoleTag = "ROLE_Profile_DELETE"
                         },
                         new
                         {
@@ -1074,7 +1077,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 5L,
                             IsEnable = true,
                             Order = 3,
-                            RoleTag = "ROLE_PROFILE_VIEW"
+                            RoleTag = "ROLE_Profile_VIEW"
                         },
                         new
                         {
@@ -1083,7 +1086,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 6L,
                             IsEnable = true,
                             Order = 0,
-                            RoleTag = "ROLE_EMPLOYEE_NEW"
+                            RoleTag = "ROLE_Employee_NEW"
                         },
                         new
                         {
@@ -1092,7 +1095,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 6L,
                             IsEnable = true,
                             Order = 1,
-                            RoleTag = "ROLE_EMPLOYEE_EDIT"
+                            RoleTag = "ROLE_Employee_EDIT"
                         },
                         new
                         {
@@ -1101,7 +1104,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 6L,
                             IsEnable = true,
                             Order = 2,
-                            RoleTag = "ROLE_EMPLOYEE_DELETE"
+                            RoleTag = "ROLE_Employee_DELETE"
                         },
                         new
                         {
@@ -1110,7 +1113,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 6L,
                             IsEnable = true,
                             Order = 3,
-                            RoleTag = "ROLE_EMPLOYEE_VIEW"
+                            RoleTag = "ROLE_Employee_VIEW"
                         },
                         new
                         {
@@ -1119,7 +1122,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 7L,
                             IsEnable = true,
                             Order = 0,
-                            RoleTag = "ROLE_USER_NEW"
+                            RoleTag = "ROLE_User_NEW"
                         },
                         new
                         {
@@ -1128,7 +1131,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 7L,
                             IsEnable = true,
                             Order = 1,
-                            RoleTag = "ROLE_USER_EDIT"
+                            RoleTag = "ROLE_User_EDIT"
                         },
                         new
                         {
@@ -1137,7 +1140,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 7L,
                             IsEnable = true,
                             Order = 2,
-                            RoleTag = "ROLE_USER_DELETE"
+                            RoleTag = "ROLE_User_DELETE"
                         },
                         new
                         {
@@ -1146,7 +1149,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 7L,
                             IsEnable = true,
                             Order = 3,
-                            RoleTag = "ROLE_USER_VIEW"
+                            RoleTag = "ROLE_User_VIEW"
                         },
                         new
                         {
@@ -1155,7 +1158,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 5L,
                             IsEnable = true,
                             Order = 0,
-                            RoleTag = "ROLE_PROFILE_NEW"
+                            RoleTag = "ROLE_Profile_NEW"
                         },
                         new
                         {
@@ -1164,7 +1167,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 5L,
                             IsEnable = true,
                             Order = 1,
-                            RoleTag = "ROLE_PROFILE_EDIT"
+                            RoleTag = "ROLE_Profile_EDIT"
                         },
                         new
                         {
@@ -1173,7 +1176,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 5L,
                             IsEnable = true,
                             Order = 2,
-                            RoleTag = "ROLE_PROFILE_DELETE"
+                            RoleTag = "ROLE_Profile_DELETE"
                         },
                         new
                         {
@@ -1182,7 +1185,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 5L,
                             IsEnable = true,
                             Order = 3,
-                            RoleTag = "ROLE_PROFILE_VIEW"
+                            RoleTag = "ROLE_Profile_VIEW"
                         },
                         new
                         {
@@ -1191,7 +1194,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 6L,
                             IsEnable = true,
                             Order = 0,
-                            RoleTag = "ROLE_EMPLOYEE_NEW"
+                            RoleTag = "ROLE_Employee_NEW"
                         },
                         new
                         {
@@ -1200,7 +1203,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 6L,
                             IsEnable = true,
                             Order = 1,
-                            RoleTag = "ROLE_EMPLOYEE_EDIT"
+                            RoleTag = "ROLE_Employee_EDIT"
                         },
                         new
                         {
@@ -1209,7 +1212,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 6L,
                             IsEnable = true,
                             Order = 2,
-                            RoleTag = "ROLE_EMPLOYEE_DELETE"
+                            RoleTag = "ROLE_Employee_DELETE"
                         },
                         new
                         {
@@ -1218,7 +1221,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 6L,
                             IsEnable = true,
                             Order = 3,
-                            RoleTag = "ROLE_EMPLOYEE_VIEW"
+                            RoleTag = "ROLE_Employee_VIEW"
                         },
                         new
                         {
@@ -1227,7 +1230,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 7L,
                             IsEnable = true,
                             Order = 0,
-                            RoleTag = "ROLE_USER_NEW"
+                            RoleTag = "ROLE_User_NEW"
                         },
                         new
                         {
@@ -1236,7 +1239,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 7L,
                             IsEnable = true,
                             Order = 1,
-                            RoleTag = "ROLE_USER_EDIT"
+                            RoleTag = "ROLE_User_EDIT"
                         },
                         new
                         {
@@ -1245,7 +1248,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 7L,
                             IsEnable = true,
                             Order = 2,
-                            RoleTag = "ROLE_USER_DELETE"
+                            RoleTag = "ROLE_User_DELETE"
                         },
                         new
                         {
@@ -1254,7 +1257,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 7L,
                             IsEnable = true,
                             Order = 3,
-                            RoleTag = "ROLE_USER_VIEW"
+                            RoleTag = "ROLE_User_VIEW"
                         },
                         new
                         {
@@ -1263,7 +1266,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 5L,
                             IsEnable = true,
                             Order = 0,
-                            RoleTag = "ROLE_PROFILE_NEW"
+                            RoleTag = "ROLE_Profile_NEW"
                         },
                         new
                         {
@@ -1272,7 +1275,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 5L,
                             IsEnable = true,
                             Order = 1,
-                            RoleTag = "ROLE_PROFILE_EDIT"
+                            RoleTag = "ROLE_Profile_EDIT"
                         },
                         new
                         {
@@ -1281,7 +1284,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 5L,
                             IsEnable = true,
                             Order = 2,
-                            RoleTag = "ROLE_PROFILE_DELETE"
+                            RoleTag = "ROLE_Profile_DELETE"
                         },
                         new
                         {
@@ -1290,7 +1293,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 5L,
                             IsEnable = true,
                             Order = 3,
-                            RoleTag = "ROLE_PROFILE_VIEW"
+                            RoleTag = "ROLE_Profile_VIEW"
                         },
                         new
                         {
@@ -1299,7 +1302,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 6L,
                             IsEnable = true,
                             Order = 0,
-                            RoleTag = "ROLE_EMPLOYEE_NEW"
+                            RoleTag = "ROLE_Employee_NEW"
                         },
                         new
                         {
@@ -1308,7 +1311,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 6L,
                             IsEnable = true,
                             Order = 1,
-                            RoleTag = "ROLE_EMPLOYEE_EDIT"
+                            RoleTag = "ROLE_Employee_EDIT"
                         },
                         new
                         {
@@ -1317,7 +1320,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 6L,
                             IsEnable = true,
                             Order = 2,
-                            RoleTag = "ROLE_EMPLOYEE_DELETE"
+                            RoleTag = "ROLE_Employee_DELETE"
                         },
                         new
                         {
@@ -1326,7 +1329,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 6L,
                             IsEnable = true,
                             Order = 3,
-                            RoleTag = "ROLE_EMPLOYEE_VIEW"
+                            RoleTag = "ROLE_Employee_VIEW"
                         },
                         new
                         {
@@ -1335,7 +1338,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 7L,
                             IsEnable = true,
                             Order = 0,
-                            RoleTag = "ROLE_USER_NEW"
+                            RoleTag = "ROLE_User_NEW"
                         },
                         new
                         {
@@ -1344,7 +1347,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 7L,
                             IsEnable = true,
                             Order = 1,
-                            RoleTag = "ROLE_USER_EDIT"
+                            RoleTag = "ROLE_User_EDIT"
                         },
                         new
                         {
@@ -1353,7 +1356,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 7L,
                             IsEnable = true,
                             Order = 2,
-                            RoleTag = "ROLE_USER_DELETE"
+                            RoleTag = "ROLE_User_DELETE"
                         },
                         new
                         {
@@ -1362,7 +1365,7 @@ namespace WebAPI.Infra.Migrations
                             IdOperation = 7L,
                             IsEnable = true,
                             Order = 3,
-                            RoleTag = "ROLE_USER_VIEW"
+                            RoleTag = "ROLE_User_VIEW"
                         });
                 });
 
@@ -1379,7 +1382,7 @@ namespace WebAPI.Infra.Migrations
                     b.Property<DateTime?>("CreatedTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 17, 21, 29, 36, 723, DateTimeKind.Unspecified).AddTicks(5359))
+                        .HasDefaultValue(new DateTime(2024, 7, 17, 21, 24, 46, 168, DateTimeKind.Unspecified).AddTicks(4621))
                         .HasColumnName("Created_Time")
                         .HasColumnOrder(1);
 
@@ -1450,13 +1453,13 @@ namespace WebAPI.Infra.Migrations
                         new
                         {
                             Id = 1L,
-                            CreatedTime = new DateTime(2024, 7, 17, 21, 29, 36, 727, DateTimeKind.Unspecified).AddTicks(357),
+                            CreatedTime = new DateTime(2024, 7, 17, 21, 24, 46, 172, DateTimeKind.Unspecified).AddTicks(1440),
                             HasTwoFactoryValidation = false,
                             IsActive = true,
                             IsAuthenticated = true,
                             LastPassword = "",
                             Login = "admin@DefaultAPI.com.br",
-                            Password = "AQAQJwAA/wCRq0UTMoDgMZlfMbNe1iX5yWDgo++SwBFrVNwUUZU="
+                            Password = "AQAQJwAAwjOjIlm+T6dxOhFLvSBBN+XWgoUEG++Tf8DkH5/DryQ="
                         });
                 });
 
@@ -1479,7 +1482,7 @@ namespace WebAPI.Infra.Migrations
                     b.Property<DateTime?>("CreatedTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 17, 21, 29, 36, 726, DateTimeKind.Unspecified).AddTicks(1203))
+                        .HasDefaultValue(new DateTime(2024, 7, 17, 21, 24, 46, 171, DateTimeKind.Unspecified).AddTicks(1114))
                         .HasColumnName("Created_Time")
                         .HasColumnOrder(1);
 
@@ -1531,7 +1534,7 @@ namespace WebAPI.Infra.Migrations
                         {
                             Id = 1L,
                             Body = "Olá, {0}<br>Seja bem vindo ao <b>{1}</b><br> Utilize a senha <b>1234</b> para acessar o sistema e usufrua de todas as ferramentas disponíveis.<br>",
-                            CreatedTime = new DateTime(2024, 7, 17, 21, 29, 36, 734, DateTimeKind.Unspecified).AddTicks(6601),
+                            CreatedTime = new DateTime(2024, 7, 17, 21, 24, 46, 180, DateTimeKind.Unspecified).AddTicks(4104),
                             EmailTemplateId = 1L,
                             HasAttachment = false,
                             IsActive = true,
@@ -1543,7 +1546,7 @@ namespace WebAPI.Infra.Migrations
                         {
                             Id = 2L,
                             Body = "<center>Olá, {0}</center><center>Conforme sua solicitação enviamos este email para que você possa concluir sua solicitação de esqueci a senha. Clique no botão abaixo.</center><br> ",
-                            CreatedTime = new DateTime(2024, 7, 17, 21, 29, 36, 734, DateTimeKind.Unspecified).AddTicks(6601),
+                            CreatedTime = new DateTime(2024, 7, 17, 21, 24, 46, 180, DateTimeKind.Unspecified).AddTicks(4104),
                             EmailTemplateId = 1L,
                             HasAttachment = false,
                             IsActive = true,
@@ -1555,7 +1558,7 @@ namespace WebAPI.Infra.Migrations
                         {
                             Id = 3L,
                             Body = "<center>Olá, {0}</center><center>Conforme sua solicitação enviamos este email para que você possa concluir sua solicitação de troca de senha. Clique no botão abaixo.</center><br> ",
-                            CreatedTime = new DateTime(2024, 7, 17, 21, 29, 36, 734, DateTimeKind.Unspecified).AddTicks(6601),
+                            CreatedTime = new DateTime(2024, 7, 17, 21, 24, 46, 180, DateTimeKind.Unspecified).AddTicks(4104),
                             EmailTemplateId = 1L,
                             HasAttachment = false,
                             IsActive = true,
@@ -1566,8 +1569,8 @@ namespace WebAPI.Infra.Migrations
                         new
                         {
                             Id = 4L,
-                            Body = "<center>Olá, {0}</center><center>Quero reporta-lo que a sua confirmação de senha foi realizada com sucesso no periodo das 17/07/2024 - 21:29</center><br> ",
-                            CreatedTime = new DateTime(2024, 7, 17, 21, 29, 36, 734, DateTimeKind.Unspecified).AddTicks(6601),
+                            Body = "<center>Olá, {0}</center><center>Quero reporta-lo que a sua confirmação de senha foi realizada com sucesso no periodo das 17/07/2024 - 21:24</center><br> ",
+                            CreatedTime = new DateTime(2024, 7, 17, 21, 24, 46, 180, DateTimeKind.Unspecified).AddTicks(4104),
                             EmailTemplateId = 1L,
                             HasAttachment = false,
                             IsActive = true,
@@ -1579,7 +1582,7 @@ namespace WebAPI.Infra.Migrations
                         {
                             Id = 5L,
                             Body = "",
-                            CreatedTime = new DateTime(2024, 7, 17, 21, 29, 36, 734, DateTimeKind.Unspecified).AddTicks(6601),
+                            CreatedTime = new DateTime(2024, 7, 17, 21, 24, 46, 180, DateTimeKind.Unspecified).AddTicks(4104),
                             EmailTemplateId = 1L,
                             HasAttachment = false,
                             IsActive = true,
@@ -1602,7 +1605,7 @@ namespace WebAPI.Infra.Migrations
                     b.Property<DateTime?>("CreatedTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 17, 21, 29, 36, 725, DateTimeKind.Unspecified).AddTicks(9227))
+                        .HasDefaultValue(new DateTime(2024, 7, 17, 21, 24, 46, 170, DateTimeKind.Unspecified).AddTicks(9015))
                         .HasColumnName("Created_Time")
                         .HasColumnOrder(1);
 
@@ -1632,7 +1635,7 @@ namespace WebAPI.Infra.Migrations
                         new
                         {
                             Id = 1L,
-                            CreatedTime = new DateTime(2024, 7, 17, 21, 29, 36, 734, DateTimeKind.Unspecified).AddTicks(6601),
+                            CreatedTime = new DateTime(2024, 7, 17, 21, 24, 46, 180, DateTimeKind.Unspecified).AddTicks(4104),
                             Description = "WebAPI",
                             IsActive = true
                         });
@@ -1651,7 +1654,7 @@ namespace WebAPI.Infra.Migrations
                     b.Property<DateTime?>("CreatedTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 17, 21, 29, 36, 726, DateTimeKind.Unspecified).AddTicks(3498))
+                        .HasDefaultValue(new DateTime(2024, 7, 17, 21, 24, 46, 171, DateTimeKind.Unspecified).AddTicks(3603))
                         .HasColumnName("Created_Time")
                         .HasColumnOrder(1);
 
@@ -1687,7 +1690,7 @@ namespace WebAPI.Infra.Migrations
                         new
                         {
                             Id = 1L,
-                            CreatedTime = new DateTime(2024, 7, 17, 21, 29, 36, 734, DateTimeKind.Unspecified).AddTicks(6601),
+                            CreatedTime = new DateTime(2024, 7, 17, 21, 24, 46, 180, DateTimeKind.Unspecified).AddTicks(4104),
                             Description = "Gmail",
                             IsActive = true,
                             SmtpConfig = "smtp.gmail.com"
@@ -1695,7 +1698,7 @@ namespace WebAPI.Infra.Migrations
                         new
                         {
                             Id = 2L,
-                            CreatedTime = new DateTime(2024, 7, 17, 21, 29, 36, 734, DateTimeKind.Unspecified).AddTicks(6601),
+                            CreatedTime = new DateTime(2024, 7, 17, 21, 24, 46, 180, DateTimeKind.Unspecified).AddTicks(4104),
                             Description = "Outlook",
                             IsActive = true,
                             SmtpConfig = "smtp.office365.com"
@@ -1703,7 +1706,7 @@ namespace WebAPI.Infra.Migrations
                         new
                         {
                             Id = 3L,
-                            CreatedTime = new DateTime(2024, 7, 17, 21, 29, 36, 734, DateTimeKind.Unspecified).AddTicks(6601),
+                            CreatedTime = new DateTime(2024, 7, 17, 21, 24, 46, 180, DateTimeKind.Unspecified).AddTicks(4104),
                             Description = "Hotmail",
                             IsActive = true,
                             SmtpConfig = "smtp.live.com"
@@ -1762,7 +1765,7 @@ namespace WebAPI.Infra.Migrations
                     b.Property<DateTime?>("CreatedTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 17, 21, 29, 36, 725, DateTimeKind.Unspecified).AddTicks(4631))
+                        .HasDefaultValue(new DateTime(2024, 7, 17, 21, 24, 46, 170, DateTimeKind.Unspecified).AddTicks(4213))
                         .HasColumnName("Created_Time");
 
                     b.Property<string>("Description")
@@ -1795,7 +1798,7 @@ namespace WebAPI.Infra.Migrations
                     b.Property<DateTime?>("CreatedTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 17, 21, 29, 36, 724, DateTimeKind.Unspecified).AddTicks(7141))
+                        .HasDefaultValue(new DateTime(2024, 7, 17, 21, 24, 46, 169, DateTimeKind.Unspecified).AddTicks(6325))
                         .HasColumnName("Created_Time")
                         .HasColumnOrder(1);
 
@@ -1841,7 +1844,7 @@ namespace WebAPI.Infra.Migrations
                     b.Property<DateTime?>("CreatedTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 17, 21, 29, 36, 724, DateTimeKind.Unspecified).AddTicks(2028))
+                        .HasDefaultValue(new DateTime(2024, 7, 17, 21, 24, 46, 169, DateTimeKind.Unspecified).AddTicks(1211))
                         .HasColumnName("Created_Time")
                         .HasColumnOrder(1);
 
@@ -1903,7 +1906,7 @@ namespace WebAPI.Infra.Migrations
                     b.Property<DateTime?>("CreatedTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 7, 17, 21, 29, 36, 724, DateTimeKind.Unspecified).AddTicks(4158))
+                        .HasDefaultValue(new DateTime(2024, 7, 17, 21, 24, 46, 169, DateTimeKind.Unspecified).AddTicks(3540))
                         .HasColumnName("Created_Time")
                         .HasColumnOrder(1);
 

@@ -21,11 +21,19 @@ public class ProfileOperationMapping : IEntityTypeConfiguration<ProfileOperation
 
     private void ConfigureColumns()
     {
+        _builder.Property(x => x.Id).ValueGeneratedOnAdd().UseIdentityColumn(1, 1).HasColumnName("Id");
         _builder.Property(a => a.IdProfile).IsRequired(true).HasColumnName("Id_Profile");
         _builder.Property(a => a.IdOperation).IsRequired(true).HasColumnName("Id_Operation");
-        _builder.Property(a => a.Order).IsRequired(true).HasColumnName("CanCreate");
-        _builder.Property(a => a.IsEnable).IsRequired(true).HasDefaultValue(false).HasColumnName("CanResearch");
-        _builder.Property(a => a.RoleTag).IsRequired(true).HasMaxLength(255).HasColumnName("CanUpdate");
+        _builder.Property(a => a.Order).IsRequired(true).HasColumnName("Order");
+        _builder.Property(a => a.IsEnable).IsRequired(true).HasDefaultValue(false).HasColumnName("IsEnable");
+        _builder.Property(a => a.RoleTag).IsRequired(true).HasMaxLength(255).HasColumnName("RoleTag");
+
+        _builder.Property(x => x.Id).HasColumnOrder(0);
+        _builder.Property(x => x.IdProfile).HasColumnOrder(1);
+        _builder.Property(x => x.IdOperation).HasColumnOrder(2);
+        _builder.Property(x => x.RoleTag).HasColumnOrder(3);
+        _builder.Property(x => x.IsEnable).HasColumnOrder(4);
+        _builder.Property(x => x.Order).HasColumnOrder(5);
     }
 
     private void ConfigureForeignKeys()
@@ -44,6 +52,7 @@ public class ProfileOperationMapping : IEntityTypeConfiguration<ProfileOperation
         _builder.HasIndex(a =>
             new
             {
+                a.Id,
                 a.IdProfile,
                 a.IdOperation
             })
@@ -54,6 +63,7 @@ public class ProfileOperationMapping : IEntityTypeConfiguration<ProfileOperation
     {
         _builder.HasKey(a => new
         {
+            a.Id,
             a.IdProfile,
             a.IdOperation
         });

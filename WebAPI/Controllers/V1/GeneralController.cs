@@ -46,11 +46,12 @@ public sealed class GeneralController : GenericController
         _generalMethod = GeneralMethod.GetLoadExtensionMethods();
     }
 
-    [HttpGet("export2Zip/{directory}/{typeFile:EnumMemoryStreamFile}")]
-    public async Task<IActionResult> Export2Zip(string directory, EnumMemoryStreamFile typeFile = EnumMemoryStreamFile.PDF)
+    [HttpGet("export2Zip/{directory}/{typeFile:int?}")]
+    public async Task<IActionResult> Export2Zip(string directory, int? typeFile)
     {
-        MemoryStream memoryStream = await _generalService.Export2ZipAsync(directory, typeFile);
-        var memoryStreamResult = _generalMethod.GetMemoryStream(typeFile);
+        EnumMemoryStreamFile enumtypeFile = typeFile.HasValue ? (EnumMemoryStreamFile)typeFile : EnumMemoryStreamFile.PDF;
+        MemoryStream memoryStream = await _generalService.Export2ZipAsync(directory, enumtypeFile);
+        var memoryStreamResult = _generalMethod.GetMemoryStream(enumtypeFile);
         return File(await Task.FromResult(memoryStream.ToArray()), memoryStreamResult.Type, $"Archive.{memoryStreamResult.Extension}");
     }
 

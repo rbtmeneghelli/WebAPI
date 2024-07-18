@@ -2,6 +2,7 @@
 
 public class ProfileOperation
 {
+    public long Id { get; set; }
     public long IdProfile { get; set; }
     public virtual Profile Profile { get; set; }
     public long IdOperation { get; set; }

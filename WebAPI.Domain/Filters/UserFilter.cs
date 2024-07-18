@@ -11,5 +11,4 @@ public class UserFilter : GenericFilter
     public bool? IsAuthenticated { get; set; }
     public long? IdProfile { get; set; }
     public bool? IsActive { get; set; }
-    public virtual Employee Employee {get; set; }
 }

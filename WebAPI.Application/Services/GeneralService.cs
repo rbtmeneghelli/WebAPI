@@ -36,7 +36,7 @@ public class GeneralService : GenericService, IGeneralService
             Audience = _tokenSettings.Audience,
             Subject = new ClaimsIdentity(new Claim[]
             {
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    //new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim("Id",credentials.Id.ToString()),
                     new Claim(ClaimTypes.Name, credentials.Login.ToString()),
                     new Claim(ClaimTypes.Role, string.Join(",",credentials.Roles)), // são as permissões do usuario, onde podemos restringir os endpoints a partir da tag >>  No Authorize(Roles = "ROLE_AUDIT") por exemplo

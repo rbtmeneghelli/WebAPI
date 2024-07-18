@@ -19,9 +19,9 @@ public class EmployeeMapping : GenericMapping<Employee>
     {
         _builder.Property(x => x.Name).IsRequired().HasMaxLength(500).HasColumnName("Name");
         _builder.Property(x => x.Email).IsRequired().HasMaxLength(80).HasColumnName("Email");
-        _builder.Property(x => x.TelPhone).IsRequired().HasMaxLength(20).HasColumnName("Description");
-        _builder.Property(x => x.CelPhone).IsRequired().HasMaxLength(20).HasColumnName("Description");
+        _builder.Property(x => x.TelPhone).IsRequired().HasMaxLength(20).HasColumnName("TelPhone");
+        _builder.Property(x => x.CelPhone).IsRequired().HasMaxLength(20).HasColumnName("CelPhone");
         _builder.HasOne(x => x.Profile).WithMany(x => x.Employees).HasForeignKey(x => x.IdProfile);
-        _builder.HasOne(x => x.User).WithOne(x => x.Employee);
+        _builder.HasOne(x => x.User).WithOne(x => x.Employee).HasForeignKey<Employee>(x => x.IdUser);
     }
 }

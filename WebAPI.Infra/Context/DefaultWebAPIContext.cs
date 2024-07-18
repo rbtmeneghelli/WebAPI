@@ -53,9 +53,6 @@ public partial class WebAPIContext : DbContext
 
         /* Código responsavel por impedir que os dados chaves de ADM sejam apresentados nas queries */
         modelBuilder.ApplyQueryFilterToTable<Area>(p => p.Id > 1);
-        modelBuilder.ApplyQueryFilterToTable<Profile>(p => p.Id > 1);
-        modelBuilder.ApplyQueryFilterToTable<User>(p => p.Id > 1);
-        modelBuilder.ApplyQueryFilterToTable<Employee>(p => p.Id > 1);
 
         foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys())) 
         relationship.DeleteBehavior = DeleteBehavior.ClientSetNull;
