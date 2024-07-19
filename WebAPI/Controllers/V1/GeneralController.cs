@@ -7,6 +7,8 @@ using Region = WebAPI.Domain.Entities.Region;
 using WebAPI.Domain.Enums;
 using System.Reflection;
 using SkiaSharp;
+using WebAPI.Domain.Validations;
+using ZXing;
 
 namespace WebAPI.V1.Controllers;
 
@@ -28,9 +30,9 @@ public sealed class GeneralController : GenericController
 
     private EnvironmentVariables _environmentVariables { get; }
 
-    public GeneralController(IMapper mapper, IHttpContextAccessor accessor, ICepService cepsService, IStatesService statesService, 
-                             IRegionService regionService, ICityService cityService, INotificationMessageService notificationMessageService, 
-                             IGeneralService generalService, IMemoryCacheService memoryCacheService, IKLogger iKLogger, 
+    public GeneralController(IMapper mapper, IHttpContextAccessor accessor, ICepService cepsService, IStatesService statesService,
+                             IRegionService regionService, ICityService cityService, INotificationMessageService notificationMessageService,
+                             IGeneralService generalService, IMemoryCacheService memoryCacheService, IKLogger iKLogger,
                              IQRCodeService qRCodeService, EnvironmentVariables environmentVariables,
                              IFirebaseService fireBaseService) : base(mapper, accessor, notificationMessageService, iKLogger)
     {
@@ -388,6 +390,22 @@ public sealed class GeneralController : GenericController
             NotificationError("Ocorreu um erro durante o processo de atualização das var de ambiente");
         }
 
+        return CustomResponse();
+    }
+
+    [EnableCors("EnableCORS")]
+    [HttpPost("validateRegionData")]
+    public async Task<IActionResult> ValidateRegionData(Region region)
+    {
+        var regionValidator = new RegionValidation();
+        var validationResult = regionValidator.Validate(region);
+
+        if (!validationResult.IsValid)
+        {
+            NotificationError(string.Join("", validationResult.Errors.Select(x => x.ErrorMessage)));
+        }
+
+        await Task.CompletedTask;
         return CustomResponse();
     }
 }
