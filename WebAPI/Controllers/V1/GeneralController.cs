@@ -26,6 +26,7 @@ public sealed class GeneralController : GenericController
     private readonly IMemoryCacheService _memoryCacheService;
     private readonly IQRCodeService _qRCodeService;
     private readonly IFirebaseService _fireBaseService;
+    private readonly IEmailService _emailService;
     private readonly GeneralMethod _generalMethod;
 
     private EnvironmentVariables _environmentVariables { get; }
@@ -34,7 +35,7 @@ public sealed class GeneralController : GenericController
                              IRegionService regionService, ICityService cityService, INotificationMessageService notificationMessageService,
                              IGeneralService generalService, IMemoryCacheService memoryCacheService, IKLogger iKLogger,
                              IQRCodeService qRCodeService, EnvironmentVariables environmentVariables,
-                             IFirebaseService fireBaseService) : base(mapper, accessor, notificationMessageService, iKLogger)
+                             IFirebaseService fireBaseService, IEmailService emailService) : base(mapper, accessor, notificationMessageService, iKLogger)
     {
         _cepsService = cepsService;
         _statesService = statesService;
@@ -46,6 +47,7 @@ public sealed class GeneralController : GenericController
         _environmentVariables = environmentVariables;
         _fireBaseService = fireBaseService;
         _generalMethod = GeneralMethod.GetLoadExtensionMethods();
+        _emailService = emailService;
     }
 
     [HttpGet("export2Zip/{directory}/{typeFile:int?}")]
@@ -407,5 +409,12 @@ public sealed class GeneralController : GenericController
 
         await Task.CompletedTask;
         return CustomResponse();
+    }
+
+    [HttpGet("testSendEmail")]
+    public async Task<IActionResult> TestSendEmail()
+    {
+        await _emailService.CustomSendEmailAsync(EnumEmail.ChangePassword, "teste@gmail.com", "XPTO");
+        return NoContent();
     }
 }

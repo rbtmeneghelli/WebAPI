@@ -2,5 +2,5 @@
 
 public interface IEmailService : IDisposable
 {
-    Task SendEmailToResetPswAsync(string userName, string appPath);
+    Task CustomSendEmailAsync(EnumEmail enumEmail, string userName, string appPath);
 }

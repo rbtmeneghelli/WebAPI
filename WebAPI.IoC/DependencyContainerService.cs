@@ -44,6 +44,8 @@ using WebAPI.Application.Services.NfService;
 using FixConstants = WebAPI.Domain.FixConstants;
 using WebAPI.Application.InterfacesRepository;
 using WebAPI.Application.Generic;
+using WebAPI.Application.FactoryInterfaces;
+using WebAPI.Application.Factory;
 
 namespace WebAPI.Infra.Structure.IoC;
 
@@ -173,37 +175,38 @@ public static class DependencyContainerService
 
     public static void RegisterServices(this IServiceCollection services)
     {
-        services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-        services.AddScoped(typeof(IGenericRepositoryDapper<>), typeof(GenericRepositoryDapper<>));
-        services.AddScoped(typeof(ILoggerService<>), typeof(LoggerService<>));
-        services.AddScoped(typeof(IFileService<>), typeof(FileService<>));
-        services.AddScoped<WebAPIContext>();
-        services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped<ICepRepository, CepRepository>();
-        services.AddScoped<ICityRepository, CityRepository>();
-        services.AddScoped<IRegionRepository, RegionRepository>();
-        services.AddScoped<IStatesRepository, StateRepository>();
-        services.AddScoped<ILogRepository, LogRepository>();
-        services.AddScoped<IAuditRepository, AuditRepository>();
-        services.AddScoped<INotificationMessageService, NotificationMessageService>();
-        services.AddScoped<IAccountService, AccountService>();
-        services.AddScoped<IAuditService, AuditService>();
-        services.AddScoped<ICepService, CepService>();
-        services.AddScoped<ICityService, CityService>();
-        services.AddScoped<ILogService, LogService>();
-        services.AddScoped<IUserService, UserService>();
-        services.AddScoped<IGeneralService, GeneralService>();
-        services.AddScoped<IRegionService, RegionService>();
-        services.AddScoped<IStatesService, StatesService>();
-        services.AddScoped<IGraphicLineService, GraphicLineService>();
-        services.AddScoped<IGraphicBarService, GraphicBarService>();
-        services.AddScoped<IEmailService, EmailService>();
-        services.AddScoped<IQRCodeService, QRCodeService>();
-        services.AddScoped<IMemoryCacheService, MemoryCacheService>();
-        services.AddScoped<IGenericUnitofWorkService, GenericUnitOfWorkService>();
-        services.AddTransient<IIpAddressService, IpAddressService>();
-        services.AddScoped<INfService, NfService>();
-        services.AddScoped<IFirebaseService, FirebaseService>();
+        services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>))
+        .AddScoped(typeof(IGenericRepositoryDapper<>), typeof(GenericRepositoryDapper<>))
+        .AddScoped(typeof(ILoggerService<>), typeof(LoggerService<>))
+        .AddScoped(typeof(IFileService<>), typeof(FileService<>))
+        .AddScoped<WebAPIContext>()
+        .AddScoped<IUserRepository, UserRepository>()
+        .AddScoped<ICepRepository, CepRepository>()
+        .AddScoped<ICityRepository, CityRepository>()
+        .AddScoped<IRegionRepository, RegionRepository>()
+        .AddScoped<IStatesRepository, StateRepository>()
+        .AddScoped<ILogRepository, LogRepository>()
+        .AddScoped<IAuditRepository, AuditRepository>()
+        .AddScoped<INotificationMessageService, NotificationMessageService>()
+        .AddScoped<IAccountService, AccountService>()
+        .AddScoped<IAuditService, AuditService>()
+        .AddScoped<ICepService, CepService>()
+        .AddScoped<ICityService, CityService>()
+        .AddScoped<ILogService, LogService>()
+        .AddScoped<IUserService, UserService>()
+        .AddScoped<IGeneralService, GeneralService>()
+        .AddScoped<IRegionService, RegionService>()
+        .AddScoped<IStatesService, StatesService>()
+        .AddScoped<IGraphicLineService, GraphicLineService>()
+        .AddScoped<IGraphicBarService, GraphicBarService>()
+        .AddScoped<IEmailService, EmailService>()
+        .AddScoped<IQRCodeService, QRCodeService>()
+        .AddScoped<IMemoryCacheService, MemoryCacheService>()
+        .AddScoped<IGenericUnitofWorkService, GenericUnitOfWorkService>()
+        .AddTransient<IIpAddressService, IpAddressService>()
+        .AddScoped<INfService, NfService>()
+        .AddScoped<IFirebaseService, FirebaseService>()
+        .AddScoped<IEmailFactory, EmailFactory>();
     }
 
     public static void RegisterMapperConfig(this IServiceCollection services)

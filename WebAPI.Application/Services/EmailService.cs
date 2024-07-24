@@ -2,6 +2,7 @@
 using MimeKit.Text;
 using MimeKit;
 using WebAPI.Application.Generic;
+using WebAPI.Application.FactoryInterfaces;
 
 namespace WebAPI.Application.Services;
 
@@ -10,17 +11,20 @@ public class EmailService : GenericService, IEmailService
     EmailSettings _emailSettings { get; }
     private readonly IGenericRepository<EmailType> _iEmailTypeRepository;
     private readonly IGenericRepository<EmailDisplay> _iEmailDisplayRepository;
+    private readonly IEmailFactory _iEmailFactory;
 
     public EmailService(
         EmailSettings emailSettings,
         INotificationMessageService notificationMessageService,
         IGenericRepository<EmailType> iEmailTypeRepository,
-        IGenericRepository<EmailDisplay> iEmailDisplayRepository
+        IGenericRepository<EmailDisplay> iEmailDisplayRepository,
+        IEmailFactory iEmailFactory
         ) : base(notificationMessageService)
     {
         _emailSettings = emailSettings;
         _iEmailTypeRepository = iEmailTypeRepository;
         _iEmailDisplayRepository = iEmailDisplayRepository;
+        _iEmailFactory = iEmailFactory;
     }
 
     private void setEmailDomain()
@@ -84,9 +88,14 @@ public class EmailService : GenericService, IEmailService
         }
     }
 
-    public async Task SendEmailToResetPswAsync(string userName, string appPath)
+    public async Task CustomSendEmailAsync(EnumEmail enumEmail, string userName, string appPath)
     {
-        var emailDisplay = _iEmailDisplayRepository.GetAll().Include(x => x.EmailTemplates).Where(x => x.IsActive && x.Id == 1L).FirstOrDefault();
+        IEmailConfigFactory iEmailFactoryConfig = _iEmailFactory.SendEmailByEnumEmail(enumEmail);
+        var emailDisplay = _iEmailDisplayRepository
+                           .GetAll()
+                           .Include(x => x.EmailTemplates)
+                           .Where(x => x.IsActive && x.Id == iEmailFactoryConfig.GetDisplayIdToSend())
+                           .FirstOrDefault();
 
         if (GuardClauses.ObjectIsNotNull(emailDisplay))
         {

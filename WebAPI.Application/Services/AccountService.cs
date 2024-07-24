@@ -134,7 +134,7 @@ public class AccountService : GenericService, IAccountService
                     user.IsAuthenticated = false;
                     user.IsActive = true;
                     user.CreatedTime = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
-                    _emailService.SendEmailToResetPswAsync("Roberto", _hostingEnvironment.ContentRootPath).Wait();
+                    _emailService.CustomSendEmailAsync(EnumEmail.ResetPassword, "Roberto", _hostingEnvironment.ContentRootPath).Wait();
                     _userRepository.Update(user);
                     return true;
                 }
