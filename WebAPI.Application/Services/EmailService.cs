@@ -88,7 +88,7 @@ public class EmailService : GenericService, IEmailService
         }
     }
 
-    public async Task CustomSendEmailAsync(EnumEmail enumEmail, string userName, string appPath)
+    public async Task CustomSendEmailAsync(EnumEmail enumEmail, string userName, string appPath = "")
     {
         IEmailConfigFactory iEmailFactoryConfig = _iEmailFactory.SendEmailByEnumEmail(enumEmail);
         var emailDisplay = _iEmailDisplayRepository

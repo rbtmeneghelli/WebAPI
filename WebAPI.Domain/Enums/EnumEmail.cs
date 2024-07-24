@@ -5,7 +5,7 @@ namespace WebAPI.Domain.Enums;
 public enum EnumEmail : byte
 {
     [Display(Name = "Email de boas vindas")]
-    Welcome = 0,
+    Welcome = 1,
 
     [Display(Name = "Email de troca de senha")]
     ChangePassword = 2,

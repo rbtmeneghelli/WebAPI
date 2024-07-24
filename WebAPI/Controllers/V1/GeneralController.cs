@@ -414,7 +414,7 @@ public sealed class GeneralController : GenericController
     [HttpGet("testSendEmail")]
     public async Task<IActionResult> TestSendEmail()
     {
-        await _emailService.CustomSendEmailAsync(EnumEmail.ChangePassword, "teste@gmail.com", "XPTO");
-        return NoContent();
+        await _emailService.CustomSendEmailAsync(EnumEmail.Welcome, "teste@gmail.com", "XPTO");
+        return CustomResponse();
     }
 }
