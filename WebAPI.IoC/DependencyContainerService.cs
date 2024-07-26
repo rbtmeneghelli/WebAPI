@@ -18,7 +18,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.RateLimiting;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -30,12 +29,9 @@ using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Serilog.Filters;
 using Serilog.Sinks.MSSqlServer;
-using System;
 using System.Collections.ObjectModel;
 using System.Data;
-using System.Data.SqlClient;
 using System.Diagnostics;
-using System.Reflection;
 using System.Text;
 using System.Threading.RateLimiting;
 using SqlConnection = Microsoft.Data.SqlClient.SqlConnection;
@@ -46,6 +42,7 @@ using WebAPI.Application.InterfacesRepository;
 using WebAPI.Application.Generic;
 using WebAPI.Application.FactoryInterfaces;
 using WebAPI.Application.Factory;
+using WebAPI.Application.InterfacesService;
 
 namespace WebAPI.Infra.Structure.IoC;
 
@@ -206,7 +203,8 @@ public static class DependencyContainerService
         .AddTransient<IIpAddressService, IpAddressService>()
         .AddScoped<INfService, NfService>()
         .AddScoped<IFirebaseService, FirebaseService>()
-        .AddScoped<IEmailFactory, EmailFactory>();
+        .AddScoped<IEmailFactory, EmailFactory>()
+        .AddScoped(typeof(IMongoDbService<>), typeof(MongoDbService<>));
     }
 
     public static void RegisterMapperConfig(this IServiceCollection services)
@@ -258,10 +256,7 @@ public static class DependencyContainerService
                 .WithMethods("GET", "POST", "PUT", "DELETE") // Configuração de tipos de metodos que serão liberados para consumo GET, POST, PUT, DELETE
                 .SetIsOriginAllowed((host) => true)
                 .AllowAnyOrigin()
-                .AllowAnyHeader()
-
-
-                ;
+                .AllowAnyHeader();
             });
         });
     }
@@ -276,8 +271,7 @@ public static class DependencyContainerService
                 .SetIsOriginAllowed((host) => true)
                 .AllowAnyMethod()
                 .AllowAnyHeader()
-                .AllowCredentials()
-                ;
+                .AllowCredentials();
             });
         });
     }

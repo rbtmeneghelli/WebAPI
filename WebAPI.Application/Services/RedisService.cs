@@ -1,13 +1,14 @@
 ﻿using WebAPI.Domain.ExtensionMethods;
 using Microsoft.Extensions.Caching.Distributed;
+using WebAPI.Application.Generic;
 
 namespace WebAPI.Application.Services;
 
-public sealed class RedisService : IRedisService
+public sealed class RedisService : GenericService, IRedisService
 {
     private readonly IDistributedCache _cache;
 
-    public RedisService(IDistributedCache cache)
+    public RedisService(IDistributedCache cache, INotificationMessageService notificationMessageService) : base(notificationMessageService)
     {
         _cache = cache;
     }

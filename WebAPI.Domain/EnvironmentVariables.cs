@@ -39,6 +39,7 @@ public static class EnvironmentVariablesExtension
             { configuration.GetSection($"ConnectionStrings:DefaultConnection").Value, GetDatabaseFromEnvVar(configuration.GetSection($"ConnectionStrings:DefaultConnection").Value).ToString() },
             { configuration.GetSection($"ConnectionStrings:DefaultConnectionLogs").Value, GetDatabaseFromEnvVar(configuration.GetSection($"ConnectionStrings:DefaultConnectionLogs").Value).ToString() },
             { configuration.GetSection($"ConnectionStrings:DefaultConnectionToDocker").Value, GetDatabaseFromEnvVar(configuration.GetSection($"ConnectionStrings:DefaultConnectionToDocker").Value).ToString() },
+            { configuration.GetSection($"ConnectionStrings:DefaultConnectionToMongoDb").Value, GetDatabaseFromEnvVar(configuration.GetSection($"ConnectionStrings:DefaultConnectionToMongoDb").Value).ToString() },
         };
 
         return envVariables;
