@@ -51,32 +51,27 @@ public class FirebaseService : GenericService, IFirebaseService
         dataStream.Write(byteArray, 0, byteArray.Length);
         dataStream.Close();
 
-        try
+        WebResponse Response = Request.GetResponse();
+        HttpStatusCode ResponseCode = ((HttpWebResponse)Response).StatusCode;
+
+        if (ResponseCode == HttpStatusCode.OK)
         {
-            WebResponse Response = Request.GetResponse();
-            HttpStatusCode ResponseCode = ((HttpWebResponse)Response).StatusCode;
-
-            if (ResponseCode.Equals(HttpStatusCode.Unauthorized) || ResponseCode.Equals(HttpStatusCode.Forbidden))
-            {
-                Notify($"{FixConstants.EXCEPTION_REQUEST_API} {FixConstantsUrl.URL_TO_GET_FIREBASE} \n " +
-                       $"Erro: {ResponseCode.ToString()}");
-            }
-            else if (!ResponseCode.Equals(HttpStatusCode.OK))
-            {
-                Notify($"{FixConstants.EXCEPTION_REQUEST_API} {FixConstantsUrl.URL_TO_GET_FIREBASE} \n " +
-                       $"Erro: {ResponseCode.ToString()}");
-            }
-
             StreamReader Reader = new StreamReader(Response.GetResponseStream());
             string responseLine = Reader.ReadToEnd();
             Reader.Close();
         }
-        catch (Exception ex)
+        else if (ResponseCode.Equals(HttpStatusCode.Unauthorized) || ResponseCode.Equals(HttpStatusCode.Forbidden))
         {
             Notify($"{FixConstants.EXCEPTION_REQUEST_API} {FixConstantsUrl.URL_TO_GET_FIREBASE} \n " +
-                      $"Erro: {ex.Message}");
+                   $"Erro: {ResponseCode.ToString()}");
+        }
+        else if (!ResponseCode.Equals(HttpStatusCode.OK))
+        {
+            Notify($"{FixConstants.EXCEPTION_REQUEST_API} {FixConstantsUrl.URL_TO_GET_FIREBASE} \n " +
+                   $"Erro: {ResponseCode.ToString()}");
         }
     }
+
 
     public async Task SendPushNotification_V2(string deviceClientToken, string message)
     {
@@ -97,29 +92,20 @@ public class FirebaseService : GenericService, IFirebaseService
 
         var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
-        try
+        var client = _httpClientFactory.CreateClient("Signed");
+        client.DefaultRequestHeaders.Accept.Clear();
+        client.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer " + "SERVER_KEY");
+        client.Timeout = TimeSpan.FromMinutes(1);
+        var response = await client.PostAsync(FixConstantsUrl.URL_TO_GET_FIREBASE, content);
+
+        if (response.IsSuccessStatusCode)
         {
-            var client = _httpClientFactory.CreateClient("Signed");
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer " + "SERVER_KEY");
-            client.Timeout = TimeSpan.FromMinutes(1);
-            var response = await client.PostAsync(FixConstantsUrl.URL_TO_GET_FIREBASE, content);
-            if (response.IsSuccessStatusCode)
-            {
-                requestDataDto.Data = await response.Content.ReadAsStringAsync();
-                requestDataDto.IsSuccess = true;
-            }
-            else
-            {
-                Notify($"{FixConstants.EXCEPTION_REQUEST_API} {FixConstantsUrl.URL_TO_GET_FIREBASE} \n ");
-            }
+            requestDataDto.Data = await response.Content.ReadAsStringAsync();
+            requestDataDto.IsSuccess = true;
         }
-        catch (Exception ex)
+        else
         {
-            {
-                Notify($"{FixConstants.EXCEPTION_REQUEST_API} {FixConstantsUrl.URL_TO_GET_FIREBASE} \n " +
-                       $"Erro: {ex.Message}");
-            }
+            Notify($"{FixConstants.EXCEPTION_REQUEST_API} {FixConstantsUrl.URL_TO_GET_FIREBASE} \n ");
         }
     }
 }

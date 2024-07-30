@@ -7,7 +7,7 @@ namespace WebAPI.Application.Services
 {
     public class LogService : GenericService, ILogService
     {
-        public readonly ILogRepository _logRepository;
+        private readonly ILogRepository _logRepository;
 
         public LogService(ILogRepository logRepository, INotificationMessageService notificationMessageService) : base(notificationMessageService)
         {

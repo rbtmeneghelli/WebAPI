@@ -1,8 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 using WebAPI.Application.Generic;
 using WebAPI.Application.InterfacesService;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace WebAPI.Application.Services;
 

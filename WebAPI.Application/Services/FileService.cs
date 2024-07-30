@@ -12,13 +12,9 @@ using LicenseContext = OfficeOpenXml.LicenseContext;
 using Microsoft.AspNetCore.Http;
 using NPOI.HSSF.UserModel;
 using CsvHelper;
-using NPOI.SS.Formula.Functions;
-using Org.BouncyCastle.Utilities;
 using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.Serialization;
-using Microsoft.Identity.Client;
-using static NPOI.HSSF.Util.HSSFColor;
 
 namespace WebAPI.Application.Services;
 
