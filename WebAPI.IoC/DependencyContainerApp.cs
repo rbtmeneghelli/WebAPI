@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Runtime.CompilerServices;
 using WebAPI.Domain;
 using WebAPI.Domain.Models;
+using WebAPI.Infra.Structure.IoC.Middleware.ExceptionHandler;
 
 namespace WebAPI.Infra.Structure.IoC;
 
@@ -63,11 +63,7 @@ public static class DependencyContainerApp
         app.UseKissLogConfig(configuration);
         //app.UseRateLimiter(); // Para Utilizar o Ratelimit de Requisição
 
-        // Configuração de Exception Handler Customizado
-        //app.UseExceptionHandler(new ExceptionHandlerOptions
-        //{
-        //    ExceptionHandler = new CustomExceptionHandler().InvokeAsync
-        //});
+        app.UseExceptionHandler();
 
         app.UseEndpoints(endpoints =>
         {

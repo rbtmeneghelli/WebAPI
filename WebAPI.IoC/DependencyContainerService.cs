@@ -204,7 +204,8 @@ public static class DependencyContainerService
         .AddScoped<INfService, NfService>()
         .AddScoped<IFirebaseService, FirebaseService>()
         .AddScoped<IEmailFactory, EmailFactory>()
-        .AddScoped(typeof(IMongoDbService<>), typeof(MongoDbService<>));
+        .AddScoped(typeof(IMongoDbService<>), typeof(MongoDbService<>))
+        .AddTransient<IProblemDetailsFactory, ProblemDetailsFactory>();
     }
 
     public static void RegisterMapperConfig(this IServiceCollection services)
@@ -526,7 +527,7 @@ public static class DependencyContainerService
     public static void RegisterSeriLog(this IServiceCollection services, IConfiguration configuration)
     {
         var connectionStringLogs = "Server=.\\SQLEXPRESS;Database=DefaultAPI_Logs;User Id=sa;Password=#web_$notes&2024!;trustservercertificate=true;";
-        
+
         //var connectionStringLogs = EnvironmentVariablesExtension.GetDatabaseFromEnvVar(configuration.GetConnectionString("DefaultConnectionLogs"));
 
         Serilog.Debugging.SelfLog.Enable(msg => Console.WriteLine(msg));

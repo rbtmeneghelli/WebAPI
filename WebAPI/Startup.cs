@@ -1,6 +1,7 @@
 ﻿using WebAPI.Configuration;
 using WebAPI.Infra.Structure.IoC;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using WebAPI.Infra.Structure.IoC.Middleware.ExceptionHandler;
 
 public class Startup
 {
@@ -56,6 +57,9 @@ public class Startup
             options.SuppressModelStateInvalidFilter = true;
         });
         services.RegisterEnvironmentVariables(_configuration);
+
+        services.AddExceptionHandler<GlobalExceptionHandler>();
+        services.AddProblemDetails();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider, IConfiguration configuration)
