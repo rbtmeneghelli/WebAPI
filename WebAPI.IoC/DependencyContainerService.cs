@@ -207,9 +207,9 @@ public static class DependencyContainerService
         .AddScoped<INfService, NfService>()
         .AddScoped<IFirebaseService, FirebaseService>()
         .AddScoped<IEmailFactory, EmailFactory>()
-        .AddScoped(typeof(IMongoDbService<>), typeof(MongoDbService<>))
         .AddTransient<IProblemDetailsFactory, ProblemDetailsFactory>()
-        .AddTransient(typeof(IRabbitMQService<>), typeof(IRabbitMQService<>));
+        .AddScoped(typeof(IMongoDbService<>), typeof(MongoDbService<>))
+        .AddTransient(typeof(IRabbitMQService<>), typeof(RabbitMQService<>));
     }
 
     public static void RegisterMapperConfig(this IServiceCollection services)
