@@ -1,27 +1,27 @@
-﻿using WebAPI.Application.BackgroundServices.RabbitMQ.Generic;
-using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.Hosting;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using System.Threading;
-using FixConstants = WebAPI.Domain.FixConstants;
 using WebAPI.Domain.ExtensionMethods;
+using WebAPI.Application.BackgroundMessageServices.RabbitMQ;
 
 namespace WebAPI.Application.BackgroundServices.RabbitMQ.Consumers;
 
 public sealed class ExcelBackGroundService : BackgroundService
 {
+    private readonly IRabbitMQService<Report> _rabbitMQService;
     private readonly IServiceProvider _serviceProvider;
     private const string QUEUE_NAME = "QueueExcelFile";
     private const bool QUEUE_IS_DURABLE = false;
 
-    public ExcelBackGroundService(IServiceProvider serviceProvider)
+    public ExcelBackGroundService(IServiceProvider serviceProvider, IRabbitMQService<Report> rabbitMQService)
     {
         _serviceProvider = serviceProvider;
+        _rabbitMQService = rabbitMQService;
     }
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        QueueExcelFileConsumer queueExcelFileConsumer = new QueueExcelFileConsumer();
+        QueueExcelFileConsumer queueExcelFileConsumer = new QueueExcelFileConsumer(_rabbitMQService);
         var rabbitMQConsumer = new RabbitMQConsumer(_serviceProvider, QUEUE_NAME, QUEUE_IS_DURABLE);
         queueExcelFileConsumer.RunQueueExcelFileConsumer(rabbitMQConsumer).GetAwaiter().GetResult();
         return Task.CompletedTask;
@@ -30,11 +30,11 @@ public sealed class ExcelBackGroundService : BackgroundService
 
 public sealed class QueueExcelFileConsumer
 {
-    private readonly RabbitMQService<Report> _rabbitMQService;
+    private readonly IRabbitMQService<Report> _rabbitMQService;
 
-    public QueueExcelFileConsumer()
+    public QueueExcelFileConsumer(IRabbitMQService<Report> rabbitMQService)
     {
-        _rabbitMQService = new RabbitMQService<Report>();
+        _rabbitMQService = rabbitMQService;
     }
 
     /// <summary>

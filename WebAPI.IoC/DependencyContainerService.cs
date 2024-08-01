@@ -43,6 +43,9 @@ using WebAPI.Application.Generic;
 using WebAPI.Application.FactoryInterfaces;
 using WebAPI.Application.Factory;
 using WebAPI.Application.InterfacesService;
+using WebAPI.Application.BackgroundMessageServices.RabbitMQ;
+using Newtonsoft.Json;
+using WebAPI.Domain.Models.Settings;
 
 namespace WebAPI.Infra.Structure.IoC;
 
@@ -205,7 +208,8 @@ public static class DependencyContainerService
         .AddScoped<IFirebaseService, FirebaseService>()
         .AddScoped<IEmailFactory, EmailFactory>()
         .AddScoped(typeof(IMongoDbService<>), typeof(MongoDbService<>))
-        .AddTransient<IProblemDetailsFactory, ProblemDetailsFactory>();
+        .AddTransient<IProblemDetailsFactory, ProblemDetailsFactory>()
+        .AddTransient(typeof(IRabbitMQService<>), typeof(IRabbitMQService<>));
     }
 
     public static void RegisterMapperConfig(this IServiceCollection services)
@@ -228,9 +232,11 @@ public static class DependencyContainerService
         configuration.Bind("CacheSettings", cacheConfiguration);
         services.AddSingleton(cacheConfiguration);
 
-        var connectionStringSettings = new ConnectionStringSettings();
+        var connectionStringSettings = new ConectionStringSettings();
         configuration.Bind("ConnectionStrings", connectionStringSettings);
         services.AddSingleton(connectionStringSettings);
+
+
     }
 
     public static void RegisterPolicy(this IServiceCollection services)
@@ -588,6 +594,9 @@ public static class DependencyContainerService
             opt.ConnectionStringSettings.DefaultConnection = data["WebAPI_Sql"];
             opt.ConnectionStringSettings.DefaultConnectionLogs = data["WebAPI_Logs"];
             opt.ConnectionStringSettings.DefaultConnectionToDocker = data["WebAPI_Docker"];
+            opt.RabbitMQSettings = JsonConvert.DeserializeObject<RabbitMQSettings>(data["WebAPI_RabbitMQ"]);
+            opt.KafkaSettings = JsonConvert.DeserializeObject<KafkaSettings>(data["WebAPI_Kafka"]);
+            opt.ServiceBusSettings = JsonConvert.DeserializeObject<ServiceBusSettings>(data["WebAPI_ServiceBus"]);
             #endregion
         });
 

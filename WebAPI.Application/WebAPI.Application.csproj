@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.18.1" />
     <PackageReference Include="Azure.Storage.Files.Shares" Version="12.17.1" />
     <PackageReference Include="Confluent.Kafka" Version="2.3.0" />
     <PackageReference Include="CsvHelper" Version="31.0.4" />
@@ -32,6 +33,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WebAPI.Domain\WebAPI.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="BackgroundMessageServices\Kafka\Consumers\" />
+    <Folder Include="BackgroundMessageServices\Kafka\Publishers\" />
+    <Folder Include="BackgroundMessageServices\ServiceBus\Consumers\" />
+    <Folder Include="BackgroundMessageServices\ServiceBus\Publishers\" />
   </ItemGroup>
 
 </Project>

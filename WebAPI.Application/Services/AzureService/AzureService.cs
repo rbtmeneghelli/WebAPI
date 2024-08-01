@@ -4,7 +4,7 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.File;
 
-namespace WebAPI.Application.AzureService;
+namespace WebAPI.Application.Services.AzureService;
 
 public static class AzureService
 {

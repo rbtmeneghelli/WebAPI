@@ -1,34 +1,33 @@
 ﻿using Confluent.Kafka;
-using WebAPI.Application.Interfaces.BusMessageService;
 using WebAPI.Domain.ExtensionMethods;
 
-namespace WebAPI.Application.Services.BusMessageService;
-
+namespace WebAPI.Application.BackgroundMessageServices.Kafka;
 
 public sealed class KafkaService<TEntity> : IKafkaService<TEntity> where TEntity : class
 {
-    private readonly string _BootstrapServers;
-    private readonly string _TopicName;
-    private readonly string _ConsumerGroup;
+    private EnvironmentVariables _EnvironmentVariables { get; set; }
 
-    public KafkaService()
+    public KafkaService(EnvironmentVariables environmentVariables)
     {
-        _BootstrapServers = "localhost:9092"; //Endereço do broker Kafka
-        _TopicName = "nome_do_topico"; //Nome do tópico Kafka
-        _ConsumerGroup = "nome_do_grupo"; // Nome do grupo de consumidores
+        _EnvironmentVariables = environmentVariables;
     }
 
     private ProducerConfig GetProducerConfig()
     {
-        return new ProducerConfig { BootstrapServers = _BootstrapServers };
+        return new ProducerConfig { BootstrapServers = _EnvironmentVariables.KafkaSettings.BootstrapServers };
     }
 
-    private ConsumerConfig GetConsumerConfig()
+    private ConsumerConfig GetConsumerConfig(string consumerGroup)
     {
-        return new ConsumerConfig { BootstrapServers = _BootstrapServers, GroupId = _ConsumerGroup, AutoOffsetReset = AutoOffsetReset.Earliest };
+        return new ConsumerConfig
+        {
+            BootstrapServers = _EnvironmentVariables.KafkaSettings.BootstrapServers,
+            GroupId = consumerGroup,
+            AutoOffsetReset = AutoOffsetReset.Earliest
+        };
     }
 
-    public async Task SendMessageToQueue(TEntity entity)
+    public async Task SendMessageToQueue(string topicName, TEntity entity)
     {
         var producerConfig = GetProducerConfig();
         using var producer = new ProducerBuilder<Null, string>(producerConfig).Build();
@@ -42,7 +41,7 @@ public sealed class KafkaService<TEntity> : IKafkaService<TEntity> where TEntity
                 Value = entity.SerializeObject()
             };
 
-            var deliveryReport = await producer.ProduceAsync(_TopicName, message);
+            var deliveryReport = await producer.ProduceAsync(topicName, message);
 
             if (deliveryReport.Status == PersistenceStatus.Persisted)
             {
@@ -59,13 +58,13 @@ public sealed class KafkaService<TEntity> : IKafkaService<TEntity> where TEntity
         }
     }
 
-    public async Task ReceiveMessageFromQueue()
+    public async Task ReceiveMessageFromQueue(string topicName, string consumerGroup)
     {
-        var consumerConfig = GetConsumerConfig();
+        var consumerConfig = GetConsumerConfig(consumerGroup);
 
         using var consumer = new ConsumerBuilder<Ignore, string>(consumerConfig).Build();
 
-        consumer.Subscribe(_TopicName);
+        consumer.Subscribe(topicName);
 
         try
         {

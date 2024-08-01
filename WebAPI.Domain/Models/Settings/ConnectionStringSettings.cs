@@ -1,6 +1,6 @@
 ﻿namespace WebAPI.Domain.Models;
 
-public sealed record ConnectionStringSettings
+public sealed record ConectionStringSettings
 {
     public string DefaultConnection { get; set; }
     public string DefaultConnectionLogs { get; set; }

@@ -1,16 +1,23 @@
 ﻿using Microsoft.Extensions.Configuration;
 using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Domain.Models;
+using WebAPI.Domain.Models.Settings;
 
 namespace WebAPI.Domain;
 
 public class EnvironmentVariables
 {
-    public ConnectionStringSettings ConnectionStringSettings { get; set; }
+    public ConectionStringSettings ConnectionStringSettings { get; set; }
+    public RabbitMQSettings RabbitMQSettings { get; set; }
+    public KafkaSettings KafkaSettings { get; set; }    
+    public ServiceBusSettings ServiceBusSettings { get; set; }
 
     public EnvironmentVariables()
     {
-        ConnectionStringSettings = new ConnectionStringSettings();
+        ConnectionStringSettings = new ConectionStringSettings();
+        RabbitMQSettings = new RabbitMQSettings();
+        KafkaSettings = new KafkaSettings();
+        ServiceBusSettings = new ServiceBusSettings();
     }
 
     public static bool LoadEnvironmentVariables(IConfiguration configuration)
@@ -40,6 +47,9 @@ public static class EnvironmentVariablesExtension
             { configuration.GetSection($"ConnectionStrings:DefaultConnectionLogs").Value, GetDatabaseFromEnvVar(configuration.GetSection($"ConnectionStrings:DefaultConnectionLogs").Value).ToString() },
             { configuration.GetSection($"ConnectionStrings:DefaultConnectionToDocker").Value, GetDatabaseFromEnvVar(configuration.GetSection($"ConnectionStrings:DefaultConnectionToDocker").Value).ToString() },
             { configuration.GetSection($"ConnectionStrings:DefaultConnectionToMongoDb").Value, GetDatabaseFromEnvVar(configuration.GetSection($"ConnectionStrings:DefaultConnectionToMongoDb").Value).ToString() },
+            { configuration.GetSection($"RabbitMQSettings:Data").Value, GetEnvironmentVariableToObject<RabbitMQSettings>(configuration.GetSection($"RabbitMQSettings:Data").Value).ToString() },
+            { configuration.GetSection($"KafkaSettings:Data").Value, GetEnvironmentVariable(configuration.GetSection($"KafkaSettings:Data").Value).ToString() },
+            { configuration.GetSection($"ServiceBusSettings:Data").Value, GetEnvironmentVariable(configuration.GetSection($"ServiceBusSettings:Data").Value).ToString() },
         };
 
         return envVariables;
@@ -50,15 +60,20 @@ public static class EnvironmentVariablesExtension
         return Environment.GetEnvironmentVariable(varName).Replace("\\\\", "\\") ?? StringExtensionMethod.GetEmptyString();
     }
 
-    public static TSource GetEnvironmentVariableToObject<TSource>(IConfiguration configuration, string varName)
+    public static string GetEnvironmentVariable(string varName)
     {
-        var data = Environment.GetEnvironmentVariable(configuration[varName]) ?? StringExtensionMethod.GetEmptyString();
+        return Environment.GetEnvironmentVariable(varName) ?? StringExtensionMethod.GetEmptyString();
+    }
+
+    public static TSource GetEnvironmentVariableToObject<TSource>(string varName)
+    {
+        var data = Environment.GetEnvironmentVariable(varName) ?? StringExtensionMethod.GetEmptyString();
         return !string.IsNullOrWhiteSpace(data) ? data.DeserializeObject<TSource>() : default;
     }
 
-    public static string[] GetEnvironmentVariableToStringArray<TSource>(IConfiguration configuration, string varName)
+    public static string[] GetEnvironmentVariableToStringArray<TSource>(string varName)
     {
-        var data = Environment.GetEnvironmentVariable(configuration[varName]) ?? StringExtensionMethod.GetEmptyString();
+        var data = Environment.GetEnvironmentVariable(varName) ?? StringExtensionMethod.GetEmptyString();
         return !string.IsNullOrWhiteSpace(data) ? data.Split(',') : default;
     }
 }

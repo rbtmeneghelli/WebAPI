@@ -1,16 +1,16 @@
-﻿using WebAPI.Application.BackgroundServices.RabbitMQ.Generic;
-using RabbitMQ.Client;
+﻿using RabbitMQ.Client;
 using System.Text.Json;
+using WebAPI.Application.BackgroundMessageServices.RabbitMQ;
 
 namespace WebAPI.Application.BackgroundServices.RabbitMQ.Publishers;
 
 public sealed class QueueExcelFilePublish
 {
-    private readonly RabbitMQService<Report> _rabbitMQService;
+    private readonly IRabbitMQService<Report> _rabbitMQService;
 
-    public QueueExcelFilePublish()
+    public QueueExcelFilePublish(IRabbitMQService<Report> rabbitMQService)
     {
-        _rabbitMQService = new RabbitMQService<Report>();
+        _rabbitMQService = rabbitMQService;
     }
 
     public async Task RunQueueExcelFilePublish<T>(string QueueName, T ObjectValue, bool QueueIsDurable)

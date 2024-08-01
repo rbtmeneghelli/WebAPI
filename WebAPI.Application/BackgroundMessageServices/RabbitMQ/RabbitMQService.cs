@@ -1,30 +1,30 @@
-﻿using WebAPI.Application.Interfaces.BusMessageService;
-using WebAPI.Domain.ExtensionMethods;
+﻿using WebAPI.Domain.ExtensionMethods;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using System.Threading;
-using Constants = WebAPI.Domain.FixConstants;
 
-namespace WebAPI.Application.BackgroundServices.RabbitMQ.Generic;
+namespace WebAPI.Application.BackgroundMessageServices.RabbitMQ;
 
-public sealed class RabbitMQService<T> : IRabbitMQService<T> where T : class
+public sealed class RabbitMQService<TEntity> : IRabbitMQService<TEntity> where TEntity : class
 {
-    public RabbitMQService()
+    public EnvironmentVariables _EnvironmentVariables { get; set; }
+
+    public RabbitMQService(EnvironmentVariables environmentVariables)
     {
+        _EnvironmentVariables = environmentVariables;
     }
 
-    public ConnectionFactory ConfigConnectionFactory(string HostName = "localhost", string UserName = "guest", string Password = "guest")
+    public ConnectionFactory ConfigConnectionFactory()
     {
         return new ConnectionFactory()
         {
-            HostName = HostName,
-            UserName = UserName,
-            Password = Password,
+            HostName = _EnvironmentVariables.RabbitMQSettings.HostName,
+            UserName = _EnvironmentVariables.RabbitMQSettings.UserName,
+            Password = _EnvironmentVariables.RabbitMQSettings.Password,
             DispatchConsumersAsync = true
         };
     }
 
-    public async Task SendMessageToWorkQueue(string QueueName, T ObjectValue)
+    public async Task SendMessageToWorkQueue(string QueueName, TEntity ObjectValue)
     {
         var factory = ConfigConnectionFactory();
         using var connection = factory.CreateConnection();
@@ -94,7 +94,7 @@ public sealed class RabbitMQService<T> : IRabbitMQService<T> where T : class
     /// <param name="QueueName"></param>
     /// <param name="ObjectValue"></param>
     /// <returns></returns>
-    public async Task SendMessageToQueueInSameTime(string ExchangeName, T ObjectValue)
+    public async Task SendMessageToQueueInSameTime(string ExchangeName, TEntity ObjectValue)
     {
         var factory = ConfigConnectionFactory();
         using (var connection = factory.CreateConnection())
@@ -158,7 +158,7 @@ public sealed class RabbitMQService<T> : IRabbitMQService<T> where T : class
     /// <param name="RoutingKey"></param>
     /// <param name="ObjectValue"></param>
     /// <returns></returns>
-    public async Task SendMessageToQueueRouting(string ExchangeName, string RoutingKey, T ObjectValue)
+    public async Task SendMessageToQueueRouting(string ExchangeName, string RoutingKey, TEntity ObjectValue)
     {
         var factory = ConfigConnectionFactory();
         using (var connection = factory.CreateConnection())
