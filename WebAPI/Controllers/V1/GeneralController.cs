@@ -9,6 +9,7 @@ using System.Reflection;
 using SkiaSharp;
 using WebAPI.Domain.Validations;
 using ZXing;
+using WebAPI.IoC.Middleware.Security;
 
 namespace WebAPI.V1.Controllers;
 
@@ -412,6 +413,7 @@ public sealed class GeneralController : GenericController
     }
 
     [HttpGet("testSendEmail")]
+    [SecurityFilter(1,1)]
     public async Task<IActionResult> TestSendEmail()
     {
         await _emailService.CustomSendEmailAsync(EnumEmail.Welcome, "teste@gmail.com", "XPTO");
