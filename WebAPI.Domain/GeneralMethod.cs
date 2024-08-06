@@ -827,13 +827,13 @@ public sealed class GeneralMethod
 
     public (string Type, string Extension) GetMemoryStream(EnumMemoryStreamFile key)
     {
-        Dictionary<EnumMemoryStreamFile, (string,string)> dictionary = new Dictionary<EnumMemoryStreamFile, (string, string)>
+        Dictionary<EnumMemoryStreamFile, (string, string)> dictionary = new Dictionary<EnumMemoryStreamFile, (string, string)>
         {
             { EnumMemoryStreamFile.XLSX, ("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "xlsx") },
             { EnumMemoryStreamFile.PDF, ("application/pdf", "pdf") },
             { EnumMemoryStreamFile.DOCX, ("application/octet-stream", "docx") },
             { EnumMemoryStreamFile.ZIP, ("application/zip", "zip") },
-            { EnumMemoryStreamFile.PNG, ("image/png", "png") }     
+            { EnumMemoryStreamFile.PNG, ("image/png", "png") }
         };
 
         return dictionary[key];
@@ -1439,6 +1439,64 @@ public sealed class GeneralMethod
         }
 
         return null;
+    }
+
+    public bool ValidateCNH(string cnhDigits)
+    {
+        bool isValid = false;
+
+        if (cnhDigits.Length == 11 && cnhDigits != new string('1', 11))
+        {
+            var dsc = 0;
+            var v = 0;
+            for (int i = 0, j = 9; i < 9; i++, j--)
+            {
+                v += (Convert.ToInt32(cnhDigits[i].ToString()) * j);
+            }
+
+            var vl1 = v % 11;
+            if (vl1 >= 10)
+            {
+                vl1 = 0;
+                dsc = 2;
+            }
+
+            v = 0;
+            for (int i = 0, j = 1; i < 9; ++i, ++j)
+            {
+                v += (Convert.ToInt32(cnhDigits[i].ToString()) * j);
+            }
+
+            var x = v % 11;
+            var vl2 = (x >= 10) ? 0 : x - dsc;
+
+            isValid = vl1.ToString() + vl2.ToString() == cnhDigits.Substring(cnhDigits.Length - 2, 2);
+        }
+
+        return isValid;
+    }
+
+    public int CalculateAge(DateTime birthDate)
+    {
+        DateTime currentDate = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
+        int age = currentDate.Year - birthDate.Year;
+
+        if (currentDate.DayOfYear < birthDate.DayOfYear)
+        {
+            age = age - 1;
+        }
+
+        return age;
+    }
+
+    public bool ValidateFullName(string fullName)
+    {
+        var arrName = fullName.ApplyTrim().Split(' ');
+
+        if (string.IsNullOrEmpty(fullName) || arrName.Length == 1 || arrName.Where(x => x.Replace(".", string.Empty).Length == 1).Count() > 0)
+            return false;
+
+        return true;
     }
 }
 

@@ -11,6 +11,7 @@ public class EnvironmentVariables
     public RabbitMQSettings RabbitMQSettings { get; set; }
     public KafkaSettings KafkaSettings { get; set; }    
     public ServiceBusSettings ServiceBusSettings { get; set; }
+    public SendGridSettings SendGridSettings { get; set; }
 
     public EnvironmentVariables()
     {
@@ -18,6 +19,7 @@ public class EnvironmentVariables
         RabbitMQSettings = new RabbitMQSettings();
         KafkaSettings = new KafkaSettings();
         ServiceBusSettings = new ServiceBusSettings();
+        SendGridSettings = new SendGridSettings();
     }
 
     public static bool LoadEnvironmentVariables(IConfiguration configuration)
@@ -50,6 +52,7 @@ public static class EnvironmentVariablesExtension
             { configuration.GetSection($"RabbitMQSettings:Data").Value, GetEnvironmentVariableToObject<RabbitMQSettings>(configuration.GetSection($"RabbitMQSettings:Data").Value).ToString() },
             { configuration.GetSection($"KafkaSettings:Data").Value, GetEnvironmentVariable(configuration.GetSection($"KafkaSettings:Data").Value).ToString() },
             { configuration.GetSection($"ServiceBusSettings:Data").Value, GetEnvironmentVariable(configuration.GetSection($"ServiceBusSettings:Data").Value).ToString() },
+            { configuration.GetSection($"SendGridSettings:Data").Value, GetEnvironmentVariable(configuration.GetSection($"SendGridSettings:Data").Value).ToString() },
         };
 
         return envVariables;

@@ -209,7 +209,8 @@ public static class DependencyContainerService
         .AddScoped<IEmailFactory, EmailFactory>()
         .AddTransient<IProblemDetailsFactory, ProblemDetailsFactory>()
         .AddScoped(typeof(IMongoDbService<>), typeof(MongoDbService<>))
-        .AddTransient(typeof(IRabbitMQService<>), typeof(RabbitMQService<>));
+        .AddTransient(typeof(IRabbitMQService<>), typeof(RabbitMQService<>))
+        .AddScoped<ISendGridService, SendGridService>();
     }
 
     public static void RegisterMapperConfig(this IServiceCollection services)
@@ -597,6 +598,7 @@ public static class DependencyContainerService
             opt.RabbitMQSettings = JsonConvert.DeserializeObject<RabbitMQSettings>(data["WebAPI_RabbitMQ"]);
             opt.KafkaSettings = JsonConvert.DeserializeObject<KafkaSettings>(data["WebAPI_Kafka"]);
             opt.ServiceBusSettings = JsonConvert.DeserializeObject<ServiceBusSettings>(data["WebAPI_ServiceBus"]);
+            opt.SendGridSettings = JsonConvert.DeserializeObject<SendGridSettings>(data["WebAPI_SendGrid"]);
             #endregion
         });
 
