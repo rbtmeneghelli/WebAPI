@@ -165,7 +165,7 @@ public class GeneralService : GenericService, IGeneralService
     public async Task<MemoryStream> Export2ZipAsync(string directory, EnumMemoryStreamFile typeFile = EnumMemoryStreamFile.PDF)
     {
         List<string> archives = new List<string>();
-        var memoryStreamResult = _generalMethod.GetMemoryStream(typeFile);
+        var memoryStreamResult = _generalMethod.GetMemoryStreamType(typeFile);
         int count = 0;
 
         foreach (string arquivo in Directory.GetFiles(directory, $"*.{memoryStreamResult.Type}"))

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using WebAPI.Domain.Entities.ControlPanel;
+using MongoDB.Driver.Linq;
 
 namespace WebAPI.Application.Interfaces;
 
@@ -68,7 +69,7 @@ public sealed class ReadPropertyValueGenericService<TSource, TDestination> : IRe
 
                 if (GuardClauses.IsNullOrWhiteSpace(data) == false)
                 {
-                    string base64Decoded = extensionMethods.EncodingString(spCharacter);
+                    string base64Decoded = StringExtensionMethod.EncodingString(spCharacter);
                     if (data.IndexOf(base64Decoded) != -1)
                     {
                         property.SetValue(obj, Regex.Replace(data.ApplyTrim(), base64Decoded, spCharacter, RegexOptions.IgnoreCase));

@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Globalization;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace WebAPI.Domain.ExtensionMethods;
 
@@ -114,4 +115,75 @@ public static class StringExtensionMethod
     public static string TransformBoolToString(this bool varBoolean) => varBoolean ? "1" : "0";
 
     public static bool TransformStringToBool(this string varString) => bool.Parse(varString);
+
+    public static string GetOnlyNumbers(this string text)
+    {
+        if (GuardClauses.IsNullOrWhiteSpace(text))
+            return GetEmptyString();
+
+        var numbers = text.Where(char.IsDigit).ToArray();
+        if (GuardClauses.ObjectIsNull(numbers) || numbers.Length == 0)
+            return GetEmptyString();
+
+        return new string(numbers);
+    }
+    public static string TransformStringToDate(this string value)
+    {
+        return DateTime.TryParse(value, out var date) ? date.ToString("yyyy-MM-dd") : value;
+    }
+    public static string RemoveSpecialCharacters(this string text)
+    {
+        string[] specialCharacters = { "=", ":", "%", "/" };
+        string result = string.Empty;
+        string partText = string.Empty;
+        if (GuardClauses.IsNullOrWhiteSpace(text) == false)
+        {
+            for (int i = 0; i < text.Length; i++)
+            {
+                partText = text.ApplySubString(i, 1);
+                if (!specialCharacters.Contains(partText))
+                    result += partText;
+            }
+            return result;
+        }
+        return text;
+    }
+    public static string StripHTML(this string input)
+    {
+        return Regex.Replace(input, "<.*?>", String.Empty);
+    }
+    public static string RemoveQuotationMarks(this string value)
+    {
+        if (GuardClauses.IsNullOrWhiteSpace(value) == false && value.EndsWith("\'") || value.EndsWith("\""))
+            return value.ApplyReplace("\'", "").ApplyReplace("\"", "").ApplyTrim();
+        return value;
+    }
+    public static string FormatCnpj(this string texto)
+    {
+        return Convert.ToUInt64(texto).ToString(@"00\.000\.000\/0000\-00");
+    }
+    public static string FormatCpf(this string texto)
+    {
+        return Convert.ToUInt64(texto).ToString(@"000\.000\.000\-00");
+    }
+    public static string FormatStringBase64ToString(this string text)
+    {
+        return Encoding.UTF8.GetString(Convert.FromBase64String(text));
+    }
+
+    #region Metodo para pegar o base64 do front (btoa ou atob) e faz o processo de conversão
+
+    public static string EncodingString(this string toEncode)
+    {
+        byte[] bytes = Encoding.GetEncoding("UTF-8").GetBytes(toEncode);
+        return Convert.ToBase64String(bytes);
+    }
+
+    public static string DecodingString(this string toDecode)
+    {
+        byte[] bytes = Convert.FromBase64String(toDecode);
+        return ASCIIEncoding.ASCII.GetString(bytes);
+    }
+
+    #endregion
 }

@@ -40,6 +40,35 @@ public sealed class GeneralMethod
 
     #endregion
 
+    #region Private Methods
+
+    private int GetRandomNumber(int value, int? minValue = null)
+    {
+        if (minValue.HasValue)
+            return Random.Shared.Next(minValue.GetValueOrDefault(0), value);
+
+        return Random.Shared.Next(value);
+    }
+
+    private XmlDocument RemoveXmlDeclaration(XmlDocument doc)
+    {
+        var declarations = doc.ChildNodes.OfType<XmlNode>().Where(x => x.NodeType == XmlNodeType.XmlDeclaration).ToList();
+        declarations.ForEach(x => doc.RemoveChild(x));
+        return doc;
+    }
+
+    private DropDownList ParseRow(string row)
+    {
+        var columns = row.Split(',');
+        return new DropDownList()
+        {
+            Id = int.Parse(columns[0]),
+            Description = columns[1]
+        };
+    }
+
+    #endregion
+
     public string RemoveMimeType(string base64)
     {
         var keyValue = "base64,";
@@ -93,41 +122,6 @@ public sealed class GeneralMethod
         }
     }
 
-    public string ConvertDateToString(string value)
-    {
-        return DateTime.TryParse(value, out var date) ? date.ToString("yyyy-MM-dd") : value;
-    }
-
-    public string GetOnlyNumbers(string text)
-    {
-        if (GuardClauses.IsNullOrWhiteSpace(text))
-            return StringExtensionMethod.GetEmptyString();
-
-        var numbers = text.Where(char.IsDigit).ToArray();
-        if (GuardClauses.ObjectIsNull(numbers) || numbers.Length == 0)
-            return StringExtensionMethod.GetEmptyString();
-
-        return new string(numbers);
-    }
-
-    public string RemoveSpecialCharacters(string text)
-    {
-        string[] specialCharacters = { "=", ":", "%", "/" };
-        string result = StringExtensionMethod.GetEmptyString();
-        string partText = StringExtensionMethod.GetEmptyString();
-        if (GuardClauses.IsNullOrWhiteSpace(text) == false)
-        {
-            for (int i = 0; i < text.Length; i++)
-            {
-                partText = text.ApplySubString(i, 1);
-                if (!specialCharacters.Contains(partText))
-                    result += partText;
-            }
-            return result;
-        }
-        return text;
-    }
-
     public string RemoveHtmlTags(string value)
     {
         var tagList = Regex.Matches(value, @"(?<=</?)([^ >/]+)")
@@ -156,18 +150,6 @@ public sealed class GeneralMethod
         }
 
         return newText;
-    }
-
-    public string StripHTML(string input)
-    {
-        return Regex.Replace(input, "<.*?>", StringExtensionMethod.GetEmptyString());
-    }
-
-    public string RemoveQuotationMarks(string value)
-    {
-        if (GuardClauses.IsNullOrWhiteSpace(value) == false && value.EndsWith("\'") || value.EndsWith("\""))
-            return value.ApplyReplace("\'", "").ApplyReplace("\"", "").ApplyTrim();
-        return value;
     }
 
     public bool ValidEmail(string email)
@@ -686,14 +668,7 @@ public sealed class GeneralMethod
         return list;
     }
 
-    public string RemoveFinalQuotationMarks(string value)
-    {
-        if (!GuardClauses.IsNullOrWhiteSpace(value) && (value.EndsWith("\'") || value.EndsWith("\"")))
-            return value.ApplyReplace("\'", "").ApplyReplace("\"", "").ApplyTrim();
-        return value;
-    }
-
-    public string[] getLocalDriversFromMachine()
+    public string[] GetLocalDriversFromMachine()
     {
         return Environment.GetLogicalDrives();
     }
@@ -758,7 +733,7 @@ public sealed class GeneralMethod
         {
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(xml);
-            doc = removeXmlDeclaration(doc);
+            doc = RemoveXmlDeclaration(doc);
             var json = JsonConvert.SerializeXmlNode(doc, Newtonsoft.Json.Formatting.Indented, true);
             return json.ToString();
         }
@@ -766,14 +741,7 @@ public sealed class GeneralMethod
         return null;
     }
 
-    private XmlDocument removeXmlDeclaration(XmlDocument doc)
-    {
-        var declarations = doc.ChildNodes.OfType<XmlNode>().Where(x => x.NodeType == XmlNodeType.XmlDeclaration).ToList();
-        declarations.ForEach(x => doc.RemoveChild(x));
-        return doc;
-    }
-
-    public string CreateCustomCpf()
+    public string CreateCpf()
     {
         int sum = 0, rest = 0;
         int[] mult1 = new int[9] { 10, 9, 8, 7, 6, 5, 4, 3, 2 };
@@ -815,17 +783,7 @@ public sealed class GeneralMethod
         .Select(row => ParseRow(row)).ToList();
     }
 
-    private DropDownList ParseRow(string row)
-    {
-        var columns = row.Split(',');
-        return new DropDownList()
-        {
-            Id = int.Parse(columns[0]),
-            Description = columns[1]
-        };
-    }
-
-    public (string Type, string Extension) GetMemoryStream(EnumMemoryStreamFile key)
+    public (string Type, string Extension) GetMemoryStreamType(EnumMemoryStreamFile key)
     {
         Dictionary<EnumMemoryStreamFile, (string, string)> dictionary = new Dictionary<EnumMemoryStreamFile, (string, string)>
         {
@@ -872,7 +830,7 @@ public sealed class GeneralMethod
         Dictionary<EnumJobTypeExecution, string> dictionary = new Dictionary<EnumJobTypeExecution, string>
         {
             { EnumJobTypeExecution.Daily, currentDate.ToString("yyyy-MM-dd") },
-            { EnumJobTypeExecution.Weekly, GetLasttDayOfWeek(currentDate).ToString("yyyy-MM-dd") },
+            { EnumJobTypeExecution.Weekly, GetLastDayOfWeek(currentDate).ToString("yyyy-MM-dd") },
             { EnumJobTypeExecution.Monthly, new DateTime(currentDate.Year, currentDate.Month, 1).AddMonths(1).AddDays(-1).ToString("yyyy-MM-dd") },
             { EnumJobTypeExecution.Yearly, new DateTime(currentDate.Year, 12, 31).ToString("yyyy-MM-dd") },
             { EnumJobTypeExecution.Never, "" }
@@ -889,7 +847,7 @@ public sealed class GeneralMethod
         return date.AddDays(-diff).Date;
     }
 
-    public DateTime GetLasttDayOfWeek(DateTime date)
+    public DateTime GetLastDayOfWeek(DateTime date)
     {
         var culture = System.Threading.Thread.CurrentThread.CurrentCulture;
         var diff = date.DayOfWeek - culture.DateTimeFormat.FirstDayOfWeek;
@@ -910,20 +868,6 @@ public sealed class GeneralMethod
         return onlyUpperCase ? res.ToString().ApplyTrim() : res.ToString().ApplyTrim();
     }
 
-    public DropDownList ConvertObjectToClass(object obj)
-    {
-        DropDownList model = obj as DropDownList;
-        return model;
-    }
-
-    public string RemoveSpaceFromWords(string text)
-    {
-        if (GuardClauses.IsNullOrWhiteSpace(text) == false)
-            return Regex.Replace(text.ApplyTrim(), @"\s+", "");
-
-        return StringExtensionMethod.GetEmptyString();
-    }
-
     public string[] RepeatValues(int times, string word)
     {
         times = times > 0 ? times : 1;
@@ -932,31 +876,6 @@ public sealed class GeneralMethod
             return Enumerable.Range(1, times).Select(x => word).ToArray();
 
         return Enumerable.Range(1, times).Select(x => "gray").ToArray();
-    }
-
-    public string GetEnvironmentVariableValue(string path)
-    {
-        try
-        {
-            return Environment.GetEnvironmentVariable(path, EnvironmentVariableTarget.Process);
-        }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message, ex.InnerException);
-        }
-    }
-
-    [Conditional("Debug")]
-    public void SetEnvironmentVariableValue(string path, string value)
-    {
-        try
-        {
-            Environment.SetEnvironmentVariable(path, value, EnvironmentVariableTarget.Process);
-        }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message, ex.InnerException);
-        }
     }
 
     public async Task<byte[]> SetFileToByteArray(IFormFile formfile)
@@ -1113,22 +1032,6 @@ public sealed class GeneralMethod
         return true;
     }
 
-    public string Truncate(string value, int maxLength)
-    {
-        if (GuardClauses.IsNullOrWhiteSpace(value)) return value;
-        return value.Length <= maxLength ? value : value.ApplySubString(0, maxLength);
-    }
-
-    public string FormatCnpj(string texto)
-    {
-        return Convert.ToUInt64(texto).ToString(@"00\.000\.000\/0000\-00");
-    }
-
-    public string FormatCpf(string texto)
-    {
-        return Convert.ToUInt64(texto).ToString(@"000\.000\.000\-00");
-    }
-
     public string GetQueryAbleToSql(IQueryable sql)
     {
         return sql.ToQueryString();
@@ -1157,15 +1060,6 @@ public sealed class GeneralMethod
         }
 
         return token.ApplyTrim();
-    }
-
-    public double MilesToKm(double miles) => Math.Round(miles * 1.609, 3);
-
-    public double KmToMiles(double km) => Math.Round(km / 1.609, 3);
-
-    public string FormatStringBase64ToString(string text)
-    {
-        return Encoding.UTF8.GetString(Convert.FromBase64String(text));
     }
 
     public string ConvertModelObjectToXml<T>(T modelObject)
@@ -1239,22 +1133,6 @@ public sealed class GeneralMethod
     {
         return $"{textStart}{FixConstants.QUOTE}{word}{FixConstants.QUOTE}{textEnd}";
     }
-
-    #region Metodo para pegar o base64 do front (btoa ou atob) e faz o processo de conversão
-
-    public string EncodingString(string toEncode)
-    {
-        byte[] bytes = Encoding.GetEncoding("UTF-8").GetBytes(toEncode);
-        return Convert.ToBase64String(bytes);
-    }
-
-    public string DecodingString(string toDecode)
-    {
-        byte[] bytes = Convert.FromBase64String(toDecode);
-        return ASCIIEncoding.ASCII.GetString(bytes);
-    }
-
-    #endregion
 
     public string GetBytesFromBinaryString(string binary)
     {
@@ -1348,19 +1226,6 @@ public sealed class GeneralMethod
         }
 
         return result;
-    }
-
-    /// <summary>
-    /// Antes do Net 6, é necessario instanciar a classe Random
-    /// A partir do Net 6 não é mais necessario instanciar, podemos utilizar a propriedade Shared direto da classe Random
-    /// </summary>
-    /// <returns></returns>
-    private int GetRandomNumber(int value, int? minValue = null)
-    {
-        if (minValue.HasValue)
-            return Random.Shared.Next(minValue.GetValueOrDefault(0), value);
-
-        return Random.Shared.Next(value);
     }
 
     /// <summary>
@@ -1497,6 +1362,19 @@ public sealed class GeneralMethod
             return false;
 
         return true;
+    }
+
+    public static IEnumerable<DropDownList> ConvertEnumToList<T>() where T : Enum
+    {
+        IEnumerable<DropDownList> list = Enum.GetValues(typeof(T))
+          .Cast<T>()
+          .Select(x => new DropDownList
+          {
+              Id = (long.Parse(x.ToString())),
+              Description = x.GetDisplayName()
+          });
+
+        return list;
     }
 }
 

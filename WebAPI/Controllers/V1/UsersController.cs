@@ -182,7 +182,7 @@ public sealed class UsersController : GenericController
         var list = await _userService.GetAllPaginateAsync(filter);
         if (list?.Results?.Count() > 0)
         {
-            var memoryStreamResult = _generalMethod.GetMemoryStream(EnumMemoryStreamFile.XLSX);
+            var memoryStreamResult = _generalMethod.GetMemoryStreamType(EnumMemoryStreamFile.XLSX);
             var excelData = _mapperService.Map<IEnumerable<UserExcelDTO>>(list.Results);
             var excelName = $"Usuarios.{memoryStreamResult.Extension}";
             var memoryStreamExcel = await _FileService.CreateExcelFileEPPLUS(excelData, excelName);

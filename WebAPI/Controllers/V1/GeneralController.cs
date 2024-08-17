@@ -56,7 +56,7 @@ public sealed class GeneralController : GenericController
     {
         EnumMemoryStreamFile enumtypeFile = typeFile.HasValue ? (EnumMemoryStreamFile)typeFile : EnumMemoryStreamFile.PDF;
         MemoryStream memoryStream = await _generalService.Export2ZipAsync(directory, enumtypeFile);
-        var memoryStreamResult = _generalMethod.GetMemoryStream(enumtypeFile);
+        var memoryStreamResult = _generalMethod.GetMemoryStreamType(enumtypeFile);
         return File(await Task.FromResult(memoryStream.ToArray()), memoryStreamResult.Type, $"Archive.{memoryStreamResult.Extension}");
     }
 
@@ -285,7 +285,7 @@ public sealed class GeneralController : GenericController
     [HttpPost("createQRCode")]
     public IActionResult CreateQRCode([FromBody] QRCodeFile qRCodeFile)
     {
-        var memoryStreamResult = _generalMethod.GetMemoryStream(EnumMemoryStreamFile.PNG);
+        var memoryStreamResult = _generalMethod.GetMemoryStreamType(EnumMemoryStreamFile.PNG);
         var image = _qRCodeService.CreateQRCode(qRCodeFile);
         return File(image, memoryStreamResult.Type);
     }
