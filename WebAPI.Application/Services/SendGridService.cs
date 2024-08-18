@@ -8,18 +8,19 @@ namespace WebAPI.Application.Services;
 
 public class SendGridService : GenericService, ISendGridService
 {
-    private EnvironmentVariables environmentVariables { get; }
+    private EnvironmentVariables _environmentVariables { get; }
     private readonly IEmailFactory _iEmailFactory;
 
-    public SendGridService(IEmailFactory emailFactory, INotificationMessageService notificationMessageService) : base(notificationMessageService)
+    public SendGridService(EnvironmentVariables environmentVariables, IEmailFactory emailFactory, INotificationMessageService notificationMessageService) : base(notificationMessageService)
     {
         _iEmailFactory = emailFactory;
+        _environmentVariables = environmentVariables;
     }
 
     private async Task SendEmailAsync(SendGridMessage sendGridMessage)
     {
-        var sendGridClient = new SendGridClient(environmentVariables.SendGridSettings.Client);
-        sendGridMessage.SetFrom(environmentVariables.SendGridSettings.EmailSender, environmentVariables.SendGridSettings.EmailSenderName);
+        var sendGridClient = new SendGridClient(_environmentVariables.SendGridSettings.Client);
+        sendGridMessage.SetFrom(_environmentVariables.SendGridSettings.EmailSender, _environmentVariables.SendGridSettings.EmailSenderName);
         await sendGridClient.SendEmailAsync(sendGridMessage);
     }
 

@@ -5,7 +5,7 @@ namespace WebAPI.Application.BackgroundMessageServices.Kafka;
 
 public sealed class KafkaService<TEntity> : IKafkaService<TEntity> where TEntity : class
 {
-    private EnvironmentVariables _EnvironmentVariables { get; set; }
+    private EnvironmentVariables _EnvironmentVariables { get; }
 
     public KafkaService(EnvironmentVariables environmentVariables)
     {
