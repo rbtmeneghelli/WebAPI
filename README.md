@@ -10,7 +10,7 @@ STATUS
   - Tempo de entrega >> Nenhum, projeto de escopo aberto
 
 CONTEXTO
-  - Esse software possui conhecimentos tecnicos e experiencias adquiridas profissionalmente pelo responsavel dessa documentação.
+  - O software possui conhecimentos tecnicos e experiencias adquiridas profissionalmente pelo responsavel dessa documentação.
   - A partir desse software, tenho um modelo de projeto a ser trabalhado no formato de REST API, caso seja necessario criar um projeto do zero.
 
 DECISÃO
