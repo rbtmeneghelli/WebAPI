@@ -31,6 +31,7 @@ DECISÃO
     
   - Limitações
     - Não tem interação com nenhum frontend para testes visual do usuário, somente testes a partir da documentação Swagger
+    - O projeto não está publicado em um servidor externo, impossibilitando seu acesso por outros usuarios
     
   - Consequencias Finais
     - Facilidade de entendimento de codigo
