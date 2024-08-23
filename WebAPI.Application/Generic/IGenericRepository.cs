@@ -31,4 +31,5 @@ public interface IGenericRepository<TEntity> : IDisposable where TEntity : class
     /// <param name="entity"></param>
     void AddTransaction(TEntity entity);
     IEnumerable<TModel> GetAllFromSqlQuery<TModel>(string query);
+    string GetConnectionStringFromDatabase();
 }

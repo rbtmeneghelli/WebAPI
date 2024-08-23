@@ -305,6 +305,11 @@ public partial class GenericRepository<TEntity> : IGenericRepository<TEntity> wh
         return count > 0 ? true : false;
     }
 
+    public string GetConnectionStringFromDatabase()
+    {
+        return _context.Database.GetConnectionString();
+    }
+
     public void Dispose()
     {
         _context?.Dispose();
