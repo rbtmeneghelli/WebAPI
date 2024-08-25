@@ -362,3 +362,7 @@ Parar o IIS e Iniciar o IIS novamente
 
 -- Resetar a SEED de uma chave Primaria
 >> DBCC CHECKIDENT ('Tabela', RESEED, ProximoID)
+
+-- Trocando o padrão Ligth do swagger para Dark
+>> https://github.com/Amoenus/SwaggerDark/
+>> https://amoenus.dev/swagger-dark-theme
