@@ -2,6 +2,7 @@
 using WebAPI.Application.Generic;
 using WebAPI.Application.InterfacesRepository;
 using WebAPI.Domain.ExtensionMethods;
+using WebAPI.Domain.Models;
 
 namespace WebAPI.Application.Services
 {
@@ -122,12 +123,12 @@ namespace WebAPI.Application.Services
                                       IsActive = x.IsActive
                                   };
 
-                return PagedFactory.GetPaged(queryResult, filter.PageIndex, filter.PageSize);
+                return PagedFactory.GetPaged(queryResult, PagedFactory.GetDefaultPageIndex(filter.PageIndex), PagedFactory.GetDefaultPageSize(filter.PageSize));
             }
             catch
             {
                 Notify(FixConstants.ERROR_IN_GETALL);
-                return PagedFactory.GetPaged(Enumerable.Empty<States>().AsQueryable(), filter.PageIndex, filter.PageSize);
+                return PagedFactory.GetPaged(Enumerable.Empty<States>().AsQueryable(), PagedFactory.GetDefaultPageIndex(filter.PageIndex), PagedFactory.GetDefaultPageSize(filter.PageSize));
             }
         }
     }

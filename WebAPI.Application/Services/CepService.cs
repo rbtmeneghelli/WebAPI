@@ -2,6 +2,7 @@
 using WebAPI.Application.Generic;
 using WebAPI.Application.InterfacesRepository;
 using WebAPI.Domain.ExtensionMethods;
+using WebAPI.Domain.Models;
 using WebAPI.Domain.ValueObject;
 
 namespace WebAPI.Application.Services;
@@ -83,7 +84,7 @@ public class CepService : GenericService, ICepService
     }
 
     public async Task<IEnumerable<AddressData>> GetAllWithLikeAsync(string parameter)
-    { 
+    {
         return await _cepRepository.FindBy(x => EF.Functions.Like(x.Cep, $"%{parameter}%")).ToListAsync();
     }
 
@@ -112,12 +113,12 @@ public class CepService : GenericService, ICepService
                                   IsActive = x.IsActive
                               };
 
-            return PagedFactory.GetPaged(queryResult, filter.PageIndex, filter.PageSize);
+            return PagedFactory.GetPaged(queryResult, PagedFactory.GetDefaultPageIndex(filter.PageIndex), PagedFactory.GetDefaultPageSize(filter.PageSize));
         }
         catch (Exception ex)
         {
             Notify(FixConstants.ERROR_IN_GETALL);
-            return PagedFactory.GetPaged(Enumerable.Empty<AddressData>().AsQueryable(), filter.PageIndex, filter.PageSize);
+            return PagedFactory.GetPaged(Enumerable.Empty<AddressData>().AsQueryable(), PagedFactory.GetDefaultPageIndex(filter.PageIndex), PagedFactory.GetDefaultPageSize(filter.PageSize));
         }
     }
 }

@@ -2,6 +2,7 @@
 using WebAPI.Application.Generic;
 using WebAPI.Application.InterfacesRepository;
 using WebAPI.Domain.ExtensionMethods;
+using WebAPI.Domain.Models;
 
 namespace WebAPI.Application.Services;
 
@@ -112,12 +113,12 @@ public class RegionService : GenericService, IRegionService
                                   IsActive = x.IsActive
                               };
 
-            return PagedFactory.GetPaged(queryResult, filter.PageIndex, filter.PageSize);
+            return PagedFactory.GetPaged(queryResult, PagedFactory.GetDefaultPageIndex(filter.PageIndex), PagedFactory.GetDefaultPageSize(filter.PageSize));
         }
         catch (Exception ex)
         {
             Notify(FixConstants.ERROR_IN_GETALL);
-            return PagedFactory.GetPaged(Enumerable.Empty<Region>().AsQueryable(), filter.PageIndex, filter.PageSize);
+            return PagedFactory.GetPaged(Enumerable.Empty<Region>().AsQueryable(), PagedFactory.GetDefaultPageIndex(filter.PageIndex), PagedFactory.GetDefaultPageSize(filter.PageSize));
         }
     }
 

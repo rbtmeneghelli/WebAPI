@@ -10,15 +10,35 @@
             result.TotalRecords = query.Count();
             result.PageCount = (int)Math.Ceiling((double)result.TotalRecords / pageSize);
             result.NextPage = (pageSize * result.Page) >= result.TotalRecords ? null : (int?)result.Page + 1;
-            //result.Results = query?.Count() > 0 ? query.Skip(GetPagination(result.Page, result.PageSize))
-            //                                           .Take(pageSize)
-            //                                           .AsEnumerable()
-            //                                           : Enumerable.Empty<T>();
-
-            result.Results = query?.Count() > 0 ? query.Take(GetPagination(result.Page, result.PageSize)..pageSize)
+            result.Results = query?.Count() > 0 ? query.Skip(GetPagination(result.Page, result.PageSize))
+                                                       .Take(pageSize)
                                                        .AsEnumerable()
                                                        : Enumerable.Empty<T>();
+
             return result;
+        }
+
+        public static string AddFilters(List<PagedFilterModel> sqlConditions)
+        {
+            string filters = string.Empty;
+
+            sqlConditions.ForEach(condicao =>
+            {
+                if (condicao.Value != null)
+                {
+                    filters += $@"
+                        AND {condicao.Column} ";
+
+                    if (condicao.Value.GetType() == typeof(string))
+                        filters += $"LIKE '%' + {condicao.Parameter} + '%'";
+                    else if (condicao.Value is IEnumerable<int> || condicao.Value is IEnumerable<string>)
+                        filters += $"IN {condicao.Parameter}";
+                    else
+                        filters += $"= {condicao.Parameter}";
+                }
+            });
+
+            return filters;
         }
 
         public static string GetPagedTSqlPagination(string query, int page, int pageSize)
@@ -32,7 +52,7 @@
 
         public static int GetDefaultPageIndex(int? pageIndex) => pageIndex.HasValue ? pageIndex.Value : 1;
         public static int GetDefaultPageSize(int? pageSize) => pageSize.HasValue ? pageSize.Value : 10;
-        public static int GetPagination(int page, int pageSize) => (page - 1) * pageSize;
+        private static int GetPagination(int page, int pageSize) => (page - 1) * pageSize;
 
     }
 }

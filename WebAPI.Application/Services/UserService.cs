@@ -4,6 +4,7 @@ using WebAPI.Application.InterfacesRepository;
 using WebAPI.Domain.Cryptography;
 using WebAPI.Domain.Entities.ControlPanel;
 using WebAPI.Domain.ExtensionMethods;
+using WebAPI.Domain.Models;
 
 namespace WebAPI.Application.Services;
 
@@ -97,12 +98,12 @@ public class UserService : GenericService, IUserService
                                   Status = p.GetStatus(),
                               };
 
-            return PagedFactory.GetPaged(queryResult, filter.PageIndex, filter.PageSize);
+            return PagedFactory.GetPaged(queryResult, PagedFactory.GetDefaultPageIndex(filter.PageIndex), PagedFactory.GetDefaultPageSize(filter.PageSize));
         }
         catch (Exception ex)
         {
             Notify(ex.Message);
-            return PagedFactory.GetPaged(Enumerable.Empty<UserResponseDTO>().AsQueryable(), filter.PageIndex, filter.PageSize);
+            return PagedFactory.GetPaged(Enumerable.Empty<UserResponseDTO>().AsQueryable(), PagedFactory.GetDefaultPageIndex(filter.PageIndex), PagedFactory.GetDefaultPageSize(filter.PageSize));
         }
         finally
         {

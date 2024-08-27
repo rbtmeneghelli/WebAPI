@@ -2,6 +2,7 @@
 using WebAPI.Application.Generic;
 using WebAPI.Application.InterfacesRepository;
 using WebAPI.Domain.ExtensionMethods;
+using WebAPI.Domain.ValueObject;
 
 namespace WebAPI.Application.Services
 {
@@ -56,12 +57,12 @@ namespace WebAPI.Application.Services
                                       UpdateTime = x.UpdateTime
                                   };
 
-                return PagedFactory.GetPaged(queryResult, filter.PageIndex, filter.PageSize);
+                return PagedFactory.GetPaged(queryResult, PagedFactory.GetDefaultPageIndex(filter.PageIndex), PagedFactory.GetDefaultPageSize(filter.PageSize));
             }
             catch
             {
                 Notify(FixConstants.ERROR_IN_GETALL);
-                return PagedFactory.GetPaged(Enumerable.Empty<LogResponseDTO>().AsQueryable(), filter.PageIndex, filter.PageSize);
+                return PagedFactory.GetPaged(Enumerable.Empty<LogResponseDTO>().AsQueryable(), PagedFactory.GetDefaultPageIndex(filter.PageIndex), PagedFactory.GetDefaultPageSize(filter.PageSize));
             }
         }
 

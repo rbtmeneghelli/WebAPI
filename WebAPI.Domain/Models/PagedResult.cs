@@ -3,15 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace WebAPI.Domain.Models
-{
-    public class PagedResult<T> : GenericPaged where T : class
-    {
-        public IEnumerable<T> Results { get; set; }
+namespace WebAPI.Domain.Models;
 
-        public PagedResult()
-        {
-            Results = Enumerable.Empty<T>();
-        }
+public class PagedResult<T> : GenericPaged where T : class
+{
+    public IEnumerable<T> Results { get; set; }
+
+    public PagedResult()
+    {
+        Results = Enumerable.Empty<T>();
     }
 }
