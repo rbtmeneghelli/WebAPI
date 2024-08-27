@@ -22,19 +22,19 @@
         {
             string filters = string.Empty;
 
-            sqlConditions.ForEach(condicao =>
+            sqlConditions.ForEach(condition =>
             {
-                if (condicao.Value != null)
+                if (condition.Value != null)
                 {
                     filters += $@"
-                        AND {condicao.Column} ";
+                        AND {condition.Column} ";
 
-                    if (condicao.Value.GetType() == typeof(string))
-                        filters += $"LIKE '%' + {condicao.Parameter} + '%'";
-                    else if (condicao.Value is IEnumerable<int> || condicao.Value is IEnumerable<string>)
-                        filters += $"IN {condicao.Parameter}";
+                    if (condition.Value.GetType() == typeof(string))
+                        filters += $"LIKE '%' + {condition.Parameter} + '%'";
+                    else if (condition.Value is IEnumerable<int> || condition.Value is IEnumerable<string>)
+                        filters += $"IN {condition.Parameter}";
                     else
-                        filters += $"= {condicao.Parameter}";
+                        filters += $"= {condition.Parameter}";
                 }
             });
 
