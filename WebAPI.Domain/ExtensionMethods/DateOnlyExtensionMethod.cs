@@ -23,12 +23,12 @@ public sealed class DateOnlyExtensionMethods
     public int GetAgeByDays(DateOnly birthDay) => Math.Abs(NumberDaysOfLife(birthDay) / 365);
     public int GetAgeByYear(DateOnly birthDay) => Math.Abs(GetDate().Year - birthDay.Year);
     public DateTime GetDateTimeFromString(string dateTime) => DateTime.ParseExact(dateTime, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-    
+
     public static DateTime FirstDayCurrentMonth()
     {
         return new DateTime(GetDateTimeNowFromBrazil().Year, GetDateTimeNowFromBrazil().Month, 1);
     }
-    
+
     public DateTime GetNextUtilDay(DateTime dateTime)
     {
         try
@@ -44,7 +44,7 @@ public sealed class DateOnlyExtensionMethods
             throw new Exception(ex.Message, ex.InnerException);
         }
     }
-    
+
     public DateTime GetCurrentUtilDay()
     {
         return GetNextUtilDay(FirstDayCurrentMonth().AddDays(5));
@@ -115,4 +115,6 @@ public sealed class DateOnlyExtensionMethods
 
         return firstDayOfMonth.AddDays(-1);
     }
+
+    public static bool IsAdultPerson(DateTime birthDate) => birthDate <= GetDateTimeNowFromBrazil().AddYears(-18);
 }

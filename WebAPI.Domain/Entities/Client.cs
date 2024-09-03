@@ -58,13 +58,15 @@ public class Document
 {
     public required string Cpf { get; set; }
     public required string Rg { get; set; }
+    public required DateTime BirthDate { get; set; }
+    public required int Age { get; set; }
 
     public Document()
     {
             
     }
 
-    public Document(string cpf, string rg)
+    public Document(string cpf, string rg, DateTime birthDate)
     {
         
     }

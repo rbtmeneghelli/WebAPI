@@ -28,6 +28,8 @@ public class ClientMapping : GenericMapping<Client>
         {
             add.Property(p => p.Cpf).HasColumnName(nameof(Document.Cpf));
             add.Property(p => p.Rg).HasColumnName(nameof(Document.Rg));
+            add.Property(p => p.BirthDate).HasColumnName(nameof(Document.BirthDate));
+            add.Property(p => p.Age).HasColumnName(nameof(Document.Age));
             add.ToTable("ClientDocument"); // Com esse comando será criado uma tabela com relacionamento 1 para 1. Senão os campos são adicionados na entidade Client
         });
 
