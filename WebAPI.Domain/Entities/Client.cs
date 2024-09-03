@@ -66,9 +66,12 @@ public class Document
             
     }
 
-    public Document(string cpf, string rg, DateTime birthDate)
+    public Document(string cpf, string rg, DateTime birthDate, int age)
     {
-        
+        Cpf = cpf;
+        Rg = rg;
+        BirthDate = birthDate;
+        Age = age;
     }
 }
 
