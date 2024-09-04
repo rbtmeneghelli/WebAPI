@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="WebAPI.Domain.Entities.ControlPanel.Area" Collapsed="true">
+    <Position X="0.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAECAAAAAAAgAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\ControlPanel\Area.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebAPI.Domain.Entities.ControlPanel.Employee" Collapsed="true">
+    <Position X="5.75" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAIACCAAAAAAAAAAAAQAAAAAAAACABAAAAAAAQA=</HashCode>
+      <FileName>Entities\ControlPanel\Employee.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebAPI.Domain.Entities.ControlPanel.Operation" Collapsed="true">
+    <Position X="7.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAEAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\ControlPanel\Operation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebAPI.Domain.Entities.ControlPanel.Profile" Collapsed="true">
+    <Position X="6.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAABAAgAAAAAAAAAAAACAAAAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>Entities\ControlPanel\Profile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebAPI.Domain.Entities.ControlPanel.ProfileOperation" Collapsed="true">
+    <Position X="8.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAECAAIAAAEAAAAAAAEAAAAAAAAACAAAABEAAAAAAAA=</HashCode>
+      <FileName>Entities\ControlPanel\ProfileOperation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebAPI.Domain.Entities.ControlPanel.User" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEAAAAEABAAAAAgCAAABAACAAAQAAAAAAA=</HashCode>
+      <FileName>Entities\ControlPanel\User.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebAPI.Domain.Entities.ControlPanel.Client" Collapsed="true">
+    <Position X="2.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Entities\ControlPanel\Client.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebAPI.Domain.Entities.ControlPanel.Address" Collapsed="true">
+    <Position X="2.5" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\ControlPanel\Client.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebAPI.Domain.Entities.ControlPanel.Document" Collapsed="true">
+    <Position X="4" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAEAAAAYAAAAAAAAAAAAAAACAAAA=</HashCode>
+      <FileName>Entities\ControlPanel\Client.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebAPI.Domain.Generic.GenericEntity" Collapsed="true">
+    <Position X="4.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAQAAEABAAAAEAAAAAAAAAAAAAAAAAAE=</HashCode>
+      <FileName>Generic\GenericEntity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

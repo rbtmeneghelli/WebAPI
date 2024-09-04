@@ -1,6 +1,6 @@
 ﻿using WebAPI.Domain.Generic;
 
-namespace WebAPI.Domain.Entities;
+namespace WebAPI.Domain.Entities.ControlPanel;
 
 /// <summary>
 /// O Data Annotation [Owned] ajuda a modelar os dados que pertencem a uma entidade, mas não têm identidade própria
@@ -42,7 +42,7 @@ public class Address
 
     public Address()
     {
-        
+
     }
 
     public Address(string cep, string city)
@@ -63,7 +63,7 @@ public class Document
 
     public Document()
     {
-            
+
     }
 
     public Document(string cpf, string rg, DateTime birthDate, int age)
