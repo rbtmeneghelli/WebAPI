@@ -15,6 +15,8 @@ using CsvHelper;
 using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.Serialization;
+using System.IO;
+using SendGrid.Helpers.Mail;
 
 namespace WebAPI.Application.Services;
 
@@ -537,6 +539,75 @@ public class FileService<TModel> : IFileService<TModel> where TModel : class
 
         return list;
     }
+
+    #region Metodos para realizar Leitura/Escrita de arquivos do tipo Texto
+
+    public async Task<string> ReadFileFromPath(string filePath)
+    {
+        string result = string.Empty;
+
+        using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+        {
+            var bytesArray = new byte[fileStream.Length];
+            await fileStream.ReadAsync(bytesArray);
+            result = Encoding.UTF8.GetString(bytesArray);
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// Faz a leitura do arquivo em pedaços de 4kb
+    /// </summary>
+    /// <param name="filePath"></param>
+    /// <returns></returns>
+    public async Task<string> ReadLargeFileFromPath(string filePath)
+    {
+        const int bufferSize = 4096;
+        var builder = new StringBuilder();
+        using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+        using (var streamReader = new StreamReader(fileStream))
+        {
+            char[] buffer = new char[bufferSize];
+            int bytesRead;
+            while ((bytesRead = streamReader.ReadBlock(buffer, 0, bufferSize)) > 0)
+            {
+                builder.Append(buffer, 0, bytesRead);
+            }
+        }
+
+        await Task.CompletedTask;
+        return builder.ToString();
+    }
+
+    public async Task CreateAndWriteFileToPath(string filePath, string content)
+    {
+        await File.WriteAllTextAsync(filePath, content);
+    }
+
+    /// <summary>
+    /// Faz a escrita do arquivo em pedaços de 1024 bytes
+    /// </summary>
+    /// <param name="filePath"></param>
+    /// <returns></returns>
+    public async Task CreateAndWriteLargeFileToPath(string filePath, string content)
+    {
+        using (FileStream stream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+        {
+            byte[] buffer = Encoding.UTF8.GetBytes(content);
+            int chunkSize = 1024;
+            for (int i = 0; i < buffer.Length; i += chunkSize)
+            {
+                int remainingBytes = buffer.Length - i;
+                int bytesToWrite = remainingBytes < chunkSize ? remainingBytes : chunkSize;
+                stream.Write(buffer, i, bytesToWrite);
+            }
+
+            await Task.CompletedTask;
+        }
+    }
+
+    #endregion
 
     public void Dispose()
     {
