@@ -1,0 +1,6 @@
+@WebAPI_VerticalSliceArc_HostAddress = http://localhost:5274
+
+GET {{WebAPI_VerticalSliceArc_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
