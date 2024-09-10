@@ -366,3 +366,5 @@ Parar o IIS e Iniciar o IIS novamente
 -- Trocando o padrão Ligth do swagger para Dark
 >> https://github.com/Amoenus/SwaggerDark/
 >> https://amoenus.dev/swagger-dark-theme
+
+-- O projeto de VerticalSliceArchiteture é valido para projetos com constante alteração

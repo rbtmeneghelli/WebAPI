@@ -8,6 +8,8 @@ public sealed class ProductEntity : GenericEntity
     public string Name { get; set; } = string.Empty;
     public decimal Price { get; set; } = decimal.Zero;
 
+    public ProductEntity() { }
+
     public ProductEntity(string name, decimal price)
     {
         Id = null;

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WebAPI_VerticalSliceArc.Domain.Entities;
+using WebAPI_VerticalSliceArc.InfraStructure.Mappings;
 
 namespace WebAPI_VerticalSlice.InfraStructure.Context;
 
@@ -12,8 +13,7 @@ public sealed class WebAPIDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<ProductEntity>().HasKey(p => p.Id);
-        modelBuilder.Entity<ProductEntity>().Property(p => p.Id).ValueGeneratedOnAdd();
+        modelBuilder.ApplyConfiguration(new ProductEntityMapping());
         base.OnModelCreating(modelBuilder);
     }
 
