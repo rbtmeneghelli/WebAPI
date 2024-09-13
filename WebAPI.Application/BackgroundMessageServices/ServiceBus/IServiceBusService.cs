@@ -10,5 +10,6 @@ namespace WebAPI.Application.BackgroundMessageServices.ServiceBus
     {
         Task SendMessage(string queueName, TEntity entity);
         Task ReceiveMessage(string queueName, TEntity entity);
+        Task ReceiveMessageAsync(string queueName, TEntity entity);
     }
 }

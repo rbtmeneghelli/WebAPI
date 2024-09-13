@@ -53,6 +53,7 @@ public static class DependencyContainerService
 {
 
     #region Metodos Privados
+
     private static void ConfigureKissLog(IOptionsBuilder options, IConfiguration configuration)
     {
         // optional KissLog configuration
@@ -88,12 +89,6 @@ public static class DependencyContainerService
         {
             ApiUrl = configuration["KissLog.ApiUrl"]
         });
-    }
-
-    // Deixar a criação desses serviços por ultimo na inclusão dos services na classe Startup
-    private static void RegisterJobsHangFire()
-    {
-        RecurringJob.AddOrUpdate<IUserService>(x => x.ExistByLoginAsync("xxx"), Cron.Daily);
     }
 
     private static bool PolicyAreOk(AuthorizationHandlerContext authorizationHandlerContext, PolicyWithClaim policyWithClaim)
@@ -327,11 +322,23 @@ public static class DependencyContainerService
 
     public static void RegisterHttpClientConfig(this IServiceCollection services)
     {
-        services.AddHttpClient("Signed").ConfigureHttpMessageHandlerBuilder(builder =>
+        #region Versão Depreciada de configuração do HTTPClient
+
+        //services.AddHttpClient("Signed").ConfigureHttpMessageHandlerBuilder(builder =>
+        //{
+        //    builder.PrimaryHandler = new HttpClientHandler
+        //    {
+        //        ServerCertificateCustomValidationCallback = (m, c, ch, e) => true
+        //    };
+        //});
+
+        #endregion
+
+        services.AddHttpClient("Signed").ConfigurePrimaryHttpMessageHandler(() =>
         {
-            builder.PrimaryHandler = new HttpClientHandler
+            return new HttpClientHandler
             {
-                ServerCertificateCustomValidationCallback = (m, c, ch, e) => true
+                ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
             };
         });
     }
@@ -425,17 +432,35 @@ public static class DependencyContainerService
         services.AddHangfireServer();
     }
 
-    public static IServiceCollection CreateRedisConfig(this IServiceCollection services, IConfiguration configuration)
+    /// <summary>
+    /// È um cliente Redis mais simples e facil de configurar. Ideal para integrações mais simples (Microsoft.Extensions.Caching.Redis)
+    /// È um cliente Redis mais poderoso e robusto, criado e mantido pela StackExchange. Ideal para integrações mais robustas (Microsoft.Extensions.Caching.StackExchangeRedis)
+    /// </summary>
+    /// <param name="services"></param>
+    /// <param name="configuration"></param>
+    /// <returns></returns>
+    public static IServiceCollection RegisterRedis(this IServiceCollection services, IConfiguration configuration)
     {
+        #region Versão Depreciada de conexão do REDIS
+
         //services.AddDistributedRedisCache(options =>
         //{
         //    options.Configuration = "localhost:6379";
-        //    options.InstanceName = "HUBDATABASE - ";
+        //    options.InstanceName = "DATABASE - ";
         //});
-        return null;
+
+        #endregion
+
+        services.AddStackExchangeRedisCache(options =>
+        {
+            options.Configuration = "localhost:6379";
+            options.InstanceName = "DATABASE - ";
+        });
+
+        return services;
     }
 
-    public static IServiceCollection CreateGlobalRateLimiting(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection RegisterGlobalRateLimiting(this IServiceCollection services, IConfiguration configuration)
     {
         int totalRequestPermit = 10;
         TimeSpan timePerRequest = TimeSpan.FromMinutes(1);
@@ -482,7 +507,7 @@ public static class DependencyContainerService
         return services;
     }
 
-    public static IServiceCollection CreatePolicyRateLimiting(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection RegisterPolicyRateLimiting(this IServiceCollection services, IConfiguration configuration)
     {
         // Nos Endpoints dos controllers, utilizar o atributo [EnableRateLimiting("NOME_DA_POLITICA")]
         // Pode-se ter 1 ou N Politicas, sendo casa uma com um nome especifico
