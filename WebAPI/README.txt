@@ -368,3 +368,7 @@ Parar o IIS e Iniciar o IIS novamente
 >> https://amoenus.dev/swagger-dark-theme
 
 -- O projeto de VerticalSliceArchiteture é valido para projetos com constante alteração
+
+-- Passos para publicar APP Front e Back + Banco de dados pelo Azure
+>> No projeto T-SQL do meu github tem um guia do passo a passo dentro da pasta Azure
+>> https://youtu.be/9dqAOc2rJHw ou https://macoratti.net/24/09/vda160924.htm
