@@ -56,7 +56,7 @@ public class CityService : GenericService, ICityService
                           Name = p.Name,
                           IBGE = p.IBGE,
                           StateDesc = p.States.Initials,
-                          IsActiveDesc = p.GetStatus(),
+                          IsActiveDesc = p.GetIsActiveDescription(),
                           IdState = p.StateId
                       }).ToListAsync();
     }
@@ -71,14 +71,13 @@ public class CityService : GenericService, ICityService
                           Name = p.Name,
                           IBGE = p.IBGE,
                           StateDesc = p.States.Initials,
-                          IsActiveDesc = p.GetStatus(),
+                          IsActiveDesc = p.GetIsActiveDescription(),
                           IdState = p.StateId
                       }).FirstOrDefaultAsync();
     }
 
     public Task AddAsync(City city)
     {
-        city.CreatedTime = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
         _cityRepository.Add(city);
         return Task.CompletedTask;
     }
@@ -124,7 +123,6 @@ public class CityService : GenericService, ICityService
                     entityBase.Name = city.Name;
                     entityBase.IBGE = city.IBGE.HasValue ? city.IBGE.Value : long.Parse("00000000");
                     entityBase.StateId = city.StateId;
-                    entityBase.CreatedTime = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
                     _cityRepository.Add(entityBase);
                 }
                 else

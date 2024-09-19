@@ -139,7 +139,7 @@ public class GeneralService : GenericService, IGeneralService
         SqlConnection sqlConnObj = GetSqlConnection();
         try
         {
-            string nomeArquivo = $"DefaultAPI_{DateOnlyExtensionMethods.GetDateTimeNowFromBrazil().ToString("ddMMyyyy")}.bak";
+            string nomeArquivo = $"DefaultAPI_{GuidExtensionMethod.GetGuidDigits("N")}.bak";
             if (File.Exists(Path.Combine(dir, nomeArquivo)))
             {
                 File.Delete(Path.Combine(dir, nomeArquivo));

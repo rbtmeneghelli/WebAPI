@@ -16,7 +16,7 @@ public static class MapperExtensionMethod
             Password = "XXXX",
             LastPassword = "XPTO",
             IsAuthenticated = user.IsAuthenticated,
-            Status = user.GetStatus()
+            Status = user.GetIsActiveDescription()
         };
     }
 }

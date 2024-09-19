@@ -214,8 +214,7 @@ public sealed class GeneralController : GenericController
                     {
                         Name = z.Nome,
                         IsActive = true,
-                        Initials = z.Sigla,
-                        CreatedTime = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()
+                        Initials = z.Sigla
                     }).ToList();
 
                     await _regionService.AddRegionsAsync(list);
@@ -247,7 +246,6 @@ public sealed class GeneralController : GenericController
                 {
                     listStates = listStatesAPI.Select(x => new States()
                     {
-                        CreatedTime = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil(),
                         IsActive = true,
                         Name = x.Name,
                         Initials = x.Initials,

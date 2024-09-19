@@ -21,8 +21,7 @@ public class CreateRegionCommandHandler : GenericService, IRequestHandler<Create
         {
             Initials = "XPTO",
             IsActive = true,
-            Name = "XPTO",
-            CreatedTime = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()
+            Name = "XPTO"
         });
 
         return Task.FromResult(true);

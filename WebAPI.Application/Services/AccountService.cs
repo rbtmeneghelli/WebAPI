@@ -99,7 +99,7 @@ public class AccountService : GenericService, IAccountService
                     dbUser.LastPassword = dbUser.Password;
                     dbUser.Password = HashingManager.GetLoadHashingManager().HashToString(user.Password);
                     dbUser.IsAuthenticated = true;
-                    dbUser.UpdateTime = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
+                    dbUser.UpdateTime = dbUser.GetNewUpDateTime();
                     _userRepository.Update(dbUser);
                     await Task.CompletedTask;
                     return true;
@@ -133,7 +133,7 @@ public class AccountService : GenericService, IAccountService
                     user.Password = HashingManager.GetLoadHashingManager().HashToString(FixConstants.DEFAULT_PASSWORD);
                     user.IsAuthenticated = false;
                     user.IsActive = true;
-                    user.CreatedTime = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
+                    user.UpdateTime = user.GetNewUpDateTime();
                     _emailService.CustomSendEmailAsync(EnumEmail.ResetPassword, "Roberto", _hostingEnvironment.ContentRootPath).Wait();
                     _userRepository.Update(user);
                     return true;

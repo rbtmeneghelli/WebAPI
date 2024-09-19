@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Newtonsoft.Json;
+using WebAPI.Domain.ExtensionMethods;
 
 namespace WebAPI.Domain.Entities;
 
@@ -24,7 +25,7 @@ public class AuditEntry
         {
             TableName = TableName,
             ActionName = ActionName,
-            CreatedTime = DateTime.UtcNow,
+            CreatedTime = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil(),
             KeyValues = JsonConvert.SerializeObject(KeyValues),
             OldValues = OldValues.Count == 0 ? null : JsonConvert.SerializeObject(OldValues),
             NewValues = NewValues.Count == 0 ? null : JsonConvert.SerializeObject(NewValues),

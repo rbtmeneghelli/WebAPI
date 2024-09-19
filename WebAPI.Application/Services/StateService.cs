@@ -57,7 +57,7 @@ namespace WebAPI.Application.Services
                     States state = refreshStates.ListState.FirstOrDefault(x => x.Initials == item.Initials && x.IsActive == true);
                     if (GuardClauses.ObjectIsNotNull(state))
                     {
-                        state.UpdateTime = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
+                        state.UpdateTime = state.GetNewUpDateTime();
                         state.Name = item.Name;
                         state.Initials = item.Initials;
                         _stateRepository.Update(state);
@@ -66,7 +66,6 @@ namespace WebAPI.Application.Services
                     {
                         state = new States();
                         state.IsActive = true;
-                        state.CreatedTime = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
                         state.Name = item.Name;
                         state.Initials = item.Initials;
                         state.RegionId = refreshStates.ListRegion.FirstOrDefault(x => x.Initials == item.Region.Initials).Id ?? 0;
