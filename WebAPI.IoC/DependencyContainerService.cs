@@ -46,6 +46,7 @@ using WebAPI.Application.InterfacesService;
 using WebAPI.Application.BackgroundMessageServices.RabbitMQ;
 using Newtonsoft.Json;
 using WebAPI.Domain.Models.Settings;
+using WebAPI.Domain.Enums;
 
 namespace WebAPI.Infra.Structure.IoC;
 
@@ -216,10 +217,6 @@ public static class DependencyContainerService
 
     public static void RegisterConfigs(this IServiceCollection services, IConfiguration configuration)
     {
-        var configEmail = new EmailSettings();
-        configuration.Bind("EmailSettings", configEmail);
-        services.AddSingleton(configEmail);
-
         var tokenConfiguration = new TokenSettings();
         configuration.Bind("TokenSettings", tokenConfiguration);
         services.AddSingleton(tokenConfiguration);
@@ -231,8 +228,6 @@ public static class DependencyContainerService
         var connectionStringSettings = new ConectionStringSettings();
         configuration.Bind("ConnectionStrings", connectionStringSettings);
         services.AddSingleton(connectionStringSettings);
-
-
     }
 
     public static void RegisterPolicy(this IServiceCollection services)
@@ -624,6 +619,8 @@ public static class DependencyContainerService
             opt.KafkaSettings = JsonConvert.DeserializeObject<KafkaSettings>(data["WebAPI_Kafka"]);
             opt.ServiceBusSettings = JsonConvert.DeserializeObject<ServiceBusSettings>(data["WebAPI_ServiceBus"]);
             opt.SendGridSettings = JsonConvert.DeserializeObject<SendGridSettings>(data["WebAPI_SendGrid"]);
+            Enum.TryParse(data["WebAPI_Environment"], out EnumEnvironment environment);
+            opt.Environment = environment;
             #endregion
         });
 

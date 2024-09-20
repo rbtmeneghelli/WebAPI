@@ -1,6 +1,7 @@
 ﻿using WebAPI.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Domain.Entities.ControlPanel;
+using WebAPI.Domain.Entities.Configuration;
 
 namespace WebAPI.Infra.Data.Context;
 
@@ -19,7 +20,7 @@ public partial class WebAPIContext
     public virtual DbSet<ArchiveType> ArchiveTypes { get; set; }
     public virtual DbSet<EmailTemplate> EmailTemplates { get; set; }
     public virtual DbSet<EmailDisplay> EmailDisplays { get; set; }
-    public virtual DbSet<EmailType> EmailType { get; set; }
+    public virtual DbSet<EmailSettings> EmailSettings { get; set; }
     public virtual DbSet<Area> Area { get; set; }
     public virtual DbSet<Employee> Employee { get; set; }
 }

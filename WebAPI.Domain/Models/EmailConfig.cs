@@ -1,6 +1,6 @@
-﻿using WebAPI.Domain.Entities;
-using MimeKit;
+﻿using MimeKit;
 using System.Net.Mail;
+using WebAPI.Domain.Entities.Configuration;
 
 namespace WebAPI.Domain.Models;
 

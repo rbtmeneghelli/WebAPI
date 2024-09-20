@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using WebAPI.Domain.Enums;
 using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Domain.Models;
 using WebAPI.Domain.Models.Settings;
@@ -12,6 +13,7 @@ public class EnvironmentVariables
     public KafkaSettings KafkaSettings { get; set; }    
     public ServiceBusSettings ServiceBusSettings { get; set; }
     public SendGridSettings SendGridSettings { get; set; }
+    public EnumEnvironment Environment {  get; set; }
 
     public EnvironmentVariables()
     {
@@ -52,6 +54,7 @@ public static class EnvironmentVariablesExtension
             { configuration.GetSection($"RabbitMQSettings:Data").Value, GetEnvironmentVariableToObject<RabbitMQSettings>(configuration.GetSection($"RabbitMQSettings:Data").Value).ToString() },
             { configuration.GetSection($"KafkaSettings:Data").Value, GetEnvironmentVariable(configuration.GetSection($"KafkaSettings:Data").Value).ToString() },
             { configuration.GetSection($"ServiceBusSettings:Data").Value, GetEnvironmentVariable(configuration.GetSection($"ServiceBusSettings:Data").Value).ToString() },
+            { configuration.GetSection($"SendGridSettings:Data").Value, GetEnvironmentVariable(configuration.GetSection($"SendGridSettings:Data").Value).ToString() },
             { configuration.GetSection($"SendGridSettings:Data").Value, GetEnvironmentVariable(configuration.GetSection($"SendGridSettings:Data").Value).ToString() },
         };
 

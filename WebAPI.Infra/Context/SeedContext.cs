@@ -6,6 +6,7 @@ using MimeKit;
 using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Domain.Entities.ControlPanel;
 using WebAPI.Domain.Enums;
+using WebAPI.Domain.Entities.Configuration;
 
 namespace WebAPI.Infra.Data
 {
@@ -268,10 +269,10 @@ namespace WebAPI.Infra.Data
 
         private static void SeedEmailType(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<EmailType>().HasData(
-               new EmailType() { Id = 1, Description = "Gmail", SmtpConfig = "smtp.gmail.com", CreatedTime = _currentDate, IsActive = STATUS_TRUE },
-               new EmailType() { Id = 2, Description = "Outlook", SmtpConfig = "smtp.office365.com", CreatedTime = _currentDate, IsActive = STATUS_TRUE },
-               new EmailType() { Id = 3, Description = "Hotmail", SmtpConfig = "smtp.live.com", CreatedTime = _currentDate, IsActive = STATUS_TRUE }
+            modelBuilder.Entity<EmailSettings>().HasData(
+               new EmailSettings() { Id = 1, Host = "Gmail", SmtpConfig = "smtp.gmail.com", CreatedTime = _currentDate, IsActive = STATUS_TRUE },
+               new EmailSettings() { Id = 2, Host = "Outlook", SmtpConfig = "smtp.office365.com", CreatedTime = _currentDate, IsActive = STATUS_TRUE },
+               new EmailSettings() { Id = 3, Host = "Hotmail", SmtpConfig = "smtp.live.com", CreatedTime = _currentDate, IsActive = STATUS_TRUE }
             );
         }
 

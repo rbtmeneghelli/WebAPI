@@ -3,34 +3,30 @@ using MimeKit.Text;
 using MimeKit;
 using WebAPI.Application.Generic;
 using WebAPI.Application.FactoryInterfaces;
+using WebAPI.Domain.Entities.Configuration;
 
 namespace WebAPI.Application.Services;
 
 public class EmailService : GenericService, IEmailService
 {
-    EmailSettings _emailSettings { get; }
-    private readonly IGenericRepository<EmailType> _iEmailTypeRepository;
+    private readonly IGenericRepository<EmailSettings> _iEmailTypeRepository;
     private readonly IGenericRepository<EmailDisplay> _iEmailDisplayRepository;
     private readonly IEmailFactory _iEmailFactory;
+    private EnvironmentVariables _environmentVariables;
+    private EmailSettings _emailSettings;
 
     public EmailService(
-        EmailSettings emailSettings,
+        EnvironmentVariables environmentVariables,
         INotificationMessageService notificationMessageService,
-        IGenericRepository<EmailType> iEmailTypeRepository,
+        IGenericRepository<EmailSettings> iEmailTypeRepository,
         IGenericRepository<EmailDisplay> iEmailDisplayRepository,
         IEmailFactory iEmailFactory
         ) : base(notificationMessageService)
     {
-        _emailSettings = emailSettings;
+        _environmentVariables = environmentVariables;
         _iEmailTypeRepository = iEmailTypeRepository;
         _iEmailDisplayRepository = iEmailDisplayRepository;
         _iEmailFactory = iEmailFactory;
-    }
-
-    private void setEmailDomain()
-    {
-        var emailType = _iEmailTypeRepository.GetAll().Where(x => x.IsActive && x.Description.Equals(_emailSettings.Host, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
-        _emailSettings.PrimaryDomain = emailType is null ? _emailSettings.PrimaryDomain : emailType.SmtpConfig;
     }
 
     private MimeEntity BuildMessage(EmailConfig emailConfig, string appPath)
@@ -53,7 +49,7 @@ public class EmailService : GenericService, IEmailService
 
     private async Task SendEmailAsync(EmailConfig emailConfig, string appPath)
     {
-        setEmailDomain();
+        _emailSettings = _iEmailTypeRepository.GetAll().Where(x => x.IsActive && x.Environment.Equals(_environmentVariables.Environment)).FirstOrDefault();
         var email = new MimeMessage();
         email.Sender = MailboxAddress.Parse(emailConfig.EmailFrom.Address);
         emailConfig.EmailTo.Split(';').ToList().ForEach(p => email.To.Add(MailboxAddress.Parse(p.Trim())));
@@ -70,9 +66,9 @@ public class EmailService : GenericService, IEmailService
             try
             {
                 client.ServerCertificateValidationCallback = (s, c, h, e) => true;
-                client.Connect(_emailSettings.PrimaryDomain, _emailSettings.PrimaryPort, SecureSocketOptions.Auto);
+                client.Connect(_emailSettings.SmtpConfig, _emailSettings.PrimaryPort, SecureSocketOptions.Auto);
                 client.AuthenticationMechanisms.Remove("XOAUTH2");
-                client.Authenticate(_emailSettings.UsernameEmail, _emailSettings.UserPassword);
+                client.Authenticate(_emailSettings.Email, _emailSettings.Password);
                 await client.SendAsync(email);
                 await client.DisconnectAsync(true);
             }

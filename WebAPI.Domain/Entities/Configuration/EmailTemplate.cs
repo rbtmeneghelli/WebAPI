@@ -1,6 +1,6 @@
 ﻿using WebAPI.Domain.Generic;
 
-namespace WebAPI.Domain.Entities;
+namespace WebAPI.Domain.Entities.Configuration;
 
 public class EmailTemplate : GenericEntity
 {

@@ -2,7 +2,7 @@
 using MimeKit;
 using WebAPI.Domain.ExtensionMethods;
 
-namespace WebAPI.Domain.Entities;
+namespace WebAPI.Domain.Entities.Configuration;
 
 public class EmailDisplay : GenericEntity
 {

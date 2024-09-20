@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Serilog.Events;
+using WebAPI.Application.InterfacesService;
 using WebAPI.Domain.ExtensionMethods;
 using FixConstants = WebAPI.Domain.FixConstants;
 using ILogger = Serilog.ILogger;
@@ -15,19 +16,19 @@ namespace WebAPI.Controllers.Base
         protected readonly IMapper _mapperService;
         protected readonly INotificationMessageService _notificationService;
         protected readonly IHttpContextAccessor _accessor;
-        protected readonly IKLogger _iKLogger;
-
+        protected readonly IKissLogService _iKissLogService;
+        
         protected long UserId { get; set; }
         protected string UserName { get; set; }
         protected long ProfileId { get; set; }
         protected string AppPath { get; set; }
 
-        protected GenericController(IMapper mapperService, IHttpContextAccessor accessor, INotificationMessageService notificationService, IKLogger iKLogger)
+        protected GenericController(IMapper mapperService, IHttpContextAccessor accessor, INotificationMessageService notificationService, IKissLogService iKissLogService)
         {
             _mapperService = mapperService;
             _accessor = accessor;
             _notificationService = notificationService;
-            _iKLogger = iKLogger;
+            _iKissLogService = iKissLogService;
 
             if (IsAuthenticated())
             {
@@ -95,7 +96,7 @@ namespace WebAPI.Controllers.Base
             _notificationService.Handle(new Domain.Models.NotificationMessage(mensagem));
         }
 
-        protected bool OperationIsValid()
+        private bool OperationIsValid()
         {
             return !_notificationService.HaveNotification();
         }
@@ -111,6 +112,8 @@ namespace WebAPI.Controllers.Base
                     message = message
                 });
             }
+
+            //_iKissLogService.SaveLogOnSeriLog();
 
             return BadRequest(new
             {
@@ -166,26 +169,6 @@ namespace WebAPI.Controllers.Base
         protected bool ModelStateIsInvalid()
         {
             return ModelState.IsValid ? false : true;
-        }
-
-        protected void SaveLogTraceOnKissLog() => _iKLogger.Trace("Trace log");
-        protected void SaveLogDebugOnKissLog() => _iKLogger.Debug("Debug log");
-        protected void SaveLogInfoOnKissLog() => _iKLogger.Info("Information log");
-        protected void SaveLogCriticalOnKissLog() => _iKLogger.Critical("Critical log");
-        protected void SaveLogOnSeriLog(LogEventLevel logEventLevel = LogEventLevel.Information, string className = "", string methodName = "", string messageError = "", string obj = "")
-        {
-            // Fazendo o Serilog funcionar pra gravarlog
-            ILogger log = Serilog.Log.ForContext(typeof(ILogger));
-            log.Write
-            (
-                logEventLevel,
-                "{Class},{Method},{MessageError},{Object},{CreatedDate}",
-                className,
-                methodName,
-                messageError,
-                obj,
-                DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()
-            );
         }
     }
 }
