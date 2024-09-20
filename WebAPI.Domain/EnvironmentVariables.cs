@@ -77,9 +77,21 @@ public static class EnvironmentVariablesExtension
         return !string.IsNullOrWhiteSpace(data) ? data.DeserializeObject<TSource>() : default;
     }
 
+    public static TSource GetEnvironmentVariableToObject<TSource>(IConfiguration configuration, string varName)
+    {
+        var data = Environment.GetEnvironmentVariable(configuration[varName]) ?? string.Empty;
+        return !string.IsNullOrWhiteSpace(data) ? data.DeserializeObject<TSource>() : default;
+    }
+
     public static string[] GetEnvironmentVariableToStringArray<TSource>(string varName)
     {
         var data = Environment.GetEnvironmentVariable(varName) ?? StringExtensionMethod.GetEmptyString();
+        return !string.IsNullOrWhiteSpace(data) ? data.Split(',') : default;
+    }
+
+    public static string[] GetEnvironmentVariableToStringArray<TSource>(IConfiguration configuration, string varName)
+    {
+        var data = Environment.GetEnvironmentVariable(configuration[varName]) ?? string.Empty;
         return !string.IsNullOrWhiteSpace(data) ? data.Split(',') : default;
     }
 }

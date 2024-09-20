@@ -11,23 +11,11 @@ public static class GuardClauses
 
     public static bool IsNullOrWhiteSpace(string argumentValue) => string.IsNullOrWhiteSpace(argumentValue);
 
-    public static void IsNotZero(int argumentValue, string argumentName)
-    {
-        if (argumentValue == 0)
-            throw new ArgumentException($"Argumento '{argumentName}' não pode ser zero");
-    }
+    public static bool IsBiggerThanZero(int argumentValue, string argumentName) => argumentValue > 0;
 
-    public static void IsNotSmallerThan(int maxValue, int argumentValue, string argumentName)
-    {
-        if (argumentValue >= maxValue)
-            throw new ArgumentException($"Argumento '{argumentName}' não pode exceder '{maxValue}'");
-    }
+    public static bool IsValueBiggerThanMax( int argumentValue, int maxValue) => argumentValue >= maxValue;
 
-    public static void IsNotBiggerThan(int minValue, int argumentValue, string argumentName)
-    {
-        if (argumentValue <= minValue)
-            throw new ArgumentException($"Argumento '{argumentName}' não pode ser menor que '{minValue}'");
-    }
+    public static bool IsValueBiggerThanMin(int argumentValue, int minValue) => argumentValue <= minValue;
 
     public static bool IsBinaryString(string binaryContent) => Regex.IsMatch(binaryContent, "^[01]+$");
 

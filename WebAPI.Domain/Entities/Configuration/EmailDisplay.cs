@@ -17,7 +17,7 @@ public class EmailDisplay : GenericEntity
     public static string GetTitleDefault()
     {
         return "Padrão";
-    }
+    } 
 
     public static string GetTitleWelcome()
     {

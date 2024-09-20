@@ -31,6 +31,6 @@ public class AuditRepository : IAuditRepository
 
     public bool Exist(Expression<Func<Audit, bool>> predicate)
     {
-        return _repository.Exist(predicate);
+        return _repository.Exist(predicate); 
     }
 }

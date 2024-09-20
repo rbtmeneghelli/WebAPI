@@ -1,6 +1,4 @@
 ﻿using System.Net;
-using Microsoft.Extensions.Configuration;
-using WebAPI.Domain.ExtensionMethods;
 
 namespace WebAPI.Domain;
 
@@ -75,16 +73,4 @@ public static class FixConstants
     public const string MESSAGE_ERROR_APP_EX = "Atenção! Ocorreu um erro ao processar os dados. Tente novamente!";
     public const string MESSAGE_ERROR_UNAUTH_EX = "Atenção! Usuário não possui privilegios de permissão para prosseguir com a requisição solicitada!";
     public const string MESSAGE_ERROR_FORB_EX = "Sua sessão expirou, faça login novamente!";
-
-    public static TSource GetEnvironmentVariableToObject<TSource>(IConfiguration configuration, string varName)
-    {
-        var data = Environment.GetEnvironmentVariable(configuration[varName]) ?? string.Empty;
-        return !string.IsNullOrWhiteSpace(data) ? data.DeserializeObject<TSource>() : default;
-    }
-
-    public static string[] GetEnvironmentVariableToStringArray<TSource>(IConfiguration configuration, string varName)
-    {
-        var data = Environment.GetEnvironmentVariable(configuration[varName]) ?? string.Empty;
-        return !string.IsNullOrWhiteSpace(data) ? data.Split(',') : default;
-    }
 }

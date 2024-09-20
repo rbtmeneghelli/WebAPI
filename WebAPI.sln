@@ -9,11 +9,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1. WebAPI_Project", "1. Web
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2. WebAPI_Application", "2. WebAPI_Application", "{BFF07E98-3D2C-44C6-B845-B3ECEA7276B9}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. WebAPI_Domain", "3. WebAPI_Domain", "{E07F3A7E-507A-4041-89A8-5097532B2EA9}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5. WebAPI_Domain", "5. WebAPI_Domain", "{E07F3A7E-507A-4041-89A8-5097532B2EA9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4. WebAPI_Infra", "4. WebAPI_Infra", "{7B07CE38-7389-4879-BE39-4BE12B672E28}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5. WebAPI_IoC", "5. WebAPI_IoC", "{A9013027-B48E-41D4-9878-806723C6C7FD}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. WebAPI_IoC", "3. WebAPI_IoC", "{A9013027-B48E-41D4-9878-806723C6C7FD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "6. WebAPI_DesignPatterns", "6. WebAPI_DesignPatterns", "{92061A33-FDF7-4D2B-906A-2E3D9F381349}"
 EndProject
@@ -44,7 +44,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "9. WebAPI_Environment", "9.
 		DEV.bat = DEV.bat
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI_VerticalSliceArc", "WebAPI_VerticalSliceArc\WebAPI_VerticalSliceArc.csproj", "{31281BD1-D341-4275-86CD-DB59EA301BDB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAPI_VerticalSliceArc", "WebAPI_VerticalSliceArc\WebAPI_VerticalSliceArc.csproj", "{31281BD1-D341-4275-86CD-DB59EA301BDB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

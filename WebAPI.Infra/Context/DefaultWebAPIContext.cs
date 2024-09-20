@@ -2,12 +2,10 @@
 using WebAPI.Domain.Entities;
 using WebAPI.Domain.Enums;
 using WebAPI.Domain.ExtensionMethods;
-using WebAPI.Domain.Generic;
 using WebAPI.Infra.Data.Mapping;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Domain.Entities.ControlPanel;
-using NPOI.SS.Formula.Functions;
-using System.Linq.Expressions;
+using WebAPI.Infra.Mapping.Configuration;
 
 namespace WebAPI.Infra.Data.Context;
 
@@ -32,24 +30,40 @@ public partial class WebAPIContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(WebAPIContext).Assembly);
+
+        #region ControlPanelMappings
+
+        modelBuilder.ApplyConfiguration(new AreaMapping());
+        modelBuilder.ApplyConfiguration(new EmployeeMapping());
+        modelBuilder.ApplyConfiguration(new OperationMapping());
         modelBuilder.ApplyConfiguration(new UserMapping());
         modelBuilder.ApplyConfiguration(new ProfileMapping());
         modelBuilder.ApplyConfiguration(new ProfileOperationMapping());
+        modelBuilder.ApplyConfiguration(new ClientMapping());
+
+        #endregion
+
+        #region ConfigurationMappings
+
+        modelBuilder.ApplyConfiguration(new EmailTemplateMapping());
+        modelBuilder.ApplyConfiguration(new EmailDisplayMapping());
+        modelBuilder.ApplyConfiguration(new EmailSettingsMapping());
+        modelBuilder.ApplyConfiguration(new AuthenticationSettingsMapping());
+        modelBuilder.ApplyConfiguration(new ExpirationPasswordSettingsMapping());
+        modelBuilder.ApplyConfiguration(new LayoutSettingsMapping());
+        modelBuilder.ApplyConfiguration(new LogSettingsMapping());
+        modelBuilder.ApplyConfiguration(new RequiredPasswordSettingsMapping());
+        modelBuilder.ApplyConfiguration(new EnvironmentTypeSettingsMapping());
+
+        #endregion
+
         modelBuilder.ApplyConfiguration(new StatesMapping());
         modelBuilder.ApplyConfiguration(new CepsMapping());
         modelBuilder.ApplyConfiguration(new RegionMapping());
         modelBuilder.ApplyConfiguration(new AuditMapping());
         modelBuilder.ApplyConfiguration(new LogMapping());
-        modelBuilder.ApplyConfiguration(new OperationMapping());
-        modelBuilder.ApplyConfiguration(new ClientMapping());
         modelBuilder.ApplyConfiguration(new NotificationMapping());
         modelBuilder.ApplyConfiguration(new CityMapping());
-        modelBuilder.ApplyConfiguration(new ArchiveTypeMapping());
-        modelBuilder.ApplyConfiguration(new EmailTemplateMapping());
-        modelBuilder.ApplyConfiguration(new EmailDisplayMapping());
-        modelBuilder.ApplyConfiguration(new EmailTypeMapping());
-        modelBuilder.ApplyConfiguration(new AreaMapping());
-        modelBuilder.ApplyConfiguration(new EmployeeMapping());
 
         /* Código responsavel por impedir que os dados chaves de ADM sejam apresentados nas queries */
         modelBuilder.ApplyQueryFilterToTable<Area>(p => p.Id > 1);
@@ -135,7 +149,7 @@ public partial class WebAPIContext : DbContext
                 {
                     case EntityState.Added:
                         auditEntry.NewValues[propertyName] = property.CurrentValue;
-                        auditEntry.ActionName = EnumActions.Insert.GetDisplayName();
+                        auditEntry.ActionName = EnumActions.Create.GetDisplayName();
                         break;
 
                     case EntityState.Deleted:

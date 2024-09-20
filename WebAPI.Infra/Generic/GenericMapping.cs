@@ -12,6 +12,8 @@ public abstract class GenericMapping<T> : IEntityTypeConfiguration<T> where T : 
 
     public abstract void Configure(EntityTypeBuilder<T> builder);
 
+    public abstract void ConfigureTableName(string tableName);
+
     public virtual void ConfigureDefaultColumns()
     {
         _builder.HasKey(x => x.Id);

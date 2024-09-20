@@ -8,7 +8,7 @@ public enum EnumActions : byte
     None = 0,
 
     [Display(Name = "Cadastro")]
-    Insert = 1,
+    Create = 1,
 
     [Display(Name = "Edição")]
     Update = 2,

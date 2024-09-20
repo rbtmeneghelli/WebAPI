@@ -7,6 +7,7 @@ using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Domain.Entities.ControlPanel;
 using WebAPI.Domain.Enums;
 using WebAPI.Domain.Entities.Configuration;
+using WebAPI.Infra.Data.Context;
 
 namespace WebAPI.Infra.Data
 {
@@ -15,6 +16,47 @@ namespace WebAPI.Infra.Data
         private const bool STATUS_TRUE = true;
         private const bool STATUS_FALSE = false;
         private static DateTime _currentDate;
+
+        #region Configuration Seeds
+        private static void SeedEnvironmentType(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<EnvironmentTypeSettings>().HasData(
+               new EnvironmentTypeSettings() { Id = (int)EnumEnvironment.PRD, Description = EnumEnvironment.PRD.GetDisplayName(), CreatedTime = _currentDate, IsActive = STATUS_TRUE },
+               new EnvironmentTypeSettings() { Id = (int)EnumEnvironment.PRE_PROD, Description = EnumEnvironment.PRE_PROD.GetDisplayName(), CreatedTime = _currentDate, IsActive = STATUS_TRUE },
+               new EnvironmentTypeSettings() { Id = (int)EnumEnvironment.HML, Description = EnumEnvironment.HML.GetDisplayName(), CreatedTime = _currentDate, IsActive = STATUS_TRUE },
+               new EnvironmentTypeSettings() { Id = (int)EnumEnvironment.QA, Description = EnumEnvironment.QA.GetDisplayName(), CreatedTime = _currentDate, IsActive = STATUS_TRUE },
+               new EnvironmentTypeSettings() { Id = (int)EnumEnvironment.DEV, Description = EnumEnvironment.DEV.GetDisplayName(), CreatedTime = _currentDate, IsActive = STATUS_TRUE }
+            );
+        }
+
+        private static void SeedEmailSettings(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<EmailSettings>().HasData(
+               new EmailSettings() { Id = 1, Host = "Gmail", SmtpConfig = "smtp.gmail.com", CreatedTime = _currentDate, IsActive = STATUS_TRUE,  },
+               new EmailSettings() { Id = 2, Host = "Outlook", SmtpConfig = "smtp.office365.com", CreatedTime = _currentDate, IsActive = STATUS_TRUE },
+               new EmailSettings() { Id = 3, Host = "Hotmail", SmtpConfig = "smtp.live.com", CreatedTime = _currentDate, IsActive = STATUS_TRUE }
+            );
+        }
+
+        private static void SeedEmailTemplate(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<EmailTemplate>().HasData(
+               new EmailTemplate() { Id = 1, Description = "WebAPI", CreatedTime = _currentDate, IsActive = STATUS_TRUE }
+            );
+        }
+
+        private static void SeedEmailDisplay(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<EmailDisplay>().HasData(
+               new EmailDisplay() { Id = (int)EnumEmail.Welcome, Subject = EmailDisplay.GetSubjectWelcome(), Title = EnumEmail.Welcome.GetDisplayName(), Body = EmailDisplay.GetBodyTextWelcome(), EmailTemplateId = 1, Priority = MessagePriority.Normal, CreatedTime = _currentDate, IsActive = STATUS_TRUE, HasAttachment = STATUS_FALSE },
+               new EmailDisplay() { Id = (int)EnumEmail.ResetPassword, Subject = EmailDisplay.GetSubjectForgetPsw(), Title = EnumEmail.ResetPassword.GetDisplayName(), Body = EmailDisplay.GetBodyTextForgetPsw(), EmailTemplateId = 1, Priority = MessagePriority.Normal, CreatedTime = _currentDate, IsActive = STATUS_TRUE, HasAttachment = STATUS_FALSE },
+               new EmailDisplay() { Id = (int)EnumEmail.ChangePassword, Subject = EmailDisplay.GetSubjectTradePsw(), Title = EnumEmail.ChangePassword.GetDisplayName(), Body = EmailDisplay.GetBodyTextTradePsw(), EmailTemplateId = 1, Priority = MessagePriority.Normal, CreatedTime = _currentDate, IsActive = STATUS_TRUE, HasAttachment = STATUS_FALSE },
+               new EmailDisplay() { Id = 4, Subject = EmailDisplay.GetSubjectConfirmPsw(), Title = EmailDisplay.GetTitleConfirmPsw(), Body = EmailDisplay.GetBodyTextConfirmPsw(), EmailTemplateId = 1, Priority = MessagePriority.Normal, CreatedTime = _currentDate, IsActive = STATUS_TRUE, HasAttachment = STATUS_FALSE },
+               new EmailDisplay() { Id = 5, Subject = EmailDisplay.GetSubjectReport(), Title = EmailDisplay.GetTitleReport(), Body = StringExtensionMethod.GetEmptyString(), EmailTemplateId = 1, Priority = MessagePriority.Normal, CreatedTime = _currentDate, IsActive = STATUS_TRUE, HasAttachment = STATUS_FALSE }
+            );
+        }
+
+        #endregion
 
         #region Control Seeds
 
@@ -246,49 +288,6 @@ namespace WebAPI.Infra.Data
 
         #endregion
 
-        #region Operational Seeds
-        private static void SeedArchiveType(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<ArchiveType>().HasData(
-               new ArchiveType() { Id = 1, Description = "Word", CreatedTime = _currentDate, IsActive = STATUS_TRUE },
-               new ArchiveType() { Id = 2, Description = "Excel", CreatedTime = _currentDate, IsActive = STATUS_TRUE },
-               new ArchiveType() { Id = 3, Description = "Pdf", CreatedTime = _currentDate, IsActive = STATUS_TRUE },
-               new ArchiveType() { Id = 4, Description = "Txt", CreatedTime = _currentDate, IsActive = STATUS_TRUE },
-               new ArchiveType() { Id = 5, Description = "Jpg", CreatedTime = _currentDate, IsActive = STATUS_TRUE },
-               new ArchiveType() { Id = 6, Description = "Word", CreatedTime = _currentDate, IsActive = STATUS_TRUE },
-               new ArchiveType() { Id = 7, Description = "Png", CreatedTime = _currentDate, IsActive = STATUS_TRUE }
-            );
-        }
-
-        private static void SeedEmailTemplate(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<EmailTemplate>().HasData(
-               new EmailTemplate() { Id = 1, Description = "WebAPI", CreatedTime = _currentDate, IsActive = STATUS_TRUE }
-            );
-        }
-
-        private static void SeedEmailType(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<EmailSettings>().HasData(
-               new EmailSettings() { Id = 1, Host = "Gmail", SmtpConfig = "smtp.gmail.com", CreatedTime = _currentDate, IsActive = STATUS_TRUE },
-               new EmailSettings() { Id = 2, Host = "Outlook", SmtpConfig = "smtp.office365.com", CreatedTime = _currentDate, IsActive = STATUS_TRUE },
-               new EmailSettings() { Id = 3, Host = "Hotmail", SmtpConfig = "smtp.live.com", CreatedTime = _currentDate, IsActive = STATUS_TRUE }
-            );
-        }
-
-        private static void SeedEmailDisplay(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<EmailDisplay>().HasData(
-               new EmailDisplay() { Id = (int)EnumEmail.Welcome, Subject = EmailDisplay.GetSubjectWelcome(), Title = EnumEmail.Welcome.GetDisplayName(), Body = EmailDisplay.GetBodyTextWelcome(), EmailTemplateId = 1, Priority = MessagePriority.Normal, CreatedTime = _currentDate, IsActive = STATUS_TRUE, HasAttachment = STATUS_FALSE },
-               new EmailDisplay() { Id = (int)EnumEmail.ResetPassword, Subject = EmailDisplay.GetSubjectForgetPsw(), Title = EnumEmail.ResetPassword.GetDisplayName(), Body = EmailDisplay.GetBodyTextForgetPsw(), EmailTemplateId = 1, Priority = MessagePriority.Normal, CreatedTime = _currentDate, IsActive = STATUS_TRUE, HasAttachment = STATUS_FALSE },
-               new EmailDisplay() { Id = (int)EnumEmail.ChangePassword, Subject = EmailDisplay.GetSubjectTradePsw(), Title = EnumEmail.ChangePassword.GetDisplayName(), Body = EmailDisplay.GetBodyTextTradePsw(), EmailTemplateId = 1, Priority = MessagePriority.Normal, CreatedTime = _currentDate, IsActive = STATUS_TRUE, HasAttachment = STATUS_FALSE },
-               new EmailDisplay() { Id = 4, Subject = EmailDisplay.GetSubjectConfirmPsw(), Title = EmailDisplay.GetTitleConfirmPsw(), Body = EmailDisplay.GetBodyTextConfirmPsw(), EmailTemplateId = 1, Priority = MessagePriority.Normal, CreatedTime = _currentDate, IsActive = STATUS_TRUE, HasAttachment = STATUS_FALSE },
-               new EmailDisplay() { Id = 5, Subject = EmailDisplay.GetSubjectReport(), Title = EmailDisplay.GetTitleReport(), Body = StringExtensionMethod.GetEmptyString(), EmailTemplateId = 1, Priority = MessagePriority.Normal, CreatedTime = _currentDate, IsActive = STATUS_TRUE, HasAttachment = STATUS_FALSE }
-            );
-        }
-
-        #endregion
-
         public static void ExecuteSeedControl(this ModelBuilder modelBuilder)
         {
             _currentDate = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
@@ -307,6 +306,21 @@ namespace WebAPI.Infra.Data
             SeedEmailTemplate(modelBuilder);
             SeedEmailType(modelBuilder);
             SeedEmailDisplay(modelBuilder);
+        }
+
+        public static void ReseedTables(this WebAPIContext context)
+        {
+            if (context.User.Where(x => x.Id > 1).Count() > 0)
+            {
+                context.Database.ExecuteSqlRaw("DBCC CHECKIDENT ('Users', RESEED, 2)");
+                context.SaveChanges();
+            }
+
+            if (context.Profile.Where(x => x.Id > 3).Count() > 0)
+            {
+                context.Database.ExecuteSqlRaw("DBCC CHECKIDENT ('Profiles', RESEED, 4)");
+                context.SaveChanges();
+            }
         }
     }
 }

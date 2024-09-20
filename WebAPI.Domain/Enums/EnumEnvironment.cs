@@ -5,20 +5,17 @@ namespace WebAPI.Domain.Enums;
 public enum EnumEnvironment : byte
 {
     [Display(Name = "Ambiente Produção")]
-    PRD = 0,
+    PRD = 1,
 
     [Display(Name = "Ambiente Pre-Produção")]
-    PRE_PROD = 1,
+    PRE_PROD = 2,
 
     [Display(Name = "Ambiente Homologação")]
-    HML = 2,
+    HML = 3,
 
     [Display(Name = "Ambiente Teste")]
-    QA = 3,
+    QA = 4,
 
     [Display(Name = "Ambiente Desenvolvimento")]
-    DEV = 4,
-
-    [Display(Name = "Ambiente Local")]
-    Local = 5,
+    DEV = 5,
 }

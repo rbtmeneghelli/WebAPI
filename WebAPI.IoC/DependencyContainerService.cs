@@ -244,7 +244,7 @@ public static class DependencyContainerService
 
     public static void RegisterCorsConfigRestriction(this IServiceCollection services, IConfiguration configuration)
     {
-        var origins = FixConstants.GetEnvironmentVariableToStringArray<string[]>(configuration, "WebAPI_Settings:corsSettings");
+        var origins = EnvironmentVariablesExtension.GetEnvironmentVariableToStringArray<string[]>(configuration, "WebAPI_Settings:corsSettings");
         services.AddCors(options =>
         {
             options.AddPolicy("EnableCORS", builder =>

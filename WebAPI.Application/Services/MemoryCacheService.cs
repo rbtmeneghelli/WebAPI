@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
+using WebAPI.Domain.Models.Settings;
 
 namespace WebAPI.Application.Services;
 

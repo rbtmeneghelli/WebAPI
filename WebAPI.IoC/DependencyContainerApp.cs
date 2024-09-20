@@ -8,8 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WebAPI.Domain;
-using WebAPI.Domain.Models;
 using WebAPI.Infra.Structure.IoC.Middleware.ExceptionHandler;
+using WebAPI.Domain.Models.Settings;
 
 namespace WebAPI.Infra.Structure.IoC;
 
@@ -31,7 +31,7 @@ public static class DependencyContainerApp
 
     private static void ConfigureKissLog(IConfiguration configuration)
     {
-        var configKissLog = FixConstants.GetEnvironmentVariableToObject<KissLogSettings>(configuration, "WebAPI_Settings:kissLogSettings");
+        var configKissLog = EnvironmentVariablesExtension.GetEnvironmentVariableToObject<KissLogSettings>(configuration, "WebAPI_Settings:kissLogSettings");
 
         var configs = configKissLog.OrganizationId;
         KissLogConfiguration.Listeners
