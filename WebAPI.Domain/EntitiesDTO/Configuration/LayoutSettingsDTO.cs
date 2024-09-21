@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WebAPI.Domain.Generic;
+using WebAPI.Domain.EntitiesDTO.Generic;
 
 namespace WebAPI.Domain.EntitiesDTO.Configuration
 {

@@ -1,6 +1,6 @@
-﻿using WebAPI.Domain.Entities;
-using WebAPI.Domain.Filters;
-using MediatR;
+﻿using MediatR;
+using WebAPI.Domain.Filters.Others;
+using WebAPI.Domain.Entities.Others;
 
 namespace WebAPI.Domain.CQRS.Command;
 

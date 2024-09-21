@@ -1,7 +1,11 @@
 ﻿using WebAPI.Application.Factory;
 using WebAPI.Application.Generic;
 using WebAPI.Application.InterfacesRepository;
+using WebAPI.Domain.Constants;
+using WebAPI.Domain.Entities.Others;
 using WebAPI.Domain.ExtensionMethods;
+using WebAPI.Domain.Filters.Others;
+using WebAPI.Domain.Interfaces.Services.Tools;
 using WebAPI.Domain.Models;
 
 namespace WebAPI.Application.Services
@@ -54,10 +58,10 @@ namespace WebAPI.Application.Services
             {
                 foreach (var item in refreshStates.ListStateAPI)
                 {
-                    States state = refreshStates.ListState.FirstOrDefault(x => x.Initials == item.Initials && x.IsActive == true);
+                    States state = refreshStates.ListState.FirstOrDefault(x => x.Initials == item.Initials && x.Status == true);
                     if (GuardClauses.ObjectIsNotNull(state))
                     {
-                        state.UpdateTime = state.GetNewUpDateTime();
+                        state.UpdateDate = state.GetNewUpdateDate();
                         state.Name = item.Name;
                         state.Initials = item.Initials;
                         _stateRepository.Update(state);
@@ -65,7 +69,7 @@ namespace WebAPI.Application.Services
                     else
                     {
                         state = new States();
-                        state.IsActive = true;
+                        state.Status = true;
                         state.Name = item.Name;
                         state.Initials = item.Initials;
                         state.RegionId = refreshStates.ListRegion.FirstOrDefault(x => x.Initials == item.Region.Initials).Id ?? 0;
@@ -90,7 +94,7 @@ namespace WebAPI.Application.Services
                 States record = await Task.FromResult(_stateRepository.GetById(id));
                 if (GuardClauses.ObjectIsNotNull(record))
                 {
-                    record.IsActive = record.IsActive == true ? false : true;
+                    record.Status = record.Status == true ? false : true;
                     _stateRepository.Update(record);
                     return true;
                 }
@@ -119,7 +123,7 @@ namespace WebAPI.Application.Services
                                       Id = x.Id,
                                       Name = x.Name,
                                       Initials = x.Initials,
-                                      IsActive = x.IsActive
+                                      Status = x.Status
                                   };
 
                 return PagedFactory.GetPaged(queryResult, PagedFactory.GetDefaultPageIndex(filter.PageIndex), PagedFactory.GetDefaultPageSize(filter.PageSize));

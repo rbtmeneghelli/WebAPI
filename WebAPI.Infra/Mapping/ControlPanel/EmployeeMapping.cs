@@ -11,8 +11,13 @@ public class EmployeeMapping : GenericMapping<Employee>
     {
         _builder = builder;
         base.ConfigureDefaultColumns();
-        _builder.ToTable("Employees");
+        _builder.ToTable("ControlPanel_Employee");
         ConfigureColumns();
+    }
+
+    public override void ConfigureTableName(string tableName)
+    {
+        _builder.ToTable(tableName);
     }
 
     private void ConfigureColumns()

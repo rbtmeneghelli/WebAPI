@@ -1,6 +1,6 @@
 ﻿using MongoDB.Driver;
 using WebAPI.Application.Generic;
-using WebAPI.Application.InterfacesService;
+using WebAPI.Domain.Interfaces.Services.Tools;
 
 namespace WebAPI.Application.Services;
 

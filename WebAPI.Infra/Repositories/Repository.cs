@@ -1,5 +1,4 @@
 ﻿using WebAPI.Domain;
-using WebAPI.Domain.Entities;
 using WebAPI.Infra.Data.Context;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +6,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using System.Data;
 using System.Linq.Expressions;
 using WebAPI.Application.Generic;
+using WebAPI.Domain.Entities.Others;
 
 namespace WebAPI.Infra.Data.Repositories;
 

@@ -2,6 +2,7 @@
 using KissLog;
 using System.Diagnostics;
 using LogMessage = WebAPI.Domain.Models.LogMessage;
+using WebAPI.Domain.Interfaces.Services.Tools;
 
 namespace WebAPI.V1.Controllers;
 

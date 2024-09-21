@@ -1,5 +1,6 @@
 ﻿using WebAPI.Domain.ExtensionMethods;
 using System.Security.Cryptography;
+using WebAPI.Domain.Constants;
 
 namespace WebAPI.Domain.Cryptography;
 

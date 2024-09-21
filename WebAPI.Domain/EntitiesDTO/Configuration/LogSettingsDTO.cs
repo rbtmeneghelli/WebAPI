@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using WebAPI.Domain.EntitiesDTO.Generic;
 using WebAPI.Domain.Enums;
-using WebAPI.Domain.Generic;
 
 namespace WebAPI.Domain.EntitiesDTO.Configuration;
 

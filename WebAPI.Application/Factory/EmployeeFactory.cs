@@ -1,6 +1,6 @@
 ﻿using WebAPI.Application.FactoryInterfaces;
 using WebAPI.Application.FactoryServices;
-using WebAPI.Domain.Generic;
+using WebAPI.Domain.Models.Generic;
 using IEmployeeService = WebAPI.Application.FactoryInterfaces.IEmployeeService;
 
 namespace WebAPI.Application.Factory

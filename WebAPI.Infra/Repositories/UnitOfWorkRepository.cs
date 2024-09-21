@@ -13,7 +13,7 @@ namespace WebAPI.Infra.Data.Repositories
         public ICepRepository Ceps { get; }
         public ICityRepository Cities { get; }
         public IRegionRepository Regions { get; }
-        public IStatesRepository States { get; }
+        public IStatesRepository States { get; } 
         public IUserRepository Users { get; }
 
         public UnitOfWorkRepository(

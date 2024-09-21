@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
+using WebAPI.Domain.Entities.Generic;
 using WebAPI.Domain.Enums;
-using WebAPI.Domain.Generic;
 
 namespace WebAPI.Domain.Entities.Configuration;
 

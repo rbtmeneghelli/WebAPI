@@ -4,6 +4,8 @@ using MimeKit;
 using WebAPI.Application.Generic;
 using WebAPI.Application.FactoryInterfaces;
 using WebAPI.Domain.Entities.Configuration;
+using WebAPI.Domain.Interfaces.Services.Tools;
+using WebAPI.Domain.Interfaces.Services.Configuration;
 
 namespace WebAPI.Application.Services;
 
@@ -49,7 +51,7 @@ public class EmailService : GenericService, IEmailService
 
     private async Task SendEmailAsync(EmailConfig emailConfig, string appPath)
     {
-        _emailSettings = _iEmailTypeRepository.GetAll().Where(x => x.IsActive && x.Environment.Equals(_environmentVariables.Environment)).FirstOrDefault();
+        _emailSettings = _iEmailTypeRepository.GetAll().Where(x => x.Status && x.IdEnvironmentType == (int)_environmentVariables.Environment).FirstOrDefault();
         var email = new MimeMessage();
         email.Sender = MailboxAddress.Parse(emailConfig.EmailFrom.Address);
         emailConfig.EmailTo.Split(';').ToList().ForEach(p => email.To.Add(MailboxAddress.Parse(p.Trim())));
@@ -90,7 +92,7 @@ public class EmailService : GenericService, IEmailService
         var emailDisplay = _iEmailDisplayRepository
                            .GetAll()
                            .Include(x => x.EmailTemplates)
-                           .Where(x => x.IsActive && x.Id == iEmailFactoryConfig.GetDisplayIdToSend())
+                           .Where(x => x.Status && x.Id == iEmailFactoryConfig.GetDisplayIdToSend())
                            .FirstOrDefault();
 
         if (GuardClauses.ObjectIsNotNull(emailDisplay))

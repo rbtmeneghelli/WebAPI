@@ -1,11 +1,12 @@
 ﻿using WebAPI.Domain;
-using WebAPI.Domain.Entities;
 using WebAPI.Domain.Enums;
 using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Infra.Data.Mapping;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Domain.Entities.ControlPanel;
 using WebAPI.Infra.Mapping.Configuration;
+using WebAPI.Infra.Mapping.ControlPanel;
+using WebAPI.Domain.Entities.Others;
 
 namespace WebAPI.Infra.Data.Context;
 
@@ -70,8 +71,8 @@ public partial class WebAPIContext : DbContext
 
         foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys())) 
         relationship.DeleteBehavior = DeleteBehavior.ClientSetNull;
-        modelBuilder.ExecuteSeedControl();
-        modelBuilder.ExecuteSeedOperation();
+        modelBuilder.ExecuteSeedControlPanel();
+        modelBuilder.ExecuteSeedConfiguration();
         base.OnModelCreating(modelBuilder);
     }
 

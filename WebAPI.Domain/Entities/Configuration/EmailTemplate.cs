@@ -1,4 +1,4 @@
-﻿using WebAPI.Domain.Generic;
+﻿using WebAPI.Domain.Entities.Generic;
 
 namespace WebAPI.Domain.Entities.Configuration;
 

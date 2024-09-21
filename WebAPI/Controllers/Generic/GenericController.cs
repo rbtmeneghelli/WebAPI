@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Serilog.Events;
-using WebAPI.Application.InterfacesService;
 using WebAPI.Domain.ExtensionMethods;
-using FixConstants = WebAPI.Domain.FixConstants;
+using WebAPI.Domain.Interfaces.Services.Tools;
+using FixConstants = WebAPI.Domain.Constants.FixConstants;
 using ILogger = Serilog.ILogger;
 
 namespace WebAPI.Controllers.Base

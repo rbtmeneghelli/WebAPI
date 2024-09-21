@@ -1,8 +1,7 @@
-﻿using WebAPI.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
 using WebAPI.Infra.Generic;
+using WebAPI.Domain.Entities.Others;
 
 namespace WebAPI.Infra.Data.Mapping;
 
@@ -12,8 +11,13 @@ public class StatesMapping : GenericMapping<States>
     {
         _builder = builder;
         base.ConfigureDefaultColumns();
-        _builder.ToTable("States");
+        _builder.ToTable("ControlPanel_State");
         ConfigureColumns();
+    }
+
+    public override void ConfigureTableName(string tableName)
+    {
+        _builder.ToTable(tableName);
     }
 
     private void ConfigureColumns()

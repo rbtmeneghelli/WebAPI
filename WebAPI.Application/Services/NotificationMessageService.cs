@@ -1,4 +1,6 @@
-﻿namespace WebAPI.Application.Services
+﻿using WebAPI.Domain.Interfaces.Services.Tools;
+
+namespace WebAPI.Application.Services
 {
     public class NotificationMessageService : INotificationMessageService
     {

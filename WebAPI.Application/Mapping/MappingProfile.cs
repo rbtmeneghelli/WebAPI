@@ -1,5 +1,8 @@
 ﻿using WebAPI.Domain.CQRS.Command;
 using WebAPI.Domain.Entities.ControlPanel;
+using WebAPI.Domain.Entities.Others;
+using WebAPI.Domain.EntitiesDTO.ControlPanel;
+using WebAPI.Domain.EntitiesDTO.Others;
 using WebAPI.Domain.ExtensionMethods;
 
 namespace WebAPI.Application
@@ -10,14 +13,14 @@ namespace WebAPI.Application
         {
             CreateMap<UserRequestDTO, User>()
             .ForMember(dest => dest.Id, act => act.MapFrom(src => src.GetId()))
-            .ForMember(dest => dest.IsActive, act => act.MapFrom(src => src.IsActive))
+            .ForMember(dest => dest.Status, act => act.MapFrom(src => src.IsActive))
             .ForMember(dest => dest.IsAuthenticated, act => act.MapFrom(src => src.IsAuthenticated))
             .ForMember(dest => dest.LastPassword, act => act.MapFrom(src => src.LastPassword.ApplyTrim()))
             .ForMember(dest => dest.Login, act => act.MapFrom(src => src.Login.ApplyTrim()))
             .ForMember(dest => dest.Password, act => act.MapFrom(src => src.Password.ApplyTrim()));
 
             CreateMap<User, UserResponseDTO>()
-            .ForMember(dest => dest.IsActive, act => act.MapFrom(src => src.IsActive))
+            .ForMember(dest => dest.IsActive, act => act.MapFrom(src => src.Status))
             .ForMember(dest => dest.IsAuthenticated, act => act.MapFrom(src => src.IsAuthenticated))
             .ForMember(dest => dest.LastPassword, act => act.MapFrom(src => src.LastPassword.ApplyTrim()))
             .ForMember(dest => dest.Login, act => act.MapFrom(src => src.Login.ApplyTrim()))

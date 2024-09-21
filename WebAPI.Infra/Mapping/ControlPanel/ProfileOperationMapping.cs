@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WebAPI.Domain.Entities.ControlPanel;
+using WebAPI.Infra.Generic;
 
 namespace WebAPI.Infra.Mapping.ControlPanel;
 
@@ -12,18 +13,23 @@ public class ProfileOperationMapping : IEntityTypeConfiguration<ProfileOperation
     public void Configure(EntityTypeBuilder<ProfileOperation> builder)
     {
         _builder = builder;
-        _builder.ToTable("ProfileOperations");
+        _builder.ToTable("ControlPanel_ProfileOperations");
         ConfigurePrimaryKey();
         ConfigureColumns();
         ConfigureForeignKeys();
         ConfigureIndexes();
     }
 
+    public void ConfigureTableName(string tableName)
+    {
+        _builder.ToTable(tableName);
+    }
+
     private void ConfigureColumns()
     {
         _builder.Property(x => x.Id).ValueGeneratedOnAdd().UseIdentityColumn(1, 1).HasColumnName("Id");
-        _builder.Property(a => a.IdProfile).IsRequired(true).HasColumnName("Id_Profile");
-        _builder.Property(a => a.IdOperation).IsRequired(true).HasColumnName("Id_Operation");
+        _builder.Property(a => a.IdProfile).IsRequired(true).HasColumnName("IdProfile");
+        _builder.Property(a => a.IdOperation).IsRequired(true).HasColumnName("IdOperation");
         _builder.Property(a => a.Order).IsRequired(true).HasColumnName("Order");
         _builder.Property(a => a.IsEnable).IsRequired(true).HasDefaultValue(false).HasColumnName("IsEnable");
         _builder.Property(a => a.RoleTag).IsRequired(true).HasMaxLength(255).HasColumnName("RoleTag");

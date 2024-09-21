@@ -1,5 +1,5 @@
-﻿using WebAPI.Domain.EntitiesDTO;
-using WebAPI.Domain.Entities.ControlPanel;
+﻿using WebAPI.Domain.Entities.ControlPanel;
+using WebAPI.Domain.EntitiesDTO.ControlPanel;
 
 namespace WebAPI.Domain.ExtensionMethods;
 
@@ -16,7 +16,7 @@ public static class MapperExtensionMethod
             Password = "XXXX",
             LastPassword = "XPTO",
             IsAuthenticated = user.IsAuthenticated,
-            Status = user.GetIsActiveDescription()
+            Status = user.GetStatusDescription()
         };
     }
 }

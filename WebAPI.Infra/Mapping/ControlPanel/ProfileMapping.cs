@@ -11,8 +11,13 @@ public class ProfileMapping : GenericMapping<Profile>
     {
         _builder = builder;
         base.ConfigureDefaultColumns();
-        _builder.ToTable("Profiles");
+        _builder.ToTable("ControlPanel_Profile");
         ConfigureColumns();
+    }
+
+    public override void ConfigureTableName(string tableName)
+    {
+        _builder.ToTable(tableName);
     }
 
     private void ConfigureColumns()

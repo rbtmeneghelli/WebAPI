@@ -1,6 +1,8 @@
 ﻿using KissLog;
 using WebAPI.Application.Generic;
+using WebAPI.Domain.Constants;
 using WebAPI.Domain.Entities.ControlPanel;
+using WebAPI.Domain.Interfaces.Services.Tools;
 
 namespace WebAPI.V1.Controllers;
 
@@ -65,7 +67,7 @@ public sealed class AccountController : GenericController
 
         var result = await _unitofWorkService.Accounts.ChangePasswordAsync(UserId, user);
         if (result)
-            return CustomResponse(null, Domain.FixConstants.SUCCESS_IN_CHANGEPASSWORD);
+            return CustomResponse(null, FixConstants.SUCCESS_IN_CHANGEPASSWORD);
 
         return CustomResponse();
     }
@@ -76,7 +78,7 @@ public sealed class AccountController : GenericController
         var result = await _unitofWorkService.Accounts.ResetPasswordAsync(email);
 
         if (result)
-            return CustomResponse(null, Domain.FixConstants.SUCCESS_IN_RESETPASSWORD);
+            return CustomResponse(null, FixConstants.SUCCESS_IN_RESETPASSWORD);
 
         return CustomResponse();
     }
@@ -110,7 +112,7 @@ public sealed class AccountController : GenericController
         var principal = _generalService.GetPrincipalFromExpiredToken(tokens.Token);
         var savedRefreshToken = _generalService.GetRefreshToken(principal.Identity.Name);
         if (savedRefreshToken != tokens.RefreshToken)
-            throw new SecurityTokenException(Domain.FixConstants.ERROR_IN_REFRESHTOKEN);
+            throw new SecurityTokenException(FixConstants.ERROR_IN_REFRESHTOKEN);
 
         var newJwtToken = _generalService.GenerateToken(principal.Claims);
         var newRefreshToken = _generalService.GenerateRefreshToken();

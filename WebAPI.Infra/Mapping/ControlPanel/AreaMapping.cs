@@ -11,8 +11,13 @@ public class AreaMapping : GenericMapping<Area>
     {
         _builder = builder;
         base.ConfigureDefaultColumns();
-        _builder.ToTable("Areas");
+        ConfigureTableName("ControlPanel_Area");
         ConfigureColumns();
+    }
+
+    public override void ConfigureTableName(string tableName)
+    {
+        _builder.ToTable(tableName);
     }
 
     private void ConfigureColumns()

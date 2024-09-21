@@ -1,9 +1,9 @@
 ﻿using WebAPI.Domain;
-using WebAPI.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using WebAPI.Domain.ExtensionMethods;
+using WebAPI.Domain.Entities.Others;
 
 namespace WebAPI.Infra.Data.Mapping;
 
@@ -14,8 +14,13 @@ public class NotificationMapping : IEntityTypeConfiguration<Notification>
     public void Configure(EntityTypeBuilder<Notification> builder)
     {
         _builder = builder;
-        _builder.ToTable("Notification");
+        ConfigureTableName("ControlPanel_Notification");
         ConfigureColumns();
+    }
+
+    public void ConfigureTableName(string tableName)
+    {
+        _builder.ToTable(tableName);
     }
 
     private void ConfigureColumns()
@@ -23,7 +28,7 @@ public class NotificationMapping : IEntityTypeConfiguration<Notification>
         _builder.HasKey(x => x.Id);
         _builder.Property(x => x.Id).ValueGeneratedOnAdd().UseIdentityColumn(1, 1).HasColumnName("Id");
         _builder.Property(x => x.Description).IsRequired().HasMaxLength(100).HasColumnName("Description");
-        _builder.Property(x => x.CreatedTime).HasDefaultValue(DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()).HasColumnName("Created_Time").ValueGeneratedOnAdd();
-        _builder.Property(x => x.IsActive).IsRequired().HasDefaultValue(true).HasColumnName("Is_Active").HasColumnType("bit");
+        _builder.Property(x => x.CreatedDate).HasDefaultValue(DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()).HasColumnName("CreatedDate").ValueGeneratedOnAdd();
+        _builder.Property(x => x.Status).IsRequired().HasDefaultValue(true).HasColumnName("Status").HasColumnType("bit");
     }
 }

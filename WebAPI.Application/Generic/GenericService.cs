@@ -1,6 +1,7 @@
-﻿using WebAPI.Domain.Generic;
-using FluentValidation;
+﻿using FluentValidation;
 using ValidationResult = FluentValidation.Results.ValidationResult;
+using WebAPI.Domain.Entities.Generic;
+using WebAPI.Domain.Interfaces.Services.Tools;
 
 namespace WebAPI.Application.Generic;
 

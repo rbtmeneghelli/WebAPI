@@ -1,9 +1,13 @@
 ﻿using WebAPI.Application.Factory;
 using WebAPI.Application.Generic;
 using WebAPI.Application.InterfacesRepository;
+using WebAPI.Domain.Constants;
 using WebAPI.Domain.Cryptography;
 using WebAPI.Domain.Entities.ControlPanel;
+using WebAPI.Domain.EntitiesDTO.ControlPanel;
 using WebAPI.Domain.ExtensionMethods;
+using WebAPI.Domain.Filters.ControlPanel;
+using WebAPI.Domain.Interfaces.Services.Tools;
 using WebAPI.Domain.Models;
 
 namespace WebAPI.Application.Services;
@@ -36,7 +40,7 @@ public class UserService : GenericService, IUserService
             &&
             (!filter.IsAuthenticated.HasValue || filter.IsAuthenticated == p.IsAuthenticated)
             &&
-            (!filter.IsActive.HasValue || filter.IsActive == p.IsActive)
+            (!filter.IsActive.HasValue || filter.IsActive == p.Status)
             &&
             (!filter.IdProfile.HasValue || filter.IdProfile == p.Employee.IdProfile);
         else
@@ -59,12 +63,12 @@ public class UserService : GenericService, IUserService
                               Id = p.Id,
                               Login = p.Login,
                               IsAuthenticated = p.IsAuthenticated,
-                              IsActive = p.IsActive,
+                              IsActive = p.Status,
                               Password = "-",
                               LastPassword = "-",
                               Employee = p.Employee.Name,
                               Profile = p.Employee.Profile.Description,
-                              Status = p.GetIsActiveDescription(),
+                              Status = p.GetStatusDescription(),
                           }).ToListAsync();
         }
         catch
@@ -91,11 +95,11 @@ public class UserService : GenericService, IUserService
                                   Id = p.Id,
                                   Login = p.Login,
                                   IsAuthenticated = p.IsAuthenticated,
-                                  IsActive = p.IsActive,
+                                  IsActive = p.Status,
                                   Password = "-",
                                   LastPassword = "-",
                                   Profile = p.Employee.Profile.Description,
-                                  Status = p.GetIsActiveDescription(),
+                                  Status = p.GetStatusDescription(),
                               };
 
             return PagedFactory.GetPaged(queryResult, PagedFactory.GetDefaultPageIndex(filter.PageIndex), PagedFactory.GetDefaultPageSize(filter.PageSize));
@@ -122,10 +126,10 @@ public class UserService : GenericService, IUserService
                               Id = p.Id,
                               Login = p.Login,
                               IsAuthenticated = p.IsAuthenticated,
-                              IsActive = p.IsActive,
+                              IsActive = p.Status,
                               Password = "-",
                               LastPassword = "-",
-                              Status = p.GetIsActiveDescription(),
+                              Status = p.GetStatusDescription(),
                           }).FirstOrDefaultAsync();
         }
         catch
@@ -150,11 +154,11 @@ public class UserService : GenericService, IUserService
                               Id = p.Id,
                               Login = p.Login,
                               IsAuthenticated = p.IsAuthenticated,
-                              IsActive = p.IsActive,
+                              IsActive = p.Status,
                               Password = "-",
                               LastPassword = "-",
                               Profile = p.Employee.Profile.Description,
-                              Status = p.GetIsActiveDescription(),
+                              Status = p.GetStatusDescription(),
                           }).FirstOrDefaultAsync();
         }
         catch
@@ -285,7 +289,7 @@ public class UserService : GenericService, IUserService
             {
                 userDb.LastPassword = userDb.Password;
                 userDb.Password = HashingManager.GetLoadHashingManager().HashToString(user.Password);
-                userDb.UpdateTime = userDb.GetNewUpDateTime();
+                userDb.UpdateDate = userDb.GetNewUpdateDate();
                 _userRepository.Update(userDb);
                 return true;
             }
@@ -339,8 +343,8 @@ public class UserService : GenericService, IUserService
 
             if (GuardClauses.ObjectIsNotNull(user))
             {
-                user.UpdateTime = user.GetNewUpDateTime();
-                user.IsActive = false;
+                user.UpdateDate = user.GetNewUpdateDate();
+                user.Status = false;
                 _userRepository.Update(user);
                 return true;
             }
@@ -386,8 +390,8 @@ public class UserService : GenericService, IUserService
 
             if (GuardClauses.ObjectIsNotNull(user))
             {
-                user.UpdateTime = user.GetNewUpDateTime();
-                user.IsActive = true;
+                user.UpdateDate = user.GetNewUpdateDate();
+                user.Status = true;
                 _userRepository.Update(user);
                 return true;
             }

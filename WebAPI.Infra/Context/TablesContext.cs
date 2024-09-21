@@ -1,7 +1,7 @@
-﻿using WebAPI.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using WebAPI.Domain.Entities.ControlPanel;
 using WebAPI.Domain.Entities.Configuration;
+using WebAPI.Domain.Entities.Others;
 
 namespace WebAPI.Infra.Data.Context;
 

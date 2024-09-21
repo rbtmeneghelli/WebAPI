@@ -1,7 +1,11 @@
 ﻿using WebAPI.Application.Factory;
 using WebAPI.Application.Generic;
 using WebAPI.Application.InterfacesRepository;
+using WebAPI.Domain.Constants;
+using WebAPI.Domain.Entities.Others;
 using WebAPI.Domain.ExtensionMethods;
+using WebAPI.Domain.Filters.Others;
+using WebAPI.Domain.Interfaces.Services.Tools;
 using WebAPI.Domain.Models;
 
 namespace WebAPI.Application.Services;
@@ -27,7 +31,7 @@ public class RegionService : GenericService, IRegionService
 
     public bool ExistRegion()
     {
-        return _regionRepository.Exist(param => param.IsActive == true);
+        return _regionRepository.Exist(param => param.Status == true);
     }
 
     public Task AddRegionsAsync(IEnumerable<Region> list)
@@ -45,7 +49,7 @@ public class RegionService : GenericService, IRegionService
             {
                 Name = x.Region.Name,
                 Initials = x.Region.Initials,
-                IsActive = true
+                Status = true
             });
 
             IEnumerable<Region> listaRegiaoAPI = tmpRegion.GroupBy(x => new { x.Name, x.Initials }).Select(g => g.First());
@@ -53,10 +57,10 @@ public class RegionService : GenericService, IRegionService
             foreach (var item in listaRegiaoAPI)
             {
 
-                Region region = regions.FirstOrDefault(x => x.Initials == item.Initials && x.IsActive == true);
+                Region region = regions.FirstOrDefault(x => x.Initials == item.Initials && x.Status == true);
                 if (GuardClauses.ObjectIsNotNull(region))
                 {
-                    region.UpdateTime = region.GetNewUpDateTime();
+                    region.UpdateDate = region.GetNewUpdateDate();
                     region.Name = item.Name;
                     region.Initials = item.Initials;
                     _regionRepository.Update(region);
@@ -80,7 +84,7 @@ public class RegionService : GenericService, IRegionService
             Region record = await Task.FromResult(_regionRepository.GetById(id));
             if (GuardClauses.ObjectIsNotNull(record))
             {
-                record.IsActive = record.IsActive == true ? false : true;
+                record.Status = record.Status == true ? false : true;
                 _regionRepository.Update(record);
                 return true;
             }
@@ -109,7 +113,7 @@ public class RegionService : GenericService, IRegionService
                                   Id = x.Id,
                                   Name = x.Name,
                                   Initials = x.Initials,
-                                  IsActive = x.IsActive
+                                  Status = x.Status
                               };
 
             return PagedFactory.GetPaged(queryResult, PagedFactory.GetDefaultPageIndex(filter.PageIndex), PagedFactory.GetDefaultPageSize(filter.PageSize));

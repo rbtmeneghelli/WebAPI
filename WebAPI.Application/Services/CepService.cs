@@ -1,7 +1,10 @@
 ﻿using WebAPI.Application.Factory;
 using WebAPI.Application.Generic;
 using WebAPI.Application.InterfacesRepository;
+using WebAPI.Domain.Constants;
 using WebAPI.Domain.ExtensionMethods;
+using WebAPI.Domain.Filters.Others;
+using WebAPI.Domain.Interfaces.Services.Tools;
 using WebAPI.Domain.Models;
 using WebAPI.Domain.ValueObject;
 
@@ -39,7 +42,7 @@ public class CepService : GenericService, ICepService
             if (GuardClauses.ObjectIsNotNull(refreshCep.ModelCep))
             {
 
-                refreshCep.ModelCep = new Domain.ValueObject.AddressData(refreshCep.ModelCep.Id.Value, refreshCep.Cep, refreshCep.ModelCepAPI, refreshCep.ModelCep.StateId, refreshCep.ModelCep.CreatedTime);
+                refreshCep.ModelCep = new Domain.ValueObject.AddressData(refreshCep.ModelCep.Id.Value, refreshCep.Cep, refreshCep.ModelCepAPI, refreshCep.ModelCep.StateId, refreshCep.ModelCep.CreateDate);
                 _cepRepository.Update(refreshCep.ModelCep);
             }
             else
@@ -70,7 +73,7 @@ public class CepService : GenericService, ICepService
             Domain.ValueObject.AddressData record = await Task.FromResult(_cepRepository.GetById(id));
             if (GuardClauses.ObjectIsNotNull(record))
             {
-                record.IsActive = record.IsActive == true ? false : true;
+                record.Status = record.Status == true ? false : true;
                 _cepRepository.Update(record);
                 return true;
             }
@@ -110,7 +113,7 @@ public class CepService : GenericService, ICepService
                                   Ibge = x.Ibge,
                                   Location = x.Location,
                                   Siafi = x.Siafi,
-                                  IsActive = x.IsActive
+                                  Status = x.Status
                               };
 
             return PagedFactory.GetPaged(queryResult, PagedFactory.GetDefaultPageIndex(filter.PageIndex), PagedFactory.GetDefaultPageSize(filter.PageSize));

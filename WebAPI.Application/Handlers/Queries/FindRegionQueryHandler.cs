@@ -2,6 +2,8 @@
 using MediatR;
 using WebAPI.Application.InterfacesRepository;
 using WebAPI.Application.Generic;
+using WebAPI.Domain.Entities.Others;
+using WebAPI.Domain.Interfaces.Services.Tools;
 
 namespace WebAPI.Application.Handlers.Queries;
 

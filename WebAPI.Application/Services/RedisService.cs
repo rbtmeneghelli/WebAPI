@@ -1,6 +1,7 @@
 ﻿using WebAPI.Domain.ExtensionMethods;
 using Microsoft.Extensions.Caching.Distributed;
 using WebAPI.Application.Generic;
+using WebAPI.Domain.Interfaces.Services.Tools;
 
 namespace WebAPI.Application.Services;
 

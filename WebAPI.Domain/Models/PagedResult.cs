@@ -1,7 +1,7 @@
-﻿using WebAPI.Domain.Generic;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using WebAPI.Domain.Models.Generic;
 
 namespace WebAPI.Domain.Models;
 

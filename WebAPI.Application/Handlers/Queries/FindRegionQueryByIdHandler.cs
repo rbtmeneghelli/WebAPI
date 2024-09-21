@@ -2,6 +2,7 @@
 using MediatR;
 using System.Threading;
 using WebAPI.Application.InterfacesRepository;
+using WebAPI.Domain.Entities.Others;
 
 namespace WebAPI.Application.Handlers.Queries;
 

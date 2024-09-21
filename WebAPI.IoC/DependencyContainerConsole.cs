@@ -1,6 +1,6 @@
-﻿using WebAPI.Application.Interfaces;
-using WebAPI.Application.Services;
+﻿using WebAPI.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
+using WebAPI.Domain.Interfaces.Services.Configuration;
 
 namespace WebAPI.Infra.Structure.IoC;
 

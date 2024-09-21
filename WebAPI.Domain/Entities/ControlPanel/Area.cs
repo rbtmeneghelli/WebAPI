@@ -1,5 +1,5 @@
-﻿using WebAPI.Domain.Enums;
-using WebAPI.Domain.Generic;
+﻿using WebAPI.Domain.Entities.Generic;
+using WebAPI.Domain.Enums;
 
 namespace WebAPI.Domain.Entities.ControlPanel;
 

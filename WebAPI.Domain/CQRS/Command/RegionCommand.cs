@@ -1,5 +1,5 @@
-﻿using WebAPI.Domain.Entities;
-using MediatR;
+﻿using MediatR;
+using WebAPI.Domain.Entities.Others;
 
 namespace WebAPI.Domain.CQRS.Command;
 

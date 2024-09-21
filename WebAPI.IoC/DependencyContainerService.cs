@@ -37,16 +37,19 @@ using System.Threading.RateLimiting;
 using SqlConnection = Microsoft.Data.SqlClient.SqlConnection;
 using WebAPI.Application.Interfaces.NfService;
 using WebAPI.Application.Services.NfService;
-using FixConstants = WebAPI.Domain.FixConstants;
+using FixConstants = WebAPI.Domain.Constants.FixConstants;
 using WebAPI.Application.InterfacesRepository;
 using WebAPI.Application.Generic;
 using WebAPI.Application.FactoryInterfaces;
 using WebAPI.Application.Factory;
-using WebAPI.Application.InterfacesService;
 using WebAPI.Application.BackgroundMessageServices.RabbitMQ;
 using Newtonsoft.Json;
 using WebAPI.Domain.Models.Settings;
 using WebAPI.Domain.Enums;
+using WebAPI.Infra.Repositories.ControlPanel;
+using WebAPI.Infra.Repositories.Others;
+using WebAPI.Domain.Interfaces.Services.Tools;
+using WebAPI.Domain.Interfaces.Services.Configuration;
 
 namespace WebAPI.Infra.Structure.IoC;
 

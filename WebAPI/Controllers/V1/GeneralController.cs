@@ -2,14 +2,18 @@
 using WebAPI.Domain.ExtensionMethods;
 using KissLog;
 using Microsoft.AspNetCore.Cors;
-using FixConstants = WebAPI.Domain.FixConstants;
-using Region = WebAPI.Domain.Entities.Region;
+using FixConstants = WebAPI.Domain.Constants.FixConstants;
+using Region = WebAPI.Domain.Entities.Others.Region;
 using WebAPI.Domain.Enums;
 using System.Reflection;
 using SkiaSharp;
 using WebAPI.Domain.Validations;
 using ZXing;
 using WebAPI.IoC.Middleware.Security;
+using WebAPI.Domain.Constants;
+using WebAPI.Domain.Entities.Others;
+using WebAPI.Domain.Interfaces.Services.Tools;
+using WebAPI.Domain.Interfaces.Services.Configuration;
 
 namespace WebAPI.V1.Controllers;
 
@@ -213,7 +217,7 @@ public sealed class GeneralController : GenericController
                     }).Distinct().Select(z => new Region()
                     {
                         Name = z.Nome,
-                        IsActive = true,
+                        Status = true,
                         Initials = z.Sigla
                     }).ToList();
 
@@ -246,7 +250,7 @@ public sealed class GeneralController : GenericController
                 {
                     listStates = listStatesAPI.Select(x => new States()
                     {
-                        IsActive = true,
+                        Status = true,
                         Name = x.Name,
                         Initials = x.Initials,
                         RegionId = listRegion.FirstOrDefault(z => z.Initials == x.Region.Initials).Id.GetValueOrDefault(0)

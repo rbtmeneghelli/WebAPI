@@ -12,7 +12,7 @@ public class UserMapping : GenericMapping<User>
         _builder = builder;
         base.ConfigureDefaultColumns();
         //Exemplo de criação de tabela Temporal (Historico) que trabalha como uma trilha de auditoria
-        _builder.ToTable("Users", e => e.IsTemporal(t =>
+        _builder.ToTable("ControlPanel_User", e => e.IsTemporal(t =>
         {
             t.HasPeriodStart("InicioValidade");
             t.HasPeriodEnd("TerminoValidade");
@@ -21,6 +21,11 @@ public class UserMapping : GenericMapping<User>
         ConfigureColumns();
         ConfigureForeignKeys();
         ConfigureIndexes();
+    }
+
+    public override void ConfigureTableName(string tableName)
+    {
+        _builder.ToTable(tableName);
     }
 
     private void ConfigureForeignKeys()
@@ -40,7 +45,7 @@ public class UserMapping : GenericMapping<User>
     {
         _builder.Property(x => x.Login).IsRequired(true).HasMaxLength(120).HasColumnName("Login");
         _builder.Property(x => x.Password).IsRequired(true).HasMaxLength(255).HasColumnName("Password");
-        _builder.Property(x => x.LastPassword).IsRequired(false).HasMaxLength(255).HasColumnName("Last_Password");
-        _builder.Property(x => x.IsAuthenticated).IsRequired(true).HasDefaultValue(false).HasColumnName("Is_Authenticated");
+        _builder.Property(x => x.LastPassword).IsRequired(false).HasMaxLength(255).HasColumnName("LastPassword");
+        _builder.Property(x => x.IsAuthenticated).IsRequired(true).HasDefaultValue(false).HasColumnName("IsAuthenticated");
     }
 }

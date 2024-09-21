@@ -3,6 +3,7 @@ using MediatR;
 using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Application.InterfacesRepository;
 using WebAPI.Application.Generic;
+using WebAPI.Domain.Interfaces.Services.Tools;
 
 namespace WebAPI.Application.Handlers.Command;
 
@@ -20,7 +21,7 @@ public class CreateRegionCommandHandler : GenericService, IRequestHandler<Create
         _regionRepository.Add(new Region()
         {
             Initials = "XPTO",
-            IsActive = true,
+            Status = true,
             Name = "XPTO"
         });
 

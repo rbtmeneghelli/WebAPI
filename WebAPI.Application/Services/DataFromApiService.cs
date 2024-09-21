@@ -1,8 +1,9 @@
-﻿using WebAPI.Domain.Generic;
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
+using WebAPI.Domain.Interfaces.Services.Tools;
+using WebAPI.Domain.Models.Generic;
 
 namespace WebAPI.Infra.CrossCutting
-{    
+{
     public class GetDataFromApiService<T> : IDataFromApiService<T> where T : class
     {
         private readonly IHttpClientFactory _httpClientFactory;

@@ -5,6 +5,9 @@ using WebAPI.Application.InterfacesRepository;
 using WebAPI.Application.Generic;
 using WebAPI.Domain.Entities.ControlPanel;
 using WebAPI.Domain.Models;
+using WebAPI.Domain.Constants;
+using WebAPI.Domain.Interfaces.Services.Tools;
+using WebAPI.Domain.Interfaces.Services.Configuration;
 
 namespace WebAPI.Application.Services;
 
@@ -26,7 +29,7 @@ public class AccountService : GenericService, IAccountService
         try
         {
 
-            User user = await _userRepository.FindBy(x => x.Login == loginUser.Login.ApplyTrim() && x.IsActive == true).FirstOrDefaultAsync();
+            User user = await _userRepository.FindBy(x => x.Login == loginUser.Login.ApplyTrim() && x.Status == true).FirstOrDefaultAsync();
             if (GuardClauses.ObjectIsNotNull(user))
             {
                 if (HashingManager.GetLoadHashingManager().Verify(loginUser.Password, user.Password))
@@ -99,7 +102,7 @@ public class AccountService : GenericService, IAccountService
                     dbUser.LastPassword = dbUser.Password;
                     dbUser.Password = HashingManager.GetLoadHashingManager().HashToString(user.Password);
                     dbUser.IsAuthenticated = true;
-                    dbUser.UpdateTime = dbUser.GetNewUpDateTime();
+                    dbUser.UpdateDate = dbUser.GetNewUpdateDate();
                     _userRepository.Update(dbUser);
                     await Task.CompletedTask;
                     return true;
@@ -132,8 +135,8 @@ public class AccountService : GenericService, IAccountService
                     user.LastPassword = user.Password;
                     user.Password = HashingManager.GetLoadHashingManager().HashToString(FixConstants.DEFAULT_PASSWORD);
                     user.IsAuthenticated = false;
-                    user.IsActive = true;
-                    user.UpdateTime = user.GetNewUpDateTime();
+                    user.Status = true;
+                    user.UpdateDate = user.GetNewUpdateDate();
                     _emailService.CustomSendEmailAsync(EnumEmail.ResetPassword, "Roberto", _hostingEnvironment.ContentRootPath).Wait();
                     _userRepository.Update(user);
                     return true;

@@ -1,8 +1,8 @@
 ﻿using KissLog;
 using Serilog;
 using Serilog.Events;
-using WebAPI.Application.InterfacesService;
 using WebAPI.Domain.ExtensionMethods;
+using WebAPI.Domain.Interfaces.Services.Tools;
 
 namespace WebAPI.Application.Services;
 

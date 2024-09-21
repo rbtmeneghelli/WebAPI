@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using WebAPI.Domain.Entities;
+using WebAPI.Domain.Entities.Others;
 
 namespace WebAPI.Domain.Validations;
 

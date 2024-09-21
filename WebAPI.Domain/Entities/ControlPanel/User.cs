@@ -1,6 +1,6 @@
-﻿using WebAPI.Domain.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using WebAPI.Domain.Entities.Generic;
 
 namespace WebAPI.Domain.Entities.ControlPanel;
 

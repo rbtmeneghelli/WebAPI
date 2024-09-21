@@ -11,7 +11,12 @@ namespace WebAPI.Infra.Mapping.ControlPanel
         {
             _builder = builder;
             base.ConfigureDefaultColumns();
-            _builder.ToTable("Operation");
+            _builder.ToTable("ControlPanel_Operation");
+        }
+
+        public override void ConfigureTableName(string tableName)
+        {
+            _builder.ToTable(tableName);
         }
     }
 }

@@ -11,8 +11,13 @@ public class CepsMapping : GenericMapping<AddressData>
     {
         _builder = builder;
         base.ConfigureDefaultColumns();
-        _builder.ToTable("Ceps");
+        ConfigureTableName("ControlPanel_Cep");
         ConfigureColumns();
+    }
+
+    public override void ConfigureTableName(string tableName)
+    {
+        _builder.ToTable(tableName);
     }
 
     private void ConfigureColumns()

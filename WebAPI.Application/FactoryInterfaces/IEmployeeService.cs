@@ -1,4 +1,5 @@
 ﻿using WebAPI.Domain.Entities.ControlPanel;
+using WebAPI.Domain.Filters.ControlPanel;
 
 namespace WebAPI.Application.FactoryInterfaces
 {

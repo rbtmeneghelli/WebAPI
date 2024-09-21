@@ -2,6 +2,10 @@
 using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Application.InterfacesRepository;
 using WebAPI.Application.Generic;
+using WebAPI.Domain.Constants;
+using WebAPI.Domain.EntitiesDTO.Others;
+using WebAPI.Domain.Entities.Others;
+using WebAPI.Domain.Interfaces.Services.Tools;
 
 namespace WebAPI.Application.Services;
 
@@ -56,7 +60,7 @@ public class CityService : GenericService, ICityService
                           Name = p.Name,
                           IBGE = p.IBGE,
                           StateDesc = p.States.Initials,
-                          IsActiveDesc = p.GetIsActiveDescription(),
+                          IsActiveDesc = p.GetStatusDescription(),
                           IdState = p.StateId
                       }).ToListAsync();
     }
@@ -71,7 +75,7 @@ public class CityService : GenericService, ICityService
                           Name = p.Name,
                           IBGE = p.IBGE,
                           StateDesc = p.States.Initials,
-                          IsActiveDesc = p.GetIsActiveDescription(),
+                          IsActiveDesc = p.GetStatusDescription(),
                           IdState = p.StateId
                       }).FirstOrDefaultAsync();
     }

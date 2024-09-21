@@ -1,7 +1,12 @@
 ﻿using WebAPI.Application.Factory;
 using WebAPI.Application.Generic;
 using WebAPI.Application.InterfacesRepository;
+using WebAPI.Domain.Constants;
+using WebAPI.Domain.Entities.Others;
+using WebAPI.Domain.EntitiesDTO.Others;
 using WebAPI.Domain.ExtensionMethods;
+using WebAPI.Domain.Filters.Others;
+using WebAPI.Domain.Interfaces.Services.Tools;
 using WebAPI.Domain.Models;
 
 
@@ -50,13 +55,13 @@ public class AuditService : GenericService, IAuditService
         var reader = await _auditDapper.QueryMultiple(sql);
 
         var queryResult = from x in reader.Result.AsQueryable()
-                          orderby x.UpdateTime descending
+                          orderby x.UpdateDate descending
                           select new AuditResponseDTO()
                           {
                               Id = x.Id,
                               TableName = x.TableName,
                               ActionName = x.ActionName,
-                              UpdateTime = x.UpdateTime,
+                              UpdateTime = x.UpdateDate,
                               KeyValues = x.KeyValues,
                               OldValues = x.OldValues,
                               NewValues = x.NewValues
@@ -73,13 +78,13 @@ public class AuditService : GenericService, IAuditService
             var queryCount = await GetCountAsync(filter);
 
             var queryResult = from x in query.AsQueryable()
-                              orderby x.UpdateTime descending
+                              orderby x.UpdateDate descending
                               select new AuditResponseDTO()
                               {
                                   Id = x.Id,
                                   TableName = x.TableName,
                                   ActionName = x.ActionName,
-                                  UpdateTime = x.UpdateTime,
+                                  UpdateTime = x.UpdateDate,
                                   KeyValues = x.KeyValues,
                                   OldValues = x.OldValues,
                                   NewValues = x.NewValues

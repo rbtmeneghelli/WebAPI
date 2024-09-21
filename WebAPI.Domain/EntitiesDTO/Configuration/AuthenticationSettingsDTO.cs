@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using WebAPI.Domain.Generic;
 
 namespace WebAPI.Domain.EntitiesDTO.Configuration;
 

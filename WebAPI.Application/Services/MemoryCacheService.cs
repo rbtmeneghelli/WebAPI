@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
-using WebAPI.Domain.Models.Settings;
+using WebAPI.Domain.Interfaces.Services.Tools;
+using WebAPI.Domain.Models.EnvVarSettings;
 
 namespace WebAPI.Application.Services;
 

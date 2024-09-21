@@ -5,7 +5,7 @@ using System.Data.Common;
 using System.Dynamic;
 using System.Linq.Expressions;
 using WebAPI.Domain.Entities.ControlPanel;
-using WebAPI.Domain.Generic;
+using WebAPI.Domain.Entities.Generic;
 
 namespace WebAPI.Infra.Data.Context;
 

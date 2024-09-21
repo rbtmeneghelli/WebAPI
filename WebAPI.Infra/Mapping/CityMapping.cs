@@ -1,7 +1,7 @@
-﻿using WebAPI.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WebAPI.Infra.Generic;
+using WebAPI.Domain.Entities.Others;
 
 namespace WebAPI.Infra.Data.Mapping;
 
@@ -11,8 +11,13 @@ public class CityMapping : GenericMapping<City>
     {
         _builder = builder;
         base.ConfigureDefaultColumns();
-        _builder.ToTable("Cities");
+        ConfigureTableName("ControlPanel_City");
         ConfigureColumns();
+    }
+
+    public override void ConfigureTableName(string tableName)
+    {
+        _builder.ToTable(tableName);
     }
 
     private void ConfigureColumns()
