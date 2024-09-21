@@ -1,4 +1,5 @@
-﻿using WebAPI.Domain.Models.Charts;
+﻿using WebAPI.Application.Services.Graphics;
+using WebAPI.Domain.Models.Charts;
 
 namespace WebAPI.Domain.Interfaces.Services;
 
@@ -9,10 +10,10 @@ public interface IBaseGraphicService<TGraphic> : IDisposable where TGraphic : cl
 }
 
 
-public interface IGraphicLineService : IBaseGraphicService<LineChart> 
+public interface IGraphicLineService : IBaseGraphicService<GraphicLineModel> 
 {
 }
 
-public interface IGraphicBarService : IBaseGraphicService<BarChart>
+public interface IGraphicBarService : IBaseGraphicService<GraphicBarModel>
 {
 }

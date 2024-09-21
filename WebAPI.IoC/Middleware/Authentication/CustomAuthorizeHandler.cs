@@ -10,6 +10,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
+using WebAPI.Domain.Interfaces.Services;
 
 namespace WebAPI.Configuration.Middleware.Authentication;
 

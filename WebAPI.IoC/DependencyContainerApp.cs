@@ -8,8 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WebAPI.Domain;
-using WebAPI.Infra.Structure.IoC.Middleware.ExceptionHandler;
-using WebAPI.Domain.Models.Settings;
+using WebAPI.Domain.Models.EnvVarSettings;
 
 namespace WebAPI.Infra.Structure.IoC;
 

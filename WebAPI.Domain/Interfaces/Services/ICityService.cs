@@ -2,7 +2,7 @@
 using WebAPI.Domain.EntitiesDTO.Others;
 using WebAPI.Domain.Models;
 
-namespace WebAPI.Application.Interfaces;
+namespace WebAPI.Domain.Interfaces.Services;
 
 public interface ICityService
 {

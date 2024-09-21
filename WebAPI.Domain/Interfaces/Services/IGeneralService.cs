@@ -2,7 +2,7 @@
 using WebAPI.Domain.Enums;
 using WebAPI.Domain.Models;
 
-namespace WebAPI.Application.Interfaces;
+namespace WebAPI.Domain.Interfaces.Services;
 
 public interface IGeneralService
 {

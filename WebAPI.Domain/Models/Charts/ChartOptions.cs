@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace WebAPI.Domain.Models.Charts;
 
-namespace WebAPI.Domain.Models.Charts
+public class ChartOptions
 {
-    public class ChartOptions
-    {
-        public bool Responsive { get; set; }
-    }
+    public bool Responsive { get; set; }
 }

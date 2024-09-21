@@ -6,6 +6,8 @@ using WebAPI.Domain.Constants;
 using WebAPI.Domain.EntitiesDTO.Others;
 using WebAPI.Domain.Entities.Others;
 using WebAPI.Domain.Interfaces.Services.Tools;
+using WebAPI.Domain.Interfaces.Services;
+using WebAPI.Domain.Interfaces.Repository;
 
 namespace WebAPI.Application.Services;
 

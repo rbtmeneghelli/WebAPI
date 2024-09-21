@@ -1,9 +1,9 @@
 ﻿using WebAPI.Domain.CQRS.Command;
 using MediatR;
-using WebAPI.Domain.ExtensionMethods;
-using WebAPI.Application.InterfacesRepository;
 using WebAPI.Application.Generic;
 using WebAPI.Domain.Interfaces.Services.Tools;
+using WebAPI.Domain.Interfaces.Repository;
+using WebAPI.Domain.Entities.Others;
 
 namespace WebAPI.Application.Handlers.Command;
 

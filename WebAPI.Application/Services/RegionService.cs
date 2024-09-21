@@ -5,6 +5,8 @@ using WebAPI.Domain.Constants;
 using WebAPI.Domain.Entities.Others;
 using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Domain.Filters.Others;
+using WebAPI.Domain.Interfaces.Repository;
+using WebAPI.Domain.Interfaces.Services;
 using WebAPI.Domain.Interfaces.Services.Tools;
 using WebAPI.Domain.Models;
 

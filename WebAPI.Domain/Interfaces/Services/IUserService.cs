@@ -4,7 +4,7 @@ using WebAPI.Domain.EntitiesDTO.ControlPanel;
 using WebAPI.Domain.Filters.ControlPanel;
 using WebAPI.Domain.Models;
 
-namespace WebAPI.Application.Interfaces;
+namespace WebAPI.Domain.Interfaces.Services;
 
 public interface IUserService
 {

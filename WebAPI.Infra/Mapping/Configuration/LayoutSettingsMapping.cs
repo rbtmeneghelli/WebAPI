@@ -18,7 +18,13 @@ public class LayoutSettingsMapping : GenericMapping<LayoutSettings>
 
     public override void ConfigureTableName(string tableName)
     {
-        _builder.ToTable(tableName);
+        _builder.ToTable(tableName, e => e.IsTemporal(t =>
+        {
+            t.HasPeriodStart("InicioValidade");
+            t.HasPeriodEnd("TerminoValidade");
+            t.UseHistoryTable("UsersHistory");
+        }));
+
     }
 
     private void ConfigureColumns()

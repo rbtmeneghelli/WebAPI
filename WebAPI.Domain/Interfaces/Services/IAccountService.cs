@@ -1,7 +1,7 @@
 ﻿using WebAPI.Domain.Entities.ControlPanel;
 using WebAPI.Domain.Models;
 
-namespace WebAPI.Application.Interfaces;
+namespace WebAPI.Domain.Interfaces.Services;
 
 public interface IAccountService
 {

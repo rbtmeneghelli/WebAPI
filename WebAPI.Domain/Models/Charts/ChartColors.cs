@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace WebAPI.Domain.Models.Charts;
 
-namespace WebAPI.Domain.Models.Charts
+public class ChartColors
 {
-    public class ChartColors
-    {
-        public string BackGroundColor { get; set; }
-        public string BorderColor { get; set; }
-    }
+    public string BackGroundColor { get; set; }
+    public string BorderColor { get; set; }
 }

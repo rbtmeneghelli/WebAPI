@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
-using WebAPI.Application.InterfacesRepository;
 using WebAPI.Application.Generic;
 using WebAPI.Domain.Entities.Others;
+using WebAPI.Domain.Interfaces.Repository;
 
 namespace WebAPI.Infra.Repositories.Others;
 

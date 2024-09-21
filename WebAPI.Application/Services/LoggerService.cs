@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using WebAPI.Domain.Interfaces.Services;
 
 namespace WebAPI.Application.Services
 {

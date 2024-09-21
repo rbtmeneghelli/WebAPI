@@ -1,4 +1,10 @@
-﻿namespace WebAPI.Domain.Models.Charts;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace WebAPI.Application.Services.Graphics;
 
 public abstract class GraphicModel
 {

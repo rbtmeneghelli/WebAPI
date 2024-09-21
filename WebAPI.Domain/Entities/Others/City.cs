@@ -1,5 +1,4 @@
-﻿using Org.BouncyCastle.Asn1.X509;
-using WebAPI.Domain.Entities.Generic;
+﻿using WebAPI.Domain.Entities.Generic;
 
 namespace WebAPI.Domain.Entities.Others;
 

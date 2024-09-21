@@ -1,4 +1,4 @@
-﻿namespace WebAPI.Application.Interfaces;
+﻿namespace WebAPI.Domain.Interfaces.Services;
 
 public interface IThreadService : IDisposable
 {

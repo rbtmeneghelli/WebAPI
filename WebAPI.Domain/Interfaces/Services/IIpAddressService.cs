@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace WebAPI.Application.Interfaces;
+namespace WebAPI.Domain.Interfaces.Services;
 
 public interface IIpAddressService
 {

@@ -1,11 +1,10 @@
 ﻿using WebAPI.Domain.Models;
 
-namespace WebAPI.Domain.Interfaces.Services.Tools
+namespace WebAPI.Domain.Interfaces.Services.Tools;
+
+public interface INotificationMessageService
 {
-    public interface INotificationMessageService
-    {
-        void Handle(NotificationMessage notificacao);
-        List<NotificationMessage> GetNotifications();
-        bool HaveNotification();
-    }
+    void Handle(NotificationMessage notificacao);
+    List<NotificationMessage> GetNotifications();
+    bool HaveNotification();
 }

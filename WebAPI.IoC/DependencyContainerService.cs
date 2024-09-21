@@ -1,5 +1,4 @@
 ﻿using WebAPI.Application.BackgroundServices.RabbitMQ.Consumers;
-using WebAPI.Application.Interfaces;
 using WebAPI.Application.Services;
 using WebAPI.Configuration.Middleware.Authentication;
 using WebAPI.Domain;
@@ -37,19 +36,19 @@ using System.Threading.RateLimiting;
 using SqlConnection = Microsoft.Data.SqlClient.SqlConnection;
 using WebAPI.Application.Interfaces.NfService;
 using WebAPI.Application.Services.NfService;
-using FixConstants = WebAPI.Domain.Constants.FixConstants;
-using WebAPI.Application.InterfacesRepository;
 using WebAPI.Application.Generic;
 using WebAPI.Application.FactoryInterfaces;
 using WebAPI.Application.Factory;
 using WebAPI.Application.BackgroundMessageServices.RabbitMQ;
 using Newtonsoft.Json;
-using WebAPI.Domain.Models.Settings;
 using WebAPI.Domain.Enums;
 using WebAPI.Infra.Repositories.ControlPanel;
 using WebAPI.Infra.Repositories.Others;
 using WebAPI.Domain.Interfaces.Services.Tools;
 using WebAPI.Domain.Interfaces.Services.Configuration;
+using WebAPI.Domain.Interfaces.Repository;
+using WebAPI.Domain.Interfaces.Services;
+using WebAPI.Domain.Models.EnvVarSettings;
 
 namespace WebAPI.Infra.Structure.IoC;
 
@@ -174,6 +173,20 @@ public static class DependencyContainerService
 
     public static void RegisterServices(this IServiceCollection services)
     {
+        #region Generics
+
+        #endregion
+
+        #region ControlPanel
+
+        #endregion
+
+        #region Configuration
+
+        //services.AddScoped<IAuthenticationSettingsService, Authe>
+
+
+        #endregion
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>))
         .AddScoped(typeof(IGenericRepositoryDapper<>), typeof(GenericRepositoryDapper<>))
         .AddScoped(typeof(ILoggerService<>), typeof(LoggerService<>))

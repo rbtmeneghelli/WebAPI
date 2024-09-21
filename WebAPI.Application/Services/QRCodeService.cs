@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using SkiaSharp;
+using WebAPI.Domain.Interfaces.Services;
 using ZXing;
 using ZXing.Common;
 using ZXing.SkiaSharp;

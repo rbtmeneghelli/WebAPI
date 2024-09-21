@@ -29,13 +29,13 @@ public class KissLogService : IKissLogService
         }
     }
 
-    public void SaveLogOnSeriLog(LogEventLevel logEventLevel = LogEventLevel.Information, string className = "", string methodName = "", string messageError = "", string obj = "")
+    public void SaveLogOnSeriLog(EnumLogger enumLogger, string className = "", string methodName = "", string messageError = "", string obj = "")
     {
         // Fazendo o Serilog funcionar pra gravarlog
         ILogger log = Serilog.Log.ForContext(typeof(ILogger));
         log.Write
         (
-            logEventLevel,
+            LogEventLevel.Information,
             "{Class},{Method},{MessageError},{Object},{CreatedDate}",
             className,
             methodName,

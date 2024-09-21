@@ -1,11 +1,10 @@
 ﻿using WebAPI.Domain.Models;
 
-namespace WebAPI.Application.Interfaces
+namespace WebAPI.Domain.Interfaces.Services;
+public interface ILoggerService<T> where T : class
 {
-    public interface ILoggerService<T> where T : class
-    {
-        void Handle(LogMessage message);
-        List<LogMessage> GetLoggerMessages();
-        bool HaveLogMessage();
-    }
+    void Handle(LogMessage message);
+    List<LogMessage> GetLoggerMessages();
+    bool HaveLogMessage();
 }
+

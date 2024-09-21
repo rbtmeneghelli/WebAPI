@@ -3,6 +3,7 @@ using MediatR;
 using WebAPI.Application.InterfacesRepository;
 using WebAPI.Application.Generic;
 using WebAPI.Domain.Interfaces.Services.Tools;
+using WebAPI.Domain.Interfaces.Repository;
 
 namespace WebAPI.Application.Handlers.Command;
 

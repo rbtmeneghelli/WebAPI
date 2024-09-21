@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
 using WebAPI.Domain.Entities.ControlPanel;
 
-namespace WebAPI.Application.InterfacesRepository;
+namespace WebAPI.Domain.Interfaces.Repository;
 
 public interface IUserRepository
 {
