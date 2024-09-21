@@ -1,5 +1,5 @@
-﻿using WebAPI.Application.FactoryInterfaces;
-using WebAPI.Application.FactoryServices.Exceptions;
+﻿using WebAPI.Domain.Interfaces.Factory;
+using WebAPI.Domain.Models.Factory.ProblemDetails;
 
 namespace WebAPI.Application.Factory;
 

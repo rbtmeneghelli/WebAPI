@@ -1,5 +1,6 @@
-﻿using WebAPI.Application.FactoryInterfaces;
-using WebAPI.Application.FactoryServices.Email;
+﻿using Microsoft.AspNetCore.Mvc;
+using WebAPI.Domain.Interfaces.Factory;
+using WebAPI.Domain.Models.Factory.Email;
 
 namespace WebAPI.Application.Factory;
 

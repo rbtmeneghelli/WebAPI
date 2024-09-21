@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
-using WebAPI.Application.Interfaces;
+//using WebAPI.Application.Interfaces;
 using WebAPI.Domain.Interfaces.Services;
 
 namespace WebAPI.IoC.Middleware.Security;

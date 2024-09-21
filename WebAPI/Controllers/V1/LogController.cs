@@ -25,7 +25,7 @@ public sealed class LogController : GenericController
     {
         if (await _logService.ExistByIdAsync(id))
         {
-            var model = _mapperService.Map<UserResponseDTO>(await _logService.GetByIdAsync(id));
+            var model = _iMapperService.Map<UserResponseDTO>(await _logService.GetByIdAsync(id));
             return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
         }
 

@@ -5,6 +5,8 @@ using NPOI.SS.Formula.Functions;
 using Region = WebAPI.Domain.Entities.Others.Region;
 using WebAPI.Application.InterfacesRepository;
 using WebAPI.Domain.Interfaces.Services.Tools;
+using WebAPI.Domain.Interfaces.Repository;
+using WebAPI.Domain.Interfaces.Services;
 
 namespace TestsWebAPI.Controllers.V1;
 

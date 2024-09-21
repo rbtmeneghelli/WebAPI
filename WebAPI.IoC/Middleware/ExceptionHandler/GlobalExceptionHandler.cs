@@ -1,9 +1,7 @@
-﻿using Amazon.Runtime.Internal;
-using Microsoft.AspNetCore.Diagnostics;
+﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using System.Net.Http;
-using WebAPI.Application.FactoryInterfaces;
+using WebAPI.Domain.Interfaces.Factory;
 
 namespace WebAPI.Infra.Structure.IoC.Middleware.ExceptionHandler;
 

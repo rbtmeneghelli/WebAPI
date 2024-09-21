@@ -1,46 +1,44 @@
-﻿using WebAPI.Application.FactoryInterfaces;
-using WebAPI.Application.FactoryServices;
+﻿using WebAPI.Domain.Interfaces.Factory;
+using WebAPI.Domain.Models.Factory;
 using WebAPI.Domain.Models.Generic;
-using IEmployeeService = WebAPI.Application.FactoryInterfaces.IEmployeeService;
 
-namespace WebAPI.Application.Factory
+namespace WebAPI.Application.Factory;
+
+public sealed class UserFactory : IEmployeeFactory
 {
-    public sealed class UserFactory : IEmployeeFactory
+    public static IEmployeeService GetData(int enumProfileType)
     {
-        public static IEmployeeService GetData(int enumProfileType)
+
+        IEmployeeService userData;
+
+        switch (enumProfileType)
         {
-
-            IEmployeeService userData;
-
-            switch (enumProfileType)
-            {
-                case 1:
-                    userData = new EmployeeDefaultService();
-                    break;
-                case 2:
-                    userData = new EmployeeDefaultService();
-                    break;
-                case 3:
-                    userData = new EmployeeDefaultService();
-                    break;
-                default:
-                    throw new ApplicationException();
-            }
-
-            return userData;
+            case 1:
+                userData = new EmployeeDefaultService();
+                break;
+            case 2:
+                userData = new EmployeeDefaultService();
+                break;
+            case 3:
+                userData = new EmployeeDefaultService();
+                break;
+            default:
+                throw new ApplicationException();
         }
 
-        public override IEmployeeService GetDataMinimal(int enumProfileType)
+        return userData;
+    }
+
+    public override IEmployeeService GetDataMinimal(int enumProfileType)
+    {
+        try
         {
-            try
-            {
-                return EmployeeDefaultFactory[enumProfileType]();
-            }
-            catch(GenericException ex)
-            {
-                ex.ShowDefaultExceptionMessage();
-                return EmployeeDefaultFactory[1]();
-            }
+            return EmployeeDefaultFactory[enumProfileType]();
+        }
+        catch(GenericException ex)
+        {
+            ex.ShowDefaultExceptionMessage();
+            return EmployeeDefaultFactory[1]();
         }
     }
 }

@@ -24,7 +24,7 @@ public sealed class AuditController : GenericController
     {
         if (await _auditService.ExistByIdAsync(id))
         {
-            var model = _mapperService.Map<AuditResponseDTO>(await _auditService.GetByIdAsync(id));
+            var model = _iMapperService.Map<AuditResponseDTO>(await _auditService.GetByIdAsync(id));
             return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
         }
 

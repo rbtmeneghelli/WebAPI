@@ -4,6 +4,7 @@ using WebAPI.Domain.EntitiesDTO.ControlPanel;
 using WebAPI.Domain.Enums;
 using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Domain.Filters.ControlPanel;
+using WebAPI.Domain.Interfaces.Services;
 using WebAPI.Domain.Interfaces.Services.Tools;
 using FixConstants = WebAPI.Domain.Constants.FixConstants;
 
@@ -34,7 +35,7 @@ public sealed class UsersController : GenericController
     [HttpGet("GetAll")]
     public async Task<IActionResult> GetAll()
     {
-        var model = _mapperService.Map<IEnumerable<UserResponseDTO>>(await _userService.GetAllAsync());
+        var model = _iMapperService.Map<IEnumerable<UserResponseDTO>>(await _userService.GetAllAsync());
 
         return CustomResponse(model, FixConstants.SUCCESS_IN_GETALL);
     }
@@ -54,7 +55,7 @@ public sealed class UsersController : GenericController
     {
         if (await _userService.ExistByIdAsync(id))
         {
-            var model = _mapperService.Map<UserResponseDTO>(await _userService.GetByIdAsync(id));
+            var model = _iMapperService.Map<UserResponseDTO>(await _userService.GetByIdAsync(id));
             return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
         }
 
@@ -66,7 +67,7 @@ public sealed class UsersController : GenericController
     {
         if (await _userService.ExistByLoginAsync(login))
         {
-            var model = _mapperService.Map<UserResponseDTO>(await _userService.GetByLoginAsync(login));
+            var model = _iMapperService.Map<UserResponseDTO>(await _userService.GetByLoginAsync(login));
             return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
         }
 
@@ -93,7 +94,7 @@ public sealed class UsersController : GenericController
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
-        User user = _mapperService.Map<User>(userRequestDTO);
+        User user = _iMapperService.Map<User>(userRequestDTO);
 
         var result = await _userService.AddAsync(user);
 
@@ -108,7 +109,7 @@ public sealed class UsersController : GenericController
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
-        User user = _mapperService.Map<User>(userRequestDTO);
+        User user = _iMapperService.Map<User>(userRequestDTO);
 
         if (id != userRequestDTO.Id)
         {
@@ -186,7 +187,7 @@ public sealed class UsersController : GenericController
         if (list?.Results?.Count() > 0)
         {
             var memoryStreamResult = _generalMethod.GetMemoryStreamType(EnumMemoryStreamFile.XLSX);
-            var excelData = _mapperService.Map<IEnumerable<UserExcelDTO>>(list.Results);
+            var excelData = _iMapperService.Map<IEnumerable<UserExcelDTO>>(list.Results);
             var excelName = $"Usuarios.{memoryStreamResult.Extension}";
             var memoryStreamExcel = await _FileService.CreateExcelFileEPPLUS(excelData, excelName);
             return File(memoryStreamExcel.ToArray(), memoryStreamResult.Type, excelName);

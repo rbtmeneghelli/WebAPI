@@ -36,7 +36,7 @@ public class Startup
         services.AddHttpContextAccessor();
         DependencyContainerService.RegisterSeriLog(services, _configuration);
         DependencyContainerService.RegisterKissLog(services);
-        DependencyConfigSwagger.RegisterSwaggerConfig(services);
+        DependencyContainerSwagger.RegisterSwaggerConfig(services);
         DependencyContainerService.RegisterMediator(services);
         services.AddMemoryCache();
         services.AddControllers();
@@ -65,7 +65,7 @@ public class Startup
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider, IConfiguration configuration)
     {
         DependencyContainerApp.UseAppConfig(app, env, configuration);
-        DependencyConfigSwagger.UseSwaggerConfig(app, provider);
+        DependencyContainerSwagger.UseSwaggerConfig(app, provider);
     }
 }
 

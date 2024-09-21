@@ -1,4 +1,4 @@
-﻿using WebAPI.Application.Interfaces.NfService;
+﻿using WebAPI.Domain.Interfaces.Services.NfService;
 
 namespace WebAPI.Application.Services.NfService;
 

@@ -1,6 +1,7 @@
 ﻿using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.Interfaces.Services;
 using WebAPI.Domain.Interfaces.Services.Configuration;
+using WebAPI.Domain.Interfaces.Services.Tools;
 
 namespace WebAPI.Application.Generic;
 
@@ -58,5 +59,17 @@ public class GenericUnitOfWorkService : IGenericUnitofWorkService
     public void Dispose()
     {
         GC.SuppressFinalize(this);
+    }
+}
+
+public class GenericNotifyLogsService : IGenericNotifyLogsService
+{
+    public INotificationMessageService iNotificationMessageService { get; }
+    public IKissLogService iKissLogService { get; }
+
+    public GenericNotifyLogsService(INotificationMessageService iNotificationMessageService, IKissLogService iKissLogService)
+    {
+        this.iNotificationMessageService = iNotificationMessageService ?? throw new ArgumentNullException(nameof(iNotificationMessageService));
+        this.iKissLogService = iKissLogService ?? throw new ArgumentNullException(nameof(iKissLogService));
     }
 }

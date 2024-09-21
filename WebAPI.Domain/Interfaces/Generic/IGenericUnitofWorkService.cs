@@ -1,6 +1,7 @@
 ﻿using WebAPI.Domain.Interfaces.Repository.Configuration;
 using WebAPI.Domain.Interfaces.Services;
 using WebAPI.Domain.Interfaces.Services.Configuration;
+using WebAPI.Domain.Interfaces.Services.Tools;
 
 namespace WebAPI.Domain.Interfaces.Repository;
 
@@ -24,5 +25,11 @@ public interface IGenericUnitofWorkService : IDisposable
     IRequiredPasswordSettingsService RequiredPasswordSettings { get; }
 
     #endregion
+}
+
+public interface IGenericNotifyLogsService
+{
+    INotificationMessageService iNotificationMessageService { get; }
+    IKissLogService iKissLogService { get; }
 }
 

@@ -34,10 +34,8 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading.RateLimiting;
 using SqlConnection = Microsoft.Data.SqlClient.SqlConnection;
-using WebAPI.Application.Interfaces.NfService;
 using WebAPI.Application.Services.NfService;
 using WebAPI.Application.Generic;
-using WebAPI.Application.FactoryInterfaces;
 using WebAPI.Application.Factory;
 using WebAPI.Application.BackgroundMessageServices.RabbitMQ;
 using Newtonsoft.Json;
@@ -49,6 +47,11 @@ using WebAPI.Domain.Interfaces.Services.Configuration;
 using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.Interfaces.Services;
 using WebAPI.Domain.Models.EnvVarSettings;
+using WebAPI.Domain.Interfaces.Factory;
+using WebAPI.Domain.Interfaces.Services.NfService;
+using WebAPI.Application.Services.Configuration;
+using WebAPI.Domain.Interfaces.Repository.Configuration;
+using WebAPI.Infra.Repositories.Configuration;
 
 namespace WebAPI.Infra.Structure.IoC;
 
@@ -173,7 +176,23 @@ public static class DependencyContainerService
 
     public static void RegisterServices(this IServiceCollection services)
     {
+        #region UnitOfWork
+
+        services
+        .AddScoped<IGenericUnitofWorkService, GenericUnitOfWorkService>()
+        .AddScoped<IGenericNotifyLogsService, GenericNotifyLogsService>();
+        #endregion
+
         #region Generics
+
+        services
+        //.AddScoped<WebAPIContext>() //TODO: Verificar se realmente e necessario isso
+        .AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>))
+        .AddScoped(typeof(IGenericRepositoryDapper<>), typeof(GenericRepositoryDapper<>))
+        .AddScoped(typeof(ILoggerService<>), typeof(LoggerService<>))
+        .AddScoped(typeof(IFileService<>), typeof(FileService<>))
+        .AddScoped(typeof(IMongoDbService<>), typeof(MongoDbService<>))
+        .AddTransient(typeof(IRabbitMQService<>), typeof(RabbitMQService<>));
 
         #endregion
 
@@ -183,52 +202,65 @@ public static class DependencyContainerService
 
         #region Configuration
 
-        //services.AddScoped<IAuthenticationSettingsService, Authe>
+        services
+        .AddScoped<IAuthenticationSettingsService, AuthenticationSettingsService>()
+        .AddScoped<IEnvironmentTypeSettingsService, EnvironmentTypeSettingsService>()
+        .AddScoped<IExpirationPasswordSettingsService, ExpirationPasswordSettingsService>()
+        .AddScoped<ILayoutSettingsService, LayoutSettingsService>()
+        .AddScoped<ILogSettingsService, LogSettingsService>()
+        .AddScoped<IRequiredPasswordSettingsService, RequiredPasswordSettingsService>()
+        .AddScoped<IEmailService, EmailService>()
+        .AddScoped<IEmailFactory, EmailFactory>();
 
+        services
+       .AddScoped<IAuthenticationSettingsRepository, AuthenticationSettingsRepository>()
+       .AddScoped<IEnvironmentTypeSettingsRepository, EnvironmentTypeSettingsRepository>()
+       .AddScoped<IExpirationPasswordSettingsRepository, ExpirationPasswordSettingsRepository>()
+       .AddScoped<ILayoutSettingsRepository, LayoutSettingsRepository>()
+       .AddScoped<ILogSettingsRepository, LogSettingsRepository>()
+       .AddScoped<IRequiredPasswordSettingsRepository, RequiredPasswordSettingsRepository>()
+       .AddScoped<IEmailDisplayRepository, EmailDisplayRepository>()
+       .AddScoped<IEmailSettingsRepository, EmailSettingsRepository>();
 
         #endregion
-        services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>))
-        .AddScoped(typeof(IGenericRepositoryDapper<>), typeof(GenericRepositoryDapper<>))
-        .AddScoped(typeof(ILoggerService<>), typeof(LoggerService<>))
-        .AddScoped(typeof(IFileService<>), typeof(FileService<>))
-        .AddScoped<WebAPIContext>()
-        .AddScoped<IUserRepository, UserRepository>()
-        .AddScoped<ICepRepository, CepRepository>()
-        .AddScoped<ICityRepository, CityRepository>()
-        .AddScoped<IRegionRepository, RegionRepository>()
-        .AddScoped<IStatesRepository, StateRepository>()
-        .AddScoped<ILogRepository, LogRepository>()
-        .AddScoped<IAuditRepository, AuditRepository>()
-        .AddScoped<INotificationMessageService, NotificationMessageService>()
-        .AddScoped<IAccountService, AccountService>()
-        .AddScoped<IAuditService, AuditService>()
-        .AddScoped<ICepService, CepService>()
-        .AddScoped<ICityService, CityService>()
-        .AddScoped<ILogService, LogService>()
-        .AddScoped<IUserService, UserService>()
-        .AddScoped<IGeneralService, GeneralService>()
-        .AddScoped<IRegionService, RegionService>()
-        .AddScoped<IStatesService, StatesService>()
-        .AddScoped<IGraphicLineService, GraphicLineService>()
-        .AddScoped<IGraphicBarService, GraphicBarService>()
-        .AddScoped<IEmailService, EmailService>()
-        .AddScoped<IQRCodeService, QRCodeService>()
-        .AddScoped<IMemoryCacheService, MemoryCacheService>()
-        .AddScoped<IGenericUnitofWorkService, GenericUnitOfWorkService>()
-        .AddTransient<IIpAddressService, IpAddressService>()
-        .AddScoped<INfService, NfService>()
-        .AddScoped<IFirebaseService, FirebaseService>()
-        .AddScoped<IEmailFactory, EmailFactory>()
-        .AddTransient<IProblemDetailsFactory, ProblemDetailsFactory>()
-        .AddScoped(typeof(IMongoDbService<>), typeof(MongoDbService<>))
-        .AddTransient(typeof(IRabbitMQService<>), typeof(RabbitMQService<>))
-        .AddScoped<ISendGridService, SendGridService>();
+
+
+        //Kisslog
+        //.AddScoped<IUserRepository, UserRepository>()
+        //.AddScoped<ICepRepository, CepRepository>()
+        //.AddScoped<ICityRepository, CityRepository>()
+        //.AddScoped<IRegionRepository, RegionRepository>()
+        //.AddScoped<IStatesRepository, StateRepository>()
+        //.AddScoped<ILogRepository, LogRepository>()
+        //.AddScoped<IAuditRepository, AuditRepository>()
+        //.AddScoped<INotificationMessageService, NotificationMessageService>()
+        //.AddScoped<IAccountService, AccountService>()
+        //.AddScoped<IAuditService, AuditService>()
+        //.AddScoped<ICepService, CepService>()
+        //.AddScoped<ICityService, CityService>()
+        //.AddScoped<ILogService, LogService>()
+        //.AddScoped<IUserService, UserService>()
+        //.AddScoped<IGeneralService, GeneralService>()
+        //.AddScoped<IRegionService, RegionService>()
+        //.AddScoped<IStatesService, StatesService>()
+        //.AddScoped<IGraphicLineService, GraphicLineService>()
+        //.AddScoped<IGraphicBarService, GraphicBarService>()
+        //
+        //.AddScoped<IQRCodeService, QRCodeService>()
+        //.AddScoped<IMemoryCacheService, MemoryCacheService>()
+        //
+        //.AddTransient<IIpAddressService, IpAddressService>()
+        //.AddScoped<INfService, NfService>()
+        //.AddScoped<IFirebaseService, FirebaseService>()
+        //
+        //.AddTransient<IProblemDetailsFactory, ProblemDetailsFactory>()
+
+        //.AddScoped<ISendGridService, SendGridService>();
     }
 
     public static void RegisterMapperConfig(this IServiceCollection services)
     {
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-        // services.AddAutoMapper(typeof(Startup));
     }
 
     public static void RegisterConfigs(this IServiceCollection services, IConfiguration configuration)
@@ -569,9 +601,7 @@ public static class DependencyContainerService
 
     public static void RegisterSeriLog(this IServiceCollection services, IConfiguration configuration)
     {
-        var connectionStringLogs = "Server=.\\SQLEXPRESS;Database=DefaultAPI_Logs;User Id=sa;Password=#web_$notes&2024!;trustservercertificate=true;";
-
-        //var connectionStringLogs = EnvironmentVariablesExtension.GetDatabaseFromEnvVar(configuration.GetConnectionString("DefaultConnectionLogs"));
+        var connectionStringLogs = EnvironmentVariablesExtension.GetDatabaseFromEnvVar(configuration.GetConnectionString("WebAPI_Logs"));
 
         Serilog.Debugging.SelfLog.Enable(msg => Console.WriteLine(msg));
 
