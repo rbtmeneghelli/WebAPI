@@ -7,11 +7,11 @@ namespace WebAPI.Application.Services;
 
 public sealed class RedisService : GenericService, IRedisService
 {
-    private readonly IDistributedCache _cache;
+    private readonly IDistributedCache _iDistributedCache;
 
-    public RedisService(IDistributedCache cache, INotificationMessageService notificationMessageService) : base(notificationMessageService)
+    public RedisService(IDistributedCache iDistributedCache, INotificationMessageService iNotificationMessageService) : base(iNotificationMessageService)
     {
-        _cache = cache;
+        _iDistributedCache = iDistributedCache;
     }
 
     private DistributedCacheEntryOptions SetTimeToExpire()
@@ -23,23 +23,23 @@ public sealed class RedisService : GenericService, IRedisService
 
     public async Task AddDataStringAsync(string redisKey, string redisData)
     {
-        await _cache.SetStringAsync(redisKey, redisData, SetTimeToExpire());
+        await _iDistributedCache.SetStringAsync(redisKey, redisData, SetTimeToExpire());
     }
 
     public async Task<string> GetDataStringAsync(string redisKey)
     {
-        var result = await _cache.GetStringAsync(redisKey);
+        var result = await _iDistributedCache.GetStringAsync(redisKey);
         return result;
     }
 
     public async Task AddDataObjectAsync<T>(string redisKey, T redisData) where T : class
     {
-        await _cache.SetStringAsync(redisKey, redisData.SerializeObject(), SetTimeToExpire());
+        await _iDistributedCache.SetStringAsync(redisKey, redisData.SerializeObject(), SetTimeToExpire());
     }
 
     public async Task<T> GetDataObjectAsync<T>(string redisKey) where T : class
     {
-        var result = await _cache.GetStringAsync(redisKey);
+        var result = await _iDistributedCache.GetStringAsync(redisKey);
         return result.DeserializeObject<T>();
     }
 

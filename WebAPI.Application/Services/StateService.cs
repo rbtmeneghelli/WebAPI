@@ -1,6 +1,5 @@
 ﻿using WebAPI.Application.Factory;
 using WebAPI.Application.Generic;
-using WebAPI.Application.InterfacesRepository;
 using WebAPI.Domain.Constants;
 using WebAPI.Domain.Entities.Others;
 using WebAPI.Domain.ExtensionMethods;
@@ -13,44 +12,34 @@ namespace WebAPI.Application.Services;
 
 public class StatesService : GenericService, IStatesService
 {
-    public readonly IStatesRepository _stateRepository;
+    private readonly IStatesRepository _iStatesRepository;
+    private readonly ICityService _iCityService;
 
-    public StatesService(IStatesRepository stateRepository, INotificationMessageService notificationMessageService) : base(notificationMessageService)
+    public StatesService(
+        IStatesRepository iStatesRepository,
+        ICityService iCityService,
+        INotificationMessageService iNotificationMessageService) 
+        : base(iNotificationMessageService)
     {
-        _stateRepository = stateRepository;
-    }
-
-    private async Task<IQueryable<States>> GetAllWithFilterAsync(StateFilter filter)
-    {
-        return await Task.FromResult(_stateRepository.GetAll().Where(GetPredicate(filter)).AsQueryable());
-    }
-
-    private async Task<int> GetCountAsync(StateFilter filter)
-    {
-        return await _stateRepository.GetAll().CountAsync(GetPredicate(filter));
-    }
-
-    private Expression<Func<States, bool>> GetPredicate(StateFilter filter)
-    {
-        return p =>
-               (GuardClauses.IsNullOrWhiteSpace(filter.Nome) || p.Name.StartsWith(filter.Nome.ApplyTrim()));
+        _iStatesRepository = iStatesRepository;
+        _iCityService = iCityService;
     }
 
     public Task AddStatesAsync(IEnumerable<States> list)
     {
-        _stateRepository.AddRange(list);
+        _iStatesRepository.AddRange(list);
         return Task.CompletedTask;
     }
 
     public async Task<long> GetStateByInitialsAsync(string initials)
     {
-        var state = await _stateRepository.GetAll().FirstOrDefaultAsync(x => x.Initials == initials);
+        var state = await _iStatesRepository.GetAll().FirstOrDefaultAsync(x => x.Initials == initials);
         return GuardClauses.ObjectIsNotNull(state) ? state.Id.Value : 0;
     }
 
     public async Task<List<States>> GetAllStatesAsync()
     {
-        return await _stateRepository.GetAll().ToListAsync();
+        return await _iStatesRepository.GetAll().ToListAsync();
     }
 
     public async Task RefreshStatesAsync(RefreshStates refreshStates)
@@ -65,7 +54,7 @@ public class StatesService : GenericService, IStatesService
                     state.UpdateDate = state.GetNewUpdateDate();
                     state.Name = item.Name;
                     state.Initials = item.Initials;
-                    _stateRepository.Update(state);
+                    _iStatesRepository.Update(state);
                 }
                 else
                 {
@@ -74,7 +63,7 @@ public class StatesService : GenericService, IStatesService
                     state.Name = item.Name;
                     state.Initials = item.Initials;
                     state.RegionId = refreshStates.ListRegion.FirstOrDefault(x => x.Initials == item.Region.Initials).Id ?? 0;
-                    _stateRepository.Add(state);
+                    _iStatesRepository.Add(state);
                 }
             }
         }
@@ -92,11 +81,11 @@ public class StatesService : GenericService, IStatesService
     {
         try
         {
-            States record = await Task.FromResult(_stateRepository.GetById(id));
+            States record = await Task.FromResult(_iStatesRepository.GetById(id));
             if (GuardClauses.ObjectIsNotNull(record))
             {
                 record.Status = record.Status == true ? false : true;
-                _stateRepository.Update(record);
+                _iStatesRepository.Update(record);
                 return true;
             }
             return false;
@@ -108,7 +97,7 @@ public class StatesService : GenericService, IStatesService
         }
     }
 
-    public async Task<IEnumerable<States>> GetAllWithLikeAsync(string stateName) => await _stateRepository.FindBy(x => EF.Functions.Like(x.Name, $"%{stateName}%")).ToListAsync();
+    public async Task<IEnumerable<States>> GetAllWithLikeAsync(string stateName) => await _iStatesRepository.FindBy(x => EF.Functions.Like(x.Name, $"%{stateName}%")).ToListAsync();
 
     public async Task<PagedResult<States>> GetAllWithPaginateAsync(StateFilter filter)
     {
@@ -134,5 +123,36 @@ public class StatesService : GenericService, IStatesService
             Notify(FixConstants.ERROR_IN_GETALL);
             return PagedFactory.GetPaged(Enumerable.Empty<States>().AsQueryable(), PagedFactory.GetDefaultPageIndex(filter.PageIndex), PagedFactory.GetDefaultPageSize(filter.PageSize));
         }
+    }
+
+    public async Task<List<States>> GetListStateWithoutCities()
+    {
+        List<States> listState = await GetAllStatesAsync();
+
+        if (listState is not null)
+        {
+            IEnumerable<long> listIdState = await _iCityService.GetIdStatesAsync();
+            foreach (long idState in listIdState)
+            {
+                listState.RemoveAll(x => x.Id == idState);
+            }
+        }
+        return listState;
+    }
+
+    private async Task<IQueryable<States>> GetAllWithFilterAsync(StateFilter filter)
+    {
+        return await Task.FromResult(_iStatesRepository.GetAll().Where(GetPredicate(filter)).AsQueryable());
+    }
+
+    private async Task<int> GetCountAsync(StateFilter filter)
+    {
+        return await _iStatesRepository.GetAll().CountAsync(GetPredicate(filter));
+    }
+
+    private Expression<Func<States, bool>> GetPredicate(StateFilter filter)
+    {
+        return p =>
+               (GuardClauses.IsNullOrWhiteSpace(filter.Nome) || p.Name.StartsWith(filter.Nome.ApplyTrim()));
     }
 }

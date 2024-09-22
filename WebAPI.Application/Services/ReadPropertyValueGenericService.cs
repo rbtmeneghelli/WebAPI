@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using WebAPI.Domain.Entities.ControlPanel;
 using WebAPI.Domain.Interfaces.Services;
 
-namespace WebAPI.Application.Interfaces;
+namespace WebAPI.Application.Services;
 
 public sealed class ReadPropertyValueGenericService<TSource, TDestination> : IReadPropertyValueGenericService<TSource, TDestination> where TSource : class where TDestination : class
 {

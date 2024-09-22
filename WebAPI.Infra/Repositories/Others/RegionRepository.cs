@@ -7,55 +7,55 @@ namespace WebAPI.Infra.Repositories.Others;
 
 public class RegionRepository : IRegionRepository
 {
-    private readonly IGenericRepository<Region> _repository;
+    private readonly IGenericRepository<Region> _iRegionRepository;
 
-    public RegionRepository(IGenericRepository<Region> repository)
+    public RegionRepository(IGenericRepository<Region> iRegionRepository)
     {
-        _repository = repository;
+        _iRegionRepository = iRegionRepository;
     }
 
     public void Add(Region region)
     {
-        _repository.Add(region);
+        _iRegionRepository.Add(region);
     }
 
     public bool Exist(Expression<Func<Region, bool>> predicate)
     {
-        return _repository.Exist(predicate);
+        return _iRegionRepository.Exist(predicate);
     }
 
     public IQueryable<Region> FindBy(Expression<Func<Region, bool>> predicate, bool hasTracking = false)
     {
-        return _repository.FindBy(predicate, hasTracking);
+        return _iRegionRepository.FindBy(predicate, hasTracking);
     }
 
     public IQueryable<Region> GetAll(bool hasTracking = false)
     {
-        return _repository.GetAll(hasTracking);
+        return _iRegionRepository.GetAll(hasTracking);
     }
 
     public Region GetById(long id)
     {
-        return _repository.GetById(id);
+        return _iRegionRepository.GetById(id);
     }
 
     public void Remove(Region region)
     {
-        _repository.Remove(region);
+        _iRegionRepository.Remove(region);
     }
 
     public void Update(Region region)
     {
-        _repository.Update(region);
+        _iRegionRepository.Update(region);
     }
 
     public void AddRange(IEnumerable<Region> regions)
     {
-        _repository.AddRange(regions);
+        _iRegionRepository.AddRange(regions);
     }
 
     public long GetCount(Expression<Func<Region, bool>> predicate)
     {
-        return _repository.GetCount(predicate);
+        return _iRegionRepository.GetCount(predicate);
     }
 }

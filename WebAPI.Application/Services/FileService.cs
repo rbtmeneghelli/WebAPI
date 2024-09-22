@@ -15,8 +15,6 @@ using CsvHelper;
 using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.Serialization;
-using System.IO;
-using SendGrid.Helpers.Mail;
 using WebAPI.Domain.Constants;
 using WebAPI.Domain.Interfaces.Services.Tools;
 

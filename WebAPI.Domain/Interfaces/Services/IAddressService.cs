@@ -3,7 +3,7 @@ using WebAPI.Domain.Models;
 
 namespace WebAPI.Domain.Interfaces.Services;
 
-public interface ICepService
+public interface IAddressService
 {
     Task RefreshCepAsync(RefreshCep refreshCep);
     Task<Domain.ValueObject.AddressData> GetByCepAsync(string cep);

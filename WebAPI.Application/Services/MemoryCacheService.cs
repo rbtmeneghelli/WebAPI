@@ -6,13 +6,13 @@ namespace WebAPI.Application.Services;
 
 public class MemoryCacheService : IMemoryCacheService
 {
-    private readonly IMemoryCache _memoryCache;
+    private readonly IMemoryCache _iMemoryCache;
     private CacheSettings _cacheSettings { get; }
     private MemoryCacheEntryOptions _cacheOptions;
 
-    public MemoryCacheService(IMemoryCache memoryCache, CacheSettings cacheSettings)
+    public MemoryCacheService(IMemoryCache iMemoryCache, CacheSettings cacheSettings)
     {
-        _memoryCache = memoryCache;
+        _iMemoryCache = iMemoryCache;
         _cacheSettings = cacheSettings;
 
         if (GuardClauses.ObjectIsNotNull(_cacheSettings))
@@ -29,23 +29,23 @@ public class MemoryCacheService : IMemoryCacheService
 
     public bool TryGet<T>(string cacheKey, out T data)
     {
-        _memoryCache.TryGetValue(cacheKey, out data);
+        _iMemoryCache.TryGetValue(cacheKey, out data);
         return GuardClauses.ObjectIsNull(data);
     }
 
     public T Set<T>(string cacheKey, T value)
     {
-        return _memoryCache.Set(cacheKey, value, _cacheOptions);
+        return _iMemoryCache.Set(cacheKey, value, _cacheOptions);
     }
 
     public T Get<T>(string cacheKey)
     {
-        return _memoryCache.Get<T>(cacheKey);
+        return _iMemoryCache.Get<T>(cacheKey);
     }
 
     public void Remove(string cacheKey)
     {
-        _memoryCache.Remove(cacheKey);
+        _iMemoryCache.Remove(cacheKey);
     }
 
     public void Dispose()

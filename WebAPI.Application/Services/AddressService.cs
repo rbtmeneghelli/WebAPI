@@ -6,28 +6,27 @@ using WebAPI.Domain.Filters.Others;
 using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.Interfaces.Services;
 using WebAPI.Domain.Interfaces.Services.Tools;
-using WebAPI.Domain.Models;
 using WebAPI.Domain.ValueObject;
 
 namespace WebAPI.Application.Services;
 
-public class CepService : GenericService, ICepService
+public class AddressService : GenericService, IAddressService
 {
-    private readonly ICepRepository _cepRepository;
+    private readonly IAddressRepository _iAddressRepository;
 
-    public CepService(ICepRepository cepRepository, INotificationMessageService notificationMessageService) : base(notificationMessageService)
+    public AddressService(IAddressRepository iAddressRepository, INotificationMessageService iNotificationMessageService) : base(iNotificationMessageService)
     {
-        _cepRepository = cepRepository;
+        _iAddressRepository = iAddressRepository;
     }
 
     private async Task<IQueryable<Domain.ValueObject.AddressData>> GetAllWithFilterAsync(CepFilter filter)
     {
-        return await Task.FromResult(_cepRepository.GetAll().Where(GetPredicateAsync(filter)).AsQueryable());
+        return await Task.FromResult(_iAddressRepository.GetAll().Where(GetPredicateAsync(filter)).AsQueryable());
     }
 
     private async Task<int> GetCountAsync(CepFilter filter)
     {
-        return await _cepRepository.GetAll().CountAsync(GetPredicateAsync(filter));
+        return await _iAddressRepository.GetAll().CountAsync(GetPredicateAsync(filter));
     }
 
     private Expression<Func<Domain.ValueObject.AddressData, bool>> GetPredicateAsync(CepFilter filter)
@@ -44,12 +43,12 @@ public class CepService : GenericService, ICepService
             {
 
                 refreshCep.ModelCep = new Domain.ValueObject.AddressData(refreshCep.ModelCep.Id.Value, refreshCep.Cep, refreshCep.ModelCepAPI, refreshCep.ModelCep.StateId, refreshCep.ModelCep.CreateDate);
-                _cepRepository.Update(refreshCep.ModelCep);
+                _iAddressRepository.Update(refreshCep.ModelCep);
             }
             else
             {
                 refreshCep.ModelCep = new Domain.ValueObject.AddressData(refreshCep.Cep, refreshCep.ModelCepAPI);
-                _cepRepository.Add(refreshCep.ModelCep);
+                _iAddressRepository.Add(refreshCep.ModelCep);
             }
         }
         catch
@@ -64,18 +63,18 @@ public class CepService : GenericService, ICepService
 
     public async Task<Domain.ValueObject.AddressData> GetByCepAsync(string cep)
     {
-        return await _cepRepository.FindBy(x => x.Cep == cep).FirstOrDefaultAsync();
+        return await _iAddressRepository.FindBy(x => x.Cep == cep).FirstOrDefaultAsync();
     }
 
     public async Task<bool> UpdateStatusByIdAsync(long id)
     {
         try
         {
-            Domain.ValueObject.AddressData record = await Task.FromResult(_cepRepository.GetById(id));
+            Domain.ValueObject.AddressData record = await Task.FromResult(_iAddressRepository.GetById(id));
             if (GuardClauses.ObjectIsNotNull(record))
             {
                 record.Status = record.Status == true ? false : true;
-                _cepRepository.Update(record);
+                _iAddressRepository.Update(record);
                 return true;
             }
             return false;
@@ -89,7 +88,7 @@ public class CepService : GenericService, ICepService
 
     public async Task<IEnumerable<AddressData>> GetAllWithLikeAsync(string parameter)
     {
-        return await _cepRepository.FindBy(x => EF.Functions.Like(x.Cep, $"%{parameter}%")).ToListAsync();
+        return await _iAddressRepository.FindBy(x => EF.Functions.Like(x.Cep, $"%{parameter}%")).ToListAsync();
     }
 
     public async Task<PagedResult<AddressData>> GetAllWithPaginateAsync(CepFilter filter)

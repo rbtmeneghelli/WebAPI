@@ -7,31 +7,31 @@ namespace WebAPI.Application.Generic;
 
 public class GenericUnitOfWorkService : IGenericUnitOfWorkService
 {
-    public IAccountService iAccountService { get; }
-    public IAuditService iAuditService { get; }
-    public ICepService iCepService { get; }
-    public ICityService iCityService { get; }
-    public IRegionService iRegionService { get; }
-    public IStatesService iStateService { get; }
-    public IUserService iUserService { get; }
+    public IAccountService AccountService { get; }
+    public IAuditService AuditService { get; }
+    public IAddressService AddressService { get; }
+    public ICityService CityService { get; }
+    public IRegionService RegionService { get; }
+    public IStatesService StateService { get; }
+    public IUserService UserService { get; }
 
     public GenericUnitOfWorkService(
-        IAccountService iAccountService,
-        IAuditService iAuditService,
-        ICepService iCepService,
-        ICityService iCityService,
-        IRegionService iRegionService,
-        IStatesService iStateService,
-        IUserService iUserService
+        IAccountService AccountService,
+        IAuditService AuditService,
+        IAddressService AddressService,
+        ICityService CityService,
+        IRegionService RegionService,
+        IStatesService StateService,
+        IUserService UserService
         )
     {
-        this.iAccountService = iAccountService ?? throw new ArgumentNullException(nameof(iAccountService));
-        this.iAuditService = iAuditService ?? throw new ArgumentNullException(nameof(iAuditService));
-        this.iCepService = iCepService ?? throw new ArgumentNullException(nameof(iCepService));
-        this.iCityService = iCityService ?? throw new ArgumentNullException(nameof(iCityService));
-        this.iRegionService = iRegionService ?? throw new ArgumentNullException(nameof(iRegionService));
-        this.iStateService = iStateService ?? throw new ArgumentNullException(nameof(iStateService));
-        this.iUserService = iUserService ?? throw new ArgumentNullException(nameof(iUserService));
+        this.AccountService = AccountService ?? throw new ArgumentNullException(nameof(AccountService));
+        this.AuditService = AuditService ?? throw new ArgumentNullException(nameof(AuditService));
+        this.AddressService = AddressService ?? throw new ArgumentNullException(nameof(AddressService));
+        this.CityService = CityService ?? throw new ArgumentNullException(nameof(CityService));
+        this.RegionService = RegionService ?? throw new ArgumentNullException(nameof(RegionService));
+        this.StateService = StateService ?? throw new ArgumentNullException(nameof(StateService));
+        this.UserService = UserService ?? throw new ArgumentNullException(nameof(UserService));
     }
 
     public void Dispose()
@@ -42,48 +42,48 @@ public class GenericUnitOfWorkService : IGenericUnitOfWorkService
 
 public class GenericNotifyLogsService : IGenericNotifyLogsService
 {
-    public INotificationMessageService iNotificationMessageService { get; }
-    public IKissLogService iKissLogService { get; }
+    public INotificationMessageService NotificationMessageService { get; }
+    public IGeneralLogService GeneralLogService { get; }
 
-    public GenericNotifyLogsService(INotificationMessageService iNotificationMessageService, IKissLogService iKissLogService)
+    public GenericNotifyLogsService(INotificationMessageService NotificationMessageService, IGeneralLogService GeneralLogService)
     {
-        this.iNotificationMessageService = iNotificationMessageService ?? throw new ArgumentNullException(nameof(iNotificationMessageService));
-        this.iKissLogService = iKissLogService ?? throw new ArgumentNullException(nameof(iKissLogService));
+        this.NotificationMessageService = NotificationMessageService ?? throw new ArgumentNullException(nameof(NotificationMessageService));
+        this.GeneralLogService = GeneralLogService ?? throw new ArgumentNullException(nameof(GeneralLogService));
     }
 }
 
 public class GenericConfigurationService : IGenericConfigurationService
 {
-    public IEmailService iEmailService { get; }
+    public IEmailService EmailService { get; }
 
-    public IAuthenticationSettingsService iAuthenticationSettingsService { get; }
+    public IAuthenticationSettingsService AuthenticationSettingsService { get; }
 
-    public IEnvironmentTypeSettingsService iEnvironmentTypeSettingsService { get; }
+    public IEnvironmentTypeSettingsService EnvironmentTypeSettingsService { get; }
 
-    public IExpirationPasswordSettingsService iExpirationPasswordSettingsService { get; }
+    public IExpirationPasswordSettingsService ExpirationPasswordSettingsService { get; }
 
-    public ILayoutSettingsService iLayoutSettingsService { get; }
+    public ILayoutSettingsService LayoutSettingsService { get; }
 
-    public ILogSettingsService iLogSettingsService { get; }
+    public ILogSettingsService LogSettingsService { get; }
 
-    public IRequiredPasswordSettingsService iRequiredPasswordSettingsService { get; }
+    public IRequiredPasswordSettingsService RequiredPasswordSettingsService { get; }
 
     public GenericConfigurationService(
-        IEmailService iEmailService,
-        IAuthenticationSettingsService iAuthenticationSettingsService,
-        IEnvironmentTypeSettingsService iEnvironmentTypeSettingsService,
-        IExpirationPasswordSettingsService iExpirationPasswordSettingsService,
-        ILayoutSettingsService iLayoutSettingsService,
-        ILogSettingsService iLogSettingsService,
-        IRequiredPasswordSettingsService iRequiredPasswordSettingsService
+        IEmailService EmailService,
+        IAuthenticationSettingsService AuthenticationSettingsService,
+        IEnvironmentTypeSettingsService EnvironmentTypeSettingsService,
+        IExpirationPasswordSettingsService ExpirationPasswordSettingsService,
+        ILayoutSettingsService LayoutSettingsService,
+        ILogSettingsService LogSettingsService,
+        IRequiredPasswordSettingsService RequiredPasswordSettingsService
         )
     {
-        this.iEmailService = iEmailService ?? throw new ArgumentNullException(nameof(iEmailService));
-        this.iAuthenticationSettingsService = iAuthenticationSettingsService ?? throw new ArgumentNullException(nameof(iAuthenticationSettingsService));
-        this.iEnvironmentTypeSettingsService = iEnvironmentTypeSettingsService ?? throw new ArgumentNullException(nameof(iEnvironmentTypeSettingsService));
-        this.iExpirationPasswordSettingsService = iExpirationPasswordSettingsService ?? throw new ArgumentNullException(nameof(iExpirationPasswordSettingsService));
-        this.iLayoutSettingsService = iLayoutSettingsService ?? throw new ArgumentNullException(nameof(iLayoutSettingsService));
-        this.iLogSettingsService = iLogSettingsService ?? throw new ArgumentNullException(nameof(iLogSettingsService));
-        this.iRequiredPasswordSettingsService = iRequiredPasswordSettingsService ?? throw new ArgumentNullException(nameof(iRequiredPasswordSettingsService));
+        this.EmailService = EmailService ?? throw new ArgumentNullException(nameof(EmailService));
+        this.AuthenticationSettingsService = AuthenticationSettingsService ?? throw new ArgumentNullException(nameof(AuthenticationSettingsService));
+        this.EnvironmentTypeSettingsService = EnvironmentTypeSettingsService ?? throw new ArgumentNullException(nameof(EnvironmentTypeSettingsService));
+        this.ExpirationPasswordSettingsService = ExpirationPasswordSettingsService ?? throw new ArgumentNullException(nameof(ExpirationPasswordSettingsService));
+        this.LayoutSettingsService = LayoutSettingsService ?? throw new ArgumentNullException(nameof(LayoutSettingsService));
+        this.LogSettingsService = LogSettingsService ?? throw new ArgumentNullException(nameof(LogSettingsService));
+        this.RequiredPasswordSettingsService = RequiredPasswordSettingsService ?? throw new ArgumentNullException(nameof(RequiredPasswordSettingsService));
     }
 }

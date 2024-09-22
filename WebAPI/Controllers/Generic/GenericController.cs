@@ -88,12 +88,12 @@ public abstract class GenericController : ControllerBase
 
     protected void NotificationError(string mensagem)
     {
-        _iGenericNotifyLogsService.iNotificationMessageService.Handle(new Domain.Models.NotificationMessage(mensagem));
+        _iGenericNotifyLogsService.NotificationMessageService.Handle(new Domain.Models.NotificationMessage(mensagem));
     }
 
     private bool OperationIsValid()
     {
-        return !_iGenericNotifyLogsService.iNotificationMessageService.HaveNotification();
+        return !_iGenericNotifyLogsService.NotificationMessageService.HaveNotification();
     }
 
     protected IActionResult CustomResponse(object result = null, string message = "")
@@ -113,7 +113,7 @@ public abstract class GenericController : ControllerBase
         return BadRequest(new
         {
             success = false,
-            errors = _iGenericNotifyLogsService.iNotificationMessageService.GetNotifications().Select(n => n.Message)
+            errors = _iGenericNotifyLogsService.NotificationMessageService.GetNotifications().Select(n => n.Message)
         });
     }
 

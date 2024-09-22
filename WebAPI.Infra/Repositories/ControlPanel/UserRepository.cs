@@ -9,74 +9,74 @@ namespace WebAPI.Infra.Repositories.ControlPanel;
 
 public class UserRepository : IUserRepository
 {
-    private readonly IGenericRepository<User> _userRepository;
-    private readonly IGenericRepository<Employee> _employeeRepository;
-    private readonly IGenericRepository<Profile> _profileRepository;
+    private readonly IGenericRepository<User> _iUserRepository;
+    private readonly IGenericRepository<Employee> _iEmployeeRepository;
+    private readonly IGenericRepository<Profile> _iProfileRepository;
 
-    public UserRepository(IGenericRepository<User> userRepository, IGenericRepository<Employee> employeeRepository, IGenericRepository<Profile> profileRepository)
+    public UserRepository(IGenericRepository<User> iUserRepository, IGenericRepository<Employee> iEmployeeRepository, IGenericRepository<Profile> iProfileRepository)
     {
-        _userRepository = userRepository;
-        _employeeRepository = employeeRepository;
-        _profileRepository = profileRepository;
+        _iUserRepository = iUserRepository;
+        _iEmployeeRepository = iEmployeeRepository;
+        _iProfileRepository = iProfileRepository;
     }
 
     #region Operações CRUD
 
     public IQueryable<User> GetAll(bool hasTracking = false)
     {
-        return _userRepository.GetAll(hasTracking);
+        return _iUserRepository.GetAll(hasTracking);
     }
 
     public IQueryable<User> GetAllIgnoreQueryFilter(bool hasTracking = false)
     {
-        return _userRepository.GetAllIgnoreQueryFilter(hasTracking);
+        return _iUserRepository.GetAllIgnoreQueryFilter(hasTracking);
     }
 
     public IQueryable<User> FindBy(Expression<Func<User, bool>> predicate)
     {
-        return _userRepository.FindBy(predicate);
+        return _iUserRepository.FindBy(predicate);
     }
 
     public IQueryable<User> FindByIgnoreQueryFilter(Expression<Func<User, bool>> predicate)
     {
-        return _userRepository.FindByIgnoreQueryFilter(predicate);
+        return _iUserRepository.FindByIgnoreQueryFilter(predicate);
     }
 
     public User GetById(long id)
     {
-        return _userRepository.GetById(id);
+        return _iUserRepository.GetById(id);
     }
 
     public void Update(User user)
     {
-        _userRepository.Update(user);
+        _iUserRepository.Update(user);
     }
 
     public bool Exist(Expression<Func<User, bool>> predicate)
     {
-        return _userRepository.Exist(predicate);
+        return _iUserRepository.Exist(predicate);
     }
 
     public void Add(User user)
     {
-        _userRepository.Add(user);
+        _iUserRepository.Add(user);
     }
 
     public void Remove(User user)
     {
-        _userRepository.Remove(user);
+        _iUserRepository.Remove(user);
     }
 
     #endregion
 
     public async Task<User> GetUserCredentialsById(long id)
     {
-        return await _userRepository.GetAllInclude("Employee.Profile.ProfileOperations.Operation", true).FirstOrDefaultAsync(p => p.Id == id);
+        return await _iUserRepository.GetAllInclude("Employee.Profile.ProfileOperations.Operation", true).FirstOrDefaultAsync(p => p.Id == id);
     }
 
     public async Task<User> GetUserCredentialsByLogin(string login)
     {
-        return await _userRepository.GetAllInclude("Employee.Profile.ProfileOperations.Operation", true).FirstOrDefaultAsync(p => p.Login == login.ApplyTrim());
+        return await _iUserRepository.GetAllInclude("Employee.Profile.ProfileOperations.Operation", true).FirstOrDefaultAsync(p => p.Login == login.ApplyTrim());
     }
 
     public async Task<bool> CanDelete(long userId)
@@ -88,10 +88,10 @@ public class UserRepository : IUserRepository
 
     public async Task<IEnumerable<User>> UserProfileJoinLinq()
     {
-        return await (from _user in _userRepository.GetAll()
-                      join _employee in _employeeRepository.GetAll()
+        return await (from _user in _iUserRepository.GetAll()
+                      join _employee in _iEmployeeRepository.GetAll()
                       on _user.Id equals _employee.IdUser
-                      join _profile in _profileRepository.GetAll()
+                      join _profile in _iProfileRepository.GetAll()
                       on _employee.IdProfile equals _profile.Id
                       select new User
                       {
@@ -102,9 +102,9 @@ public class UserRepository : IUserRepository
 
     public async Task<IEnumerable<User>> UserProfileJoinLinqAndLambda()
     {
-        return await _userRepository.GetAll()
+        return await _iUserRepository.GetAll()
                .Join(
-                    _employeeRepository.GetAll(),
+                    _iEmployeeRepository.GetAll(),
                     _user => _user.Id,
                     _employee => _employee.IdUser,
                     (_user, _employee) => new User
@@ -116,8 +116,8 @@ public class UserRepository : IUserRepository
 
     public async Task<IEnumerable<User>> UserProfileLeftJoinLinq()
     {
-        return await (from _user in _userRepository.GetAll()
-                      join _employee in _employeeRepository.GetAll()
+        return await (from _user in _iUserRepository.GetAll()
+                      join _employee in _iEmployeeRepository.GetAll()
                       on _user.Id equals _employee.IdUser
                       into _userEmployeeJoin
                       from _userEmployeeResult in _userEmployeeJoin.DefaultIfEmpty()
@@ -130,8 +130,8 @@ public class UserRepository : IUserRepository
 
     public async Task<IEnumerable<User>> UserProfileRightJoinLinq()
     {
-        return await (from _employee in _employeeRepository.GetAll()
-                      join _user in _userRepository.GetAll()
+        return await (from _employee in _iEmployeeRepository.GetAll()
+                      join _user in _iUserRepository.GetAll()
                       on _employee.IdUser equals _user.Id
                       into _userEmployeeJoin
                       from _userEmployeeResult in _userEmployeeJoin.DefaultIfEmpty()

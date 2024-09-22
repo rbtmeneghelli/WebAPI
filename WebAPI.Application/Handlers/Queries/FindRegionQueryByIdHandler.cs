@@ -1,24 +1,22 @@
-﻿using WebAPI.Domain.CQRS.Command;
-using MediatR;
-using System.Threading;
-using WebAPI.Application.InterfacesRepository;
+﻿using MediatR;
 using WebAPI.Domain.Entities.Others;
 using WebAPI.Domain.Interfaces.Repository;
+using WebAPI.Domain.CQRS.Queries;
 
 namespace WebAPI.Application.Handlers.Queries;
 
 public class FindRegionQueryByIdHandler : IRequestHandler<RegionQueryByIdRequest, Region>
 {
-    private readonly IRegionRepository _regionRepository;
+    private readonly IRegionRepository _iRegionRepository;
 
-    public FindRegionQueryByIdHandler(IRegionRepository regionRepository)
+    public FindRegionQueryByIdHandler(IRegionRepository iRegionRepository)
     {
-        _regionRepository = regionRepository;
+        _iRegionRepository = iRegionRepository;
     }
 
     public Task<Region> Handle(RegionQueryByIdRequest request, CancellationToken cancellationToken)
     {
-        var result = _regionRepository.GetById(request.Id.Value);
+        var result = _iRegionRepository.GetById(request.Id.Value);
         return Task.FromResult(result);
     }
 }

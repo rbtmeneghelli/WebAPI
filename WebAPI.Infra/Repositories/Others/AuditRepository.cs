@@ -7,30 +7,30 @@ namespace WebAPI.Infra.Repositories.Others;
 
 public class AuditRepository : IAuditRepository
 {
-    private readonly IGenericRepository<Audit> _repository;
+    private readonly IGenericRepository<Audit> _iAuditRepository;
 
-    public AuditRepository(IGenericRepository<Audit> repository)
+    public AuditRepository(IGenericRepository<Audit> iAuditRepository)
     {
-        _repository = repository;
+        _iAuditRepository = iAuditRepository;
     }
 
     public IQueryable<Audit> GetAll(bool hasTracking = false)
     {
-        return _repository.GetAll(hasTracking);
+        return _iAuditRepository.GetAll(hasTracking);
     }
 
     public Audit GetById(long id)
     {
-        return _repository.GetById(id);
+        return _iAuditRepository.GetById(id);
     }
 
     public IQueryable<Audit> FindBy(Expression<Func<Audit, bool>> predicate, bool hasTracking = false)
     {
-        return _repository.FindBy(predicate, hasTracking);
+        return _iAuditRepository.FindBy(predicate, hasTracking);
     }
 
     public bool Exist(Expression<Func<Audit, bool>> predicate)
     {
-        return _repository.Exist(predicate);
+        return _iAuditRepository.Exist(predicate);
     }
 }

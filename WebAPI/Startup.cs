@@ -1,7 +1,7 @@
-﻿using WebAPI.Configuration;
-using WebAPI.Infra.Structure.IoC;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using WebAPI.Infra.Structure.IoC.Middleware.ExceptionHandler;
+﻿using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using WebAPI.IoC;
+using WebAPI.IoC.Middleware.ExceptionHandler;
+
 
 public class Startup
 {

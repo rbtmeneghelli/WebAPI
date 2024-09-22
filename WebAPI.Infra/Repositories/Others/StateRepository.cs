@@ -8,50 +8,50 @@ namespace WebAPI.Infra.Repositories.Others;
 
 public class StateRepository : IStatesRepository
 {
-    private readonly IGenericRepository<States> _repository;
+    private readonly IGenericRepository<States> _iStateRepository;
 
-    public StateRepository(IGenericRepository<States> repository)
+    public StateRepository(IGenericRepository<States> iStateRepository)
     {
-        _repository = repository;
+        _iStateRepository = iStateRepository;
     }
 
     public void Add(States state)
     {
-        _repository.Add(state);
+        _iStateRepository.Add(state);
     }
 
     public bool Exist(Expression<Func<States, bool>> predicate)
     {
-        return _repository.Exist(predicate);
+        return _iStateRepository.Exist(predicate);
     }
 
     public IQueryable<States> FindBy(Expression<Func<States, bool>> predicate, bool hasTracking = false)
     {
-        return _repository.FindBy(predicate, hasTracking);
+        return _iStateRepository.FindBy(predicate, hasTracking);
     }
 
     public IQueryable<States> GetAll(bool hasTracking = false)
     {
-        return _repository.GetAll(hasTracking);
+        return _iStateRepository.GetAll(hasTracking);
     }
 
     public States GetById(long id)
     {
-        return _repository.GetById(id);
+        return _iStateRepository.GetById(id);
     }
 
     public void Remove(States state)
     {
-        _repository.Remove(state);
+        _iStateRepository.Remove(state);
     }
 
     public void Update(States state)
     {
-        _repository.Update(state);
+        _iStateRepository.Update(state);
     }
 
     public void AddRange(IEnumerable<States> states)
     {
-        _repository.AddRange(states);
+        _iStateRepository.AddRange(states);
     }
 }

@@ -53,6 +53,7 @@ using WebAPI.Infra.Repositories.ControlPanel;
 using WebAPI.Domain.Interfaces.Services.NfService;
 using WebAPI.Application.Services.NfService;
 using WebAPI.Infra.Repositories.Others;
+using WebAPI.Application.Services.Graphics;
 
 namespace WebAPI.IoC;
 
@@ -193,7 +194,6 @@ public static class DependencyContainerService
         //.AddScoped<WebAPIContext>() //TODO: Verificar se realmente e necessario isso
         .AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>))
         .AddScoped(typeof(IGenericRepositoryDapper<>), typeof(GenericRepositoryDapper<>))
-        .AddScoped(typeof(ILoggerService<>), typeof(LoggerService<>))
         .AddScoped(typeof(IFileService<>), typeof(FileService<>))
         .AddScoped(typeof(IMongoDbService<>), typeof(MongoDbService<>))
         .AddTransient(typeof(IRabbitMQService<>), typeof(RabbitMQService<>));
@@ -233,7 +233,7 @@ public static class DependencyContainerService
         #endregion
 
         services
-        .AddScoped<ICepRepository, CepRepository>()
+        .AddScoped<IAddressRepository, AddressRepository>()
         .AddScoped<ICityRepository, CityRepository>()
         .AddScoped<IRegionRepository, RegionRepository>()
         .AddScoped<IStatesRepository, StateRepository>()
@@ -241,10 +241,10 @@ public static class DependencyContainerService
         .AddScoped<IAuditRepository, AuditRepository>()
         .AddScoped<INotificationMessageService, NotificationMessageService>()
         .AddScoped<IAuditService, AuditService>()
-        .AddScoped<ICepService, CepService>()
+        .AddScoped<IAddressService, AddressService>()
         .AddScoped<ICityService, CityService>()
         .AddScoped<ILogService, LogService>()
-        .AddScoped<IKissLogService, KissLogService>()
+        .AddScoped<IGeneralLogService, GeneralLogService>()
         .AddScoped<IGeneralService, GeneralService>()
         .AddScoped<IRegionService, RegionService>()
         .AddScoped<IStatesService, StatesService>()

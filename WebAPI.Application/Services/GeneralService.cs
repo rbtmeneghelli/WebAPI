@@ -13,13 +13,13 @@ public class GeneralService : GenericService, IGeneralService
 {
     private List<RefreshTokens> _refreshTokens = new List<RefreshTokens>();
     private TokenSettings _tokenSettings { get; }
-    private readonly IHttpClientFactory _httpClientFactory;
+    private readonly IHttpClientFactory _iHttpClientFactory;
     private readonly GeneralMethod _generalMethod;
 
-    public GeneralService(TokenSettings tokenSettings, INotificationMessageService notificationMessageService, IHttpClientFactory httpClientFactory) : base(notificationMessageService)
+    public GeneralService(TokenSettings tokenSettings, INotificationMessageService iNotificationMessageService, IHttpClientFactory iHttpClientFactory) : base(iNotificationMessageService)
     {
         _tokenSettings = tokenSettings;
-        _httpClientFactory = httpClientFactory;
+        _iHttpClientFactory = iHttpClientFactory;
         _generalMethod = GeneralMethod.GetLoadExtensionMethods();
     }
 
@@ -59,7 +59,7 @@ public class GeneralService : GenericService, IGeneralService
 
         try
         {
-            var client = _httpClientFactory.CreateClient("Signed");
+            var client = _iHttpClientFactory.CreateClient("Signed");
             client.BaseAddress = new Uri(url);
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -85,7 +85,7 @@ public class GeneralService : GenericService, IGeneralService
         RequestData requestDataDto = new RequestData();
         try
         {
-            var client = _httpClientFactory.CreateClient("Signed");
+            var client = _iHttpClientFactory.CreateClient("Signed");
             client.BaseAddress = new Uri(url);
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));

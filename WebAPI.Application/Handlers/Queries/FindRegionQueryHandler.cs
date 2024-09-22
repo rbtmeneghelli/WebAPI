@@ -1,26 +1,25 @@
-﻿using WebAPI.Domain.CQRS.Command;
-using MediatR;
-using WebAPI.Application.InterfacesRepository;
+﻿using MediatR;
 using WebAPI.Application.Generic;
 using WebAPI.Domain.Entities.Others;
 using WebAPI.Domain.Interfaces.Services.Tools;
 using WebAPI.Domain.Interfaces.Repository;
+using WebAPI.Domain.CQRS.Queries;
 
 namespace WebAPI.Application.Handlers.Queries;
 
 public class FindRegionQueryFilterHandler : GenericService, IRequestHandler<RegionQueryFilterRequest, IEnumerable<Region>>
 {
-    private readonly IRegionRepository _regionRepository;
+    private readonly IRegionRepository _iRegionRepository;
 
-    public FindRegionQueryFilterHandler(IRegionRepository regionRepository, INotificationMessageService notificationMessageService) : base(notificationMessageService)
+    public FindRegionQueryFilterHandler(IRegionRepository iRegionRepository, INotificationMessageService iNotificationMessageService) : base(iNotificationMessageService)
     {
-        _regionRepository = regionRepository;
+        _iRegionRepository = iRegionRepository;
     }
 
     public Task<IEnumerable<Region>> Handle(RegionQueryFilterRequest request, CancellationToken cancellationToken)
     {
         List<RegionQueryFilterResponse> regionQueryFilterResponses = new();
-        var result = _regionRepository.GetAll();
+        var result = _iRegionRepository.GetAll();
         //foreach (var item in result)
         //{
         //    regionQueryFilterResponses.Add(new RegionQueryFilterResponse()

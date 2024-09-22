@@ -11,47 +11,47 @@ namespace WebAPI.Infra.Repositories.Others;
 public class CityRepository : ICityRepository
 {
     private readonly WebAPIContext _context;
-    private readonly IGenericRepository<City> _repository;
+    private readonly IGenericRepository<City> _iCityRepository;
 
-    public CityRepository(IGenericRepository<City> repository, WebAPIContext context)
+    public CityRepository(IGenericRepository<City> iCityRepository, WebAPIContext context)
     {
-        _repository = repository;
+        _iCityRepository = iCityRepository;
         _context = context;
     }
 
     public IQueryable<City> GetAll(bool hasTracking = false)
     {
-        return _repository.GetAll(hasTracking);
+        return _iCityRepository.GetAll(hasTracking);
     }
 
     public IQueryable<City> FindBy(Expression<Func<City, bool>> predicate, bool hasTracking = false)
     {
-        return _repository.FindBy(predicate, hasTracking);
+        return _iCityRepository.FindBy(predicate, hasTracking);
     }
 
     public void Add(City city)
     {
-        _repository.Add(city);
+        _iCityRepository.Add(city);
     }
 
     public void Update(City city)
     {
-        _repository.Update(city);
+        _iCityRepository.Update(city);
     }
 
     public City GetById(long id)
     {
-        return _repository.GetById(id);
+        return _iCityRepository.GetById(id);
     }
 
     public bool Exist(Expression<Func<City, bool>> predicate)
     {
-        return _repository.Exist(predicate);
+        return _iCityRepository.Exist(predicate);
     }
 
     public void Remove(City city)
     {
-        _repository.Remove(city);
+        _iCityRepository.Remove(city);
     }
 
     /// <summary>

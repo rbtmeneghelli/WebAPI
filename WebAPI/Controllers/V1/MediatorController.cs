@@ -1,9 +1,9 @@
 ﻿using WebAPI.Domain.CQRS.Command;
-using KissLog;
 using MediatR;
 using FixConstants = WebAPI.Domain.Constants.FixConstants;
 using WebAPI.Domain.Entities.Others;
-using WebAPI.Domain.Interfaces.Services.Tools;
+using WebAPI.Domain.Interfaces.Repository;
+using WebAPI.Domain.CQRS.Queries;
 
 namespace WebAPI.V1.Controllers;
 
@@ -17,7 +17,12 @@ public sealed class MediatorController : GenericController
 {
     private readonly IMediator _mediator;
 
-    public MediatorController(IMapper mapper, IHttpContextAccessor accessor, INotificationMessageService noticationMessageService, IKLogger iKLogger, IMediator mediator) : base(mapper, accessor, noticationMessageService, iKLogger)
+    public MediatorController(
+        IMediator mediator,
+        IMapper iMapperService, 
+        IHttpContextAccessor iHttpContextAccessor,
+        IGenericNotifyLogsService iGenericNotifyLogsService) 
+        : base(iMapperService, iHttpContextAccessor, iGenericNotifyLogsService)
     {
         _mediator = mediator;
     }

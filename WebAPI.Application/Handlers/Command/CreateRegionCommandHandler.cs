@@ -9,16 +9,16 @@ namespace WebAPI.Application.Handlers.Command;
 
 public class CreateRegionCommandHandler : GenericService, IRequestHandler<CreateRegionCommandRequest, bool>
 {
-    private readonly IRegionRepository _regionRepository;
+    private readonly IRegionRepository _iRegionRepository;
 
-    public CreateRegionCommandHandler(IRegionRepository regionRepository, INotificationMessageService notificationMessageService) : base(notificationMessageService)
+    public CreateRegionCommandHandler(IRegionRepository iRegionRepository, INotificationMessageService iNotificationMessageService) : base(iNotificationMessageService)
     {
-        _regionRepository = regionRepository;
+        _iRegionRepository = iRegionRepository;
     }
 
     public Task<bool> Handle(CreateRegionCommandRequest request, CancellationToken cancellationToken)
     {
-        _regionRepository.Add(new Region()
+        _iRegionRepository.Add(new Region()
         {
             Initials = "XPTO",
             Status = true,

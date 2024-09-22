@@ -6,18 +6,18 @@ namespace WebAPI.Application.Services;
 
 public class GetDataFromApiService<T> : IDataFromApiService<T> where T : class
 {
-    private readonly IHttpClientFactory _httpClientFactory;
+    private readonly IHttpClientFactory _iHttpClientFactory;
 
-    public GetDataFromApiService(IHttpClientFactory httpClientFactory)
+    public GetDataFromApiService(IHttpClientFactory iHttpClientFactory)
     {
-        _httpClientFactory = httpClientFactory;
+        _iHttpClientFactory = iHttpClientFactory;
     }
 
     public async Task<T> GetDataFromExternalAPI(string apiPath)
     {
         try
         {
-            var client = _httpClientFactory.CreateClient("Signed");
+            var client = _iHttpClientFactory.CreateClient("Signed");
             var response = await client.GetFromJsonAsync<T>(apiPath);
             return response;
         }
@@ -32,7 +32,7 @@ public class GetDataFromApiService<T> : IDataFromApiService<T> where T : class
     {
         try
         {
-            var client = _httpClientFactory.CreateClient("Signed");
+            var client = _iHttpClientFactory.CreateClient("Signed");
             var response = await client.GetFromJsonAsync<IEnumerable<T>>(apiPath);
             return response;
         }
@@ -47,7 +47,7 @@ public class GetDataFromApiService<T> : IDataFromApiService<T> where T : class
     {
         try
         {
-            var client = _httpClientFactory.CreateClient("Signed");
+            var client = _iHttpClientFactory.CreateClient("Signed");
             var response = await client.PostAsJsonAsync(apiPath, data);
             response.EnsureSuccessStatusCode();
             return true;
@@ -63,7 +63,7 @@ public class GetDataFromApiService<T> : IDataFromApiService<T> where T : class
     {
         try
         {
-            var client = _httpClientFactory.CreateClient("Signed");
+            var client = _iHttpClientFactory.CreateClient("Signed");
             var response = await client.PutAsJsonAsync(apiPath, data);
             response.EnsureSuccessStatusCode();
             return true;

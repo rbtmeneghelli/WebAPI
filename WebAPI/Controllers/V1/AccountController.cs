@@ -1,24 +1,28 @@
-﻿using KissLog;
-using WebAPI.Application.Generic;
-using WebAPI.Domain.Constants;
+﻿using WebAPI.Domain.Constants;
 using WebAPI.Domain.Entities.ControlPanel;
-using WebAPI.Domain.Interfaces.Services.Tools;
+using WebAPI.Domain.Interfaces.Repository;
+using WebAPI.Domain.Interfaces.Services;
 
 namespace WebAPI.V1.Controllers;
 
-[ApiController]
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiVersion("1.0")]
 [AllowAnonymous]
 public sealed class AccountController : GenericController
 {
-    private readonly IGeneralService _generalService;
-    private readonly IGenericUnitofWorkService _unitofWorkService;
+    private readonly IGeneralService _iGeneralService;
+    private readonly IGenericUnitOfWorkService _iGenericUnitOfWorkService;
 
-    public AccountController(IKLogger iKLogger, IMapper mapper, IHttpContextAccessor accessor, INotificationMessageService notificationMessageService, IGeneralService generalService, IGenericUnitofWorkService unitofWorkService) : base(mapper, accessor, notificationMessageService, iKLogger)
+    public AccountController(
+        IGeneralService iGeneralService,
+        IGenericUnitOfWorkService iGenericUnitOfWorkService,
+        IMapper iMapperService, 
+        IHttpContextAccessor iHttpContextAccessor, 
+        IGenericNotifyLogsService iGenericNotifyLogsService) 
+        : base(iMapperService, iHttpContextAccessor, iGenericNotifyLogsService)
     {
-        _generalService = generalService;
-        _unitofWorkService = unitofWorkService;
+        _iGeneralService = iGeneralService;
+        _iGenericUnitOfWorkService = iGenericUnitOfWorkService;
     }
 
     [HttpPost("Login")]
@@ -26,12 +30,12 @@ public sealed class AccountController : GenericController
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
-        var result = await _unitofWorkService.Accounts.CheckUserAuthenticationAsync(loginUser);
+        var result = await _iGenericUnitOfWorkService.AccountService.CheckUserAuthenticationAsync(loginUser);
 
         if (result)
         {
-            Credentials credentials = await _unitofWorkService.Accounts.GetUserCredentialsAsync(loginUser.Login);
-            var userToken = _generalService.CreateJwtToken(credentials);
+            Credentials credentials = await _iGenericUnitOfWorkService.AccountService.GetUserCredentialsAsync(loginUser.Login);
+            var userToken = _iGeneralService.CreateJwtToken(credentials);
             return CustomResponse(userToken);
         }
         else
@@ -50,7 +54,7 @@ public sealed class AccountController : GenericController
 
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
-        var result = _unitofWorkService.Accounts.CheckCodeTwoFactory(UserId, UserName, confirmLoginUser.CodeTwoFactory);
+        var result = _iGenericUnitOfWorkService.AccountService.CheckCodeTwoFactory(UserId, UserName, confirmLoginUser.CodeTwoFactory);
 
         if (!result)
         {
@@ -65,7 +69,7 @@ public sealed class AccountController : GenericController
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
-        var result = await _unitofWorkService.Accounts.ChangePasswordAsync(UserId, user);
+        var result = await _iGenericUnitOfWorkService.AccountService.ChangePasswordAsync(UserId, user);
         if (result)
             return CustomResponse(null, FixConstants.SUCCESS_IN_CHANGEPASSWORD);
 
@@ -75,7 +79,7 @@ public sealed class AccountController : GenericController
     [HttpGet("ResetPassword/{email}")]
     public async Task<IActionResult> ResetPassword(string email)
     {
-        var result = await _unitofWorkService.Accounts.ResetPasswordAsync(email);
+        var result = await _iGenericUnitOfWorkService.AccountService.ResetPasswordAsync(email);
 
         if (result)
             return CustomResponse(null, FixConstants.SUCCESS_IN_RESETPASSWORD);
@@ -89,14 +93,14 @@ public sealed class AccountController : GenericController
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
-        var result = await _unitofWorkService.Accounts.CheckUserAuthenticationAsync(loginUser);
+        var result = await _iGenericUnitOfWorkService.AccountService.CheckUserAuthenticationAsync(loginUser);
 
         if (result)
         {
-            Credentials credentials = await _unitofWorkService.Accounts.GetUserCredentialsAsync(loginUser.Login);
-            string dataToken = _generalService.CreateJwtToken(credentials);
-            var dataRefreshToken = _generalService.GenerateRefreshToken();
-            _generalService.SaveRefreshToken(credentials.Login, dataRefreshToken);
+            Credentials credentials = await _iGenericUnitOfWorkService.AccountService.GetUserCredentialsAsync(loginUser.Login);
+            string dataToken = _iGeneralService.CreateJwtToken(credentials);
+            var dataRefreshToken = _iGeneralService.GenerateRefreshToken();
+            _iGeneralService.SaveRefreshToken(credentials.Login, dataRefreshToken);
             return CustomResponse(new { token = dataToken, refreshToken = dataRefreshToken });
         }
         else
@@ -109,15 +113,15 @@ public sealed class AccountController : GenericController
     [HttpPost("RefreshToken")]
     public IActionResult RefreshToken([FromBody] Tokens tokens)
     {
-        var principal = _generalService.GetPrincipalFromExpiredToken(tokens.Token);
-        var savedRefreshToken = _generalService.GetRefreshToken(principal.Identity.Name);
+        var principal = _iGeneralService.GetPrincipalFromExpiredToken(tokens.Token);
+        var savedRefreshToken = _iGeneralService.GetRefreshToken(principal.Identity.Name);
         if (savedRefreshToken != tokens.RefreshToken)
             throw new SecurityTokenException(FixConstants.ERROR_IN_REFRESHTOKEN);
 
-        var newJwtToken = _generalService.GenerateToken(principal.Claims);
-        var newRefreshToken = _generalService.GenerateRefreshToken();
-        _generalService.DeleteRefreshToken(principal.Identity.Name, tokens.RefreshToken);
-        _generalService.SaveRefreshToken(principal.Identity.Name, newRefreshToken);
+        var newJwtToken = _iGeneralService.GenerateToken(principal.Claims);
+        var newRefreshToken = _iGeneralService.GenerateRefreshToken();
+        _iGeneralService.DeleteRefreshToken(principal.Identity.Name, tokens.RefreshToken);
+        _iGeneralService.SaveRefreshToken(principal.Identity.Name, newRefreshToken);
 
         return CustomResponse(new Tokens() { Token = newJwtToken, RefreshToken = newRefreshToken });
     }

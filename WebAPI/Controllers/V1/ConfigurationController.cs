@@ -1,7 +1,9 @@
 ﻿using KissLog;
+using Microsoft.AspNetCore.Cors;
 using WebAPI.Application.Services;
 using WebAPI.Domain.Constants;
 using WebAPI.Domain.Entities.Configuration;
+using WebAPI.Domain.Entities.Others;
 using WebAPI.Domain.EntitiesDTO.Configuration;
 using WebAPI.Domain.EntitiesDTO.ControlPanel;
 using WebAPI.Domain.Enums;
@@ -18,10 +20,15 @@ namespace WebAPI.Controllers.V1;
 [Authorize("Bearer")]
 public sealed class ConfigurationController : GenericController
 {
-    public ConfigurationController(IMapper iMapperService, IHttpContextAccessor iHttpContextAccessor, IGenericNotifyLogsService iGenericNotifyLogsService)
+    public ConfigurationController(
+        IMapper iMapperService, 
+        IHttpContextAccessor iHttpContextAccessor, 
+        IGenericNotifyLogsService iGenericNotifyLogsService)
     : base(iMapperService, iHttpContextAccessor, iGenericNotifyLogsService)
     {
     }
+
+    //private readonly IMemoryCacheService _memoryCacheService;
 
     //[HttpGet("GetAll")]
     //public async Task<IActionResult> GetAll()
@@ -97,6 +104,41 @@ public sealed class ConfigurationController : GenericController
     [HttpPut("requiredPasswordSettings/update")]
     public async Task<IActionResult> RequiredPasswordSettings(int id, [FromBody] RequiredPasswordSettingsDTO requiredPasswordSettingsDTO)
     {
+        return CustomResponse();
+    }
+
+    /// <summary>
+    /// Esse endpoint ira armazenar arquivos por X tempo, e depois será atualizado após 5 minutos.
+    /// </summary>
+    /// <returns></returns>
+    //[HttpGet("loadBanners")]
+    //public async Task<IActionResult> LoadBanners()
+    //{
+    //    if (!_memoryCacheService.TryGet<IEnumerable<Region>>("FilesCache", out var cached))
+    //    {
+    //        var files = await _regionService.GetAllRegionAsync();
+
+    //        _memoryCacheService.Set("FilesCache", files);
+
+    //        return CustomResponse(files);
+    //    }
+    //    else
+    //    {
+    //        var files = _memoryCacheService.Get<IEnumerable<Region>>("FilesCache");
+    //        return CustomResponse(files);
+    //    }
+    //}
+
+    [EnableCors("EnableCORS")]
+    [HttpPost("uploadMultFiles")]
+    public IActionResult UploadFiles([FromForm] IEnumerable<MultFiles> multFiles)
+    {
+        if (multFiles is null)
+        {
+            NotificationError("Nenhum arquivo foi enviado.");
+            return CustomResponse();
+        }
+
         return CustomResponse();
     }
 

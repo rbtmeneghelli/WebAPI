@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.ComponentModel;
 using System.Data;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO.Compression;
 using System.Net;
@@ -19,8 +18,9 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Serialization;
 using WebAPI.Domain.Constants;
+using WebAPI.Domain.ExtensionMethods;
 
-namespace WebAPI.Domain.ExtensionMethods;
+namespace WebAPI.Domain;
 
 public sealed class GeneralMethod
 {

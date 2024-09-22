@@ -7,30 +7,30 @@ namespace WebAPI.Infra.Repositories.Others;
 
 public class LogRepository : ILogRepository
 {
-    private readonly IGenericRepository<Log> _repository;
+    private readonly IGenericRepository<Log> _iLogRepository;
 
-    public LogRepository(IGenericRepository<Log> repository)
+    public LogRepository(IGenericRepository<Log> iLogRepository)
     {
-        _repository = repository;
+        _iLogRepository = iLogRepository;
     }
 
     public bool Exist(Expression<Func<Log, bool>> predicate)
     {
-        return _repository.Exist(predicate);
+        return _iLogRepository.Exist(predicate);
     }
 
     public IQueryable<Log> FindBy(Expression<Func<Log, bool>> predicate, bool hasTracking = false)
     {
-        return _repository.FindBy(predicate, hasTracking);
+        return _iLogRepository.FindBy(predicate, hasTracking);
     }
 
     public IQueryable<Log> GetAll(bool hasTracking = false)
     {
-        return _repository.GetAll(hasTracking);
+        return _iLogRepository.GetAll(hasTracking);
     }
 
     public Log GetById(long id)
     {
-        return _repository.GetById(id);
+        return _iLogRepository.GetById(id);
     }
 }

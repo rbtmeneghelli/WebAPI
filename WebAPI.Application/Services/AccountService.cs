@@ -13,14 +13,14 @@ namespace WebAPI.Application.Services;
 
 public class AccountService : GenericService, IAccountService
 {
-    private readonly IUserRepository _userRepository;
-    private readonly IEmailService _emailService;
+    private readonly IUserRepository _iUserRepository;
+    private readonly IEmailService _iEmailService;
     private readonly IHostEnvironment _hostingEnvironment;
 
-    public AccountService(IUserRepository userRepository, IEmailService emailService, INotificationMessageService notificationMessageService, IHostEnvironment hostingEnvironment) : base(notificationMessageService)
+    public AccountService(IUserRepository iUserRepository, IEmailService iEmailService, INotificationMessageService iNotificationMessageService, IHostEnvironment hostingEnvironment) : base(iNotificationMessageService)
     {
-        _userRepository = userRepository;
-        _emailService = emailService;
+        _iUserRepository = iUserRepository;
+        _iEmailService = iEmailService;
         _hostingEnvironment = hostingEnvironment;
     }
 
@@ -29,7 +29,7 @@ public class AccountService : GenericService, IAccountService
         try
         {
 
-            User user = await _userRepository.FindBy(x => x.Login == loginUser.Login.ApplyTrim() && x.Status == true).FirstOrDefaultAsync();
+            User user = await _iUserRepository.FindBy(x => x.Login == loginUser.Login.ApplyTrim() && x.Status == true).FirstOrDefaultAsync();
             if (GuardClauses.ObjectIsNotNull(user))
             {
                 if (HashingManager.GetLoadHashingManager().Verify(loginUser.Password, user.Password))
@@ -60,7 +60,7 @@ public class AccountService : GenericService, IAccountService
         try
         {
             Credentials credentials = new Credentials();
-            User user = await _userRepository.GetUserCredentialsByLogin(login);
+            User user = await _iUserRepository.GetUserCredentialsByLogin(login);
 
             if (GuardClauses.ObjectIsNotNull(user))
             {
@@ -94,7 +94,7 @@ public class AccountService : GenericService, IAccountService
     {
         try
         {
-            User dbUser = _userRepository.GetById(id);
+            User dbUser = _iUserRepository.GetById(id);
             if (GuardClauses.ObjectIsNotNull(dbUser))
             {
                 if (HashingManager.GetLoadHashingManager().Verify(user.Password, dbUser.Password) && dbUser.Login == user.Login.ApplyTrim())
@@ -103,7 +103,7 @@ public class AccountService : GenericService, IAccountService
                     dbUser.Password = HashingManager.GetLoadHashingManager().HashToString(user.Password);
                     dbUser.IsAuthenticated = true;
                     dbUser.UpdateDate = dbUser.GetNewUpdateDate();
-                    _userRepository.Update(dbUser);
+                    _iUserRepository.Update(dbUser);
                     await Task.CompletedTask;
                     return true;
                 }
@@ -129,7 +129,7 @@ public class AccountService : GenericService, IAccountService
         {
             if (GuardClauses.IsNullOrWhiteSpace(login) == false)
             {
-                User user = await _userRepository.FindBy(x => x.Login == login.ApplyTrim()).FirstOrDefaultAsync();
+                User user = await _iUserRepository.FindBy(x => x.Login == login.ApplyTrim()).FirstOrDefaultAsync();
                 if (GuardClauses.ObjectIsNotNull(user))
                 {
                     user.LastPassword = user.Password;
@@ -137,8 +137,8 @@ public class AccountService : GenericService, IAccountService
                     user.IsAuthenticated = false;
                     user.Status = true;
                     user.UpdateDate = user.GetNewUpdateDate();
-                    _emailService.CustomSendEmailAsync(EnumEmail.ResetPassword, "Roberto", _hostingEnvironment.ContentRootPath).Wait();
-                    _userRepository.Update(user);
+                    _iEmailService.CustomSendEmailAsync(EnumEmail.ResetPassword, "Roberto", _hostingEnvironment.ContentRootPath).Wait();
+                    _iUserRepository.Update(user);
                     return true;
                 }
 
@@ -163,7 +163,7 @@ public class AccountService : GenericService, IAccountService
         try
         {
             Credentials credentials = new Credentials();
-            User user = await _userRepository.GetUserCredentialsById(id);
+            User user = await _iUserRepository.GetUserCredentialsById(id);
 
             if (GuardClauses.ObjectIsNotNull(user))
             {

@@ -1,30 +1,36 @@
-﻿using KissLog;
-using WebAPI.Domain.EntitiesDTO.Others;
+﻿using WebAPI.Domain.EntitiesDTO.Others;
 using WebAPI.Domain.Filters.Others;
+using WebAPI.Domain.Interfaces.Repository;
+using WebAPI.Domain.Interfaces.Services;
 using WebAPI.Domain.Interfaces.Services.Tools;
 using FixConstants = WebAPI.Domain.Constants.FixConstants;
 
 namespace WebAPI.V1.Controllers;
 
-[ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/[controller]")]
 [Authorize("Bearer")]
 public sealed class AuditController : GenericController
 {
-    private readonly IAuditService _auditService;
+    private readonly IAuditService _iAuditService;
 
-    public AuditController(IMapper mapper, IHttpContextAccessor accessor, INotificationMessageService noticationMessageService, IAuditService auditService, IKLogger iKLogger) : base(mapper, accessor, noticationMessageService, iKLogger)
+    public AuditController(
+        IAuditService iAuditService,
+        IMapper iMapperService, 
+        IHttpContextAccessor iHttpContextAccessor, 
+        INotificationMessageService noticationMessageService, 
+        IGenericNotifyLogsService iGenericNotifyLogsService) 
+        : base(iMapperService, iHttpContextAccessor, iGenericNotifyLogsService)
     {
-        _auditService = auditService;
+        _iAuditService = iAuditService;
     }
 
     [HttpGet("getById/{id:long}")]
     public async Task<IActionResult> GetById(long id)
     {
-        if (await _auditService.ExistByIdAsync(id))
+        if (await _iAuditService.ExistByIdAsync(id))
         {
-            var model = _iMapperService.Map<AuditResponseDTO>(await _auditService.GetByIdAsync(id));
+            var model = _iMapperService.Map<AuditResponseDTO>(await _iAuditService.GetByIdAsync(id));
             return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
         }
 
@@ -37,7 +43,7 @@ public sealed class AuditController : GenericController
         if (ModelStateIsInvalid())
             return CustomResponse(ModelState);
 
-        var model = await _auditService.GetAllPaginateAsync(filter);
+        var model = await _iAuditService.GetAllPaginateAsync(filter);
 
         return CustomResponse(model, FixConstants.SUCCESS_IN_GETALLPAGINATE);
     }

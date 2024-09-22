@@ -1,4 +1,5 @@
 ﻿using WebAPI.Domain.CQRS.Command;
+using WebAPI.Domain.CQRS.Queries;
 using WebAPI.Domain.Entities.ControlPanel;
 using WebAPI.Domain.Entities.Others;
 using WebAPI.Domain.EntitiesDTO.ControlPanel;
@@ -41,6 +42,15 @@ public class MappingProfile : AutoMapper.Profile
         .ForMember(dest => dest.KeyValues, act => act.MapFrom(src => src.KeyValues))
         .ForMember(dest => dest.NewValues, act => act.MapFrom(src => src.NewValues))
         .ForMember(dest => dest.OldValues, act => act.MapFrom(src => src.OldValues)).ReverseMap();
+
+        //TODO: Ajustar 
+        //CreateMap<Audit, AuditResponseDTO>()
+        //.ForMember(dest => dest.TableName, act => act.MapFrom(src => src.TableName.ApplyTrim()))
+        //.ForMember(dest => dest.ActionName, act => act.MapFrom(src => src.ActionName.ApplyTrim()))
+        //.ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
+        //.ForMember(dest => dest.KeyValues, act => act.MapFrom(src => src.KeyValues))
+        //.ForMember(dest => dest.NewValues, act => act.MapFrom(src => src.NewValues))
+        //.ForMember(dest => dest.OldValues, act => act.MapFrom(src => src.OldValues)).ReverseMap();
 
         CreateMap<UserResponseDTO, UserExcelDTO>().ReverseMap();
 

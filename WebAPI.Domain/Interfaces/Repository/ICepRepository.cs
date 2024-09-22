@@ -3,7 +3,7 @@ using WebAPI.Domain.ValueObject;
 
 namespace WebAPI.Domain.Interfaces.Repository;
 
-public interface ICepRepository
+public interface IAddressRepository
 {
     IQueryable<AddressData> GetAll(bool hasTracking = false);
     void Update(AddressData ceps);

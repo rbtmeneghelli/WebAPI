@@ -1,6 +1,9 @@
 ﻿using KissLog;
+using Microsoft.AspNetCore.Http;
 using WebAPI.Domain.EntitiesDTO.ControlPanel;
 using WebAPI.Domain.Filters.Others;
+using WebAPI.Domain.Interfaces.Repository;
+using WebAPI.Domain.Interfaces.Services;
 using WebAPI.Domain.Interfaces.Services.Tools;
 using FixConstants = WebAPI.Domain.Constants.FixConstants;
 
@@ -13,19 +16,24 @@ namespace WebAPI.V1.Controllers;
 // [ApiExplorerSettings(IgnoreApi = true)] // Ignora completamente os endpoints da controller
 public sealed class LogController : GenericController
 {
-    private readonly ILogService _logService;
+    private readonly ILogService _iLogService;
 
-    public LogController(IMapper mapper, IHttpContextAccessor accessor, INotificationMessageService notificationMessageService, ILogService logService, IKLogger iKLogger) : base(mapper, accessor, notificationMessageService, iKLogger)
+    public LogController(
+        ILogService iLogService,
+        IMapper iMapperService,
+        IHttpContextAccessor iHttpContextAccessor,
+        IGenericNotifyLogsService iGenericNotifyLogsService) 
+        : base(iMapperService, iHttpContextAccessor, iGenericNotifyLogsService)
     {
-        _logService = logService;
+        _iLogService = iLogService;
     }
 
     [HttpGet("getById/{id:long}")]
     public async Task<IActionResult> GetById(long id)
     {
-        if (await _logService.ExistByIdAsync(id))
+        if (await _iLogService.ExistByIdAsync(id))
         {
-            var model = _iMapperService.Map<UserResponseDTO>(await _logService.GetByIdAsync(id));
+            var model = _iMapperService.Map<UserResponseDTO>(await _iLogService.GetByIdAsync(id));
             return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
         }
 
@@ -37,7 +45,7 @@ public sealed class LogController : GenericController
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
-        var model = await _logService.GetAllPaginateAsync(filter);
+        var model = await _iLogService.GetAllPaginateAsync(filter);
 
         return CustomResponse(model, FixConstants.SUCCESS_IN_GETALLPAGINATE);
     }

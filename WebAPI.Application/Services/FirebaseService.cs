@@ -1,6 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System.Net.Http;
-using System.Net.Http.Json;
 using WebAPI.Application.Generic;
 using WebAPI.Domain.Constants;
 using WebAPI.Domain.ExtensionMethods;
@@ -10,11 +8,11 @@ namespace WebAPI.Application.Services;
 
 public class FirebaseService : GenericService, IFirebaseService
 {
-    private readonly IHttpClientFactory _httpClientFactory;
+    private readonly IHttpClientFactory _iHttpClientFactory;
 
-    public FirebaseService(INotificationMessageService notificationMessageService, IHttpClientFactory httpClientFactory) : base(notificationMessageService)
+    public FirebaseService(INotificationMessageService iNotificationMessageService, IHttpClientFactory iHttpClientFactory) : base(iNotificationMessageService)
     {
-        _httpClientFactory = httpClientFactory;
+        _iHttpClientFactory = iHttpClientFactory;
     }
 
     public void Dispose()
@@ -94,7 +92,7 @@ public class FirebaseService : GenericService, IFirebaseService
 
         var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
-        var client = _httpClientFactory.CreateClient("Signed");
+        var client = _iHttpClientFactory.CreateClient("Signed");
         client.DefaultRequestHeaders.Accept.Clear();
         client.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer " + "SERVER_KEY");
         client.Timeout = TimeSpan.FromMinutes(1);

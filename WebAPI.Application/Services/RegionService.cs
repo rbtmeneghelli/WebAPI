@@ -1,6 +1,5 @@
 ﻿using WebAPI.Application.Factory;
 using WebAPI.Application.Generic;
-using WebAPI.Application.InterfacesRepository;
 using WebAPI.Domain.Constants;
 using WebAPI.Domain.Entities.Others;
 using WebAPI.Domain.ExtensionMethods;
@@ -8,37 +7,36 @@ using WebAPI.Domain.Filters.Others;
 using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.Interfaces.Services;
 using WebAPI.Domain.Interfaces.Services.Tools;
-using WebAPI.Domain.Models;
 
 namespace WebAPI.Application.Services;
 
 public class RegionService : GenericService, IRegionService
 {
-    private readonly IRegionRepository _regionRepository;
+    private readonly IRegionRepository _iRegionRepository;
 
-    public RegionService(IRegionRepository regionRepository, INotificationMessageService notificationMessageService) : base(notificationMessageService)
+    public RegionService(IRegionRepository iRegionRepository, INotificationMessageService iNotificationMessageService) : base(iNotificationMessageService)
     {
-        _regionRepository = regionRepository;
+        _iRegionRepository = iRegionRepository;
     }
 
     public async Task<IEnumerable<Region>> GetAllRegionAsync()
     {
-        return await _regionRepository.GetAll().ToListAsync();
+        return await _iRegionRepository.GetAll().ToListAsync();
     }
 
     public bool ExistRegionById(long regionId)
     {
-        return _regionRepository.Exist(param => param.Id.Value == regionId);
+        return _iRegionRepository.Exist(param => param.Id.Value == regionId);
     }
 
     public bool ExistRegion()
     {
-        return _regionRepository.Exist(param => param.Status == true);
+        return _iRegionRepository.Exist(param => param.Status == true);
     }
 
     public Task AddRegionsAsync(IEnumerable<Region> list)
     {
-        _regionRepository.AddRange(list);
+        _iRegionRepository.AddRange(list);
         return Task.CompletedTask;
     }
 
@@ -46,7 +44,7 @@ public class RegionService : GenericService, IRegionService
     {
         try
         {
-            IEnumerable<Region> regions = await _regionRepository.GetAll().ToListAsync();
+            IEnumerable<Region> regions = await _iRegionRepository.GetAll().ToListAsync();
             IEnumerable<Region> tmpRegion = listStatesAPI.Select(x => new Region()
             {
                 Name = x.Region.Name,
@@ -65,11 +63,11 @@ public class RegionService : GenericService, IRegionService
                     region.UpdateDate = region.GetNewUpdateDate();
                     region.Name = item.Name;
                     region.Initials = item.Initials;
-                    _regionRepository.Update(region);
+                    _iRegionRepository.Update(region);
                 }
                 else
                 {
-                    _regionRepository.Add(item);
+                    _iRegionRepository.Add(item);
                 }
             }
         }
@@ -83,11 +81,11 @@ public class RegionService : GenericService, IRegionService
     {
         try
         {
-            Region record = await Task.FromResult(_regionRepository.GetById(id));
+            Region record = await Task.FromResult(_iRegionRepository.GetById(id));
             if (GuardClauses.ObjectIsNotNull(record))
             {
                 record.Status = record.Status == true ? false : true;
-                _regionRepository.Update(record);
+                _iRegionRepository.Update(record);
                 return true;
             }
             return false;
@@ -99,7 +97,7 @@ public class RegionService : GenericService, IRegionService
         }
     }
 
-    public async Task<IEnumerable<Region>> GetAllWithLikeAsync(string parameter) => await _regionRepository.FindBy(x => EF.Functions.Like(x.Name, $"%{parameter}%")).ToListAsync();
+    public async Task<IEnumerable<Region>> GetAllWithLikeAsync(string parameter) => await _iRegionRepository.FindBy(x => EF.Functions.Like(x.Name, $"%{parameter}%")).ToListAsync();
 
     public async Task<PagedResult<Region>> GetAllWithPaginateAsync(RegionFilter filter)
     {
@@ -129,12 +127,12 @@ public class RegionService : GenericService, IRegionService
 
     public long GetCount(Expression<Func<Region, bool>> predicate)
     {
-        return _regionRepository.GetCount(predicate);
+        return _iRegionRepository.GetCount(predicate);
     }
 
     private async Task<IQueryable<Region>> GetAllWithFilterAsync(RegionFilter filter)
     {
-        return await Task.FromResult(_regionRepository.GetAll().Where(GetPredicate(filter)).AsQueryable());
+        return await Task.FromResult(_iRegionRepository.GetAll().Where(GetPredicate(filter)).AsQueryable());
     }
 
     private Expression<Func<Region, bool>> GetPredicate(RegionFilter filter)

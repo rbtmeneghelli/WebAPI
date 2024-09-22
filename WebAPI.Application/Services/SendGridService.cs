@@ -11,9 +11,9 @@ public class SendGridService : GenericService, ISendGridService
     private EnvironmentVariables _environmentVariables { get; }
     private readonly IEmailFactory _iEmailFactory;
 
-    public SendGridService(EnvironmentVariables environmentVariables, IEmailFactory emailFactory, INotificationMessageService notificationMessageService) : base(notificationMessageService)
+    public SendGridService(EnvironmentVariables environmentVariables, IEmailFactory iEmailFactory, INotificationMessageService iNotificationMessageService) : base(iNotificationMessageService)
     {
-        _iEmailFactory = emailFactory;
+        _iEmailFactory = iEmailFactory;
         _environmentVariables = environmentVariables;
     }
 

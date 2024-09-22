@@ -5,23 +5,23 @@ namespace WebAPI.Application.InterfacesRepository;
 
 public interface IGenericUnitofWorkRepository : IDisposable
 {
-    IAuditRepository Audits { get; }
-    ICepRepository Ceps { get; }
-    ICityRepository Cities { get; }
-    IRegionRepository Regions { get; }
-    IStatesRepository States { get; }
-    IUserRepository Users { get; }
+    IAuditRepository AuditRepository { get; }
+    IAddressRepository AddressRepository { get; }
+    ICityRepository CityRepository { get; }
+    IRegionRepository RegionRepository { get; }
+    IStatesRepository StatesRepository { get; }
+    IUserRepository UserRepository { get; }
 
     #region Configuration
 
-    IAuthenticationSettingsRepository AuthenticationSettings { get; }
-    IEmailDisplayRepository EmailDisplay { get; }
-    IEmailSettingsRepository EmailSettings { get; }
-    IEnvironmentTypeSettingsRepository EnvironmentTypeSettings { get; }
-    IExpirationPasswordSettingsRepository ExpirationPasswordSettings { get; }
-    ILayoutSettingsRepository LayoutSettings { get; }
-    ILogSettingsRepository LogSettings { get; }
-    IRequiredPasswordSettingsRepository RequiredPasswordSettings { get; }
+    IAuthenticationSettingsRepository AuthenticationSettingsRepository { get; }
+    IEmailDisplayRepository EmailDisplayRepository { get; }
+    IEmailSettingsRepository EmailSettingsRepository { get; }
+    IEnvironmentTypeSettingsRepository EnvironmentTypeSettingsRepository { get; }
+    IExpirationPasswordSettingsRepository ExpirationPasswordSettingsRepository { get; }
+    ILayoutSettingsRepository LayoutSettingsRepository { get; }
+    ILogSettingsRepository LogSettingsRepository { get; }
+    IRequiredPasswordSettingsRepository RequiredPasswordSettingsRepository { get; }
 
     #endregion
 }

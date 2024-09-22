@@ -2,7 +2,7 @@
 using WebAPI.Domain.Filters.Others;
 using WebAPI.Domain.Entities.Others;
 
-namespace WebAPI.Domain.CQRS.Command;
+namespace WebAPI.Domain.CQRS.Queries;
 
 public class RegionQueryFilterRequest : RegionFilter, IRequest<IEnumerable<Region>>
 {

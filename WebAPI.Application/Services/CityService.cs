@@ -1,6 +1,4 @@
 ﻿using WebAPI.Application.Factory;
-using WebAPI.Domain.ExtensionMethods;
-using WebAPI.Application.InterfacesRepository;
 using WebAPI.Application.Generic;
 using WebAPI.Domain.Constants;
 using WebAPI.Domain.EntitiesDTO.Others;
@@ -13,11 +11,11 @@ namespace WebAPI.Application.Services;
 
 public class CityService : GenericService, ICityService
 {
-    private readonly ICityRepository _cityRepository;
+    private readonly ICityRepository _iCityRepository;
 
-    public CityService(ICityRepository cityRepository, INotificationMessageService notificationMessageService) : base(notificationMessageService)
+    public CityService(ICityRepository iCityRepository, INotificationMessageService iNotificationMessageService) : base(iNotificationMessageService)
     {
-        _cityRepository = cityRepository;
+        _iCityRepository = iCityRepository;
     }
 
     public async Task<IEnumerable<long>> GetIdStatesAsync()
@@ -30,7 +28,7 @@ public class CityService : GenericService, ICityService
     {
         try
         {
-            var queryResult = (from x in _cityRepository.GetAll().AsQueryable().AsNoTracking()
+            var queryResult = (from x in _iCityRepository.GetAll().AsQueryable().AsNoTracking()
                                where x.StateId == idState
                                orderby x.Name ascending
                                select new CityResponseDTO()
@@ -54,7 +52,7 @@ public class CityService : GenericService, ICityService
 
     public async Task<IEnumerable<CityResponseDTO>> GetAllEntityAsync()
     {
-        return await (from p in _cityRepository.FindBy(x => true).AsQueryable()
+        return await (from p in _iCityRepository.FindBy(x => true).AsQueryable()
                       orderby p.Name ascending
                       select new CityResponseDTO
                       {
@@ -69,7 +67,7 @@ public class CityService : GenericService, ICityService
 
     public async Task<CityResponseDTO> GetByIdAsync(int id)
     {
-        return await (from p in _cityRepository.FindBy(x => x.Id == id).AsQueryable()
+        return await (from p in _iCityRepository.FindBy(x => x.Id == id).AsQueryable()
                       orderby p.Name ascending
                       select new CityResponseDTO
                       {
@@ -84,33 +82,33 @@ public class CityService : GenericService, ICityService
 
     public Task AddAsync(City city)
     {
-        _cityRepository.Add(city);
+        _iCityRepository.Add(city);
         return Task.CompletedTask;
     }
 
     public Task RemoveAsync(long id)
     {
-        City city = _cityRepository.GetById(id);
+        City city = _iCityRepository.GetById(id);
 
         if (GuardClauses.ObjectIsNotNull(city))
-            _cityRepository.Remove(city);
+            _iCityRepository.Remove(city);
 
         return Task.CompletedTask;
     }
 
     public Task UpdateAsync(City city)
     {
-        City entityBase = _cityRepository.FindBy(a => a.Id == city.Id).FirstOrDefault();
+        City entityBase = _iCityRepository.FindBy(a => a.Id == city.Id).FirstOrDefault();
 
         if (GuardClauses.ObjectIsNotNull(entityBase))
         {
             entityBase.Name = city.Name;
             entityBase.IBGE = city.IBGE;
             entityBase.StateId = city.StateId;
-            _cityRepository.Update(entityBase);
+            _iCityRepository.Update(entityBase);
         }
 
-        _cityRepository.Update(entityBase);
+        _iCityRepository.Update(entityBase);
         return Task.CompletedTask;
     }
 
@@ -119,7 +117,7 @@ public class CityService : GenericService, ICityService
         City entityBase = new City();
         try
         {
-            List<City> citiesFromDatabase = await _cityRepository.GetAll(true).ToListAsync();
+            List<City> citiesFromDatabase = await _iCityRepository.GetAll(true).ToListAsync();
 
             foreach (City city in cities)
             {
@@ -129,11 +127,11 @@ public class CityService : GenericService, ICityService
                     entityBase.Name = city.Name;
                     entityBase.IBGE = city.IBGE.HasValue ? city.IBGE.Value : long.Parse("00000000");
                     entityBase.StateId = city.StateId;
-                    _cityRepository.Add(entityBase);
+                    _iCityRepository.Add(entityBase);
                 }
                 else
                 {
-                    _cityRepository.ExecuteUpdate(city);
+                    _iCityRepository.ExecuteUpdate(city);
                 }
             }
 
@@ -148,6 +146,6 @@ public class CityService : GenericService, ICityService
 
     public async Task<bool> CheckCityExistAsync(string city, long idState)
     {
-        return await Task.FromResult(_cityRepository.Exist(a => a.Name == city && a.StateId == idState));
+        return await Task.FromResult(_iCityRepository.Exist(a => a.Name == city && a.StateId == idState));
     }
 }

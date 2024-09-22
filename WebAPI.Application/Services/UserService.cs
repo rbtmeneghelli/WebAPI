@@ -1,6 +1,5 @@
 ﻿using WebAPI.Application.Factory;
 using WebAPI.Application.Generic;
-using WebAPI.Application.InterfacesRepository;
 using WebAPI.Domain.Constants;
 using WebAPI.Domain.Cryptography;
 using WebAPI.Domain.Entities.ControlPanel;
@@ -15,11 +14,11 @@ namespace WebAPI.Application.Services;
 
 public class UserService : GenericService, IUserService
 {
-    private readonly IUserRepository _userRepository;
+    private readonly IUserRepository _iUserRepository;
 
-    public UserService(IUserRepository userRepository, INotificationMessageService notificationMessageService) : base(notificationMessageService)
+    public UserService(IUserRepository iUserRepository, INotificationMessageService iNotificationMessageService) : base(iNotificationMessageService)
     {
-        _userRepository = userRepository;
+        _iUserRepository = iUserRepository;
     }
 
     private IQueryable<User> GetAllUsers(UserFilter filter)
@@ -28,9 +27,9 @@ public class UserService : GenericService, IUserService
         // var obj = UserFactory.GetData(EnumProfileType.Admin);
         // return _userRepository.GetAllTracking().Include(x => x.Profile).Where(obj.GetPredicate(filter)).AsQueryable();
         if (filter.IsActive.HasValue)
-            return _userRepository.GetAllIgnoreQueryFilter().Include(x => x.Employee).ThenInclude(x => x.Profile).Where(GetPredicate(filter)).AsQueryable();
+            return _iUserRepository.GetAllIgnoreQueryFilter().Include(x => x.Employee).ThenInclude(x => x.Profile).Where(GetPredicate(filter)).AsQueryable();
         else
-            return _userRepository.GetAll().Include(x => x.Employee).ThenInclude(x => x.Profile).Where(GetPredicate(filter)).AsQueryable();
+            return _iUserRepository.GetAll().Include(x => x.Employee).ThenInclude(x => x.Profile).Where(GetPredicate(filter)).AsQueryable();
     }
 
     private Expression<Func<User, bool>> GetPredicate(UserFilter filter)
@@ -57,7 +56,7 @@ public class UserService : GenericService, IUserService
     {
         try
         {
-            return await (from p in _userRepository.GetAll().Include(x => x.Employee).ThenInclude(x => x.Profile)
+            return await (from p in _iUserRepository.GetAll().Include(x => x.Employee).ThenInclude(x => x.Profile)
                           orderby p.Login ascending
                           select new UserResponseDTO()
                           {
@@ -120,7 +119,7 @@ public class UserService : GenericService, IUserService
     {
         try
         {
-            return await (from p in _userRepository.FindBy(x => x.Id == id).AsQueryable()
+            return await (from p in _iUserRepository.FindBy(x => x.Id == id).AsQueryable()
                           orderby p.Login ascending
                           select new UserResponseDTO
                           {
@@ -148,7 +147,7 @@ public class UserService : GenericService, IUserService
     {
         try
         {
-            return await (from p in _userRepository.FindBy(x => x.Login == login.ApplyTrim()).AsQueryable()
+            return await (from p in _iUserRepository.FindBy(x => x.Login == login.ApplyTrim()).AsQueryable()
                           orderby p.Login ascending
                           select new UserResponseDTO
                           {
@@ -177,7 +176,7 @@ public class UserService : GenericService, IUserService
     {
         try
         {
-            var result = _userRepository.FindBy(x => x.IsAuthenticated == true)
+            var result = _iUserRepository.FindBy(x => x.IsAuthenticated == true)
                          .Select(x => new DropDownList()
                          {
                              Id = x.Id.Value,
@@ -203,7 +202,7 @@ public class UserService : GenericService, IUserService
     {
         try
         {
-            var result = _userRepository.Exist(x => x.Id == id);
+            var result = _iUserRepository.Exist(x => x.Id == id);
 
             if (result == false)
                 Notify(FixConstants.ERROR_IN_GETID);
@@ -231,7 +230,7 @@ public class UserService : GenericService, IUserService
                 return false;
             }
 
-            var result = _userRepository.Exist(x => x.Login == login.ApplyTrim());
+            var result = _iUserRepository.Exist(x => x.Login == login.ApplyTrim());
 
             if (result == false)
                 Notify("Ocorreu um erro para pesquisar o registro do login solicitado. Entre em contato com o Administrador");
@@ -259,10 +258,10 @@ public class UserService : GenericService, IUserService
                 return false;
             }
 
-            else if (_userRepository.Exist(x => x.Login == user.Login) == false)
+            else if (_iUserRepository.Exist(x => x.Login == user.Login) == false)
             {
                 user.Password = HashingManager.GetLoadHashingManager().HashToString(user.Password);
-                _userRepository.Add(user);
+                _iUserRepository.Add(user);
                 return true;
             }
 
@@ -284,14 +283,14 @@ public class UserService : GenericService, IUserService
     {
         try
         {
-            User userDb = _userRepository.GetById(id);
+            User userDb = _iUserRepository.GetById(id);
 
             if (GuardClauses.ObjectIsNotNull(userDb))
             {
                 userDb.LastPassword = userDb.Password;
                 userDb.Password = HashingManager.GetLoadHashingManager().HashToString(user.Password);
                 userDb.UpdateDate = userDb.GetNewUpdateDate();
-                _userRepository.Update(userDb);
+                _iUserRepository.Update(userDb);
                 return true;
             }
             Notify(FixConstants.ERROR_IN_UPDATE);
@@ -312,11 +311,11 @@ public class UserService : GenericService, IUserService
     {
         try
         {
-            User user = _userRepository.GetById(id);
+            User user = _iUserRepository.GetById(id);
 
             if (GuardClauses.ObjectIsNull(user) == false)
             {
-                _userRepository.Remove(user);
+                _iUserRepository.Remove(user);
                 return true;
             }
             else
@@ -340,13 +339,13 @@ public class UserService : GenericService, IUserService
     {
         try
         {
-            User user = _userRepository.GetById(id);
+            User user = _iUserRepository.GetById(id);
 
             if (GuardClauses.ObjectIsNotNull(user))
             {
                 user.UpdateDate = user.GetNewUpdateDate();
                 user.Status = false;
-                _userRepository.Update(user);
+                _iUserRepository.Update(user);
                 return true;
             }
             else
@@ -370,7 +369,7 @@ public class UserService : GenericService, IUserService
     {
         try
         {
-            return await _userRepository.CanDelete(id);
+            return await _iUserRepository.CanDelete(id);
         }
         catch
         {
@@ -387,13 +386,13 @@ public class UserService : GenericService, IUserService
     {
         try
         {
-            User user = _userRepository.GetById(id);
+            User user = _iUserRepository.GetById(id);
 
             if (GuardClauses.ObjectIsNotNull(user))
             {
                 user.UpdateDate = user.GetNewUpdateDate();
                 user.Status = true;
-                _userRepository.Update(user);
+                _iUserRepository.Update(user);
                 return true;
             }
 

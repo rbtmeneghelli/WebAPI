@@ -13,5 +13,6 @@ public interface IStatesService
     Task<bool> UpdateStatusByIdAsync(long id);
     Task<IEnumerable<States>> GetAllWithLikeAsync(string param);
     Task<PagedResult<States>> GetAllWithPaginateAsync(StateFilter filter);
+    Task<List<States>> GetListStateWithoutCities();
 }
 

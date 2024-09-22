@@ -6,61 +6,53 @@ namespace WebAPI.Infra.Data.Repositories;
 
 public class GenericUnitofWorkRepository : IGenericUnitofWorkRepository
 {
-    public IAuditRepository Audits { get; }
-    public ICepRepository Ceps { get; }
-    public ICityRepository Cities { get; }
-    public IRegionRepository Regions { get; }
-    public IStatesRepository States { get; } 
-    public IUserRepository Users { get; }
-
-    public IAuthenticationSettingsRepository AuthenticationSettings { get; }
-
-    public IEmailDisplayRepository EmailDisplay { get; }
-
-    public IEmailSettingsRepository EmailSettings { get; }
-
-    public IEnvironmentTypeSettingsRepository EnvironmentTypeSettings { get; }
-
-    public IExpirationPasswordSettingsRepository ExpirationPasswordSettings { get; }
-
-    public ILayoutSettingsRepository LayoutSettings { get; }
-
-    public ILogSettingsRepository LogSettings { get; }
-
-    public IRequiredPasswordSettingsRepository RequiredPasswordSettings { get; }
+    public IAuditRepository AuditRepository { get; }
+    public IAddressRepository AddressRepository { get; }
+    public ICityRepository CityRepository { get; }
+    public IRegionRepository RegionRepository { get; }
+    public IStatesRepository StatesRepository { get; } 
+    public IUserRepository UserRepository { get; }
+    public IAuthenticationSettingsRepository AuthenticationSettingsRepository { get; }
+    public IEmailDisplayRepository EmailDisplayRepository { get; }
+    public IEmailSettingsRepository EmailSettingsRepository { get; }
+    public IEnvironmentTypeSettingsRepository EnvironmentTypeSettingsRepository { get; }
+    public IExpirationPasswordSettingsRepository ExpirationPasswordSettingsRepository { get; }
+    public ILayoutSettingsRepository LayoutSettingsRepository { get; }
+    public ILogSettingsRepository LogSettingsRepository { get; }
+    public IRequiredPasswordSettingsRepository RequiredPasswordSettingsRepository { get; }
 
     public GenericUnitofWorkRepository(
-        IAuditRepository Audits,
-        ICepRepository Ceps,
-        ICityRepository Cities,
-        IRegionRepository Regions,
-        IStatesRepository States,
-        IUserRepository Users,
-        IAuthenticationSettingsRepository authenticationSettings,
-        IEmailDisplayRepository emailDisplay,
-        IEmailSettingsRepository emailSettings,
-        IEnvironmentTypeSettingsRepository environmentTypeSettings,
-        IExpirationPasswordSettingsRepository expirationPasswordSettings,
-        ILayoutSettingsRepository layoutSettings,
-        ILogSettingsRepository logSettings,
-        IRequiredPasswordSettingsRepository requiredPasswordSettings
+        IAuditRepository AuditRepository,
+        IAddressRepository CepRepository,
+        ICityRepository CityRepository,
+        IRegionRepository RegionRepository,
+        IStatesRepository StatesRepository,
+        IUserRepository UserRepository,
+        IAuthenticationSettingsRepository AuthenticationSettingsRepository,
+        IEmailDisplayRepository EmailDisplayRepository,
+        IEmailSettingsRepository EmailSettingsRepository,
+        IEnvironmentTypeSettingsRepository EnvironmentTypeSettingsRepository,
+        IExpirationPasswordSettingsRepository ExpirationPasswordSettingsRepository,
+        ILayoutSettingsRepository LayoutSettingsRepository,
+        ILogSettingsRepository LogSettingsRepository,
+        IRequiredPasswordSettingsRepository RequiredPasswordSettingsRepository
         )
     {
-        this.Audits = Audits ?? throw new ArgumentNullException(nameof(Audits));
-        this.Ceps = Ceps ?? throw new ArgumentNullException(nameof(Ceps));
-        this.Cities = Cities ?? throw new ArgumentNullException(nameof(Cities));
-        this.Regions = Regions ?? throw new ArgumentNullException(nameof(Regions));
-        this.States = States ?? throw new ArgumentNullException(nameof(States));
-        this.Users = Users ?? throw new ArgumentNullException(nameof(Users));
+        this.AuditRepository = AuditRepository ?? throw new ArgumentNullException(nameof(AuditRepository));
+        this.AddressRepository = AddressRepository ?? throw new ArgumentNullException(nameof(AddressRepository));
+        this.CityRepository = CityRepository ?? throw new ArgumentNullException(nameof(CityRepository));
+        this.RegionRepository = RegionRepository ?? throw new ArgumentNullException(nameof(RegionRepository));
+        this.StatesRepository = StatesRepository ?? throw new ArgumentNullException(nameof(StatesRepository));
+        this.UserRepository = UserRepository ?? throw new ArgumentNullException(nameof(UserRepository));
 
-        this.AuthenticationSettings = authenticationSettings ?? throw new ArgumentNullException(nameof(authenticationSettings));
-        this.EmailDisplay = emailDisplay ?? throw new ArgumentNullException(nameof(emailDisplay));
-        this.EmailSettings = emailSettings ?? throw new ArgumentNullException(nameof(emailSettings));
-        this.EnvironmentTypeSettings = environmentTypeSettings ?? throw new ArgumentNullException(nameof(environmentTypeSettings));
-        this.ExpirationPasswordSettings = expirationPasswordSettings ?? throw new ArgumentNullException(nameof(expirationPasswordSettings));
-        this.LayoutSettings = layoutSettings ?? throw new ArgumentNullException(nameof(layoutSettings));
-        this.LogSettings = logSettings ?? throw new ArgumentNullException(nameof(logSettings));
-        this.RequiredPasswordSettings = requiredPasswordSettings ?? throw new ArgumentNullException(nameof(requiredPasswordSettings));
+        this.AuthenticationSettingsRepository = AuthenticationSettingsRepository ?? throw new ArgumentNullException(nameof(AuthenticationSettingsRepository));
+        this.EmailDisplayRepository = EmailDisplayRepository ?? throw new ArgumentNullException(nameof(EmailDisplayRepository));
+        this.EmailSettingsRepository = EmailSettingsRepository ?? throw new ArgumentNullException(nameof(EmailSettingsRepository));
+        this.EnvironmentTypeSettingsRepository = EnvironmentTypeSettingsRepository ?? throw new ArgumentNullException(nameof(EnvironmentTypeSettingsRepository));
+        this.ExpirationPasswordSettingsRepository = ExpirationPasswordSettingsRepository ?? throw new ArgumentNullException(nameof(ExpirationPasswordSettingsRepository));
+        this.LayoutSettingsRepository = LayoutSettingsRepository ?? throw new ArgumentNullException(nameof(LayoutSettingsRepository));
+        this.LogSettingsRepository = LogSettingsRepository ?? throw new ArgumentNullException(nameof(LogSettingsRepository));
+        this.RequiredPasswordSettingsRepository = RequiredPasswordSettingsRepository ?? throw new ArgumentNullException(nameof(RequiredPasswordSettingsRepository));
     }
 
     public void Dispose()

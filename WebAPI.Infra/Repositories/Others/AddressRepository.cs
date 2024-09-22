@@ -5,37 +5,37 @@ using WebAPI.Domain.Interfaces.Repository;
 
 namespace WebAPI.Infra.Repositories.Others;
 
-public class CepRepository : ICepRepository
+public class AddressRepository : IAddressRepository
 {
-    private readonly IGenericRepository<AddressData> _repository;
+    private readonly IGenericRepository<AddressData> _iAddressDataRepository;
 
-    public CepRepository(IGenericRepository<AddressData> repository)
+    public AddressRepository(IGenericRepository<AddressData> iAddressDataRepository)
     {
-        _repository = repository;
+        _iAddressDataRepository = iAddressDataRepository;
     }
 
     public IQueryable<AddressData> GetAll(bool hasTracking = false)
     {
-        return _repository.GetAll(hasTracking);
+        return _iAddressDataRepository.GetAll(hasTracking);
     }
 
     public void Update(AddressData ceps)
     {
-        _repository.Update(ceps);
+        _iAddressDataRepository.Update(ceps);
     }
 
     public void Add(AddressData ceps)
     {
-        _repository.Add(ceps);
+        _iAddressDataRepository.Add(ceps);
     }
 
     public IQueryable<AddressData> FindBy(Expression<Func<AddressData, bool>> predicate, bool hasTracking = false)
     {
-        return _repository.FindBy(predicate, hasTracking);
+        return _iAddressDataRepository.FindBy(predicate, hasTracking);
     }
 
     public AddressData GetById(long id)
     {
-        return _repository.GetById(id);
+        return _iAddressDataRepository.GetById(id);
     }
 }

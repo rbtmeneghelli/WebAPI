@@ -1,12 +1,6 @@
 ﻿using WebAPI.Domain.Enums;
 using WebAPI.Domain.Models;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Buffers;
 
 namespace WebAPI.Domain.ExtensionMethods
 {

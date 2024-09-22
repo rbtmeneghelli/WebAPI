@@ -1,6 +1,5 @@
 ﻿using WebAPI.Application.Factory;
 using WebAPI.Application.Generic;
-using WebAPI.Application.InterfacesRepository;
 using WebAPI.Domain.Constants;
 using WebAPI.Domain.Entities.Others;
 using WebAPI.Domain.EntitiesDTO.Others;
@@ -9,30 +8,29 @@ using WebAPI.Domain.Filters.Others;
 using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.Interfaces.Services;
 using WebAPI.Domain.Interfaces.Services.Tools;
-using WebAPI.Domain.Models;
 
 
 namespace WebAPI.Application.Services;
 
 public class AuditService : GenericService, IAuditService
 {
-    private readonly IAuditRepository _auditRepository;
-    private readonly IGenericRepositoryDapper<Audit> _auditDapper;
+    private readonly IAuditRepository _iAuditRepository;
+    private readonly IGenericRepositoryDapper<Audit> _iAuditRepositoryDapper;
 
-    public AuditService(IAuditRepository auditRepository, IGenericRepositoryDapper<Audit> auditDapper, INotificationMessageService notificationMessageService) : base(notificationMessageService)
+    public AuditService(IAuditRepository iAuditRepository, IGenericRepositoryDapper<Audit> iAuditRepositoryDapper, INotificationMessageService iNotificationMessageService) : base(iNotificationMessageService)
     {
-        _auditRepository = auditRepository;
-        _auditDapper = auditDapper;
+        _iAuditRepository = iAuditRepository;
+        _iAuditRepositoryDapper = iAuditRepositoryDapper;
     }
 
     private async Task<IQueryable<Audit>> GetAllWithFilterAsync(AuditFilter filter)
     {
-        return await Task.FromResult(_auditRepository.GetAll().Where(GetPredicate(filter)).AsQueryable());
+        return await Task.FromResult(_iAuditRepository.GetAll().Where(GetPredicate(filter)).AsQueryable());
     }
 
     private async Task<int> GetCountAsync(AuditFilter filter)
     {
-        return await _auditRepository.GetAll().CountAsync(GetPredicate(filter));
+        return await _iAuditRepository.GetAll().CountAsync(GetPredicate(filter));
     }
 
     private Expression<Func<Audit, bool>> GetPredicate(AuditFilter filter)
@@ -42,19 +40,19 @@ public class AuditService : GenericService, IAuditService
 
     public async Task<Audit> GetByIdAsync(long id)
     {
-        return await Task.FromResult(_auditRepository.GetById(id));
+        return await Task.FromResult(_iAuditRepository.GetById(id));
     }
 
     public async Task<IEnumerable<Audit>> GetAllWithLikeAsync(string parameter)
     {
-        return await _auditRepository.FindBy(x => EF.Functions.Like(x.TableName, $"%{parameter}%")).ToListAsync();
+        return await _iAuditRepository.FindBy(x => EF.Functions.Like(x.TableName, $"%{parameter}%")).ToListAsync();
     }
 
     public async Task<PagedResult<AuditResponseDTO>> GetAllDapperAsync(AuditFilter filter)
     {
         string sql = @"select count(*) from audits " +
         @"select Id = Id, TableName = Table_Name, ActionName = Action_Name from audits where (Table_Name = '" + filter.TableName + "')";
-        var reader = await _auditDapper.QueryMultiple(sql);
+        var reader = await _iAuditRepositoryDapper.QueryMultiple(sql);
 
         var queryResult = from x in reader.Result.AsQueryable()
                           orderby x.UpdateDate descending
@@ -105,7 +103,7 @@ public class AuditService : GenericService, IAuditService
     {
         try
         {
-            var result = _auditRepository.Exist(x => x.Id == id);
+            var result = _iAuditRepository.Exist(x => x.Id == id);
 
             if (result == false)
                 Notify(FixConstants.ERROR_IN_GETID);
@@ -126,6 +124,6 @@ public class AuditService : GenericService, IAuditService
     public async Task CreateAuditBySQLScript(Audit audit)
     {
         var scriptSQL = new SqlExtensionMethod().CreateSQLInsertScript(audit, typeof(Audit));
-        await _auditDapper.ExecuteQuery(scriptSQL);
+        await _iAuditRepositoryDapper.ExecuteQuery(scriptSQL);
     }
 }

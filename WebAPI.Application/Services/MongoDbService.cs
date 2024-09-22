@@ -8,7 +8,7 @@ public sealed class MongoDbService<TEntity> : GenericService, IMongoDbService<TE
 {
     private EnvironmentVariables _environmentVariables { get; }
 
-    public MongoDbService(EnvironmentVariables environmentVariables, INotificationMessageService notificationMessageService) : base(notificationMessageService)
+    public MongoDbService(EnvironmentVariables environmentVariables, INotificationMessageService iNotificationMessageService) : base(iNotificationMessageService)
     {
         _environmentVariables = environmentVariables;
     }

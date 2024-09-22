@@ -6,28 +6,28 @@ namespace WebAPI.Domain.Interfaces.Repository;
 
 public interface IGenericUnitOfWorkService : IDisposable
 {
-    IAccountService iAccountService { get; }
-    IAuditService iAuditService { get; }
-    ICepService iCepService { get; }
-    ICityService iCityService { get; }
-    IRegionService iRegionService { get; }
-    IStatesService iStateService { get; }
-    IUserService iUserService { get; }
+    IAccountService AccountService { get; }
+    IAuditService AuditService { get; }
+    IAddressService AddressService { get; }
+    ICityService CityService { get; }
+    IRegionService RegionService { get; }
+    IStatesService StateService { get; }
+    IUserService UserService { get; }
 }
 
 public interface IGenericNotifyLogsService
 {
-    INotificationMessageService iNotificationMessageService { get; }
-    IKissLogService iKissLogService { get; }
+    INotificationMessageService NotificationMessageService { get; }
+    IGeneralLogService GeneralLogService { get; }
 }
 
 public interface IGenericConfigurationService
 {
-    IEmailService iEmailService { get; }
-    IAuthenticationSettingsService iAuthenticationSettingsService { get; }
-    IEnvironmentTypeSettingsService iEnvironmentTypeSettingsService { get; }
-    IExpirationPasswordSettingsService iExpirationPasswordSettingsService { get; }
-    ILayoutSettingsService iLayoutSettingsService { get; }
-    ILogSettingsService iLogSettingsService { get; }
-    IRequiredPasswordSettingsService iRequiredPasswordSettingsService { get; }
+    IEmailService EmailService { get; }
+    IAuthenticationSettingsService AuthenticationSettingsService { get; }
+    IEnvironmentTypeSettingsService EnvironmentTypeSettingsService { get; }
+    IExpirationPasswordSettingsService ExpirationPasswordSettingsService { get; }
+    ILayoutSettingsService LayoutSettingsService { get; }
+    ILogSettingsService LogSettingsService { get; }
+    IRequiredPasswordSettingsService RequiredPasswordSettingsService { get; }
 }
