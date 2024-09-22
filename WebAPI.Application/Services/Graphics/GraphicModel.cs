@@ -1,4 +1,4 @@
-﻿namespace WebAPI.Domain.Models.Charts;
+﻿namespace WebAPI.Application.Services.Graphics;
 
 public abstract class GraphicModel
 {

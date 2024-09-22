@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using System.Text;
 
-namespace WebAPI.Infra.Structure.IoC.HostedService.AzureServiceBus.Consumer;
+namespace WebAPI.IoC.HostedService.AzureServiceBus.Consumer;
 
 /// <summary>
 /// Na nossa ConfigureServices da classe Startup, adicionar o serviço abaixo.

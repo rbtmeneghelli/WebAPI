@@ -1,6 +1,5 @@
 ﻿using WebAPI.Application.BackgroundServices.RabbitMQ.Consumers;
 using WebAPI.Application.Services;
-using WebAPI.Configuration.Middleware.Authentication;
 using WebAPI.Domain;
 using WebAPI.Domain.Models;
 using WebAPI.Infra.Data.Context;
@@ -34,26 +33,28 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading.RateLimiting;
 using SqlConnection = Microsoft.Data.SqlClient.SqlConnection;
-using WebAPI.Application.Services.NfService;
 using WebAPI.Application.Generic;
 using WebAPI.Application.Factory;
 using WebAPI.Application.BackgroundMessageServices.RabbitMQ;
 using Newtonsoft.Json;
 using WebAPI.Domain.Enums;
-using WebAPI.Infra.Repositories.ControlPanel;
-using WebAPI.Infra.Repositories.Others;
 using WebAPI.Domain.Interfaces.Services.Tools;
 using WebAPI.Domain.Interfaces.Services.Configuration;
 using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.Interfaces.Services;
 using WebAPI.Domain.Models.EnvVarSettings;
 using WebAPI.Domain.Interfaces.Factory;
-using WebAPI.Domain.Interfaces.Services.NfService;
 using WebAPI.Application.Services.Configuration;
 using WebAPI.Domain.Interfaces.Repository.Configuration;
 using WebAPI.Infra.Repositories.Configuration;
+using WebAPI.IoC.Middleware.Authentication;
+using WebAPI.Application.InterfacesRepository;
+using WebAPI.Infra.Repositories.ControlPanel;
+using WebAPI.Domain.Interfaces.Services.NfService;
+using WebAPI.Application.Services.NfService;
+using WebAPI.Infra.Repositories.Others;
 
-namespace WebAPI.Infra.Structure.IoC;
+namespace WebAPI.IoC;
 
 public static class DependencyContainerService
 {
@@ -179,8 +180,11 @@ public static class DependencyContainerService
         #region UnitOfWork
 
         services
-        .AddScoped<IGenericUnitofWorkService, GenericUnitOfWorkService>()
-        .AddScoped<IGenericNotifyLogsService, GenericNotifyLogsService>();
+        .AddScoped<IGenericUnitOfWorkService, GenericUnitOfWorkService>()
+        .AddScoped<IGenericNotifyLogsService, GenericNotifyLogsService>()
+        .AddScoped<IGenericConfigurationService, GenericConfigurationService>()
+        .AddScoped<IGenericUnitofWorkRepository, GenericUnitofWorkRepository>();
+
         #endregion
 
         #region Generics
@@ -197,6 +201,10 @@ public static class DependencyContainerService
         #endregion
 
         #region ControlPanel
+
+        services
+        .AddScoped<IUserRepository, UserRepository>()
+        .AddScoped<IAccountService, AccountService>();
 
         #endregion
 
@@ -224,38 +232,31 @@ public static class DependencyContainerService
 
         #endregion
 
-
-        //Kisslog
-        //.AddScoped<IUserRepository, UserRepository>()
-        //.AddScoped<ICepRepository, CepRepository>()
-        //.AddScoped<ICityRepository, CityRepository>()
-        //.AddScoped<IRegionRepository, RegionRepository>()
-        //.AddScoped<IStatesRepository, StateRepository>()
-        //.AddScoped<ILogRepository, LogRepository>()
-        //.AddScoped<IAuditRepository, AuditRepository>()
-        //.AddScoped<INotificationMessageService, NotificationMessageService>()
-        //.AddScoped<IAccountService, AccountService>()
-        //.AddScoped<IAuditService, AuditService>()
-        //.AddScoped<ICepService, CepService>()
-        //.AddScoped<ICityService, CityService>()
-        //.AddScoped<ILogService, LogService>()
-        //.AddScoped<IUserService, UserService>()
-        //.AddScoped<IGeneralService, GeneralService>()
-        //.AddScoped<IRegionService, RegionService>()
-        //.AddScoped<IStatesService, StatesService>()
-        //.AddScoped<IGraphicLineService, GraphicLineService>()
-        //.AddScoped<IGraphicBarService, GraphicBarService>()
-        //
-        //.AddScoped<IQRCodeService, QRCodeService>()
-        //.AddScoped<IMemoryCacheService, MemoryCacheService>()
-        //
-        //.AddTransient<IIpAddressService, IpAddressService>()
-        //.AddScoped<INfService, NfService>()
-        //.AddScoped<IFirebaseService, FirebaseService>()
-        //
-        //.AddTransient<IProblemDetailsFactory, ProblemDetailsFactory>()
-
-        //.AddScoped<ISendGridService, SendGridService>();
+        services
+        .AddScoped<ICepRepository, CepRepository>()
+        .AddScoped<ICityRepository, CityRepository>()
+        .AddScoped<IRegionRepository, RegionRepository>()
+        .AddScoped<IStatesRepository, StateRepository>()
+        .AddScoped<ILogRepository, LogRepository>()
+        .AddScoped<IAuditRepository, AuditRepository>()
+        .AddScoped<INotificationMessageService, NotificationMessageService>()
+        .AddScoped<IAuditService, AuditService>()
+        .AddScoped<ICepService, CepService>()
+        .AddScoped<ICityService, CityService>()
+        .AddScoped<ILogService, LogService>()
+        .AddScoped<IKissLogService, KissLogService>()
+        .AddScoped<IGeneralService, GeneralService>()
+        .AddScoped<IRegionService, RegionService>()
+        .AddScoped<IStatesService, StatesService>()
+        .AddScoped<IGraphicLineService, GraphicLineService>()
+        .AddScoped<IGraphicBarService, GraphicBarService>()
+        .AddScoped<IQRCodeService, QRCodeService>()
+        .AddScoped<IMemoryCacheService, MemoryCacheService>()
+        .AddTransient<IIpAddressService, IpAddressService>()
+        .AddScoped<INfService, NfService>()
+        .AddScoped<IFirebaseService, FirebaseService>()
+        .AddTransient<IProblemDetailsFactory, ProblemDetailsFactory>()
+        .AddScoped<ISendGridService, SendGridService>();
     }
 
     public static void RegisterMapperConfig(this IServiceCollection services)

@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
-using System.Linq;
-using System.Security.Claims;
 
-namespace WebAPI.Configuration.Middleware.Authentication;
+namespace WebAPI.IoC.Middleware.Authentication;
 
 public class CustomMyAuthenticationSchemeOptions : AuthenticationSchemeOptions
 {

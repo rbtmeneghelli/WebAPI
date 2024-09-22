@@ -1,14 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
-using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Text;
 using Microsoft.Extensions.Logging;
 
-namespace WebAPI.Configuration.Middleware.Authentication;
+namespace WebAPI.IoC.Middleware.Authentication;
 
 public sealed class CustomAuthorizeMiddleware : AuthenticationHandler<AuthenticationSchemeOptions>
 {

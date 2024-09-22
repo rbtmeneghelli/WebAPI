@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using System.Text;
 using System.Text.Json;
 
-namespace WebAPI.Infra.Structure.IoC.HostedService.AzureServiceBus.Publisher;
+namespace WebAPI.IoC.HostedService.AzureServiceBus.Publisher;
 
 public class PublisherService
 {

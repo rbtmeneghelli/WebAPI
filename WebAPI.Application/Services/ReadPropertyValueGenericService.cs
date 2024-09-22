@@ -3,15 +3,9 @@ using System.Collections;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using WebAPI.Domain.Entities.ControlPanel;
-using MongoDB.Driver.Linq;
+using WebAPI.Domain.Interfaces.Services;
 
 namespace WebAPI.Application.Interfaces;
-
-public interface IReadPropertyValueGenericService<TSource, TDestination> : IDisposable where TSource : class where TDestination : class
-{
-    TDestination TradeSpecialCharactersToStringFromObject(object obj);
-    TDestination TradeSpecialCharactersToStringFromList(object obj);
-}
 
 public sealed class ReadPropertyValueGenericService<TSource, TDestination> : IReadPropertyValueGenericService<TSource, TDestination> where TSource : class where TDestination : class
 {

@@ -12,7 +12,7 @@ using System.Security.Claims;
 using System.Text.Encodings.Web;
 using WebAPI.Domain.Interfaces.Services;
 
-namespace WebAPI.Configuration.Middleware.Authentication;
+namespace WebAPI.IoC.Middleware.Authentication;
 
 public class CustomAuthorizeHandler : AuthenticationHandler<CustomMyAuthenticationSchemeOptions>
 {

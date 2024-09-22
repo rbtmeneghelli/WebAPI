@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Builder;
 using WebAPI.IoC.Middleware.Swagger;
 using WebAPI.Domain;
 
-namespace WebAPI.Configuration;
+namespace WebAPI.IoC;
 
 /// <summary>
 /// Pacote Nuget >> Swashbuckle.AspNetCore.Annotations

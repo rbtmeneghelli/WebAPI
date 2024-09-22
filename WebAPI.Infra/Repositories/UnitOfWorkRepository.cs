@@ -4,7 +4,7 @@ using WebAPI.Domain.Interfaces.Repository.Configuration;
 
 namespace WebAPI.Infra.Data.Repositories;
 
-public class UnitOfWorkRepository : IGenericUnitofWorkRepository
+public class GenericUnitofWorkRepository : IGenericUnitofWorkRepository
 {
     public IAuditRepository Audits { get; }
     public ICepRepository Ceps { get; }
@@ -29,7 +29,7 @@ public class UnitOfWorkRepository : IGenericUnitofWorkRepository
 
     public IRequiredPasswordSettingsRepository RequiredPasswordSettings { get; }
 
-    public UnitOfWorkRepository(
+    public GenericUnitofWorkRepository(
         IAuditRepository Audits,
         ICepRepository Ceps,
         ICityRepository Cities,

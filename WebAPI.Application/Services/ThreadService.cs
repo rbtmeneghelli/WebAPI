@@ -1,65 +1,64 @@
 ﻿using WebAPI.Domain.Interfaces.Services;
 
-namespace WebAPI.Infra.CrossCutting
+namespace WebAPI.Application.Services;
+
+public sealed class ThreadService : IThreadService
 {
-    public sealed class ThreadService : IThreadService
+    public bool RunMethodWithThreadPool(int value)
     {
-        public bool RunMethodWithThreadPool(int value)
-        {
-            bool result = false;
+        bool result = false;
 
-            for (int i = 0; i <= 10; i++)
+        for (int i = 0; i <= 10; i++)
+        {
+            result = ThreadPool.QueueUserWorkItem(new WaitCallback(MetodoExecutado), value);
+            if (result == false)
+                break;
+        }
+
+        return result;
+    }
+
+    public bool RunMethodWithThreadParallel(IEnumerable<int> list)
+    {
+        bool result = false;
+
+        Parallel.ForEach(list, GetParallelOptions(), (number, loopState) =>
+        {
+            try
             {
-                result = ThreadPool.QueueUserWorkItem(new WaitCallback(MetodoExecutado), value);
-                if (result == false)
-                    break;
+                MetodoExecutado(number);
+                result = true;
             }
-
-            return result;
-        }
-
-        public bool RunMethodWithThreadParallel(IEnumerable<int> list)
-        {
-            bool result = false;
-
-            Parallel.ForEach(list, GetParallelOptions(), (number, loopState) =>
+            catch (Exception ex)
             {
-                try
-                {
-                    MetodoExecutado(number);
-                    result = true;
-                }
-                catch (Exception ex)
-                {
-                    loopState.Break();
-                    result = false;
-                }
-            });
-
-            return result;
-        }
-
-        private ParallelOptions GetParallelOptions()
-        {
-            return new ParallelOptions { MaxDegreeOfParallelism = Convert.ToInt32(Math.Ceiling((Environment.ProcessorCount * 0.50) * 2.0)) };
-        }
-
-        private void MetodoExecutado(object value)
-        {
-            int limit = (int)value;
-            int total = 0;
-
-            for (int i = 0; i <= limit; i++)
-            {
-                total = limit * i;
-                Console.WriteLine($"Tabuada do {limit} e : \n ");
-                Console.WriteLine($"{limit} * {i} = {total} \t");
+                loopState.Break();
+                result = false;
             }
-        }
+        });
 
-        public void Dispose()
+        return result;
+    }
+
+    private ParallelOptions GetParallelOptions()
+    {
+        return new ParallelOptions { MaxDegreeOfParallelism = Convert.ToInt32(Math.Ceiling((Environment.ProcessorCount * 0.50) * 2.0)) };
+    }
+
+    private void MetodoExecutado(object value)
+    {
+        int limit = (int)value;
+        int total = 0;
+
+        for (int i = 0; i <= limit; i++)
         {
-            GC.SuppressFinalize(this);
+            total = limit * i;
+            Console.WriteLine($"Tabuada do {limit} e : \n ");
+            Console.WriteLine($"{limit} * {i} = {total} \t");
         }
+    }
+
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
     }
 }

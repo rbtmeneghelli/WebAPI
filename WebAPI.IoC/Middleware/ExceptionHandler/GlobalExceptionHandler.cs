@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using WebAPI.Domain.Interfaces.Factory;
 
-namespace WebAPI.Infra.Structure.IoC.Middleware.ExceptionHandler;
+namespace WebAPI.IoC.Middleware.ExceptionHandler;
 
 /// <summary>
 /// Exemplo de exceptionHandler valido a partir do NET 8

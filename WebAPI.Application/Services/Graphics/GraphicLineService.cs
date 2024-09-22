@@ -1,5 +1,6 @@
-﻿using WebAPI.Application.Services.Graphics;
-using WebAPI.Domain.Interfaces.Services;
+﻿using WebAPI.Domain.Interfaces.Services;
+
+namespace WebAPI.Application.Services.Graphics;
 
 public class GraphicLineService : IGraphicLineService
 {

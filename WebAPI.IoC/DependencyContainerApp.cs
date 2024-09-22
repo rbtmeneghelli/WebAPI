@@ -10,7 +10,7 @@ using Microsoft.Extensions.Hosting;
 using WebAPI.Domain;
 using WebAPI.Domain.Models.EnvVarSettings;
 
-namespace WebAPI.Infra.Structure.IoC;
+namespace WebAPI.IoC;
 
 public static class DependencyContainerApp
 {

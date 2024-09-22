@@ -1,15 +1,8 @@
-﻿using WebAPI.Domain;
-using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
 using WebAPI.Domain.ExtensionMethods;
 
-namespace WebAPI.Infra.Structure.IoC.HostedService;
+namespace WebAPI.IoC.HostedService;
 
 /// <summary>
 /// Na nossa ConfigureServices da classe Startup, adicionar o serviço abaixo.
