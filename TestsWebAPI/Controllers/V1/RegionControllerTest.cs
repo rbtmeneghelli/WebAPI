@@ -1,5 +1,4 @@
-﻿using WebAPI.Application.Interfaces;
-using WebAPI.Application.Services;
+﻿using WebAPI.Application.Services;
 using Moq;
 using NPOI.SS.Formula.Functions;
 using Region = WebAPI.Domain.Entities.Others.Region;

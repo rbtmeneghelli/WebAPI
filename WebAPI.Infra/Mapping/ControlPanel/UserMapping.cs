@@ -16,7 +16,7 @@ public class UserMapping : GenericMapping<User>
         {
             t.HasPeriodStart("InicioValidade");
             t.HasPeriodEnd("TerminoValidade");
-            t.UseHistoryTable("UsersHistory");
+            t.UseHistoryTable("ControlPanel_UserHistory");
         }));
         ConfigureColumns();
         ConfigureForeignKeys();

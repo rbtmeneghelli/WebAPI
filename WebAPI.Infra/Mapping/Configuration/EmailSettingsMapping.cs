@@ -27,13 +27,12 @@ public class EmailSettingsMapping : GenericMapping<EmailSettings>
         _builder.Property(x => x.SmtpConfig).IsRequired().HasMaxLength(80).HasColumnName("SmtpConfig");
         _builder.Property(x => x.PrimaryPort).IsRequired().HasMaxLength(3).HasColumnName("PrimaryPort");
         _builder.Property(x => x.Email).IsRequired().HasMaxLength(80).HasColumnName("Email");
-        _builder.Property(x => x.Password).IsRequired().HasMaxLength(15).HasColumnName("Password");
+        _builder.Property(x => x.Password).IsRequired().HasMaxLength(40).HasColumnName("Password");
         _builder.Property(x => x.EnableSsl).IsRequired().HasMaxLength(80).HasColumnName("EnableSsl");
     }
 
     private void ConfigureRelationShip()
     {
-        _builder.HasOne(x => x.EnvironmentTypeSettings).WithOne(p => p.EmailSettings).HasForeignKey<EmailSettings>(x => x.IdEnvironmentType);
-        _builder.HasMany(x => x.EmailTemplates).WithOne(p => p.EmailSettings).HasForeignKey(x => x.IdEmailSettings);
+        _builder.HasOne(x => x.EnvironmentTypeSettings).WithMany(p => p.EmailSettings).HasForeignKey(x => x.IdEnvironmentType);
     }
 }

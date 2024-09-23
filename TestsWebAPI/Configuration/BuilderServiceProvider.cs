@@ -10,7 +10,7 @@ public class BuilderServiceProvider
         serviceCollection.AddHttpClient();
         serviceCollection.AddDbContext<WebAPITestContext>(opt => opt.UseInMemoryDatabase("DefaultMemoryAPI"));
         //serviceCollection.AddDbContext<DefaultWebAPITestContext>(opts => opts.UseSqlServer(defaultConnection, b => b.MinBatchSize(5).MaxBatchSize(50).MigrationsAssembly(typeof(DefaultWebAPITestContext).Assembly.FullName)));
-        serviceCollection.AddScoped<WebAPITestContext>();
+        //serviceCollection.AddScoped<WebAPITestContext>();
         serviceCollection.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositoryTest<>));
         serviceCollection.AddScoped<IAuthenticateEntityRepositoryTest, AuthenticateEntityRepositoryTest>();
         serviceCollection.AddScoped<IAuthenticateEntityServiceTest, AuthenticateEntityServiceTest>();

@@ -22,7 +22,7 @@ public class LayoutSettingsMapping : GenericMapping<LayoutSettings>
         {
             t.HasPeriodStart("InicioValidade");
             t.HasPeriodEnd("TerminoValidade");
-            t.UseHistoryTable("UsersHistory");
+            t.UseHistoryTable("Configuration_LayoutSettingsHistory");
         }));
 
     }

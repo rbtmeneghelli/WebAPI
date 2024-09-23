@@ -9,9 +9,9 @@ public class EnvironmentTypeSettings : GenericEntity
     public string Description { get; set; }
 
     [DisplayName("Sigla do ambiente")]
-    public int Initials { get; set; }
+    public string Initials { get; set; }
 
-    public virtual EmailSettings EmailSettings { get; set; }
+    public virtual IEnumerable<EmailSettings> EmailSettings { get; set; }
     public virtual ExpirationPasswordSettings ExpirationPasswordSettings { get; set; }
     public virtual RequiredPasswordSettings RequiredPasswordSettings { get; set; }
     public virtual AuthenticationSettings AuthenticationSettings { get; set; }

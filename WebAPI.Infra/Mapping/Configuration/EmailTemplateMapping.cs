@@ -29,6 +29,5 @@ public class EmailTemplateMapping : GenericMapping<EmailTemplate>
     private void ConfigureRelationShip()
     {
         _builder.HasMany(x => x.EmailDisplays).WithOne(x => x.EmailTemplates).HasForeignKey(x => x.EmailTemplateId);
-        _builder.HasOne(x => x.EmailSettings).WithMany(x => x.EmailTemplates).HasForeignKey(p => p.IdEmailSettings);
     }
 }

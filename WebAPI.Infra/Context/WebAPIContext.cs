@@ -7,6 +7,7 @@ using WebAPI.Domain.Entities.ControlPanel;
 using WebAPI.Infra.Mapping.Configuration;
 using WebAPI.Infra.Mapping.ControlPanel;
 using WebAPI.Domain.Entities.Others;
+using WebAPI.Domain.Entities.Configuration;
 
 namespace WebAPI.Infra.Data.Context;
 

@@ -1,7 +1,35 @@
 ﻿using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.EntityFrameworkCore;
+using WebAPI.Infra.Data.Context;
 using WebAPI.IoC;
 using WebAPI.IoC.Middleware.ExceptionHandler;
 
+
+public class WebAPIContextFactory : IDesignTimeDbContextFactory<WebAPIContext>
+{
+    /// <summary>
+    /// Se for necessario, remover <PrivateAssets>all</PrivateAssets> da referência ao pacote Microsoft.EntityFrameworkCore.Design no arquivo de projeto. Assim a referência a este pacote ficou definida assim:
+    /// <PackageReference Include = "Microsoft.EntityFrameworkCore.Design" Version="5.0.3">
+    /// <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    /// </PackageReference>
+    /// </summary>
+    /// <param name="args"></param>
+    /// <returns></returns>
+    public WebAPIContext CreateDbContext(string[] args)
+    {
+        IConfigurationRoot configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json")
+            .Build();
+
+        var builder = new DbContextOptionsBuilder<WebAPIContext>();
+        var connectionString = EnvironmentVariablesExtension.GetDatabaseFromEnvVar(configuration.GetConnectionString("DefaultConnection"));
+        builder.UseSqlServer(connectionString);
+
+        return new WebAPIContext(builder.Options);
+    }
+}
 
 public class Startup
 {

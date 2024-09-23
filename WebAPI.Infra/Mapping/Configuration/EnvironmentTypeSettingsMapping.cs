@@ -24,12 +24,12 @@ public class EnvironmentTypeSettingsMapping : GenericMapping<EnvironmentTypeSett
     private void ConfigureColumns()
     {
         _builder.Property(x => x.Description).IsRequired().HasMaxLength(120).HasColumnName("Description");
-        _builder.Property(x => x.Initials).IsRequired().HasMaxLength(3).HasColumnName("Initials");
+        _builder.Property(x => x.Initials).IsRequired().HasMaxLength(6).HasColumnName("Initials");
     }
 
     private void ConfigureRelationShip()
     {
-        _builder.HasOne(x => x.EmailSettings).WithOne(p => p.EnvironmentTypeSettings).HasForeignKey<EmailSettings>(x => x.IdEnvironmentType);
+        _builder.HasMany(x => x.EmailSettings).WithOne(p => p.EnvironmentTypeSettings).HasForeignKey(x => x.IdEnvironmentType);
         _builder.HasOne(x => x.ExpirationPasswordSettings).WithOne(p => p.EnvironmentTypeSettings).HasForeignKey<ExpirationPasswordSettings>(x => x.IdEnvironmentType);
         _builder.HasOne(x => x.RequiredPasswordSettings).WithOne(p => p.EnvironmentTypeSettings).HasForeignKey<RequiredPasswordSettings>(x => x.IdEnvironmentType);
         _builder.HasOne(x => x.AuthenticationSettings).WithOne(p => p.EnvironmentTypeSettings).HasForeignKey<AuthenticationSettings>(x => x.IdEnvironmentType);

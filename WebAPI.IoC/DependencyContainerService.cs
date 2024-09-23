@@ -191,7 +191,6 @@ public static class DependencyContainerService
         #region Generics
 
         services
-        //.AddScoped<WebAPIContext>() //TODO: Verificar se realmente e necessario isso
         .AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>))
         .AddScoped(typeof(IGenericRepositoryDapper<>), typeof(GenericRepositoryDapper<>))
         .AddScoped(typeof(IFileService<>), typeof(FileService<>))
@@ -673,31 +672,6 @@ public static class DependencyContainerService
 
         services.Configure(resultValues);
         services.AddSingleton(resolver => resolver.GetRequiredService<IOptions<EnvironmentVariables>>().Value);
-    }
-
-    public class WebAPIContextFactory : IDesignTimeDbContextFactory<WebAPIContext>
-    {
-        /// <summary>
-        /// Se for necessario, remover <PrivateAssets>all</PrivateAssets> da referência ao pacote Microsoft.EntityFrameworkCore.Design no arquivo de projeto. Assim a referência a este pacote ficou definida assim:
-        /// <PackageReference Include = "Microsoft.EntityFrameworkCore.Design" Version="5.0.3">
-        /// <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        /// </PackageReference>
-        /// </summary>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        public WebAPIContext CreateDbContext(string[] args)
-        {
-            IConfigurationRoot configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
-                .Build();
-
-            var builder = new DbContextOptionsBuilder<WebAPIContext>();
-            var connectionStringLogs = EnvironmentVariablesExtension.GetDatabaseFromEnvVar(configuration.GetConnectionString("DefaultConnection"));
-            builder.UseSqlServer(connectionStringLogs);
-
-            return new WebAPIContext(builder.Options);
-        }
     }
 
     public static void RegisterBackGroundServices(this IServiceCollection services)

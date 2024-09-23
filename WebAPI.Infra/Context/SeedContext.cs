@@ -21,11 +21,11 @@ public static class SeedContext
     private static void SeedEnvironmentType(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<EnvironmentTypeSettings>().HasData(
-           new EnvironmentTypeSettings() { Id = (int)EnumEnvironment.PRD, Description = EnumEnvironment.PRD.GetDisplayName(), CreateDate = _currentDate, Status = STATUS_TRUE },
-           new EnvironmentTypeSettings() { Id = (int)EnumEnvironment.PRE_PROD, Description = EnumEnvironment.PRE_PROD.GetDisplayName(), CreateDate = _currentDate, Status = STATUS_TRUE },
-           new EnvironmentTypeSettings() { Id = (int)EnumEnvironment.HML, Description = EnumEnvironment.HML.GetDisplayName(), CreateDate = _currentDate, Status = STATUS_TRUE },
-           new EnvironmentTypeSettings() { Id = (int)EnumEnvironment.QA, Description = EnumEnvironment.QA.GetDisplayName(), CreateDate = _currentDate, Status = STATUS_TRUE },
-           new EnvironmentTypeSettings() { Id = (int)EnumEnvironment.DEV, Description = EnumEnvironment.DEV.GetDisplayName(), CreateDate = _currentDate, Status = STATUS_TRUE }
+           new EnvironmentTypeSettings() { Id = (int)EnumEnvironment.PRD, Description = "Ambiente Produção", CreateDate = _currentDate, Status = STATUS_TRUE, Initials = "PRD" },
+           new EnvironmentTypeSettings() { Id = (int)EnumEnvironment.PRE_PROD, Description = "Ambiente PréProdução", CreateDate = _currentDate, Status = STATUS_TRUE, Initials = "PREPRD" },
+           new EnvironmentTypeSettings() { Id = (int)EnumEnvironment.HML, Description = "Ambiente Homologação", CreateDate = _currentDate, Status = STATUS_TRUE, Initials = "HML" },
+           new EnvironmentTypeSettings() { Id = (int)EnumEnvironment.QA, Description = "Ambiente QA", CreateDate = _currentDate, Status = STATUS_TRUE, Initials = "QA" },
+           new EnvironmentTypeSettings() { Id = (int)EnumEnvironment.DEV, Description = "Ambiente DEV", CreateDate = _currentDate, Status = STATUS_TRUE, Initials = "DEV" }
         );
     }
 
@@ -92,11 +92,11 @@ public static class SeedContext
     private static void SeedEmailDisplay(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<EmailDisplay>().HasData(
-           new EmailDisplay() { Id = (int)EnumEmail.Welcome, Subject = "Bem vindo ao sistema {0}", Title = EnumEmail.Welcome.GetDisplayName(), Body = EmailDisplay.GetBodyTextWelcome(), EmailTemplateId = 1, Priority = MessagePriority.Normal, CreateDate = _currentDate, Status = STATUS_TRUE, HasAttachment = STATUS_FALSE },
-           new EmailDisplay() { Id = (int)EnumEmail.ResetPassword, Subject = "{0} - Esqueci a senha", Title = EnumEmail.ResetPassword.GetDisplayName(), Body = EmailDisplay.GetBodyTextForgetPsw(), EmailTemplateId = 1, Priority = MessagePriority.Normal, CreateDate = _currentDate, Status = STATUS_TRUE, HasAttachment = STATUS_FALSE },
-           new EmailDisplay() { Id = (int)EnumEmail.ChangePassword, Subject = "{0} - Solicitação de troca de senha", Title = EnumEmail.ChangePassword.GetDisplayName(), Body = EmailDisplay.GetBodyTextTradePsw(), EmailTemplateId = 1, Priority = MessagePriority.Normal, CreateDate = _currentDate, Status = STATUS_TRUE, HasAttachment = STATUS_FALSE },
-           new EmailDisplay() { Id = (int)EnumEmail.ConfirmPassword, Subject = "{0} - Confirmação de senha", Title = EnumEmail.ChangePassword.GetDisplayName(), Body = EmailDisplay.GetBodyTextConfirmPsw(), EmailTemplateId = 1, Priority = MessagePriority.Normal, CreateDate = _currentDate, Status = STATUS_TRUE, HasAttachment = STATUS_FALSE },
-           new EmailDisplay() { Id = (int)EnumEmail.Report, Subject = "{0} - Relatório", Title = EnumEmail.ChangePassword.GetDisplayName(), Body = StringExtensionMethod.GetEmptyString(), EmailTemplateId = 1, Priority = MessagePriority.Normal, CreateDate = _currentDate, Status = STATUS_TRUE, HasAttachment = STATUS_FALSE }
+           new EmailDisplay() { Id = (int)EnumEmail.Welcome, Subject = "Bem vindo ao sistema {0}", Title = "Email de boas vindas", Body = EmailDisplay.GetBodyTextWelcome(), EmailTemplateId = 1, Priority = MessagePriority.Normal, CreateDate = _currentDate, Status = STATUS_TRUE, HasAttachment = STATUS_FALSE },
+           new EmailDisplay() { Id = (int)EnumEmail.ChangePassword, Subject = "{0} - Solicitação de troca de senha", Title = "Email de troca de senha", Body = EmailDisplay.GetBodyTextTradePsw(), EmailTemplateId = 1, Priority = MessagePriority.Normal, CreateDate = _currentDate, Status = STATUS_TRUE, HasAttachment = STATUS_FALSE },
+           new EmailDisplay() { Id = (int)EnumEmail.ResetPassword, Subject = "{0} - Esqueci a senha", Title = "Email de reset de senha", Body = EmailDisplay.GetBodyTextForgetPsw(), EmailTemplateId = 1, Priority = MessagePriority.Normal, CreateDate = _currentDate, Status = STATUS_TRUE, HasAttachment = STATUS_FALSE },
+           new EmailDisplay() { Id = (int)EnumEmail.ConfirmPassword, Subject = "{0} - Confirmação de senha", Title = "Email de confirmação de senha", Body = EmailDisplay.GetBodyTextConfirmPsw(), EmailTemplateId = 1, Priority = MessagePriority.Normal, CreateDate = _currentDate, Status = STATUS_TRUE, HasAttachment = STATUS_FALSE },
+           new EmailDisplay() { Id = (int)EnumEmail.Report, Subject = "{0} - Relatório", Title = "Email de relatório", Body = StringExtensionMethod.GetEmptyString(), EmailTemplateId = 1, Priority = MessagePriority.Normal, CreateDate = _currentDate, Status = STATUS_TRUE, HasAttachment = STATUS_FALSE }
         );
     }
 

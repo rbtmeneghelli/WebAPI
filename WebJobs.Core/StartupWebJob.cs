@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Builder;
-using WebAPI.Infra.Structure.IoC;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using WebAPI.IoC;
 
 namespace WebJobs.Core
 {
