@@ -347,22 +347,4 @@ public class GeneralService : GenericService, IGeneralService
 
         return identity != null ? true : false;
     }
-
-    #region Atualizar Variaveis de ambiente
-
-    public void RefreshEnvironmentVarLocal(EnvironmentVarSettings environmentVarSettings)
-    {
-        Environment.SetEnvironmentVariable("WEBAPI_VERSAO_SISTEMA", environmentVarSettings.VersaoSistema);
-        Environment.SetEnvironmentVariable("WEBAPI_VALIDACAO_DUAS_ETAPAS", environmentVarSettings.HabilitarValidacaoDuasEtapas.TransformBoolToString());
-        Environment.SetEnvironmentVariable("WEBAPI_GRAVAR_LOGS_ERRO", environmentVarSettings.GravarLogsErro.TransformBoolToString());
-        Environment.SetEnvironmentVariable("WEBAPI_GRAVAR_LOGS_AUDITORIA", environmentVarSettings.GravarLogsAuditoria.TransformBoolToString());
-    }
-
-    public void RefreshEnvironmentVarAzure(EnvironmentVarSettings environmentVarSettings)
-    {
-        // Descobrir uma forma de como fazer isso ou se e possivel efetuar isso apenas com o codigo acima!
-        RefreshEnvironmentVarLocal(environmentVarSettings);
-    }
-
-    #endregion
 }

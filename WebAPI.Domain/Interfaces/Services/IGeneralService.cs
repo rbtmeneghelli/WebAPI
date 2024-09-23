@@ -21,6 +21,4 @@ public interface IGeneralService
     void DeleteRefreshToken(string username, string refreshToken);
     string ExtractObjectInformationsByReflection(object obj);
     bool TokenIsValid(string jwtToken);
-    void RefreshEnvironmentVarLocal(EnvironmentVarSettings environmentVarSettings);
-    void RefreshEnvironmentVarAzure(EnvironmentVarSettings environmentVarSettings);
 }

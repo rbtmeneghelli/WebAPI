@@ -116,32 +116,6 @@ public sealed class GeneralController : GenericController
         return CustomResponse();
     }
 
-    [EnableCors("EnableCORS")]
-    [HttpPost("refreshEnvironmentVariables")]
-    public IActionResult RefreshEnvironmentVariables([FromBody] EnvironmentVarSettings environmentVarSettings)
-    {
-        try
-        {
-            if (_environmentVariables is null)
-            {
-                NotificationError("Ocorreu um erro durante o processo de atualização das var de ambiente");
-                return CustomResponse();
-            }
-
-#if DEBUG
-            _iGeneralService.RefreshEnvironmentVarLocal(environmentVarSettings);
-#else
-                _iGeneralService.RefreshEnvironmentVarAzure(environmentVarSettings);
-#endif
-        }
-        catch (Exception ex)
-        {
-            NotificationError("Ocorreu um erro durante o processo de atualização das var de ambiente");
-        }
-
-        return CustomResponse();
-    }
-
     [HttpGet("testSendEmail")]
     [SecurityFilter(1,1)]
     public async Task<IActionResult> TestSendEmail()

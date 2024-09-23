@@ -12,4 +12,9 @@ public class AuthenticationSettingsRepository : IAuthenticationSettingsRepositor
     {
         _iAuthenticationSettingsRepository = iAuthenticationSettingsRepository;
     }
+
+    public IQueryable<AuthenticationSettings> GetAllInclude(string includeData, bool hasTracking = false)
+    {
+        return _iAuthenticationSettingsRepository.GetAllInclude(includeData, hasTracking);
+    }
 }

@@ -9,10 +9,10 @@ public class EnvironmentVariables
 {
     public ConectionStringSettings ConnectionStringSettings { get; set; }
     public RabbitMQSettings RabbitMQSettings { get; set; }
-    public KafkaSettings KafkaSettings { get; set; }    
+    public KafkaSettings KafkaSettings { get; set; }
     public ServiceBusSettings ServiceBusSettings { get; set; }
     public SendGridSettings SendGridSettings { get; set; }
-    public EnumEnvironment Environment {  get; set; }
+    public EnumEnvironment Environment { get; set; }
 
     public EnvironmentVariables()
     {
@@ -50,11 +50,12 @@ public static class EnvironmentVariablesExtension
             { configuration.GetSection($"ConnectionStrings:DefaultConnectionLogs").Value, GetDatabaseFromEnvVar(configuration.GetSection($"ConnectionStrings:DefaultConnectionLogs").Value).ToString() },
             { configuration.GetSection($"ConnectionStrings:DefaultConnectionToDocker").Value, GetDatabaseFromEnvVar(configuration.GetSection($"ConnectionStrings:DefaultConnectionToDocker").Value).ToString() },
             { configuration.GetSection($"ConnectionStrings:DefaultConnectionToMongoDb").Value, GetDatabaseFromEnvVar(configuration.GetSection($"ConnectionStrings:DefaultConnectionToMongoDb").Value).ToString() },
-            { configuration.GetSection($"RabbitMQSettings:Data").Value, GetEnvironmentVariableToObject<RabbitMQSettings>(configuration.GetSection($"RabbitMQSettings:Data").Value).ToString() },
+            { configuration.GetSection($"RabbitMQSettings:Data").Value, GetEnvironmentVariable(configuration.GetSection($"RabbitMQSettings:Data").Value).ToString() },
             { configuration.GetSection($"KafkaSettings:Data").Value, GetEnvironmentVariable(configuration.GetSection($"KafkaSettings:Data").Value).ToString() },
             { configuration.GetSection($"ServiceBusSettings:Data").Value, GetEnvironmentVariable(configuration.GetSection($"ServiceBusSettings:Data").Value).ToString() },
             { configuration.GetSection($"SendGridSettings:Data").Value, GetEnvironmentVariable(configuration.GetSection($"SendGridSettings:Data").Value).ToString() },
-            { configuration.GetSection($"SendGridSettings:Data").Value, GetEnvironmentVariable(configuration.GetSection($"SendGridSettings:Data").Value).ToString() },
+            { configuration.GetSection($"WebAPI_Settings:Version").Value, GetEnvironmentVariable(configuration.GetSection($"WebAPI_Settings:Version").Value).ToString() },
+            { configuration.GetSection($"WebAPI_Settings:Environment").Value, GetEnvironmentVariable(configuration.GetSection($"WebAPI_Settings:Environment").Value).ToString() },
         };
 
         return envVariables;

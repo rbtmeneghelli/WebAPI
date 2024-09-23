@@ -54,6 +54,7 @@ using WebAPI.Domain.Interfaces.Services.NfService;
 using WebAPI.Application.Services.NfService;
 using WebAPI.Infra.Repositories.Others;
 using WebAPI.Application.Services.Graphics;
+using WebAPI.Domain.ExtensionMethods;
 
 namespace WebAPI.IoC;
 
@@ -203,6 +204,7 @@ public static class DependencyContainerService
 
         services
         .AddScoped<IUserRepository, UserRepository>()
+        .AddScoped<IUserService, UserService>()
         .AddScoped<IAccountService, AccountService>();
 
         #endregion
@@ -601,7 +603,7 @@ public static class DependencyContainerService
 
     public static void RegisterSeriLog(this IServiceCollection services, IConfiguration configuration)
     {
-        var connectionStringLogs = EnvironmentVariablesExtension.GetDatabaseFromEnvVar(configuration.GetConnectionString("WebAPI_Logs"));
+        var connectionStringLogs = EnvironmentVariablesExtension.GetDatabaseFromEnvVar(configuration.GetConnectionString("DefaultConnectionLogs"));
 
         Serilog.Debugging.SelfLog.Enable(msg => Console.WriteLine(msg));
 
@@ -661,7 +663,10 @@ public static class DependencyContainerService
             opt.ConnectionStringSettings.DefaultConnection = data["WebAPI_Sql"];
             opt.ConnectionStringSettings.DefaultConnectionLogs = data["WebAPI_Logs"];
             opt.ConnectionStringSettings.DefaultConnectionToDocker = data["WebAPI_Docker"];
-            opt.RabbitMQSettings = JsonConvert.DeserializeObject<RabbitMQSettings>(data["WebAPI_RabbitMQ"]);
+            if(data["WebAPI_RabbitMQ"] != null)
+            {
+                opt.RabbitMQSettings = JsonConvert.DeserializeObject<RabbitMQSettings>(data["WebAPI_RabbitMQ"]);
+            }
             opt.KafkaSettings = JsonConvert.DeserializeObject<KafkaSettings>(data["WebAPI_Kafka"]);
             opt.ServiceBusSettings = JsonConvert.DeserializeObject<ServiceBusSettings>(data["WebAPI_ServiceBus"]);
             opt.SendGridSettings = JsonConvert.DeserializeObject<SendGridSettings>(data["WebAPI_SendGrid"]);

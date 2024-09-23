@@ -17,26 +17,31 @@ namespace WebAPI.Controllers.V1;
 
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/[controller]")]
-[Authorize("Bearer")]
+//[Authorize("Bearer")]
+[EnableCors("EnableCORS")]
+[AllowAnonymous]
 public sealed class ConfigurationController : GenericController
 {
+    private readonly IGenericConfigurationService _iGenericConfigurationService;
+
     public ConfigurationController(
+        IGenericConfigurationService iGenericConfigurationService,
         IMapper iMapperService, 
         IHttpContextAccessor iHttpContextAccessor, 
         IGenericNotifyLogsService iGenericNotifyLogsService)
     : base(iMapperService, iHttpContextAccessor, iGenericNotifyLogsService)
     {
+        _iGenericConfigurationService = iGenericConfigurationService;
     }
 
     //private readonly IMemoryCacheService _memoryCacheService;
 
-    //[HttpGet("GetAll")]
-    //public async Task<IActionResult> GetAll()
-    //{
-    //    var model = _iMapperService.Map<IEnumerable<UserResponseDTO>>(await _userService.GetAllAsync());
-
-    //    return CustomResponse(model, FixConstants.SUCCESS_IN_GETALL);
-    //}
+    [HttpGet("GetAll")]
+    public async Task<IActionResult> GetAll()
+    {
+        var model = await _iGenericConfigurationService.AuthenticationSettingsService.GetAllAsync();
+        return CustomResponse(model, FixConstants.SUCCESS_IN_GETALL);
+    }
 
     //[ProducesResponseType(StatusCodes.Status201Created)]
     //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -56,7 +61,7 @@ public sealed class ConfigurationController : GenericController
     //}
 
     [HttpPut("authenticationSettings/update")]
-    public async Task<IActionResult> AuthenticationSettingsUpdate(int id, [FromBody] AuthenticationSettingsDTO authenticationSettingsDTO)
+    public async Task<IActionResult> AuthenticationSettingsUpdate(int id, [FromBody] AuthenticationSettingsRequestDTO authenticationSettingsDTO)
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
