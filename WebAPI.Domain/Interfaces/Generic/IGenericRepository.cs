@@ -11,7 +11,7 @@ public interface IGenericRepository<TEntity> : IDisposable where TEntity : class
     IQueryable<TEntity> FindByIgnoreQueryFilter(Expression<Func<TEntity, bool>> predicate, bool hasTracking = false);
     TEntity GetById(long id);
     long GetCount(Expression<Func<TEntity, bool>> predicate);
-    void Add(TEntity entity);
+    void Create(TEntity entity);
     void AddRange(IEnumerable<TEntity> entities);
     void Update(TEntity entity);
     void UpdateRange(IEnumerable<TEntity> entities);

@@ -3,7 +3,7 @@ using WebAPI.Domain.Entities.Generic;
 
 namespace WebAPI.Domain.Entities.Configuration;
 
-public class AuthenticationSettings :GenericEntity
+public class AuthenticationSettings : GenericEntity
 {
     [DisplayName("Número de tentativas antes do bloqueio do usuário")]
     public int NumberOfTryToBlockUser { get; set; }

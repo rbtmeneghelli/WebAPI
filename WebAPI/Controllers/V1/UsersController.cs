@@ -1,16 +1,17 @@
-﻿using WebAPI.Domain.Entities.ControlPanel;
+﻿using WebAPI.Domain.Constants;
+using WebAPI.Domain.Entities.Configuration;
+using WebAPI.Domain.Entities.ControlPanel;
+using WebAPI.Domain.EntitiesDTO.Configuration;
 using WebAPI.Domain.EntitiesDTO.ControlPanel;
 using WebAPI.Domain.Enums;
+using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Domain.Filters.ControlPanel;
 using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.Interfaces.Services;
 using WebAPI.Domain.Interfaces.Services.Tools;
-using FixConstants = WebAPI.Domain.Constants.FixConstants;
 
 namespace WebAPI.V1.Controllers;
 
-
-[ApiController]
 [ApiVersion("1.0", Deprecated = true)]
 [ApiVersion("2.0")]
 [Route("api/v{version:apiVersion}/[controller]")]
@@ -40,7 +41,6 @@ public sealed class UsersController : GenericController
     public async Task<IActionResult> GetAll()
     {
         var model = _iMapperService.Map<IEnumerable<UserResponseDTO>>(await _iUserService.GetAllAsync());
-
         return CustomResponse(model, FixConstants.SUCCESS_IN_GETALL);
     }
 
@@ -48,9 +48,7 @@ public sealed class UsersController : GenericController
     public async Task<IActionResult> GetAllPaginate([FromBody] UserFilter userFilter)
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
-
         var model = await _iUserService.GetAllPaginateAsync(userFilter);
-
         return CustomResponse(model, FixConstants.SUCCESS_IN_GETALLPAGINATE);
     }
 
@@ -63,7 +61,7 @@ public sealed class UsersController : GenericController
             return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
         }
 
-        return CustomResponse();
+        return CustomNotFound();
     }
 
     [HttpGet("GetByLogin/{login}")]
@@ -75,7 +73,7 @@ public sealed class UsersController : GenericController
             return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
         }
 
-        return CustomResponse();
+        return CustomNotFound();
     }
 
     [HttpGet("GetUsers")]
@@ -98,8 +96,7 @@ public sealed class UsersController : GenericController
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
-        User user = _iMapperService.Map<User>(userRequestDTO);
-
+        User user = ApplyMapToEntity<UserRequestDTO, User>(userRequestDTO);
         var result = await _iUserService.AddAsync(user);
 
         if (result)
@@ -113,7 +110,7 @@ public sealed class UsersController : GenericController
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
-        User user = _iMapperService.Map<User>(userRequestDTO);
+        User user = ApplyMapToEntity<UserRequestDTO, User>(userRequestDTO);
 
         if (id != userRequestDTO.Id)
         {
@@ -121,12 +118,16 @@ public sealed class UsersController : GenericController
             return CustomResponse();
         }
 
-        var result = await _iUserService.UpdateAsync(id, user);
+        if (await _iUserService.ExistByIdAsync(id))
+        {
+            var result = await _iUserService.UpdateAsync(id, user);
+            if (result)
+                return NoContent();
+            else
+                return CustomResponse();
+        }
 
-        if (result)
-            return NoContent();
-
-        return CustomResponse();
+        return CustomNotFound();
     }
 
     /// <summary>
@@ -134,22 +135,19 @@ public sealed class UsersController : GenericController
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    [HttpDelete("Remove/{id:long}")]
-    public async Task<IActionResult> Remove(int id)
+    [HttpDelete("LogicDelete/{id:long}")]
+    public async Task<IActionResult> LogicDelete(int id)
     {
-        try
+        if (await _iUserService.ExistByIdAsync(id))
         {
             bool result = await _iUserService.DeleteLogicAsync(id);
             if (result)
-                NotificationError(FixConstants.ERROR_IN_DELETELOGIC);
+                return CustomResponse(default, FixConstants.SUCCESS_IN_DELETELOGIC);
+            else
+                return CustomResponse();
+        }
 
-            return CustomResponse();
-        }
-        catch
-        {
-            NotificationError(FixConstants.NO_AUTHORIZATION);
-            return CustomResponse();
-        }
+        return CustomNotFound();
     }
 
     /// <summary>
@@ -157,29 +155,24 @@ public sealed class UsersController : GenericController
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    [HttpDelete("Delete/{id:long}")]
-    public async Task<IActionResult> Delete(int id)
+    [HttpDelete("PhysicalDelete/{id:long}")]
+    public async Task<IActionResult> PhysicalDelete(int id)
     {
-        try
-        {
-            if (await _iUserService.CanDeleteAsync(id))
-            {
-                bool result = await _iUserService.DeletePhysicalAsync(id);
-                if (result)
-                    NotificationError(FixConstants.ERROR_IN_DELETEPHYSICAL);
-            }
+        var existId = await _iUserService.ExistByIdAsync(id);
+        var canDelete = await _iUserService.CanDeleteAsync(id);
 
-            return CustomResponse();
-        }
-        catch
+        if (existId && canDelete)
         {
-            if (ProfileId == 1)
-                NotificationError(FixConstants.ERROR_IN_DELETEPHYSICAL);
+            bool result = await _iUserService.DeletePhysicalAsync(id);
+
+            if (result)
+                return CustomResponse(default, FixConstants.SUCCESS_IN_DELETEPHYSICAL);
             else
-                NotificationError(FixConstants.NO_AUTHORIZATION);
-
-            return CustomResponse();
+                return CustomResponse();
         }
+
+        NotificationError(FixConstants.NO_AUTHORIZATION);
+        return CustomResponse();
     }
 
     [HttpPost("Export2Excel")]
@@ -192,11 +185,11 @@ public sealed class UsersController : GenericController
         {
             var memoryStreamResult = _generalMethod.GetMemoryStreamType(EnumMemoryStreamFile.XLSX);
             var excelData = _iMapperService.Map<IEnumerable<UserExcelDTO>>(list.Results);
-            var excelName = $"Usuarios.{memoryStreamResult.Extension}";
+            var excelName = $"Users._{GuidExtensionMethod.GetGuidDigits("N")}.{memoryStreamResult.Extension}";
             var memoryStreamExcel = await _iFileService.CreateExcelFileEPPLUS(excelData, excelName);
             return File(memoryStreamExcel.ToArray(), memoryStreamResult.Type, excelName);
         }
 
-        return NotFound();
+        return CustomNotFound();
     }
 }

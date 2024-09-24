@@ -16,7 +16,7 @@ public class RegionRepository : IRegionRepository
 
     public void Add(Region region)
     {
-        _iRegionRepository.Add(region);
+        _iRegionRepository.Create(region);
     }
 
     public bool Exist(Expression<Func<Region, bool>> predicate)

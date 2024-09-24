@@ -200,52 +200,21 @@ public class UserService : GenericService, IUserService
 
     public async Task<bool> ExistByIdAsync(long id)
     {
-        try
-        {
-            var result = _iUserRepository.Exist(x => x.Id == id);
-
-            if (result == false)
-                Notify(FixConstants.ERROR_IN_GETID);
-
-            return result;
-        }
-        catch
-        {
-            Notify(FixConstants.ERROR_IN_GETID);
-            return false;
-        }
-        finally
-        {
-            await Task.CompletedTask;
-        }
+        var result = _iUserRepository.Exist(x => x.Id == id);
+        await Task.CompletedTask;
+        return result;
     }
 
     public async Task<bool> ExistByLoginAsync(string login)
     {
-        try
+        if (GuardClauses.IsNullOrWhiteSpace(login))
         {
-            if (GuardClauses.IsNullOrWhiteSpace(login))
-            {
-                Notify("O campo login está em branco, por favor preencha!");
-                return false;
-            }
-
-            var result = _iUserRepository.Exist(x => x.Login == login.ApplyTrim());
-
-            if (result == false)
-                Notify("Ocorreu um erro para pesquisar o registro do login solicitado. Entre em contato com o Administrador");
-
-            return result;
-        }
-        catch
-        {
-            Notify("Ocorreu um erro para pesquisar o registro do login solicitado. Entre em contato com o Administrador");
             return false;
         }
-        finally
-        {
-            await Task.CompletedTask;
-        }
+
+        var result = _iUserRepository.Exist(x => x.Login == login.ApplyTrim());
+        await Task.CompletedTask;
+        return result;
     }
 
     public async Task<bool> AddAsync(User user)

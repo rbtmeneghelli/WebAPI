@@ -59,7 +59,7 @@ public class UserRepository : IUserRepository
 
     public void Add(User user)
     {
-        _iUserRepository.Add(user);
+        _iUserRepository.Create(user);
     }
 
     public void Remove(User user)

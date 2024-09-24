@@ -39,7 +39,7 @@ public sealed class ConfigurationController : GenericController
     [HttpGet("GetAll")]
     public async Task<IActionResult> GetAll()
     {
-        var model = await _iGenericConfigurationService.AuthenticationSettingsService.GetAllAsync();
+        var model = await _iGenericConfigurationService.AuthenticationSettingsService.GetAllAuthenticationSettingsAsync();
         return CustomResponse(model, FixConstants.SUCCESS_IN_GETALL);
     }
 
@@ -60,26 +60,26 @@ public sealed class ConfigurationController : GenericController
     //    return CustomResponse();
     //}
 
-    [HttpPut("authenticationSettings/update")]
-    public async Task<IActionResult> AuthenticationSettingsUpdate(int id, [FromBody] AuthenticationSettingsRequestDTO authenticationSettingsDTO)
-    {
-        if (ModelStateIsInvalid()) return CustomResponse(ModelState);
+    //[HttpPut("authenticationSettings/update")]
+    //public async Task<IActionResult> AuthenticationSettingsUpdate(int id, [FromBody] AuthenticationSettingsCreateRequestDTO authenticationSettingsDTO)
+    //{
+    //    if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
-        //User user = _iMapperService.Map<User>(userRequestDTO);
+    //    //User user = _iMapperService.Map<User>(userRequestDTO);
 
-        //if (id != userRequestDTO.Id)
-        //{
-        //    NotificationError(FixConstants.ERROR_IN_GETID);
-        //    return CustomResponse();
-        //}
+    //    //if (id != userRequestDTO.Id)
+    //    //{
+    //    //    NotificationError(FixConstants.ERROR_IN_GETID);
+    //    //    return CustomResponse();
+    //    //}
 
-        //var result = await _userService.UpdateAsync(id, user);
+    //    //var result = await _userService.UpdateAsync(id, user);
 
-        //if (result)
-        //    return NoContent();
+    //    //if (result)
+    //    //    return NoContent();
 
-        return CustomResponse();
-    }
+    //    return CustomResponse();
+    //}
 
 
     //[HttpPut("environmentTypeSettings/update")]

@@ -17,7 +17,7 @@ public class StateRepository : IStatesRepository
 
     public void Add(States state)
     {
-        _iStateRepository.Add(state);
+        _iStateRepository.Create(state);
     }
 
     public bool Exist(Expression<Func<States, bool>> predicate)

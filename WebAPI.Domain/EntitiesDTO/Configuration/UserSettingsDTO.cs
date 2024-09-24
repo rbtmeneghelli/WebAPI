@@ -11,5 +11,5 @@ public record UserSettingsDTO : GenericDTO
     public EnumEnvironment Environment { get; set; }
     public ExpirationPasswordSettingsDTO ExpirationPasswordSettings { get; set; }
     public RequiredPasswordSettingsDTO RequiredPasswordSettings { get; set; }
-    public AuthenticationSettingsRequestDTO AuthenticationSettings { get; set; }
+    public AuthenticationSettingsCreateRequestDTO AuthenticationSettings { get; set; }
 }

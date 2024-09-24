@@ -31,7 +31,7 @@ public class CityRepository : ICityRepository
 
     public void Add(City city)
     {
-        _iCityRepository.Add(city);
+        _iCityRepository.Create(city);
     }
 
     public void Update(City city)

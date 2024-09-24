@@ -26,7 +26,7 @@ public class AddressRepository : IAddressRepository
 
     public void Add(AddressData ceps)
     {
-        _iAddressDataRepository.Add(ceps);
+        _iAddressDataRepository.Create(ceps);
     }
 
     public IQueryable<AddressData> FindBy(Expression<Func<AddressData, bool>> predicate, bool hasTracking = false)

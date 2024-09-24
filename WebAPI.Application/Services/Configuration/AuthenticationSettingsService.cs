@@ -2,6 +2,7 @@
 using WebAPI.Application.Generic;
 using WebAPI.Domain.Constants;
 using WebAPI.Domain.Cryptography;
+using WebAPI.Domain.Entities.Configuration;
 using WebAPI.Domain.EntitiesDTO.Configuration;
 using WebAPI.Domain.EntitiesDTO.ControlPanel;
 using WebAPI.Domain.Filters.ControlPanel;
@@ -15,15 +16,19 @@ namespace WebAPI.Application.Services.Configuration;
 public class AuthenticationSettingsService : GenericService, IAuthenticationSettingsService
 {
     private readonly IAuthenticationSettingsRepository _iAuthenticationSettingsRepository;
+    private EnvironmentVariables _environmentVariables;
+
     public AuthenticationSettingsService(
         IAuthenticationSettingsRepository iAuthenticationSettingsRepository,
-        INotificationMessageService iNotificationMessageService) 
+        INotificationMessageService iNotificationMessageService,
+        EnvironmentVariables environmentVariables)
         : base(iNotificationMessageService)
     {
         _iAuthenticationSettingsRepository = iAuthenticationSettingsRepository;
+        _environmentVariables = environmentVariables;
     }
 
-    public async Task<IEnumerable<AuthenticationSettingsResponseDTO>> GetAllAsync()
+    public async Task<IEnumerable<AuthenticationSettingsResponseDTO>> GetAllAuthenticationSettingsAsync()
     {
         try
         {
@@ -49,95 +54,118 @@ public class AuthenticationSettingsService : GenericService, IAuthenticationSett
         }
     }
 
-    //public async Task<PagedResult<UserResponseDTO>> GetAllPaginateAsync(UserFilter filter)
-    //{
-    //    try
-    //    {
-    //        var query = GetAllUsers(filter);
+    public async Task<AuthenticationSettingsResponseDTO> GetAuthenticationSettingsByEnvironmentAsync()
+    {
+        try
+        {
+            return await (from p in _iAuthenticationSettingsRepository.FindBy(x => x.IdEnvironmentType == (int)_environmentVariables.Environment).AsQueryable()
+                          select new AuthenticationSettingsResponseDTO
+                          {
+                              EnvironmentDescription = p.EnvironmentTypeSettings.Description,
+                              NumberOfTryToBlockUser = p.NumberOfTryToBlockUser,
+                              BlockUserTime = p.BlockUserTime,
+                              ApplyTwoFactoryValidation = p.ApplyTwoFactoryValidation,
+                              StatusDescription = p.Status ? FixConstants.STATUS_ACTIVE : FixConstants.STATUS_INACTIVE
+                          }).FirstOrDefaultAsync();
+        }
+        catch
+        {
+            Notify(FixConstants.ERROR_IN_GETID);
+            return default;
+        }
+        finally
+        {
+            await Task.CompletedTask;
+        }
+    }
 
-    //        var queryResult = from p in query.AsQueryable()
-    //                          orderby p.Login ascending
-    //                          select new UserResponseDTO
-    //                          {
-    //                              Id = p.Id,
-    //                              Login = p.Login,
-    //                              IsAuthenticated = p.IsAuthenticated,
-    //                              IsActive = p.Status,
-    //                              Password = "-",
-    //                              LastPassword = "-",
-    //                              Profile = p.Employee.Profile.Description,
-    //                              Status = p.GetStatusDescription(),
-    //                          };
+    public async Task<AuthenticationSettingsResponseDTO> GetAuthenticationSettingsByIdAsync(long id)
+    {
+        try
+        {
+            return await (from p in _iAuthenticationSettingsRepository.FindBy(x => x.Id == id).AsQueryable()
+                          select new AuthenticationSettingsResponseDTO
+                          {
+                              EnvironmentDescription = p.EnvironmentTypeSettings.Description,
+                              NumberOfTryToBlockUser = p.NumberOfTryToBlockUser,
+                              BlockUserTime = p.BlockUserTime,
+                              ApplyTwoFactoryValidation = p.ApplyTwoFactoryValidation,
+                              StatusDescription = p.Status ? FixConstants.STATUS_ACTIVE : FixConstants.STATUS_INACTIVE
+                          }).FirstOrDefaultAsync();
+        }
+        catch
+        {
+            Notify(FixConstants.ERROR_IN_GETID);
+            return default;
+        }
+        finally
+        {
+            await Task.CompletedTask;
+        }
+    }
 
-    //        return PagedFactory.GetPaged(queryResult, PagedFactory.GetDefaultPageIndex(filter.PageIndex), PagedFactory.GetDefaultPageSize(filter.PageSize));
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        Notify(ex.Message);
-    //        return PagedFactory.GetPaged(Enumerable.Empty<UserResponseDTO>().AsQueryable(), PagedFactory.GetDefaultPageIndex(filter.PageIndex), PagedFactory.GetDefaultPageSize(filter.PageSize));
-    //    }
-    //    finally
-    //    {
-    //        await Task.CompletedTask;
-    //    }
-    //}
+    public async Task<bool> ExistAuthenticationSettingsByEnvironmentAsync()
+    {
+        var result = _iAuthenticationSettingsRepository.Exist(x => x.IdEnvironmentType == (int)_environmentVariables.Environment);
+        await Task.CompletedTask;
+        return result;
+    }
 
-    //public async Task<UserResponseDTO> GetByIdAsync(long id)
-    //{
-    //    try
-    //    {
-    //        return await (from p in _iUserRepository.FindBy(x => x.Id == id).AsQueryable()
-    //                      orderby p.Login ascending
-    //                      select new UserResponseDTO
-    //                      {
-    //                          Id = p.Id,
-    //                          Login = p.Login,
-    //                          IsAuthenticated = p.IsAuthenticated,
-    //                          IsActive = p.Status,
-    //                          Password = "-",
-    //                          LastPassword = "-",
-    //                          Status = p.GetStatusDescription(),
-    //                      }).FirstOrDefaultAsync();
-    //    }
-    //    catch
-    //    {
-    //        Notify(FixConstants.ERROR_IN_GETID);
-    //        return default;
-    //    }
-    //    finally
-    //    {
-    //        await Task.CompletedTask;
-    //    }
-    //}
+    public async Task<bool> ExistAuthenticationSettingsByIdAsync(long id)
+    {
+        var result = _iAuthenticationSettingsRepository.Exist(x => x.Id == id);
+        await Task.CompletedTask;
+        return result;
+    }
 
-    //public async Task<UserResponseDTO> GetByLoginAsync(string login)
-    //{
-    //    try
-    //    {
-    //        return await (from p in _iUserRepository.FindBy(x => x.Login == login.ApplyTrim()).AsQueryable()
-    //                      orderby p.Login ascending
-    //                      select new UserResponseDTO
-    //                      {
-    //                          Id = p.Id,
-    //                          Login = p.Login,
-    //                          IsAuthenticated = p.IsAuthenticated,
-    //                          IsActive = p.Status,
-    //                          Password = "-",
-    //                          LastPassword = "-",
-    //                          Profile = p.Employee.Profile.Description,
-    //                          Status = p.GetStatusDescription(),
-    //                      }).FirstOrDefaultAsync();
-    //    }
-    //    catch
-    //    {
-    //        Notify("Ocorreu um erro ao efetuar a pesquisa a partir do login. Entre em contato com o administrador");
-    //        return default;
-    //    }
-    //    finally
-    //    {
-    //        await Task.CompletedTask;
-    //    }
-    //}
+    public async Task<bool> CreateAuthenticationSettingsAsync(AuthenticationSettings authenticationSettings)
+    {
+        try
+        {
+            _iAuthenticationSettingsRepository.Create(authenticationSettings);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Notify(FixConstants.ERROR_IN_ADD);
+            return false;
+        }
+        finally
+        {
+            await Task.CompletedTask;
+        }
+    }
+
+    public async Task<bool> UpdateAuthenticationSettingsAsync(long id, AuthenticationSettings authenticationSettings)
+    {
+        try
+        {
+            AuthenticationSettings authenticationSettingsDb = _iAuthenticationSettingsRepository.GetById(id);
+
+            if (GuardClauses.ObjectIsNotNull(authenticationSettingsDb))
+            {
+                authenticationSettingsDb.Status = authenticationSettings.Status;
+                authenticationSettingsDb.UpdateDate = authenticationSettings.UpdateDate;
+                authenticationSettingsDb.NumberOfTryToBlockUser = authenticationSettings.NumberOfTryToBlockUser;
+                authenticationSettingsDb.BlockUserTime = authenticationSettings.BlockUserTime;
+                authenticationSettingsDb.ApplyTwoFactoryValidation = authenticationSettings.ApplyTwoFactoryValidation;
+                _iAuthenticationSettingsRepository.Update(authenticationSettingsDb);
+                return true;
+            }
+
+            Notify(FixConstants.ERROR_IN_UPDATE);
+            return false;
+        }
+        catch (Exception ex)
+        {
+            Notify(FixConstants.ERROR_IN_UPDATE);
+            return false;
+        }
+        finally
+        {
+            await Task.CompletedTask;
+        }
+    }
 
     //public async Task<bool> UpdateAsync(long id, User user)
     //{

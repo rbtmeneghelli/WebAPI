@@ -1,7 +1,9 @@
 ﻿using WebAPI.Domain.CQRS.Command;
 using WebAPI.Domain.CQRS.Queries;
+using WebAPI.Domain.Entities.Configuration;
 using WebAPI.Domain.Entities.ControlPanel;
 using WebAPI.Domain.Entities.Others;
+using WebAPI.Domain.EntitiesDTO.Configuration;
 using WebAPI.Domain.EntitiesDTO.ControlPanel;
 using WebAPI.Domain.EntitiesDTO.Others;
 using WebAPI.Domain.ExtensionMethods;
@@ -55,5 +57,30 @@ public class MappingProfile : AutoMapper.Profile
         CreateMap<UserResponseDTO, UserExcelDTO>().ReverseMap();
 
         CreateMap<Region, RegionQueryFilterResponse>().ReverseMap();
+
+        CreateMap<AuthenticationSettingsCreateRequestDTO, AuthenticationSettings>()
+        .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
+        .ForMember(dest => dest.NumberOfTryToBlockUser, act => act.MapFrom(src => src.NumberOfTryToBlockUser))
+        .ForMember(dest => dest.BlockUserTime, act => act.MapFrom(src => src.BlockUserTime))
+        .ForMember(dest => dest.ApplyTwoFactoryValidation, act => act.MapFrom(src => src.ApplyTwoFactoryValidation))
+        .ForMember(dest => dest.IdEnvironmentType, act => act.MapFrom(src => src.IdEnvironment))
+        .ForMember(dest => dest.CreateDate, act => act.MapFrom(src => DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()))
+        .ForMember(dest => dest.Status, act => act.MapFrom(src => true));
+
+        CreateMap<AuthenticationSettingsUpdateRequestDTO, AuthenticationSettings>()
+        .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
+        .ForMember(dest => dest.NumberOfTryToBlockUser, act => act.MapFrom(src => src.NumberOfTryToBlockUser))
+        .ForMember(dest => dest.BlockUserTime, act => act.MapFrom(src => src.BlockUserTime))
+        .ForMember(dest => dest.ApplyTwoFactoryValidation, act => act.MapFrom(src => src.ApplyTwoFactoryValidation))
+        .ForMember(dest => dest.IdEnvironmentType, act => act.MapFrom(src => src.IdEnvironment))
+        .ForMember(dest => dest.UpdateDate, act => act.MapFrom(src => DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()))
+        .ForMember(dest => dest.Status, act => act.MapFrom(src => src.Status));
+
+        CreateMap<AuthenticationSettingsResponseDTO, AuthenticationSettingsExcelDTO>()
+        .ForMember(dest => dest.NumberOfTryToBlockUser, act => act.MapFrom(src => src.NumberOfTryToBlockUser))
+        .ForMember(dest => dest.BlockUserTime, act => act.MapFrom(src => src.BlockUserTime))
+        .ForMember(dest => dest.ApplyTwoFactoryValidation, act => act.MapFrom(src => src.ApplyTwoFactoryValidation))
+        .ForMember(dest => dest.EnvironmentDescription, act => act.MapFrom(src => src.EnvironmentDescription))
+        .ForMember(dest => dest.StatusDescription, act => act.MapFrom(src => src.StatusDescription));
     }
 }

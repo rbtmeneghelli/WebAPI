@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using WebAPI.Domain.Constants;
 using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Domain.Interfaces.Repository;
+using ZXing;
 
 namespace WebAPI.Controllers.Base;
 
+[EnableCors("EnableCORS")]
 [Produces("application/json")]
 [ApiController]
 public abstract class GenericController : ControllerBase
@@ -121,6 +124,15 @@ public abstract class GenericController : ControllerBase
     {
         NotificationModelIsInvalid(modelState);
         return CustomResponse();
+    }
+
+    protected IActionResult CustomNotFound()
+    {
+        return NotFound(new
+        {
+            success = true,
+            message = FixConstants.SUCCESS_IN_NOTFOUND
+        });
     }
 
     protected TDestination ApplyMapToEntity<TSource, TDestination>(TSource source)

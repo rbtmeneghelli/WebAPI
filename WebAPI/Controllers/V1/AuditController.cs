@@ -34,7 +34,7 @@ public sealed class AuditController : GenericController
             return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
         }
 
-        return CustomResponse();
+        return CustomNotFound();
     }
 
     [HttpPost("GetAllPaginate")]

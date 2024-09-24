@@ -11,7 +11,7 @@ public static class FixConstants
     public const string SERVER_API_KEY = "AIzaSyD2i3-nX8RkclUxWPFwirDHKN_D0x2h4Pc"; // Get this from your Firebase Developer Console Login  
     public const string SENDER_ID = "AAAANLjaZwE:APA91bFAfv1CviU_8WyiL971mnqBXi2m6qJax9VwWvmUOnMepnShnGeZmw_sBYAAe3YH5CW370xJm-LZrWCMNt5CMK_Hn8fhigbtc5OaJd0_rqubiHK4hEI4CFh179hfTmwMoHOk9QkW"; // Get this from your Firebase Developer Console Login  
 
-    public const string SAVE_LOG = @"insert into Logs(Class,Method,Message_Error,Update_time,Object) values('{0}','{1}','{2}','{3}','{4}')";
+    public const string SAVE_LOG = @"insert into ControlPanel_Logs(Class,Method,Error,UpdateDate,Object) values('{0}','{1}','{2}','{3}','{4}')";
 
     public const string EXCEPTION_REQUEST_API = "Erro ao efetuar request da Api externa: ";
     public const string EXCEPTION_EXCEL = "Erro ao gerar o excel solicitado";

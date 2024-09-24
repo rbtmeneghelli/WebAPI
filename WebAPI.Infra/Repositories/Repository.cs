@@ -80,7 +80,7 @@ public partial class GenericRepository<TEntity> : IGenericRepository<TEntity> wh
         return DbSet.AsNoTracking().LongCount(predicate);
     }
 
-    public virtual void Add(TEntity entity)
+    public virtual void Create(TEntity entity)
     {
         try
         {

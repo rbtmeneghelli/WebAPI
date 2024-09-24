@@ -98,18 +98,18 @@ public partial class WebAPIContext : DbContext
 
     public override int SaveChanges()
     {
-        foreach (var entry in ChangeTracker.Entries().Where(entry => entry.Entity.GetType().GetProperty("CreatedTime") != null))
+        foreach (var entry in ChangeTracker.Entries().Where(entry => entry.Entity.GetType().GetProperty("CreatedDate") != null))
         {
             if (entry.State == EntityState.Added)
             {
-                entry.Property("CreatedTime").CurrentValue = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
-                entry.Property("UpdateTime").IsModified = false;
+                entry.Property("CreatedDate").CurrentValue = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
+                entry.Property("UpdateDate").IsModified = false;
             }
 
             if (entry.State == EntityState.Modified)
             {
-                entry.Property("CreatedTime").IsModified = false;
-                entry.Property("UpdateTime").CurrentValue = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
+                entry.Property("UpdateDate").IsModified = false;
+                entry.Property("UpdateDate").CurrentValue = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
             }
         }
 
