@@ -1,18 +1,16 @@
 ﻿using WebAPI.Domain.Constants;
 using WebAPI.Domain.Entities.Configuration;
 using WebAPI.Domain.EntitiesDTO.Configuration;
-using WebAPI.Domain.EntitiesDTO.ControlPanel;
 using WebAPI.Domain.Enums;
 using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.Interfaces.Services.Tools;
 
-namespace WebAPI.Controllers.V1;
+namespace WebAPI.Controllers.V1.Configuration;
 
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/[controller]")]
-//[Authorize("Bearer")]
-[AllowAnonymous]
+[Authorize("Bearer")]
 public sealed class AuthenticationSettingsController : GenericController
 {
     private readonly IGenericConfigurationService _iGenericConfigurationService;
@@ -82,7 +80,7 @@ public sealed class AuthenticationSettingsController : GenericController
     }
 
     [HttpPut("Update")]
-    public async Task<IActionResult> Update(int id, [FromBody] AuthenticationSettingsUpdateRequestDTO authenticationSettingsUpdateRequestDTO )
+    public async Task<IActionResult> Update(int id, [FromBody] AuthenticationSettingsUpdateRequestDTO authenticationSettingsUpdateRequestDTO)
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
@@ -106,6 +104,36 @@ public sealed class AuthenticationSettingsController : GenericController
         return CustomNotFound();
     }
 
+    [HttpDelete("LogicDelete/{id:long}")]
+    public async Task<IActionResult> LogicDelete(int id)
+    {
+        if (await _iGenericConfigurationService.AuthenticationSettingsService.ExistAuthenticationSettingsByIdAsync(id))
+        {
+            bool result = await _iGenericConfigurationService.AuthenticationSettingsService.LogicDeleteAuthenticationSettingsByIdAsync(id);
+            if (result)
+                return CustomResponse(default, FixConstants.SUCCESS_IN_DELETELOGIC);
+            else
+                return CustomResponse();
+        }
+
+        return CustomNotFound();
+    }
+
+    [HttpPost("Reactive")]
+    public async Task<IActionResult> Reactive(AuthenticationSettingsReactiveRequestDTO authenticationSettingsReactiveRequestDTO)
+    {
+        if (await _iGenericConfigurationService.AuthenticationSettingsService.ExistAuthenticationSettingsByIdAsync(authenticationSettingsReactiveRequestDTO.Id.GetValueOrDefault()))
+        {
+            bool result = await _iGenericConfigurationService.AuthenticationSettingsService.ReactiveAuthenticationSettingsByIdAsync(authenticationSettingsReactiveRequestDTO.Id.Value);
+            if (result)
+                return CustomResponse(default, FixConstants.SUCCESS_IN_ACTIVERECORD);
+            else
+                return CustomResponse();
+        }
+
+        return CustomNotFound();
+    }
+
     [HttpPost("Export2Excel")]
     public async Task<IActionResult> Export2Excel()
     {
@@ -115,7 +143,7 @@ public sealed class AuthenticationSettingsController : GenericController
         if (list?.Count() > 0)
         {
             var memoryStreamResult = _generalMethod.GetMemoryStreamType(EnumMemoryStreamFile.XLSX);
-            var excelData = ApplyMapToEntity<IEnumerable<AuthenticationSettingsResponseDTO>, IEnumerable<AuthenticationSettingsExcelDTO>> (list);
+            var excelData = ApplyMapToEntity<IEnumerable<AuthenticationSettingsResponseDTO>, IEnumerable<AuthenticationSettingsExcelDTO>>(list);
             var excelName = $"AuthenticationSettings_{GuidExtensionMethod.GetGuidDigits("N")}.{memoryStreamResult.Extension}";
             var memoryStreamExcel = await _iFileService.CreateExcelFileEPPLUS(excelData, excelName);
             return File(memoryStreamExcel.ToArray(), memoryStreamResult.Type, excelName);
@@ -123,37 +151,6 @@ public sealed class AuthenticationSettingsController : GenericController
 
         return CustomNotFound();
     }
-
-
-    //[HttpPut("environmentTypeSettings/update")]
-    //public async Task<IActionResult> environmentTypeSettings(int id, [FromBody] environmentTypeSettingsDTO authenticationSettingsDTO)
-    //{
-    //    return CustomResponse();
-    //}
-
-    //[HttpPut("expirationPasswordSettings/update")]
-    //public async Task<IActionResult> ExpirationPasswordSettings(int id, [FromBody] ExpirationPasswordSettingsDTO expirationPasswordSettingsDTO)
-    //{
-    //    return CustomResponse();
-    //}
-
-    //[HttpPut("layoutSettings/update")]
-    //public async Task<IActionResult> LayoutSettings(int id, [FromBody] LayoutSettingsDTO layoutSettingsDTO)
-    //{
-    //    return CustomResponse();
-    //}
-
-    //[HttpPut("logSettings/update")]
-    //public async Task<IActionResult> LogSettings(int id, [FromBody] LogSettingsDTO logSettingsDTO)
-    //{
-    //    return CustomResponse();
-    //}
-
-    //[HttpPut("requiredPasswordSettings/update")]
-    //public async Task<IActionResult> RequiredPasswordSettings(int id, [FromBody] RequiredPasswordSettingsDTO requiredPasswordSettingsDTO)
-    //{
-    //    return CustomResponse();
-    //}
 
     /// <summary>
     /// Esse endpoint ira armazenar arquivos por X tempo, e depois será atualizado após 5 minutos.
@@ -188,23 +185,5 @@ public sealed class AuthenticationSettingsController : GenericController
     //    }
 
     //    return CustomResponse();
-    //}
-
-    //[HttpPost("Export2Excel")]
-    //public async Task<IActionResult> Export2Excel([FromBody] UserFilter filter)
-    //{
-    //    if (ModelStateIsInvalid()) return CustomResponse(ModelState);
-
-    //    var list = await _userService.GetAllPaginateAsync(filter);
-    //    if (list?.Results?.Count() > 0)
-    //    {
-    //        var memoryStreamResult = _generalMethod.GetMemoryStreamType(EnumMemoryStreamFile.XLSX);
-    //        var excelData = _iMapperService.Map<IEnumerable<UserExcelDTO>>(list.Results);
-    //        var excelName = $"Usuarios.{memoryStreamResult.Extension}";
-    //        var memoryStreamExcel = await _FileService.CreateExcelFileEPPLUS(excelData, excelName);
-    //        return File(memoryStreamExcel.ToArray(), memoryStreamResult.Type, excelName);
-    //    }
-
-    //    return NotFound();
     //}
 }

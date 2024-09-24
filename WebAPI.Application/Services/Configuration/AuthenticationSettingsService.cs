@@ -1,12 +1,7 @@
-﻿using WebAPI.Application.Factory;
-using WebAPI.Application.Generic;
+﻿using WebAPI.Application.Generic;
 using WebAPI.Domain.Constants;
-using WebAPI.Domain.Cryptography;
 using WebAPI.Domain.Entities.Configuration;
 using WebAPI.Domain.EntitiesDTO.Configuration;
-using WebAPI.Domain.EntitiesDTO.ControlPanel;
-using WebAPI.Domain.Filters.ControlPanel;
-using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.Interfaces.Repository.Configuration;
 using WebAPI.Domain.Interfaces.Services.Configuration;
 using WebAPI.Domain.Interfaces.Services.Tools;
@@ -144,13 +139,18 @@ public class AuthenticationSettingsService : GenericService, IAuthenticationSett
 
             if (GuardClauses.ObjectIsNotNull(authenticationSettingsDb))
             {
-                authenticationSettingsDb.Status = authenticationSettings.Status;
-                authenticationSettingsDb.UpdateDate = authenticationSettings.UpdateDate;
-                authenticationSettingsDb.NumberOfTryToBlockUser = authenticationSettings.NumberOfTryToBlockUser;
-                authenticationSettingsDb.BlockUserTime = authenticationSettings.BlockUserTime;
-                authenticationSettingsDb.ApplyTwoFactoryValidation = authenticationSettings.ApplyTwoFactoryValidation;
-                _iAuthenticationSettingsRepository.Update(authenticationSettingsDb);
-                return true;
+                if (authenticationSettingsDb.Status)
+                {
+                    authenticationSettingsDb.UpdateDate = authenticationSettings.UpdateDate;
+                    authenticationSettingsDb.NumberOfTryToBlockUser = authenticationSettings.NumberOfTryToBlockUser;
+                    authenticationSettingsDb.BlockUserTime = authenticationSettings.BlockUserTime;
+                    authenticationSettingsDb.ApplyTwoFactoryValidation = authenticationSettings.ApplyTwoFactoryValidation;
+                    _iAuthenticationSettingsRepository.Update(authenticationSettingsDb);
+                    return true;
+                }
+
+                Notify(FixConstants.ERROR_IN_UPDATE);
+                return false;
             }
 
             Notify(FixConstants.ERROR_IN_UPDATE);
@@ -167,88 +167,63 @@ public class AuthenticationSettingsService : GenericService, IAuthenticationSett
         }
     }
 
-    //public async Task<bool> UpdateAsync(long id, User user)
-    //{
-    //    try
-    //    {
-    //        User userDb = _iUserRepository.GetById(id);
+    public async Task<bool> LogicDeleteAuthenticationSettingsByIdAsync(long id)
+    {
+        try
+        {
+            AuthenticationSettings authenticationSettingsDb = _iAuthenticationSettingsRepository.GetById(id);
 
-    //        if (GuardClauses.ObjectIsNotNull(userDb))
-    //        {
-    //            userDb.LastPassword = userDb.Password;
-    //            userDb.Password = HashingManager.GetLoadHashingManager().HashToString(user.Password);
-    //            userDb.UpdateDate = userDb.GetNewUpdateDate();
-    //            _iUserRepository.Update(userDb);
-    //            return true;
-    //        }
-    //        Notify(FixConstants.ERROR_IN_UPDATE);
-    //        return false;
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        Notify(FixConstants.ERROR_IN_UPDATE);
-    //        return false;
-    //    }
-    //    finally
-    //    {
-    //        await Task.CompletedTask;
-    //    }
-    //}
+            if (GuardClauses.ObjectIsNotNull(authenticationSettingsDb))
+            {
+                authenticationSettingsDb.UpdateDate = authenticationSettingsDb.GetNewUpdateDate();
+                authenticationSettingsDb.Status = false;
+                _iAuthenticationSettingsRepository.Update(authenticationSettingsDb);
+                return true;
+            }
+            else
+            {
+                Notify(FixConstants.ERROR_IN_DELETELOGIC);
+                return false;
+            }
+        }
+        catch (Exception)
+        {
+            Notify(FixConstants.ERROR_IN_DELETELOGIC);
+            return false;
+        }
+        finally
+        {
+            await Task.CompletedTask;
+        }
+    }
 
-    //public async Task<bool> DeleteLogicAsync(long id)
-    //{
-    //    try
-    //    {
-    //        User user = _iUserRepository.GetById(id);
+    public async Task<bool> ReactiveAuthenticationSettingsByIdAsync(long id)
+    {
+        try
+        {
+            AuthenticationSettings authenticationSettingsDb = _iAuthenticationSettingsRepository.GetById(id);
 
-    //        if (GuardClauses.ObjectIsNotNull(user))
-    //        {
-    //            user.UpdateDate = user.GetNewUpdateDate();
-    //            user.Status = false;
-    //            _iUserRepository.Update(user);
-    //            return true;
-    //        }
-    //        else
-    //        {
-    //            Notify(FixConstants.ERROR_IN_DELETELOGIC);
-    //            return false;
-    //        }
-    //    }
-    //    catch (Exception)
-    //    {
-    //        Notify(FixConstants.ERROR_IN_DELETELOGIC);
-    //        return false;
-    //    }
-    //    finally
-    //    {
-    //        await Task.CompletedTask;
-    //    }
-    //}
-
-    //public async Task<bool> ReactiveUserAsync(long id)
-    //{
-    //    try
-    //    {
-    //        User user = _iUserRepository.GetById(id);
-
-    //        if (GuardClauses.ObjectIsNotNull(user))
-    //        {
-    //            user.UpdateDate = user.GetNewUpdateDate();
-    //            user.Status = true;
-    //            _iUserRepository.Update(user);
-    //            return true;
-    //        }
-
-    //        return false;
-    //    }
-    //    catch (Exception)
-    //    {
-    //        Notify(FixConstants.ERROR_IN_ACTIVERECORD);
-    //        return false;
-    //    }
-    //    finally
-    //    {
-    //        await Task.CompletedTask;
-    //    }
-    //}
+            if (GuardClauses.ObjectIsNotNull(authenticationSettingsDb))
+            {
+                authenticationSettingsDb.UpdateDate = authenticationSettingsDb.GetNewUpdateDate();
+                authenticationSettingsDb.Status = true;
+                _iAuthenticationSettingsRepository.Update(authenticationSettingsDb);
+                return true;
+            }
+            else
+            {
+                Notify(FixConstants.ERROR_IN_DELETELOGIC);
+                return false;
+            }
+        }
+        catch (Exception)
+        {
+            Notify(FixConstants.ERROR_IN_DELETELOGIC);
+            return false;
+        }
+        finally
+        {
+            await Task.CompletedTask;
+        }
+    }
 }

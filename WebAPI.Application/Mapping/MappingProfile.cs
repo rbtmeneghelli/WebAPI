@@ -73,13 +73,33 @@ public class MappingProfile : AutoMapper.Profile
         .ForMember(dest => dest.BlockUserTime, act => act.MapFrom(src => src.BlockUserTime))
         .ForMember(dest => dest.ApplyTwoFactoryValidation, act => act.MapFrom(src => src.ApplyTwoFactoryValidation))
         .ForMember(dest => dest.IdEnvironmentType, act => act.MapFrom(src => src.IdEnvironment))
-        .ForMember(dest => dest.UpdateDate, act => act.MapFrom(src => DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()))
-        .ForMember(dest => dest.Status, act => act.MapFrom(src => src.Status));
+        .ForMember(dest => dest.UpdateDate, act => act.MapFrom(src => DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()));
 
         CreateMap<AuthenticationSettingsResponseDTO, AuthenticationSettingsExcelDTO>()
         .ForMember(dest => dest.NumberOfTryToBlockUser, act => act.MapFrom(src => src.NumberOfTryToBlockUser))
         .ForMember(dest => dest.BlockUserTime, act => act.MapFrom(src => src.BlockUserTime))
         .ForMember(dest => dest.ApplyTwoFactoryValidation, act => act.MapFrom(src => src.ApplyTwoFactoryValidation))
+        .ForMember(dest => dest.EnvironmentDescription, act => act.MapFrom(src => src.EnvironmentDescription))
+        .ForMember(dest => dest.StatusDescription, act => act.MapFrom(src => src.StatusDescription));
+
+        CreateMap<ExpirationPasswordSettingsCreateRequestDTO, ExpirationPasswordSettings>()
+        .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
+        .ForMember(dest => dest.QtyDaysPasswordExpire, act => act.MapFrom(src => src.QtyDaysPasswordExpire))
+        .ForMember(dest => dest.NotifyExpirationDays, act => act.MapFrom(src => src.NotifyExpirationDays))
+        .ForMember(dest => dest.IdEnvironmentType, act => act.MapFrom(src => src.IdEnvironment))
+        .ForMember(dest => dest.CreateDate, act => act.MapFrom(src => DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()))
+        .ForMember(dest => dest.Status, act => act.MapFrom(src => true));
+
+        CreateMap<ExpirationPasswordSettingsUpdateRequestDTO, ExpirationPasswordSettings>()
+        .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
+        .ForMember(dest => dest.QtyDaysPasswordExpire, act => act.MapFrom(src => src.QtyDaysPasswordExpire))
+        .ForMember(dest => dest.NotifyExpirationDays, act => act.MapFrom(src => src.NotifyExpirationDays))
+        .ForMember(dest => dest.IdEnvironmentType, act => act.MapFrom(src => src.IdEnvironment))
+        .ForMember(dest => dest.UpdateDate, act => act.MapFrom(src => DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()));
+
+        CreateMap<ExpirationPasswordSettingsResponseDTO, ExpirationPasswordSettingsExcelDTO>()
+        .ForMember(dest => dest.QtyDaysPasswordExpire, act => act.MapFrom(src => src.QtyDaysPasswordExpire))
+        .ForMember(dest => dest.NotifyExpirationDays, act => act.MapFrom(src => src.NotifyExpirationDays))
         .ForMember(dest => dest.EnvironmentDescription, act => act.MapFrom(src => src.EnvironmentDescription))
         .ForMember(dest => dest.StatusDescription, act => act.MapFrom(src => src.StatusDescription));
     }

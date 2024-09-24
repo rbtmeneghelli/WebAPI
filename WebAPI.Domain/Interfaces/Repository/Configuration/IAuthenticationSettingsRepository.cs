@@ -1,6 +1,5 @@
 ﻿using System.Linq.Expressions;
 using WebAPI.Domain.Entities.Configuration;
-using WebAPI.Domain.EntitiesDTO.Configuration;
 
 namespace WebAPI.Domain.Interfaces.Repository.Configuration;
 

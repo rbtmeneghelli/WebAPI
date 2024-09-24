@@ -88,29 +88,29 @@ public sealed class ConfigurationController : GenericController
     //    return CustomResponse();
     //}
 
-    [HttpPut("expirationPasswordSettings/update")]
-    public async Task<IActionResult> ExpirationPasswordSettings(int id, [FromBody] ExpirationPasswordSettingsDTO expirationPasswordSettingsDTO)
-    {
-        return CustomResponse();
-    }
+    //[HttpPut("expirationPasswordSettings/update")]
+    //public async Task<IActionResult> ExpirationPasswordSettings(int id, [FromBody] ExpirationPasswordSettingsDTO expirationPasswordSettingsDTO)
+    //{
+    //    return CustomResponse();
+    //}
 
-    [HttpPut("layoutSettings/update")]
-    public async Task<IActionResult> LayoutSettings(int id, [FromBody] LayoutSettingsDTO layoutSettingsDTO)
-    {
-        return CustomResponse();
-    }
+    //[HttpPut("layoutSettings/update")]
+    //public async Task<IActionResult> LayoutSettings(int id, [FromBody] LayoutSettingsDTO layoutSettingsDTO)
+    //{
+    //    return CustomResponse();
+    //}
 
-    [HttpPut("logSettings/update")]
-    public async Task<IActionResult> LogSettings(int id, [FromBody] LogSettingsDTO logSettingsDTO)
-    {
-        return CustomResponse();
-    }
+    //[HttpPut("logSettings/update")]
+    //public async Task<IActionResult> LogSettings(int id, [FromBody] LogSettingsDTO logSettingsDTO)
+    //{
+    //    return CustomResponse();
+    //}
 
-    [HttpPut("requiredPasswordSettings/update")]
-    public async Task<IActionResult> RequiredPasswordSettings(int id, [FromBody] RequiredPasswordSettingsDTO requiredPasswordSettingsDTO)
-    {
-        return CustomResponse();
-    }
+    //[HttpPut("requiredPasswordSettings/update")]
+    //public async Task<IActionResult> RequiredPasswordSettings(int id, [FromBody] RequiredPasswordSettingsDTO requiredPasswordSettingsDTO)
+    //{
+    //    return CustomResponse();
+    //}
 
     /// <summary>
     /// Esse endpoint ira armazenar arquivos por X tempo, e depois será atualizado após 5 minutos.

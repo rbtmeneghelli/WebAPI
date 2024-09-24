@@ -42,7 +42,7 @@ public record AuthenticationSettingsResponseDTO
 public record AuthenticationSettingsCreateRequestDTO
 {
     [Required]
-    [Display(Name = "IdEnvironment", Description = "Id do registro")]
+    [Display(Name = "Id", Description = "Id do registro")]
     public long? Id { get; set; }
 
     [Required]
@@ -67,7 +67,7 @@ public record AuthenticationSettingsCreateRequestDTO
 public record AuthenticationSettingsUpdateRequestDTO
 {
     [Required]
-    [Display(Name = "IdEnvironment", Description = "Id do registro")]
+    [Display(Name = "Id", Description = "Id do registro")]
     public long? Id { get; set; }
 
     [Required]
@@ -87,8 +87,11 @@ public record AuthenticationSettingsUpdateRequestDTO
     [Required]
     [Display(Name = "IdEnvironment", Description = "Id do ambiente")]
     public long? IdEnvironment { get; set; }
+}
 
+public record AuthenticationSettingsReactiveRequestDTO
+{
     [Required]
-    [Display(Name = "Status", Description = "Status do registro")]
-    public bool Status { get; set; }
+    [Display(Name = "Id", Description = "Id do registro")]
+    public long? Id { get; set; }
 }

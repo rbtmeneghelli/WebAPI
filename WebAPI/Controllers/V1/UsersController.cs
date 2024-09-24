@@ -130,11 +130,6 @@ public sealed class UsersController : GenericController
         return CustomNotFound();
     }
 
-    /// <summary>
-    /// Metodo para exclusão Logica do registro
-    /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
     [HttpDelete("LogicDelete/{id:long}")]
     public async Task<IActionResult> LogicDelete(int id)
     {

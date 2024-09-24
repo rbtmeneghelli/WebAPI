@@ -12,4 +12,6 @@ public interface IAuthenticationSettingsService
     Task<bool> ExistAuthenticationSettingsByIdAsync(long id);
     Task<bool> CreateAuthenticationSettingsAsync(AuthenticationSettings authenticationSettings);
     Task<bool> UpdateAuthenticationSettingsAsync(long id, AuthenticationSettings authenticationSettings);
+    Task<bool> LogicDeleteAuthenticationSettingsByIdAsync(long id);
+    Task<bool> ReactiveAuthenticationSettingsByIdAsync(long id);
 }
