@@ -23,6 +23,9 @@ public record AuthenticationSettingsExcelDTO
 
 public record AuthenticationSettingsResponseDTO
 {
+    [Display(Name = "Id", Description = "Id do registro")]
+    public long Id { get; set; }
+
     [Display(Name = "EnvironmentDescription", Description = "Descrição do ambiente")]
     public string EnvironmentDescription { get; set; }
 

@@ -50,6 +50,28 @@ public static class PagedFactory
         return newQuery;
     }
 
+    public static string AddFieldsToUpdateQuery(IEnumerable<PagedFilterModel> parameters)
+    {
+        List<string> arrParameters = new List<string>();
+
+        foreach (var param in parameters)
+        {
+            Type paramType = param.GetType();
+            bool objectString = paramType == typeof(string) && !string.IsNullOrEmpty((string)param.Value);
+            bool objectInt = paramType == typeof(int) && (int)param.Value > 0;
+            bool objectBool = paramType == typeof(bool);
+
+            if (objectString)
+                arrParameters.Add($@"{param.Parameter} = @{param.Parameter}");
+            else if (objectInt)
+                arrParameters.Add($@"{param.Parameter} = @{param.Parameter}");
+            else if (objectBool)
+                arrParameters.Add($@"{param.Parameter} = @{param.Parameter}");
+        }
+
+        return arrParameters.Count > 0 ? string.Join(',', arrParameters) : string.Empty;
+    }
+
     public static int GetDefaultPageIndex(int? pageIndex) => pageIndex.HasValue ? pageIndex.Value : 1;
     public static int GetDefaultPageSize(int? pageSize) => pageSize.HasValue ? pageSize.Value : 10;
     private static int GetPagination(int page, int pageSize) => (page - 1) * pageSize;

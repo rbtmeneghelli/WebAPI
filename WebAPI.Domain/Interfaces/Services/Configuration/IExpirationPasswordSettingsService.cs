@@ -14,4 +14,5 @@ public interface IExpirationPasswordSettingsService
     Task<bool> UpdateExpirationPasswordSettingsAsync(long id, ExpirationPasswordSettings expirationPasswordSettings);
     Task<bool> LogicDeleteExpirationPasswordSettingsByIdAsync(long id);
     Task<bool> ReactiveExpirationPasswordSettingsByIdAsync(long id);
+    Task<IEnumerable<ExpirationPasswordSettingsExcelDTO>> GetAllExpirationPasswordSettingsExcelAsync();
 }

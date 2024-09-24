@@ -31,6 +31,7 @@ public class ExpirationPasswordSettingsService : GenericService, IExpirationPass
                           orderby p.EnvironmentTypeSettings.Id ascending
                           select new ExpirationPasswordSettingsResponseDTO()
                           {
+                              Id = p.Id.Value,
                               EnvironmentDescription = p.EnvironmentTypeSettings.Description,
                               QtyDaysPasswordExpire = p.QtyDaysPasswordExpire,
                               NotifyExpirationDays = p.NotifyExpirationDays,
@@ -55,6 +56,7 @@ public class ExpirationPasswordSettingsService : GenericService, IExpirationPass
             return await (from p in _iExpirationPasswordSettingsRepository.FindBy(x => x.IdEnvironmentType == (int)_environmentVariables.Environment).AsQueryable()
                           select new ExpirationPasswordSettingsResponseDTO
                           {
+                              Id = p.Id.Value,
                               EnvironmentDescription = p.EnvironmentTypeSettings.Description,
                               QtyDaysPasswordExpire = p.QtyDaysPasswordExpire,
                               NotifyExpirationDays = p.NotifyExpirationDays,
@@ -79,6 +81,7 @@ public class ExpirationPasswordSettingsService : GenericService, IExpirationPass
             return await (from p in _iExpirationPasswordSettingsRepository.FindBy(x => x.Id == id).AsQueryable()
                           select new ExpirationPasswordSettingsResponseDTO
                           {
+                              Id = p.Id.Value,
                               EnvironmentDescription = p.EnvironmentTypeSettings.Description,
                               QtyDaysPasswordExpire = p.QtyDaysPasswordExpire,
                               NotifyExpirationDays = p.NotifyExpirationDays,
@@ -216,6 +219,31 @@ public class ExpirationPasswordSettingsService : GenericService, IExpirationPass
         {
             Notify(FixConstants.ERROR_IN_DELETELOGIC);
             return false;
+        }
+        finally
+        {
+            await Task.CompletedTask;
+        }
+    }
+
+    public async Task<IEnumerable<ExpirationPasswordSettingsExcelDTO>> GetAllExpirationPasswordSettingsExcelAsync()
+    {
+        try
+        {
+            return await (from p in _iExpirationPasswordSettingsRepository.GetAllInclude("EnvironmentTypeSettings")
+                          orderby p.EnvironmentTypeSettings.Id ascending
+                          select new ExpirationPasswordSettingsExcelDTO()
+                          {
+                              EnvironmentDescription = p.EnvironmentTypeSettings.Description,
+                              QtyDaysPasswordExpire = p.QtyDaysPasswordExpire,
+                              NotifyExpirationDays = p.NotifyExpirationDays,
+                              StatusDescription = p.GetStatusDescription()
+                          }).ToListAsync();
+        }
+        catch
+        {
+            Notify(FixConstants.ERROR_IN_GETALL);
+            return Enumerable.Empty<ExpirationPasswordSettingsExcelDTO>();
         }
         finally
         {

@@ -132,16 +132,15 @@ public sealed class ExpirationPasswordSettingsController : GenericController
         return CustomNotFound();
     }
 
-    [HttpPost("Export2Excel")]
-    public async Task<IActionResult> Export2Excel()
+    [HttpPost("ExportData")]
+    public async Task<IActionResult> ExportData()
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
-        var list = await _iGenericConfigurationService.ExpirationPasswordSettingsService.GetAllExpirationPasswordSettingsAsync();
-        if (list?.Count() > 0)
+        var excelData = await _iGenericConfigurationService.ExpirationPasswordSettingsService.GetAllExpirationPasswordSettingsExcelAsync();
+        if (excelData?.Count() > 0)
         {
             var memoryStreamResult = _generalMethod.GetMemoryStreamType(EnumMemoryStreamFile.XLSX);
-            var excelData = ApplyMapToEntity<IEnumerable<ExpirationPasswordSettingsResponseDTO>, IEnumerable<ExpirationPasswordSettingsExcelDTO>>(list);
             var excelName = $"ExpirationPasswordSettings_{GuidExtensionMethod.GetGuidDigits("N")}.{memoryStreamResult.Extension}";
             var memoryStreamExcel = await _iFileService.CreateExcelFileEPPLUS(excelData, excelName);
             return File(memoryStreamExcel.ToArray(), memoryStreamResult.Type, excelName);

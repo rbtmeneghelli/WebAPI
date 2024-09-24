@@ -134,16 +134,15 @@ public sealed class AuthenticationSettingsController : GenericController
         return CustomNotFound();
     }
 
-    [HttpPost("Export2Excel")]
-    public async Task<IActionResult> Export2Excel()
+    [HttpPost("ExportData")]
+    public async Task<IActionResult> ExportData()
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
-        var list = await _iGenericConfigurationService.AuthenticationSettingsService.GetAllAuthenticationSettingsAsync();
-        if (list?.Count() > 0)
+        var excelData = await _iGenericConfigurationService.AuthenticationSettingsService.GetAllAuthenticationSettingsExcelAsync();
+        if (excelData?.Count() > 0)
         {
             var memoryStreamResult = _generalMethod.GetMemoryStreamType(EnumMemoryStreamFile.XLSX);
-            var excelData = ApplyMapToEntity<IEnumerable<AuthenticationSettingsResponseDTO>, IEnumerable<AuthenticationSettingsExcelDTO>>(list);
             var excelName = $"AuthenticationSettings_{GuidExtensionMethod.GetGuidDigits("N")}.{memoryStreamResult.Extension}";
             var memoryStreamExcel = await _iFileService.CreateExcelFileEPPLUS(excelData, excelName);
             return File(memoryStreamExcel.ToArray(), memoryStreamResult.Type, excelName);

@@ -91,8 +91,8 @@ public sealed class UsersController : GenericController
     /// <response code = "500">Erro interno no servidor</response>
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [HttpPost("Add")]
-    public async Task<IActionResult> Add([FromBody] UserRequestDTO userRequestDTO)
+    [HttpPost("Create")]
+    public async Task<IActionResult> Create([FromBody] UserRequestDTO userRequestDTO)
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
@@ -100,7 +100,7 @@ public sealed class UsersController : GenericController
         var result = await _iUserService.AddAsync(user);
 
         if (result)
-            return CreatedAtAction(nameof(Add), user);
+            return CreatedAtAction(nameof(Create), user);
 
         return CustomResponse();
     }
@@ -170,8 +170,8 @@ public sealed class UsersController : GenericController
         return CustomResponse();
     }
 
-    [HttpPost("Export2Excel")]
-    public async Task<IActionResult> Export2Excel([FromBody] UserFilter filter)
+    [HttpPost("ExportData")]
+    public async Task<IActionResult> ExportData([FromBody] UserFilter filter)
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 

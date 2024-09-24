@@ -1,11 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using WebAPI.Domain.Entities.Configuration;
+using WebAPI.Domain.EntitiesDTO.Configuration;
 
 namespace WebAPI.Domain.Interfaces.Services.Configuration;
 
 public interface IRequiredPasswordSettingsService
 {
+    Task<IEnumerable<RequiredPasswordSettingsResponseDTO>> GetAllRequiredPasswordSettingsAsync();
+    Task<RequiredPasswordSettingsResponseDTO> GetRequiredPasswordSettingsByEnvironmentAsync();
+    Task<RequiredPasswordSettingsResponseDTO> GetRequiredPasswordSettingsByIdAsync(long id);
+    Task<bool> ExistRequiredPasswordSettingsByEnvironmentAsync();
+    Task<bool> ExistRequiredPasswordSettingsByIdAsync(long id);
+    Task<bool> CreateRequiredPasswordSettingsAsync(RequiredPasswordSettings requiredPasswordSettings);
+    Task<bool> UpdateRequiredPasswordSettingsAsync(long id, RequiredPasswordSettings requiredPasswordSettings);
+    Task<bool> LogicDeleteRequiredPasswordSettingsByIdAsync(long id);
+    Task<bool> ReactiveRequiredPasswordSettingsByIdAsync(long id);
+    Task<IEnumerable<RequiredPasswordSettingsExcelDTO>> GetAllRequiredPasswordSettingsExcelAsync();
 }

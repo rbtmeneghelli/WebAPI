@@ -75,13 +75,6 @@ public class MappingProfile : AutoMapper.Profile
         .ForMember(dest => dest.IdEnvironmentType, act => act.MapFrom(src => src.IdEnvironment))
         .ForMember(dest => dest.UpdateDate, act => act.MapFrom(src => DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()));
 
-        CreateMap<AuthenticationSettingsResponseDTO, AuthenticationSettingsExcelDTO>()
-        .ForMember(dest => dest.NumberOfTryToBlockUser, act => act.MapFrom(src => src.NumberOfTryToBlockUser))
-        .ForMember(dest => dest.BlockUserTime, act => act.MapFrom(src => src.BlockUserTime))
-        .ForMember(dest => dest.ApplyTwoFactoryValidation, act => act.MapFrom(src => src.ApplyTwoFactoryValidation))
-        .ForMember(dest => dest.EnvironmentDescription, act => act.MapFrom(src => src.EnvironmentDescription))
-        .ForMember(dest => dest.StatusDescription, act => act.MapFrom(src => src.StatusDescription));
-
         CreateMap<ExpirationPasswordSettingsCreateRequestDTO, ExpirationPasswordSettings>()
         .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
         .ForMember(dest => dest.QtyDaysPasswordExpire, act => act.MapFrom(src => src.QtyDaysPasswordExpire))
@@ -97,10 +90,46 @@ public class MappingProfile : AutoMapper.Profile
         .ForMember(dest => dest.IdEnvironmentType, act => act.MapFrom(src => src.IdEnvironment))
         .ForMember(dest => dest.UpdateDate, act => act.MapFrom(src => DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()));
 
-        CreateMap<ExpirationPasswordSettingsResponseDTO, ExpirationPasswordSettingsExcelDTO>()
-        .ForMember(dest => dest.QtyDaysPasswordExpire, act => act.MapFrom(src => src.QtyDaysPasswordExpire))
-        .ForMember(dest => dest.NotifyExpirationDays, act => act.MapFrom(src => src.NotifyExpirationDays))
-        .ForMember(dest => dest.EnvironmentDescription, act => act.MapFrom(src => src.EnvironmentDescription))
-        .ForMember(dest => dest.StatusDescription, act => act.MapFrom(src => src.StatusDescription));
+        CreateMap<RequiredPasswordSettingsCreateRequestDTO, RequiredPasswordSettings>()
+        .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
+        .ForMember(dest => dest.MinimalOfChars, act => act.MapFrom(src => src.MinimalOfChars))
+        .ForMember(dest => dest.MustHaveNumbers, act => act.MapFrom(src => src.MustHaveNumbers))
+        .ForMember(dest => dest.MustHaveSpecialChars, act => act.MapFrom(src => src.MustHaveSpecialChars))
+        .ForMember(dest => dest.MustHaveUpperCaseLetter, act => act.MapFrom(src => src.MustHaveUpperCaseLetter))
+        .ForMember(dest => dest.IdEnvironmentType, act => act.MapFrom(src => src.IdEnvironment))
+        .ForMember(dest => dest.CreateDate, act => act.MapFrom(src => DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()))
+        .ForMember(dest => dest.Status, act => act.MapFrom(src => true));
+
+        CreateMap<RequiredPasswordSettingsUpdateRequestDTO, RequiredPasswordSettings>()
+        .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
+        .ForMember(dest => dest.MinimalOfChars, act => act.MapFrom(src => src.MinimalOfChars))
+        .ForMember(dest => dest.MustHaveNumbers, act => act.MapFrom(src => src.MustHaveNumbers))
+        .ForMember(dest => dest.MustHaveSpecialChars, act => act.MapFrom(src => src.MustHaveSpecialChars))
+        .ForMember(dest => dest.MustHaveUpperCaseLetter, act => act.MapFrom(src => src.MustHaveUpperCaseLetter))
+        .ForMember(dest => dest.IdEnvironmentType, act => act.MapFrom(src => src.IdEnvironment))
+        .ForMember(dest => dest.UpdateDate, act => act.MapFrom(src => DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()));
+
+        CreateMap<LogSettingsCreateRequestDTO, LogSettings>()
+        .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
+        .ForMember(dest => dest.SaveLogUpdateData, act => act.MapFrom(src => src.SaveLogUpdateData))
+        .ForMember(dest => dest.SaveLogResearchData, act => act.MapFrom(src => src.SaveLogResearchData))
+        .ForMember(dest => dest.SaveLogCreateData, act => act.MapFrom(src => src.SaveLogCreateData))
+        .ForMember(dest => dest.SaveLogDeleteData, act => act.MapFrom(src => src.SaveLogDeleteData))
+        .ForMember(dest => dest.SaveLogTurnOffSystem, act => act.MapFrom(src => src.SaveLogTurnOffSystem))
+        .ForMember(dest => dest.SaveLogTurnOnSystem, act => act.MapFrom(src => src.SaveLogTurnOnSystem))
+        .ForMember(dest => dest.IdEnvironmentType, act => act.MapFrom(src => src.IdEnvironment))
+        .ForMember(dest => dest.CreateDate, act => act.MapFrom(src => DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()))
+        .ForMember(dest => dest.Status, act => act.MapFrom(src => true));
+
+        CreateMap<LogSettingsUpdateRequestDTO, LogSettings>()
+        .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
+        .ForMember(dest => dest.SaveLogUpdateData, act => act.MapFrom(src => src.SaveLogUpdateData))
+        .ForMember(dest => dest.SaveLogResearchData, act => act.MapFrom(src => src.SaveLogResearchData))
+        .ForMember(dest => dest.SaveLogCreateData, act => act.MapFrom(src => src.SaveLogCreateData))
+        .ForMember(dest => dest.SaveLogDeleteData, act => act.MapFrom(src => src.SaveLogDeleteData))
+        .ForMember(dest => dest.SaveLogTurnOffSystem, act => act.MapFrom(src => src.SaveLogTurnOffSystem))
+        .ForMember(dest => dest.SaveLogTurnOnSystem, act => act.MapFrom(src => src.SaveLogTurnOnSystem))
+        .ForMember(dest => dest.IdEnvironmentType, act => act.MapFrom(src => src.IdEnvironment))
+        .ForMember(dest => dest.UpdateDate, act => act.MapFrom(src => DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()));
     }
 }

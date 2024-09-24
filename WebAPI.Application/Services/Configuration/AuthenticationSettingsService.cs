@@ -31,11 +31,12 @@ public class AuthenticationSettingsService : GenericService, IAuthenticationSett
                           orderby p.EnvironmentTypeSettings.Id ascending
                           select new AuthenticationSettingsResponseDTO()
                           {
+                              Id = p.Id.Value,
                               EnvironmentDescription = p.EnvironmentTypeSettings.Description,
                               NumberOfTryToBlockUser = p.NumberOfTryToBlockUser,
                               BlockUserTime = p.BlockUserTime,
                               ApplyTwoFactoryValidation = p.ApplyTwoFactoryValidation,
-                              StatusDescription = p.Status ? FixConstants.STATUS_ACTIVE : FixConstants.STATUS_INACTIVE
+                              StatusDescription = p.GetStatusDescription()
                           }).ToListAsync();
         }
         catch
@@ -56,6 +57,7 @@ public class AuthenticationSettingsService : GenericService, IAuthenticationSett
             return await (from p in _iAuthenticationSettingsRepository.FindBy(x => x.IdEnvironmentType == (int)_environmentVariables.Environment).AsQueryable()
                           select new AuthenticationSettingsResponseDTO
                           {
+                              Id = p.Id.Value,
                               EnvironmentDescription = p.EnvironmentTypeSettings.Description,
                               NumberOfTryToBlockUser = p.NumberOfTryToBlockUser,
                               BlockUserTime = p.BlockUserTime,
@@ -81,6 +83,7 @@ public class AuthenticationSettingsService : GenericService, IAuthenticationSett
             return await (from p in _iAuthenticationSettingsRepository.FindBy(x => x.Id == id).AsQueryable()
                           select new AuthenticationSettingsResponseDTO
                           {
+                              Id = p.Id.Value,
                               EnvironmentDescription = p.EnvironmentTypeSettings.Description,
                               NumberOfTryToBlockUser = p.NumberOfTryToBlockUser,
                               BlockUserTime = p.BlockUserTime,
@@ -220,6 +223,32 @@ public class AuthenticationSettingsService : GenericService, IAuthenticationSett
         {
             Notify(FixConstants.ERROR_IN_DELETELOGIC);
             return false;
+        }
+        finally
+        {
+            await Task.CompletedTask;
+        }
+    }
+
+    public async Task<IEnumerable<AuthenticationSettingsExcelDTO>> GetAllAuthenticationSettingsExcelAsync()
+    {
+        try
+        {
+            return await (from p in _iAuthenticationSettingsRepository.GetAllInclude("EnvironmentTypeSettings")
+                          orderby p.EnvironmentTypeSettings.Id ascending
+                          select new AuthenticationSettingsExcelDTO()
+                          {
+                              EnvironmentDescription = p.EnvironmentTypeSettings.Description,
+                              NumberOfTryToBlockUser = p.NumberOfTryToBlockUser,
+                              BlockUserTime = p.BlockUserTime,
+                              ApplyTwoFactoryValidation = p.ApplyTwoFactoryValidation,
+                              StatusDescription = p.GetStatusDescription()
+                          }).ToListAsync();
+        }
+        catch
+        {
+            Notify(FixConstants.ERROR_IN_GETALL);
+            return Enumerable.Empty<AuthenticationSettingsExcelDTO>();
         }
         finally
         {
