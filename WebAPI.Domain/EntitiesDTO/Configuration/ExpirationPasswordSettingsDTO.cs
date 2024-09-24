@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace WebAPI.Domain.EntitiesDTO.Configuration;
 
@@ -32,13 +33,13 @@ public record ExpirationPasswordSettingsResponseDTO
     [Display(Name = "NotifyExpirationDays", Description = "Dias para enviar notificação antes de expirar")]
     public int NotifyExpirationDays { get; set; }
 
-    [Display(Name = "Status", Description = "Status do ambiente")]
+    [Display(Name = "Status", Description = "Status do registro")]
     public string StatusDescription { get; set; }
 }
 
 public record ExpirationPasswordSettingsCreateRequestDTO
 {
-    [Required]
+    [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
     [Display(Name = "Id", Description = "Id do registro")]
     public long? Id { get; set; }
 

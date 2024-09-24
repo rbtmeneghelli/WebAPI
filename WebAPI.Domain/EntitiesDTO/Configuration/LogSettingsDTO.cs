@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace WebAPI.Domain.EntitiesDTO.Configuration;
 
@@ -56,13 +57,13 @@ public record LogSettingsResponseDTO
     [Display(Name = "SaveLogDeleteData", Description = "Salvar log ao excluir registro no sistema")]
     public bool SaveLogDeleteData { get; set; }
 
-    [Display(Name = "Status", Description = "Status do ambiente")]
+    [Display(Name = "Status", Description = "Status do registro")]
     public string StatusDescription { get; set; }
 }
 
 public record LogSettingsCreateRequestDTO
 {
-    [Required]
+    [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
     [Display(Name = "Id", Description = "Id do registro")]
     public long? Id { get; set; }
 

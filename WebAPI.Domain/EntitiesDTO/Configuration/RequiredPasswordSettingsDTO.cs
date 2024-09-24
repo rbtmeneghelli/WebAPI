@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace WebAPI.Domain.EntitiesDTO.Configuration;
 
@@ -44,13 +45,13 @@ public record RequiredPasswordSettingsResponseDTO
     [Display(Name = "MustHaveSpecialChars", Description = "Deve conter caracteres especiais")]
     public bool MustHaveSpecialChars { get; set; }
 
-    [Display(Name = "Status", Description = "Status do ambiente")]
+    [Display(Name = "Status", Description = "Status do registro")]
     public string StatusDescription { get; set; }
 }
 
 public record RequiredPasswordSettingsCreateRequestDTO
 {
-    [Required]
+    [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
     [Display(Name = "Id", Description = "Id do registro")]
     public long? Id { get; set; }
 

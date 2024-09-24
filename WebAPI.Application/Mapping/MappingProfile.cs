@@ -131,5 +131,18 @@ public class MappingProfile : AutoMapper.Profile
         .ForMember(dest => dest.SaveLogTurnOnSystem, act => act.MapFrom(src => src.SaveLogTurnOnSystem))
         .ForMember(dest => dest.IdEnvironmentType, act => act.MapFrom(src => src.IdEnvironment))
         .ForMember(dest => dest.UpdateDate, act => act.MapFrom(src => DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()));
+
+        CreateMap<EnvironmentTypeSettingsCreateRequestDTO, EnvironmentTypeSettings>()
+        .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
+        .ForMember(dest => dest.Description, act => act.MapFrom(src => src.EnvironmentDescription))
+        .ForMember(dest => dest.Initials, act => act.MapFrom(src => src.EnvironmentInitial))
+        .ForMember(dest => dest.CreateDate, act => act.MapFrom(src => DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()))
+        .ForMember(dest => dest.Status, act => act.MapFrom(src => true));
+
+        CreateMap<EnvironmentTypeSettingsUpdateRequestDTO, EnvironmentTypeSettings>()
+        .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
+        .ForMember(dest => dest.Description, act => act.MapFrom(src => src.EnvironmentDescription))
+        .ForMember(dest => dest.Initials, act => act.MapFrom(src => src.EnvironmentInitial))
+        .ForMember(dest => dest.UpdateDate, act => act.MapFrom(src => DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()));
     }
 }
