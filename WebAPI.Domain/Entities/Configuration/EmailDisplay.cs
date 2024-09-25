@@ -10,7 +10,7 @@ public class EmailDisplay : GenericEntity
     public string Title { get; set; }
     public string Subject { get; set; }
     public string Body { get; set; }
-    public MessagePriority Priority { get; set; }
+    public MessagePriority MessagePriority { get; set; }
     public bool HasAttachment { get; set; }
     public virtual EmailTemplate EmailTemplates { get; set; }
     public long EmailTemplateId { get; set; }

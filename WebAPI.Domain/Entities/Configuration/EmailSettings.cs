@@ -13,5 +13,4 @@ public class EmailSettings : GenericEntity
 
     public virtual EnvironmentTypeSettings EnvironmentTypeSettings { get; set; }
     public virtual long? IdEnvironmentType { get; set; }
-    public virtual IEnumerable<EmailTemplate> EmailTemplates { get; set; }
 }

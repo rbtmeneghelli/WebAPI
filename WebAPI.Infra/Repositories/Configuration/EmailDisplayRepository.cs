@@ -5,11 +5,11 @@ using WebAPI.Domain.Interfaces.Repository.Configuration;
 
 namespace WebAPI.Infra.Repositories.Configuration;
 
-public class EmailDisplayRepository : IEmailDisplayRepository
+public class EmailDisplaySettingsRepository : IEmailDisplaySettingsRepository
 {
     private readonly IGenericRepository<EmailDisplay> _iEmailDisplayRepository;
 
-    public EmailDisplayRepository(IGenericRepository<EmailDisplay> iEmailDisplayRepository)
+    public EmailDisplaySettingsRepository(IGenericRepository<EmailDisplay> iEmailDisplayRepository)
     {
         _iEmailDisplayRepository = iEmailDisplayRepository;
     }

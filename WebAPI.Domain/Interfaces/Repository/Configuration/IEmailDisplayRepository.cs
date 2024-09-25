@@ -3,7 +3,7 @@ using WebAPI.Domain.Entities.Configuration;
 
 namespace WebAPI.Domain.Interfaces.Repository.Configuration;
 
-public interface IEmailDisplayRepository
+public interface IEmailDisplaySettingsRepository
 {
     IQueryable<EmailDisplay> GetAllInclude(string includeData, bool hasTracking = false);
     IQueryable<EmailDisplay> FindBy(Expression<Func<EmailDisplay, bool>> predicate, bool hasTracking = false);

@@ -1,5 +1,6 @@
 ﻿using WebAPI.Domain.CQRS.Command;
 using WebAPI.Domain.CQRS.Queries;
+using WebAPI.Domain.Cryptography;
 using WebAPI.Domain.Entities.Configuration;
 using WebAPI.Domain.Entities.ControlPanel;
 using WebAPI.Domain.Entities.Others;
@@ -143,6 +144,50 @@ public class MappingProfile : AutoMapper.Profile
         .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
         .ForMember(dest => dest.Description, act => act.MapFrom(src => src.EnvironmentDescription))
         .ForMember(dest => dest.Initials, act => act.MapFrom(src => src.EnvironmentInitial))
+        .ForMember(dest => dest.UpdateDate, act => act.MapFrom(src => DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()));
+
+        CreateMap<EmailDisplaySettingsCreateRequestDTO, EmailDisplay>()
+        .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
+        .ForMember(dest => dest.Title, act => act.MapFrom(src => src.Title))
+        .ForMember(dest => dest.Subject, act => act.MapFrom(src => src.Subject))
+        .ForMember(dest => dest.Body, act => act.MapFrom(src => src.Body))
+        .ForMember(dest => dest.MessagePriority, act => act.MapFrom(src => src.MessagePriority))
+        .ForMember(dest => dest.HasAttachment, act => act.MapFrom(src => src.HasAttachment))
+        .ForMember(dest => dest.EmailTemplateId, act => act.MapFrom(src => src.IdEmailTemplate))
+        .ForMember(dest => dest.CreateDate, act => act.MapFrom(src => DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()))
+        .ForMember(dest => dest.Status, act => act.MapFrom(src => true));
+
+        CreateMap<EmailDisplaySettingsUpdateRequestDTO, EmailDisplay>()
+        .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
+        .ForMember(dest => dest.Title, act => act.MapFrom(src => src.Title))
+        .ForMember(dest => dest.Subject, act => act.MapFrom(src => src.Subject))
+        .ForMember(dest => dest.Body, act => act.MapFrom(src => src.Body))
+        .ForMember(dest => dest.MessagePriority, act => act.MapFrom(src => src.MessagePriority))
+        .ForMember(dest => dest.HasAttachment, act => act.MapFrom(src => src.HasAttachment))
+        .ForMember(dest => dest.EmailTemplateId, act => act.MapFrom(src => src.IdEmailTemplate))
+        .ForMember(dest => dest.UpdateDate, act => act.MapFrom(src => DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()));
+
+        CreateMap<EmailSettingsCreateRequestDTO, EmailSettings>()
+        .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
+        .ForMember(dest => dest.Host, act => act.MapFrom(src => src.Host))
+        .ForMember(dest => dest.SmtpConfig, act => act.MapFrom(src => src.SmtpConfig))
+        .ForMember(dest => dest.PrimaryPort, act => act.MapFrom(src => src.PrimaryPort))
+        .ForMember(dest => dest.Email, act => act.MapFrom(src => src.Email))
+        .ForMember(dest => dest.Password, act => act.MapFrom(src => CryptographyAesService.ApplyEncrypt(src.Password)))
+        .ForMember(dest => dest.EnableSsl, act => act.MapFrom(src => src.EnableSsl))
+        .ForMember(dest => dest.IdEnvironmentType, act => act.MapFrom(src => src.IdEnvironment))
+        .ForMember(dest => dest.CreateDate, act => act.MapFrom(src => DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()))
+        .ForMember(dest => dest.Status, act => act.MapFrom(src => true));
+
+        CreateMap<EmailSettingsUpdateRequestDTO, EmailSettings>()
+        .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
+        .ForMember(dest => dest.Host, act => act.MapFrom(src => src.Host))
+        .ForMember(dest => dest.SmtpConfig, act => act.MapFrom(src => src.SmtpConfig))
+        .ForMember(dest => dest.PrimaryPort, act => act.MapFrom(src => src.PrimaryPort))
+        .ForMember(dest => dest.Email, act => act.MapFrom(src => src.Email))
+        .ForMember(dest => dest.Password, act => act.MapFrom(src => CryptographyAesService.ApplyEncrypt(src.Password)))
+        .ForMember(dest => dest.EnableSsl, act => act.MapFrom(src => src.EnableSsl))
+        .ForMember(dest => dest.IdEnvironmentType, act => act.MapFrom(src => src.IdEnvironment))
         .ForMember(dest => dest.UpdateDate, act => act.MapFrom(src => DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()));
     }
 }

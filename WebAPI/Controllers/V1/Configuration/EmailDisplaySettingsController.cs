@@ -11,15 +11,15 @@ namespace WebAPI.Controllers.V1.Configuration;
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/[controller]")]
 [Authorize("Bearer")]
-public sealed class EmailSettingsController : GenericController
+public sealed class EmailDisplaySettingsController : GenericController
 {
     private readonly IGenericConfigurationService _iGenericConfigurationService;
     private readonly GeneralMethod _generalMethod;
-    private readonly IFileService<EmailSettingsExcelDTO> _iFileService;
+    private readonly IFileService<EmailDisplaySettingsExcelDTO> _iFileService;
 
-    public EmailSettingsController(
+    public EmailDisplaySettingsController(
         IGenericConfigurationService iGenericConfigurationService,
-        IFileService<EmailSettingsExcelDTO> iFileService,
+        IFileService<EmailDisplaySettingsExcelDTO> iFileService,
         IMapper iMapperService,
         IHttpContextAccessor iHttpContextAccessor,
         IGenericNotifyLogsService iGenericNotifyLogsService)
@@ -33,30 +33,17 @@ public sealed class EmailSettingsController : GenericController
     [HttpGet("GetAll")]
     public async Task<IActionResult> GetAll()
     {
-        var model = await _iGenericConfigurationService.EmailSettingsService.GetAllEmailSettingsAsync();
+        var model = await _iGenericConfigurationService.EmailDisplaySettingsService.GetAllEmailDisplaySettingsAsync();
         return CustomResponse(model, FixConstants.SUCCESS_IN_GETALL);
-    }
-
-    [HttpGet("GetByEnvironment")]
-    public async Task<IActionResult> GetByEnvironment()
-    {
-        var existRequiredPasswordSettings = await _iGenericConfigurationService.EmailSettingsService.ExistEmailSettingsByEnvironmentAsync();
-        if (existRequiredPasswordSettings)
-        {
-            var model = await _iGenericConfigurationService.EmailSettingsService.GetEmailSettingsByEnvironmentAsync();
-            return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
-        }
-
-        return CustomNotFound();
     }
 
     [HttpGet("GetById/{id:long}")]
     public async Task<IActionResult> GetById(long id)
     {
-        var existEmailSettings = await _iGenericConfigurationService.EmailSettingsService.ExistEmailSettingsByIdAsync(id);
-        if (existEmailSettings)
+        var existEmailDisplaySettings = await _iGenericConfigurationService.EmailDisplaySettingsService.ExistEmailDisplaySettingsByIdAsync(id);
+        if (existEmailDisplaySettings)
         {
-            var model = await _iGenericConfigurationService.EmailSettingsService.GetEmailSettingsByIdAsync(id);
+            var model = await _iGenericConfigurationService.EmailDisplaySettingsService.GetEmailDisplaySettingsByIdAsync(id);
             return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
         }
 
@@ -64,35 +51,35 @@ public sealed class EmailSettingsController : GenericController
     }
 
     [HttpPost("Create")]
-    public async Task<IActionResult> Create([FromBody] EmailSettingsCreateRequestDTO emailSettingsCreateRequestDTO)
+    public async Task<IActionResult> Create([FromBody] EmailDisplaySettingsCreateRequestDTO emailDisplaySettingsCreateRequestDTO)
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
-        var emailSettingsCreateRequest = ApplyMapToEntity<EmailSettingsCreateRequestDTO, EmailSettings>(emailSettingsCreateRequestDTO);
-        var result = await _iGenericConfigurationService.EmailSettingsService.CreateEmailSettingsAsync(emailSettingsCreateRequest);
+        var emailDisplaySettingsCreateRequest = ApplyMapToEntity<EmailDisplaySettingsCreateRequestDTO, EmailDisplay>(emailDisplaySettingsCreateRequestDTO);
+        var result = await _iGenericConfigurationService.EmailDisplaySettingsService.CreateEmailDisplaySettingsAsync(emailDisplaySettingsCreateRequest);
 
         if (result)
-            return CreatedAtAction(nameof(Create), emailSettingsCreateRequest);
+            return CreatedAtAction(nameof(Create), emailDisplaySettingsCreateRequest);
 
         return CustomResponse();
     }
 
     [HttpPut("Update")]
-    public async Task<IActionResult> Update(int id, [FromBody] EmailSettingsUpdateRequestDTO emailSettingsUpdateRequestDTO)
+    public async Task<IActionResult> Update(int id, [FromBody] EmailDisplaySettingsUpdateRequestDTO emailDisplaySettingsUpdateRequestDTO)
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
-        var emailSettingsUpdateRequest = ApplyMapToEntity<EmailSettingsUpdateRequestDTO, EmailSettings>(emailSettingsUpdateRequestDTO);
+        var emailDisplaySettingsUpdateRequest = ApplyMapToEntity<EmailDisplaySettingsUpdateRequestDTO, EmailDisplay>(emailDisplaySettingsUpdateRequestDTO);
 
-        if (id != emailSettingsUpdateRequest.Id)
+        if (id != emailDisplaySettingsUpdateRequest.Id)
         {
             NotificationError(FixConstants.ERROR_IN_GETID);
             return CustomResponse();
         }
 
-        if (await _iGenericConfigurationService.EmailSettingsService.ExistEmailSettingsByIdAsync(id))
+        if (await _iGenericConfigurationService.EmailDisplaySettingsService.ExistEmailDisplaySettingsByIdAsync(id))
         {
-            var result = await _iGenericConfigurationService.EmailSettingsService.UpdateEmailSettingsAsync(id, emailSettingsUpdateRequest);
+            var result = await _iGenericConfigurationService.EmailDisplaySettingsService.UpdateEmailDisplaySettingsAsync(id, emailDisplaySettingsUpdateRequest);
             if (result)
                 return NoContent();
             else
@@ -105,9 +92,9 @@ public sealed class EmailSettingsController : GenericController
     [HttpDelete("LogicDelete/{id:long}")]
     public async Task<IActionResult> LogicDelete(int id)
     {
-        if (await _iGenericConfigurationService.EmailSettingsService.ExistEmailSettingsByIdAsync(id))
+        if (await _iGenericConfigurationService.EmailDisplaySettingsService.ExistEmailDisplaySettingsByIdAsync(id))
         {
-            bool result = await _iGenericConfigurationService.EmailSettingsService.LogicDeleteEmailSettingsByIdAsync(id);
+            bool result = await _iGenericConfigurationService.EmailDisplaySettingsService.LogicDeleteEmailDisplaySettingsByIdAsync(id);
             if (result)
                 return CustomResponse(default, FixConstants.SUCCESS_IN_DELETELOGIC);
             else
@@ -120,9 +107,9 @@ public sealed class EmailSettingsController : GenericController
     [HttpPost("Reactive")]
     public async Task<IActionResult> Reactive(EmailSettingsReactiveRequestDTO emailSettingsReactiveRequestDTO)
     {
-        if (await _iGenericConfigurationService.EmailSettingsService.ExistEmailSettingsByIdAsync(emailSettingsReactiveRequestDTO.Id.GetValueOrDefault()))
+        if (await _iGenericConfigurationService.EmailDisplaySettingsService.ExistEmailDisplaySettingsByIdAsync(emailSettingsReactiveRequestDTO.Id.GetValueOrDefault()))
         {
-            bool result = await _iGenericConfigurationService.EmailSettingsService.ReactiveEmailSettingsByIdAsync(emailSettingsReactiveRequestDTO.Id.Value);
+            bool result = await _iGenericConfigurationService.EmailDisplaySettingsService.ReactiveEmailDisplaySettingsByIdAsync(emailSettingsReactiveRequestDTO.Id.Value);
             if (result)
                 return CustomResponse(default, FixConstants.SUCCESS_IN_ACTIVERECORD);
             else
@@ -137,11 +124,11 @@ public sealed class EmailSettingsController : GenericController
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
-        var excelData = await _iGenericConfigurationService.EmailSettingsService.GetAllEmailSettingsExcelAsync();
+        var excelData = await _iGenericConfigurationService.EmailDisplaySettingsService.GetAllEmailDisplaySettingsExcelAsync();
         if (excelData?.Count() > 0)
         {
             var memoryStreamResult = _generalMethod.GetMemoryStreamType(EnumMemoryStreamFile.XLSX);
-            var excelName = $"EmailSettings_{GuidExtensionMethod.GetGuidDigits("N")}.{memoryStreamResult.Extension}";
+            var excelName = $"EmailDisplaySettings_{GuidExtensionMethod.GetGuidDigits("N")}.{memoryStreamResult.Extension}";
             var memoryStreamExcel = await _iFileService.CreateExcelFileEPPLUS(excelData, excelName);
             return File(memoryStreamExcel.ToArray(), memoryStreamResult.Type, excelName);
         }

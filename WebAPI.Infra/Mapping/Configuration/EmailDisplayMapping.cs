@@ -26,7 +26,7 @@ public class EmailDisplayMapping : GenericMapping<EmailDisplay>
         _builder.Property(x => x.Title).IsRequired().HasMaxLength(255).HasColumnName("Title");
         _builder.Property(x => x.Subject).IsRequired().HasMaxLength(255).HasColumnName("Subject");
         _builder.Property(x => x.Body).IsRequired().HasMaxLength(8000).HasColumnName("Body");
-        _builder.Property(x => x.Priority).IsRequired().HasColumnName("Priority");
+        _builder.Property(x => x.MessagePriority).IsRequired().HasColumnName("Priority");
         _builder.Property(x => x.HasAttachment).IsRequired().HasDefaultValue(false).HasColumnName("HasAttachment");
     }
 

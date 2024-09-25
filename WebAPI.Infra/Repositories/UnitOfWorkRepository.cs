@@ -13,7 +13,7 @@ public class GenericUnitofWorkRepository : IGenericUnitofWorkRepository
     public IStatesRepository StatesRepository { get; } 
     public IUserRepository UserRepository { get; }
     public IAuthenticationSettingsRepository AuthenticationSettingsRepository { get; }
-    public IEmailDisplayRepository EmailDisplayRepository { get; }
+    public IEmailDisplaySettingsRepository EmailDisplayRepository { get; }
     public IEmailSettingsRepository EmailSettingsRepository { get; }
     public IEnvironmentTypeSettingsRepository EnvironmentTypeSettingsRepository { get; }
     public IExpirationPasswordSettingsRepository ExpirationPasswordSettingsRepository { get; }
@@ -29,7 +29,7 @@ public class GenericUnitofWorkRepository : IGenericUnitofWorkRepository
         IStatesRepository StatesRepository,
         IUserRepository UserRepository,
         IAuthenticationSettingsRepository AuthenticationSettingsRepository,
-        IEmailDisplayRepository EmailDisplayRepository,
+        IEmailDisplaySettingsRepository EmailDisplayRepository,
         IEmailSettingsRepository EmailSettingsRepository,
         IEnvironmentTypeSettingsRepository EnvironmentTypeSettingsRepository,
         IExpirationPasswordSettingsRepository ExpirationPasswordSettingsRepository,

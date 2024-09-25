@@ -15,7 +15,7 @@ public interface IGenericUnitofWorkRepository : IDisposable
     #region Configuration
 
     IAuthenticationSettingsRepository AuthenticationSettingsRepository { get; }
-    IEmailDisplayRepository EmailDisplayRepository { get; }
+    IEmailDisplaySettingsRepository EmailDisplayRepository { get; }
     IEmailSettingsRepository EmailSettingsRepository { get; }
     IEnvironmentTypeSettingsRepository EnvironmentTypeSettingsRepository { get; }
     IExpirationPasswordSettingsRepository ExpirationPasswordSettingsRepository { get; }

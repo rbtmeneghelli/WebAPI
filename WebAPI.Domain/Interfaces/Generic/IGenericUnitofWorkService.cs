@@ -30,4 +30,6 @@ public interface IGenericConfigurationService
     ILayoutSettingsService LayoutSettingsService { get; }
     ILogSettingsService LogSettingsService { get; }
     IRequiredPasswordSettingsService RequiredPasswordSettingsService { get; }
+    IEmailDisplaySettingsService EmailDisplaySettingsService { get; }
+    IEmailSettingsService EmailSettingsService { get; }
 }

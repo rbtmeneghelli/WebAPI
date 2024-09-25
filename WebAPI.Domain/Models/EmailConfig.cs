@@ -29,7 +29,7 @@ public class EmailConfig
         Subject = emailDisplay.Subject;
         Body = emailDisplay.Body;
         EmailTo = EMAIL_TO;
-        Priority = emailDisplay.Priority;
+        Priority = emailDisplay.MessagePriority;
         UserName = userName;
         HasAttachment = emailDisplay.HasAttachment;
         Template = emailDisplay.EmailTemplates.Description;
