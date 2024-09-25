@@ -1,31 +1,31 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="WebAPI.Domain.Entities.Region" Collapsed="true">
-    <Position X="0.5" Y="1.5" Width="1.5" />
+  <Class Name="WebAPI.Domain.Entities.Generic.GenericEntity" Collapsed="true">
+    <Position X="4.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAIAAAAAAAAAIAAACAAAQAAAAAAAAAAAAABAAAAAA=</HashCode>
-      <FileName>Entities\Region.cs</FileName>
+      <HashCode>AAACAAAEEQIAAAAAAABAAAAAAAAAAAAAAAABAAAAAAA=</HashCode>
+      <FileName>Entities\Generic\GenericEntity.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="WebAPI.Domain.Entities.States" Collapsed="true">
-    <Position X="2.25" Y="1.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAEAAAAgAAAAAAIAAiAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Entities\States.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="WebAPI.Domain.Generic.GenericEntity" Collapsed="true">
-    <Position X="4.25" Y="0.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAACAAAAAAAAAQAAEABAAAAEAAAAAAAAAAAAAAAAAAE=</HashCode>
-      <FileName>Generic\GenericEntity.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="WebAPI.Domain.Entities.City" Collapsed="true">
-    <Position X="6.25" Y="1.5" Width="1.5" />
+  <Class Name="WebAPI.Domain.Entities.Others.City" Collapsed="true">
+    <Position X="2.75" Y="2.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAQAAAgAAAAAAAAAQQAgAAABAAAAAABAAAAAA=</HashCode>
-      <FileName>Entities\City.cs</FileName>
+      <FileName>Entities\Others\City.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebAPI.Domain.Entities.Others.Region" Collapsed="true">
+    <Position X="4.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAIAAACAAAQAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Entities\Others\Region.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebAPI.Domain.Entities.Others.States" Collapsed="true">
+    <Position X="6.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAgAAAAAAIAAiAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\Others\States.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />

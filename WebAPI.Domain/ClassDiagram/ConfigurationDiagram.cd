@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="WebAPI.Domain.Entities.Configuration.AuthenticationSettings" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAAAAAAgQAAAAAAAAAAAAAAgAAAAEAAA=</HashCode>
+      <FileName>Entities\Configuration\AuthenticationSettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebAPI.Domain.Entities.Configuration.EmailTemplate" Collapsed="true">
+    <Position X="7.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\Configuration\EmailTemplate.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebAPI.Domain.Entities.Configuration.EnvironmentTypeSettings" Collapsed="true">
+    <Position X="0.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAECAAAAAEAAAACAAEAAQAAAEgAA=</HashCode>
+      <FileName>Entities\Configuration\EnvironmentTypeSettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebAPI.Domain.Entities.Configuration.ExpirationPasswordSettings" Collapsed="true">
+    <Position X="4" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAAAAAAgAAAAAAAAgBAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\Configuration\ExpirationPasswordSettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebAPI.Domain.Entities.Configuration.LayoutSettings" Collapsed="true">
+    <Position X="7.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAACAAAAAwAAAAAAAgAAAAAAAAAAAAAAgAAAAAAAAA=</HashCode>
+      <FileName>Entities\Configuration\LayoutSettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebAPI.Domain.Entities.Configuration.LogSettings" Collapsed="true">
+    <Position X="5.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAgAAAAAAAgCAAAAAAgAAARAAAAAAAAAAAAAAAIAAAA=</HashCode>
+      <FileName>Entities\Configuration\LogSettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebAPI.Domain.Entities.Configuration.RequiredPasswordSettings" Collapsed="true">
+    <Position X="4.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAgAAAAAAAgAAAAAAAAAAAAQAAAAECAAAAA=</HashCode>
+      <FileName>Entities\Configuration\RequiredPasswordSettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebAPI.Domain.Entities.Configuration.UploadSettings" Collapsed="true">
+    <Position X="2.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgBAAEAAAgAAAAAgAgAAAAAAAABAIgAAAAEAAAAAAA=</HashCode>
+      <FileName>Entities\Configuration\UploadSettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebAPI.Domain.Entities.Generic.GenericEntity" Collapsed="true">
+    <Position X="4.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAEEQIAAAAAAABAAAAAAAAAAAAAAAABAAAAAAA=</HashCode>
+      <FileName>Entities\Generic\GenericEntity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

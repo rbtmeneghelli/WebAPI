@@ -22,17 +22,10 @@
     </TypeIdentifier>
   </Class>
   <Class Name="WebAPI.Domain.Entities.ControlPanel.Profile" Collapsed="true">
-    <Position X="6.75" Y="1.5" Width="1.5" />
+    <Position X="4" Y="4" Width="1.5" />
     <TypeIdentifier>
       <HashCode>QAAAAAAABAAgAAAAAAAAAAAACAAAAAAAAAAAAQAAAAA=</HashCode>
       <FileName>Entities\ControlPanel\Profile.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="WebAPI.Domain.Entities.ControlPanel.ProfileOperation" Collapsed="true">
-    <Position X="8.5" Y="1.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAECAAIAAAEAAAAAAAEAAAAAAAAACAAAABEAAAAAAAA=</HashCode>
-      <FileName>Entities\ControlPanel\ProfileOperation.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="WebAPI.Domain.Entities.ControlPanel.User" Collapsed="true">
@@ -49,25 +42,18 @@
       <FileName>Entities\ControlPanel\Client.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="WebAPI.Domain.Entities.ControlPanel.Address" Collapsed="true">
-    <Position X="2.5" Y="1" Width="1.5" />
+  <Class Name="WebAPI.Domain.Entities.Generic.GenericEntity" Collapsed="true">
+    <Position X="4.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Entities\ControlPanel\Client.cs</FileName>
+      <HashCode>AAACAAAEEQIAAAAAAABAAAAAAAAAAAAAAAABAAAAAAA=</HashCode>
+      <FileName>Entities\Generic\GenericEntity.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="WebAPI.Domain.Entities.ControlPanel.Document" Collapsed="true">
-    <Position X="4" Y="4" Width="1.5" />
+  <Class Name="WebAPI.Domain.Entities.ControlPanel.ProfileOperation" Collapsed="true">
+    <Position X="6.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAEAAAAYAAAAAAAAAAAAAAACAAAA=</HashCode>
-      <FileName>Entities\ControlPanel\Client.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="WebAPI.Domain.Generic.GenericEntity" Collapsed="true">
-    <Position X="4.25" Y="0.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAACAAAAAAAAAQAAEABAAAAEAAAAAAAAAAAAAAAAAAE=</HashCode>
-      <FileName>Generic\GenericEntity.cs</FileName>
+      <HashCode>AAECAAIAAAEAAAAAAAEAAAAAAAAACAAAABEAAAAAAAA=</HashCode>
+      <FileName>Entities\ControlPanel\ProfileOperation.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />
