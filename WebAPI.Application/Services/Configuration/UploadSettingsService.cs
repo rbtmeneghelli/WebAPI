@@ -164,13 +164,13 @@ public class UploadSettingsService : GenericService, IUploadSettingsService
             UploadSettings uploadSettings = new UploadSettings()
             {
                 LogoWeb = arrLogoWeb,
-                LogoWebDescription = uploadSettingsCreateRequestDTO.LogoWeb.FileName ?? StringExtensionMethod.GetEmptyString(),
+                LogoWebDescription = Path.GetFileNameWithoutExtension(uploadSettingsCreateRequestDTO.LogoWeb.FileName) ?? StringExtensionMethod.GetEmptyString(),
                 LogoMobile = arrLogoMobile,
-                LogoMobileDescription = uploadSettingsCreateRequestDTO.LogoMobile.FileName ?? StringExtensionMethod.GetEmptyString(),
+                LogoMobileDescription = Path.GetFileNameWithoutExtension(uploadSettingsCreateRequestDTO.LogoMobile.FileName) ?? StringExtensionMethod.GetEmptyString(),
                 BannerWeb = arrBannerWeb,
-                BannerWebDescription = uploadSettingsCreateRequestDTO.BannerWeb.FileName ?? StringExtensionMethod.GetEmptyString(),
+                BannerWebDescription = Path.GetFileNameWithoutExtension(uploadSettingsCreateRequestDTO.BannerWeb.FileName) ?? StringExtensionMethod.GetEmptyString(),
                 BannerMobile = arrBannerMobile,
-                BannerMobileDescription = uploadSettingsCreateRequestDTO.BannerMobile.FileName ?? StringExtensionMethod.GetEmptyString(),
+                BannerMobileDescription = Path.GetFileNameWithoutExtension(uploadSettingsCreateRequestDTO.BannerMobile.FileName) ?? StringExtensionMethod.GetEmptyString(),
                 CreateDate = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil(),
                 Status = true,
                 IdEnvironmentType = uploadSettingsCreateRequestDTO.IdEnvironment
@@ -209,30 +209,74 @@ public class UploadSettingsService : GenericService, IUploadSettingsService
                     string[] arrExtensions = layoutSettings.ImageFileContentToUpload.Split(',');
                     double maxSizeFile = layoutSettings.MaxImageFileSize;
 
-                    bool LogoWebValidation = ValidationFile(uploadSettingsUpdateRequestDTO.LogoWeb, arrExtensions, maxSizeFile);
-                    bool LogoMobileValidation = ValidationFile(uploadSettingsUpdateRequestDTO.LogoMobile, arrExtensions, maxSizeFile);
-                    bool BannerWebValidation = ValidationFile(uploadSettingsUpdateRequestDTO.BannerWeb, arrExtensions, maxSizeFile);
-                    bool BannerMobileValidation = ValidationFile(uploadSettingsUpdateRequestDTO.BannerMobile, arrExtensions, maxSizeFile);
+                    bool existLogoWeb = _generalMethod.ExistFile(uploadSettingsUpdateRequestDTO.LogoWeb);
+                    bool existLogoMobile = _generalMethod.ExistFile(uploadSettingsUpdateRequestDTO.LogoMobile);
+                    bool existBannerWeb = _generalMethod.ExistFile(uploadSettingsUpdateRequestDTO.BannerWeb);
+                    bool existBannerMobile = _generalMethod.ExistFile(uploadSettingsUpdateRequestDTO.BannerMobile);
 
-                    uploadSettingsDb.LogoWeb = await GetByteArray(LogoWebValidation, uploadSettingsUpdateRequestDTO.LogoWeb, uploadSettingsDb.LogoWeb);
-                    uploadSettingsDb.LogoWebDescription = LogoWebValidation ?
-                                                          uploadSettingsDb.LogoWebDescription :
-                                                          uploadSettingsUpdateRequestDTO.LogoWeb.FileName ?? StringExtensionMethod.GetEmptyString();
+                    bool LogoWebValidation = existLogoWeb ?
+                                             _generalMethod.ValidateFile(uploadSettingsUpdateRequestDTO.LogoWeb, arrExtensions, maxSizeFile) :
+                                             true;
 
-                    uploadSettingsDb.LogoMobile = await GetByteArray(LogoMobileValidation, uploadSettingsUpdateRequestDTO.LogoMobile, uploadSettingsDb.LogoMobile);
-                    uploadSettingsDb.LogoMobileDescription = LogoMobileValidation ?
-                                                             uploadSettingsDb.LogoMobileDescription :
-                                                             uploadSettingsUpdateRequestDTO.LogoMobile.FileName ?? StringExtensionMethod.GetEmptyString();
+                    bool LogoMobileValidation = existLogoMobile ?
+                                                 _generalMethod.ValidateFile(uploadSettingsUpdateRequestDTO.LogoMobile, arrExtensions, maxSizeFile) :
+                                                true;
 
-                    uploadSettingsDb.BannerWeb = await GetByteArray(BannerWebValidation, uploadSettingsUpdateRequestDTO.BannerWeb, uploadSettingsDb.BannerWeb);
-                    uploadSettingsDb.BannerWebDescription = BannerWebValidation ?
-                                                            uploadSettingsDb.BannerWebDescription :
-                                                            uploadSettingsUpdateRequestDTO.BannerWeb.FileName ?? StringExtensionMethod.GetEmptyString();
+                    bool BannerWebValidation = existBannerWeb ?
+                                                _generalMethod.ValidateFile(uploadSettingsUpdateRequestDTO.BannerWeb, arrExtensions, maxSizeFile) :
+                                               true;
 
-                    uploadSettingsDb.BannerMobile = await GetByteArray(BannerMobileValidation, uploadSettingsUpdateRequestDTO.BannerMobile, uploadSettingsDb.BannerMobile);
-                    uploadSettingsDb.BannerMobileDescription = BannerWebValidation ?
-                                                               uploadSettingsDb.BannerMobileDescription :
-                                                               uploadSettingsUpdateRequestDTO.BannerMobile.FileName ?? StringExtensionMethod.GetEmptyString();
+                    bool BannerMobileValidation = existBannerMobile ?
+                                                   _generalMethod.ValidateFile(uploadSettingsUpdateRequestDTO.BannerMobile, arrExtensions, maxSizeFile) :
+                                                  true;
+
+                    if (!LogoWebValidation)
+                    {
+                        Notify(string.Format(ERROR_UPLOAD, uploadSettingsUpdateRequestDTO.LogoWeb, layoutSettings));
+                        return false;
+                    }
+
+                    if (!LogoMobileValidation)
+                    {
+                        Notify(string.Format(ERROR_UPLOAD, uploadSettingsUpdateRequestDTO.LogoMobile, arrExtensions));
+                        return false;
+                    }
+
+                    if (!BannerWebValidation)
+                    {
+                        Notify(string.Format(ERROR_UPLOAD, uploadSettingsUpdateRequestDTO.BannerWeb, arrExtensions));
+                        return false;
+                    }
+
+                    if (!BannerMobileValidation)
+                    {
+                        Notify(string.Format(ERROR_UPLOAD, uploadSettingsUpdateRequestDTO.BannerMobile, arrExtensions));
+                        return false;
+                    }
+
+                    if (existLogoWeb)
+                    {
+                        uploadSettingsDb.LogoWeb = await GetByteArray(LogoWebValidation, uploadSettingsUpdateRequestDTO.LogoWeb, uploadSettingsDb.LogoWeb);
+                        uploadSettingsDb.LogoWebDescription = Path.GetFileNameWithoutExtension(uploadSettingsUpdateRequestDTO.LogoWeb.FileName ?? StringExtensionMethod.GetEmptyString());
+                    }
+
+                    if (existLogoMobile)
+                    {
+                        uploadSettingsDb.LogoMobile = await GetByteArray(LogoWebValidation, uploadSettingsUpdateRequestDTO.LogoMobile, uploadSettingsDb.LogoMobile);
+                        uploadSettingsDb.LogoMobileDescription = Path.GetFileNameWithoutExtension(uploadSettingsUpdateRequestDTO.LogoMobile.FileName ?? StringExtensionMethod.GetEmptyString());
+                    }
+
+                    if (existBannerWeb)
+                    {
+                        uploadSettingsDb.BannerWeb = await GetByteArray(LogoWebValidation, uploadSettingsUpdateRequestDTO.BannerWeb, uploadSettingsDb.BannerWeb);
+                        uploadSettingsDb.BannerWebDescription = Path.GetFileNameWithoutExtension(uploadSettingsUpdateRequestDTO.BannerWeb.FileName ?? StringExtensionMethod.GetEmptyString());
+                    }
+
+                    if (existBannerMobile)
+                    {
+                        uploadSettingsDb.BannerMobile = await GetByteArray(LogoWebValidation, uploadSettingsUpdateRequestDTO.BannerMobile, uploadSettingsDb.BannerMobile);
+                        uploadSettingsDb.BannerMobileDescription = Path.GetFileNameWithoutExtension(uploadSettingsUpdateRequestDTO.BannerMobile.FileName ?? StringExtensionMethod.GetEmptyString());
+                    }
 
 
                     uploadSettingsDb.IdEnvironmentType = uploadSettingsUpdateRequestDTO.IdEnvironment;
@@ -317,12 +361,6 @@ public class UploadSettingsService : GenericService, IUploadSettingsService
         {
             await Task.CompletedTask;
         }
-    }
-
-    private bool ValidationFile(IFormFile formFile, string[] arrExtensions, double maxSizeFile)
-    {
-        bool fileValidation = _generalMethod.ExistFile(formFile) ? _generalMethod.ValidateFile(formFile, arrExtensions, maxSizeFile) : false;
-        return fileValidation;
     }
 
     private async Task<byte[]> GetByteArray(bool fileValidation, IFormFile formFile, byte[] arrByteFileDb)

@@ -30,8 +30,6 @@ public sealed class AuthenticationSettingsController : GenericController
         _iFileService = iFileService;
     }
 
-    //private readonly IMemoryCacheService _memoryCacheService;
-
     [HttpGet("GetAll")]
     public async Task<IActionResult> GetAll()
     {

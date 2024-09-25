@@ -1,26 +1,28 @@
 ﻿using WebAPI.Domain.Constants;
 using WebAPI.Domain.EntitiesDTO.Configuration;
 using WebAPI.Domain.Interfaces.Repository;
+using WebAPI.Domain.Interfaces.Services.Tools;
 
 namespace WebAPI.Controllers.V1.Configuration;
 
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/[controller]")]
-//[Authorize("Bearer")]
-[AllowAnonymous]
+[Authorize("Bearer")]
 public sealed class UploadSettingsController : GenericController
 {
     private readonly IGenericConfigurationService _iGenericConfigurationService;
     private readonly GeneralMethod _generalMethod;
-
+    private readonly IMemoryCacheService _iMemoryCacheService;
     public UploadSettingsController(
         IGenericConfigurationService iGenericConfigurationService,
+        IMemoryCacheService iMemoryCacheService,
         IMapper iMapperService,
         IHttpContextAccessor iHttpContextAccessor,
         IGenericNotifyLogsService iGenericNotifyLogsService)
     : base(iMapperService, iHttpContextAccessor, iGenericNotifyLogsService)
     {
         _iGenericConfigurationService = iGenericConfigurationService;
+        _iMemoryCacheService = iMemoryCacheService;
         _generalMethod = GeneralMethod.GetLoadExtensionMethods();
     }
 
@@ -114,5 +116,22 @@ public sealed class UploadSettingsController : GenericController
         }
 
         return CustomNotFound();
+    }
+
+
+    [HttpGet("load")]
+    public async Task<IActionResult> Load()
+    {
+        if (!_iMemoryCacheService.TryGet<UploadSettingsResponseDTO>("FilesData", out var cached))
+        {
+            var files = await _iGenericConfigurationService.UploadSettingsService.GetUploadSettingsByEnvironmentAsync();
+            _iMemoryCacheService.Set("FilesData", files);
+            return CustomResponse(files);
+        }
+        else
+        {
+            var files = _iMemoryCacheService.Get<UploadSettingsResponseDTO>("FilesData");
+            return CustomResponse(files);
+        }
     }
 }

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
@@ -10,23 +9,19 @@ public record LayoutSettingsExcelDTO
     [DisplayName("EnvironmentDescription")]
     public string EnvironmentDescription { get; set; }
 
-    [Required]
-    [Display(Name = "BannerMobile", Description = "Banner da aplicação Mobile")]
+    [DisplayName("ImageFileContentToUpload")]
     public string ImageFileContentToUpload { get; set; }
 
-    [Required]
-    [Display(Name = "BannerMobile", Description = "Banner da aplicação Mobile")]
+    [DisplayName("DocumentFileContentToUpload")]
     public string DocumentFileContentToUpload { get; set; }
 
-    [Required]
-    [Display(Name = "BannerMobile", Description = "Tamanho máximo do arquivo imagem")]
+    [DisplayName("MaxImageFileSize")]
     public double MaxImageFileSize { get; set; }
 
-    [Required]
-    [Display(Name = "MaxDocumentFileSize", Description = "Tamanho máximo do arquivo documento")]
+    [DisplayName("MaxDocumentFileSize")]
     public double MaxDocumentFileSize { get; set; }
 
-    [Display(Name = "Status", Description = "Status do registro")]
+    [DisplayName("StatusDescription")]
     public string StatusDescription { get; set; }
 }
 public record LayoutSettingsResponseDTO
@@ -34,22 +29,18 @@ public record LayoutSettingsResponseDTO
     [Display(Name = "Id", Description = "Id do registro")]
     public long Id { get; set; }
 
-    [DisplayName("EnvironmentDescription")]
+    [Display(Name = "EnvironmentDescription", Description = "Descrição do ambiente")]
     public string EnvironmentDescription { get; set; }
 
-    [Required]
     [Display(Name = "BannerMobile", Description = "Banner da aplicação Mobile")]
     public string ImageFileContentToUpload { get; set; }
 
-    [Required]
     [Display(Name = "BannerMobile", Description = "Banner da aplicação Mobile")]
     public string DocumentFileContentToUpload { get; set; }
 
-    [Required]
     [Display(Name = "BannerMobile", Description = "Tamanho máximo do arquivo imagem")]
     public double MaxImageFileSize { get; set; }
 
-    [Required]
     [Display(Name = "MaxDocumentFileSize", Description = "Tamanho máximo do arquivo documento")]
     public double MaxDocumentFileSize { get; set; }
 
