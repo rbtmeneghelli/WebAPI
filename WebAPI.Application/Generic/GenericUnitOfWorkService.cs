@@ -72,6 +72,8 @@ public class GenericConfigurationService : IGenericConfigurationService
 
     public IEmailSettingsService EmailSettingsService { get; }
 
+    public IUploadSettingsService UploadSettingsService { get; }
+
     public GenericConfigurationService(
         IEmailService EmailService,
         IAuthenticationSettingsService AuthenticationSettingsService,
@@ -81,7 +83,8 @@ public class GenericConfigurationService : IGenericConfigurationService
         ILogSettingsService LogSettingsService,
         IRequiredPasswordSettingsService RequiredPasswordSettingsService,
         IEmailDisplaySettingsService EmailDisplaySettingsService,
-        IEmailSettingsService EmailSettingsService
+        IEmailSettingsService EmailSettingsService,
+        IUploadSettingsService UploadSettingsService
         )
     {
         this.EmailService = EmailService ?? throw new ArgumentNullException(nameof(EmailService));
@@ -93,5 +96,6 @@ public class GenericConfigurationService : IGenericConfigurationService
         this.RequiredPasswordSettingsService = RequiredPasswordSettingsService ?? throw new ArgumentNullException(nameof(RequiredPasswordSettingsService));
         this.EmailDisplaySettingsService = EmailDisplaySettingsService ?? throw new ArgumentNullException(nameof(EmailDisplaySettingsService));
         this.EmailSettingsService = EmailSettingsService ?? throw new ArgumentNullException(nameof(EmailSettingsService));
+        this.UploadSettingsService = UploadSettingsService ?? throw new ArgumentNullException(nameof(UploadSettingsService));
     }
 }

@@ -1,5 +1,4 @@
-﻿using WebAPI.Domain.Entities.Configuration;
-using WebAPI.Domain.EntitiesDTO.Configuration;
+﻿using WebAPI.Domain.EntitiesDTO.Configuration;
 
 namespace WebAPI.Domain.Interfaces.Services.Configuration;
 

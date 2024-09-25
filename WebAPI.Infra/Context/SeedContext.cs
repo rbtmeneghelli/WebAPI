@@ -100,6 +100,17 @@ public static class SeedContext
         );
     }
 
+    private static void SeedLayoutSettings(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<LayoutSettings>().HasData(
+           new LayoutSettings() { Id = (int)EnumEnvironment.PRD, CreateDate = _currentDate, DocumentFileContentToUpload = ".pdf,.doc,.docx", ImageFileContentToUpload = ".jpg,.jpeg,.png", MaxDocumentFileSize = 20, MaxImageFileSize = 20, Status = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.PRD },
+           new LayoutSettings() { Id = (int)EnumEnvironment.PRE_PROD, CreateDate = _currentDate, DocumentFileContentToUpload = ".pdf,.doc,.docx", ImageFileContentToUpload = ".jpg,.jpeg,.png", MaxDocumentFileSize = 20, MaxImageFileSize = 20, Status = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.PRE_PROD },
+           new LayoutSettings() { Id = (int)EnumEnvironment.HML, CreateDate = _currentDate, DocumentFileContentToUpload = ".pdf,.doc,.docx,.txt", ImageFileContentToUpload = ".jpg,.jpeg,.png", MaxDocumentFileSize = 20, MaxImageFileSize = 20, Status = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.HML },
+           new LayoutSettings() { Id = (int)EnumEnvironment.QA, CreateDate = _currentDate, DocumentFileContentToUpload = ".pdf,.doc,.docx,.txt", ImageFileContentToUpload = ".jpg,.jpeg,.png", MaxDocumentFileSize = 20, MaxImageFileSize = 20, Status = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.QA },
+           new LayoutSettings() { Id = (int)EnumEnvironment.DEV, CreateDate = _currentDate, DocumentFileContentToUpload = ".pdf,.doc,.docx,.txt", ImageFileContentToUpload = ".jpg,.jpeg,.png", MaxDocumentFileSize = 20, MaxImageFileSize = 20, Status = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.DEV }
+        );
+    }
+
     #endregion
 
     #region Control Panel Seeds
@@ -354,6 +365,7 @@ public static class SeedContext
         SeedExpirationPasswordSettings(modelBuilder);
         SeedLogSettings(modelBuilder);
         SeedRequiredPasswordSettings(modelBuilder);
+        SeedLayoutSettings(modelBuilder);
     }
 
     public static void ReseedTables(this WebAPIContext context)

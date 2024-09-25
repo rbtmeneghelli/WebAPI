@@ -1,13 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using NPOI.OpenXmlFormats.Dml;
-using WebAPI.Application.Generic;
-using WebAPI.Domain;
+﻿using WebAPI.Application.Generic;
 using WebAPI.Domain.Constants;
 using WebAPI.Domain.Entities.Configuration;
 using WebAPI.Domain.EntitiesDTO.Configuration;
-using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Domain.Interfaces.Repository.Configuration;
-using WebAPI.Domain.Interfaces.Services.Configuration;
 using WebAPI.Domain.Interfaces.Services.Tools;
 
 namespace WebAPI.Application.Services.Configuration;
@@ -15,59 +10,118 @@ namespace WebAPI.Application.Services.Configuration;
 public class LayoutSettingsService : GenericService, ILayoutSettingsService
 {
     private readonly ILayoutSettingsRepository _iLayoutSettingsRepository;
-    private readonly GeneralMethod _generalMethod;
-    private const string ERROR_UPLOAD = "Ocorreu um erro no upload do logo web. Tente novamente! \n O arquivo deve ser do tipo {0} e de tamanho maximo de {1}";
+    private EnvironmentVariables _environmentVariables;
 
     public LayoutSettingsService(
         ILayoutSettingsRepository iLayoutSettingsRepository,
-        INotificationMessageService iNotificationMessageService)
+        INotificationMessageService iNotificationMessageService,
+        EnvironmentVariables environmentVariables)
         : base(iNotificationMessageService)
     {
-        _generalMethod = GeneralMethod.GetLoadExtensionMethods();
         _iLayoutSettingsRepository = iLayoutSettingsRepository;
+        _environmentVariables = environmentVariables;
     }
 
-    public async Task<bool> CreateLayoutSettingsRequestDTO(LayoutSettingsCreateRequestDTO layoutSettingsCreateRequestDTO)
+    public async Task<IEnumerable<LayoutSettingsResponseDTO>> GetAllLayoutSettingsAsync()
     {
         try
         {
-            bool LogoWebValidation = _generalMethod.ValidateFile(layoutSettingsCreateRequestDTO.LogoWeb);
-            bool LogoMobileValidation = _generalMethod.ValidateFile(layoutSettingsCreateRequestDTO.LogoMobile);
-            bool BannerWebValidation = _generalMethod.ValidateFile(layoutSettingsCreateRequestDTO.BannerWeb);
-            bool BannerMobileValidation = _generalMethod.ValidateFile(layoutSettingsCreateRequestDTO.BannerMobile);
+            return await (from p in _iLayoutSettingsRepository.GetAllInclude("EnvironmentTypeSettings")
+                          orderby p.EnvironmentTypeSettings.Id ascending
+                          select new LayoutSettingsResponseDTO()
+                          {
+                              Id = p.Id.Value,
+                              EnvironmentDescription = p.EnvironmentTypeSettings.Description,
+                              DocumentFileContentToUpload = p.DocumentFileContentToUpload,
+                              ImageFileContentToUpload = p.ImageFileContentToUpload,
+                              MaxDocumentFileSize = p.MaxDocumentFileSize,
+                              MaxImageFileSize = p.MaxImageFileSize,
+                              StatusDescription = p.GetStatusDescription()
+                          }).ToListAsync();
+        }
+        catch
+        {
+            Notify(FixConstants.ERROR_IN_GETALL);
+            return Enumerable.Empty<LayoutSettingsResponseDTO>();
+        }
+        finally
+        {
+            await Task.CompletedTask;
+        }
+    }
 
-            if (!LogoWebValidation)
-                Notify(string.Format(ERROR_UPLOAD, layoutSettingsCreateRequestDTO.LogoWeb, ".Jpg,.png,.jpeg"));
+    public async Task<LayoutSettingsResponseDTO> GetLayoutSettingsByEnvironmentAsync()
+    {
+        try
+        {
+            return await (from p in _iLayoutSettingsRepository.FindBy(x => x.IdEnvironmentType == (int)_environmentVariables.Environment).AsQueryable()
+                          select new LayoutSettingsResponseDTO
+                          {
+                              Id = p.Id.Value,
+                              EnvironmentDescription = p.EnvironmentTypeSettings.Description,
+                              DocumentFileContentToUpload = p.DocumentFileContentToUpload,
+                              ImageFileContentToUpload = p.ImageFileContentToUpload,
+                              MaxDocumentFileSize = p.MaxDocumentFileSize,
+                              MaxImageFileSize = p.MaxImageFileSize,
+                              StatusDescription = p.GetStatusDescription()
+                          }).FirstOrDefaultAsync();
+        }
+        catch
+        {
+            Notify(FixConstants.ERROR_IN_GETID);
+            return default;
+        }
+        finally
+        {
+            await Task.CompletedTask;
+        }
+    }
 
-            if (!LogoWebValidation)
-                Notify(string.Format(ERROR_UPLOAD, layoutSettingsCreateRequestDTO.LogoWeb, ".Jpg,.png,.jpeg"));
+    public async Task<LayoutSettingsResponseDTO> GetLayoutSettingsByIdAsync(long id)
+    {
+        try
+        {
+            return await (from p in _iLayoutSettingsRepository.FindBy(x => x.Id == id).AsQueryable()
+                          select new LayoutSettingsResponseDTO
+                          {
+                              Id = p.Id.Value,
+                              EnvironmentDescription = p.EnvironmentTypeSettings.Description,
+                              DocumentFileContentToUpload = p.DocumentFileContentToUpload,
+                              ImageFileContentToUpload = p.ImageFileContentToUpload,
+                              MaxDocumentFileSize = p.MaxDocumentFileSize,
+                              MaxImageFileSize = p.MaxImageFileSize,
+                              StatusDescription = p.GetStatusDescription()
+                          }).FirstOrDefaultAsync();
+        }
+        catch
+        {
+            Notify(FixConstants.ERROR_IN_GETID);
+            return default;
+        }
+        finally
+        {
+            await Task.CompletedTask;
+        }
+    }
 
-            if (!LogoWebValidation)
-                Notify(string.Format(ERROR_UPLOAD, layoutSettingsCreateRequestDTO.LogoWeb, ".Jpg,.png,.jpeg"));
+    public async Task<bool> ExistLayoutSettingsByEnvironmentAsync()
+    {
+        var result = _iLayoutSettingsRepository.Exist(x => x.IdEnvironmentType == (int)_environmentVariables.Environment);
+        await Task.CompletedTask;
+        return result;
+    }
 
-            if (!LogoWebValidation)
-                Notify(string.Format(ERROR_UPLOAD, layoutSettingsCreateRequestDTO.LogoWeb, ".Jpg,.png,.jpeg"));
+    public async Task<bool> ExistLayoutSettingsByIdAsync(long id)
+    {
+        var result = _iLayoutSettingsRepository.Exist(x => x.Id == id);
+        await Task.CompletedTask;
+        return result;
+    }
 
-            byte[] arrLogoWeb = await _generalMethod.SetFileToByteArray(layoutSettingsCreateRequestDTO.LogoWeb);
-            byte[] arrLogoMobile = await _generalMethod.SetFileToByteArray(layoutSettingsCreateRequestDTO.LogoMobile);
-            byte[] arrBannerWeb = await _generalMethod.SetFileToByteArray(layoutSettingsCreateRequestDTO.BannerWeb);
-            byte[] arrBannerMobile = await _generalMethod.SetFileToByteArray(layoutSettingsCreateRequestDTO.BannerMobile);
-
-            LayoutSettings layoutSettings = new LayoutSettings()
-            {
-                LogoWeb = arrLogoWeb,
-                LogoMobile = arrLogoMobile,
-                BannerWeb = arrBannerWeb,
-                BannerMobile = arrBannerMobile,
-                CreateDate = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil(),
-                DocumentFileContentToUpload = "sfsdf",
-                IdEnvironmentType = layoutSettingsCreateRequestDTO.IdEnvironment,
-                ImageFileContentToUpload = "hfdsghfhd",
-                MaxDocumentFileSize = 20,
-                MaxImageFileSize = 20,
-                Status = true
-            };
-
+    public async Task<bool> CreateLayoutSettingsAsync(LayoutSettings layoutSettings)
+    {
+        try
+        {
             _iLayoutSettingsRepository.Create(layoutSettings);
             return true;
         }
@@ -76,35 +130,34 @@ public class LayoutSettingsService : GenericService, ILayoutSettingsService
             Notify(FixConstants.ERROR_IN_ADD);
             return false;
         }
+        finally
+        {
+            await Task.CompletedTask;
+        }
     }
 
-    public async Task<bool> UpdateLayoutSettingsRequestDTO(LayoutSettingsUpdateRequestDTO layoutSettingsUpdateRequestDTO)
+    public async Task<bool> UpdateLayoutSettingsAsync(LayoutSettings layoutSettings)
     {
         try
         {
-            var layoutSettingsDb = _iLayoutSettingsRepository.GetById(layoutSettingsUpdateRequestDTO.Id.Value);
+            LayoutSettings layoutSettingsDb = _iLayoutSettingsRepository.GetById(layoutSettings.Id.Value);
 
-            if (layoutSettingsDb is null)
+            if (GuardClauses.ObjectIsNotNull(layoutSettingsDb))
             {
-                Notify(FixConstants.ERROR_IN_RESEARCH);
+                if (layoutSettingsDb.Status)
+                {
+                    layoutSettingsDb.UpdateDate = layoutSettings.UpdateDate;
+                    layoutSettingsDb.DocumentFileContentToUpload = layoutSettings.DocumentFileContentToUpload;
+                    layoutSettingsDb.ImageFileContentToUpload = layoutSettings.ImageFileContentToUpload;
+                    layoutSettingsDb.MaxDocumentFileSize = layoutSettings.MaxDocumentFileSize;
+                    layoutSettingsDb.MaxImageFileSize = layoutSettings.MaxImageFileSize;
+                    layoutSettingsDb.IdEnvironmentType = layoutSettings.IdEnvironmentType;
+                    _iLayoutSettingsRepository.Update(layoutSettingsDb);
+                    return true;
+                }
+
+                Notify(FixConstants.ERROR_IN_UPDATE);
                 return false;
-            }
-
-            if (layoutSettingsDb.Status)
-            {
-                bool LogoWebValidation = ValidationFile(layoutSettingsUpdateRequestDTO.LogoWeb);
-                bool LogoMobileValidation = ValidationFile(layoutSettingsUpdateRequestDTO.LogoWeb);
-                bool BannerWebValidation = ValidationFile(layoutSettingsUpdateRequestDTO.LogoWeb);
-                bool BannerMobileValidation = ValidationFile(layoutSettingsUpdateRequestDTO.LogoWeb);
-
-                layoutSettingsDb.LogoWeb = await GetByteArray(LogoWebValidation, layoutSettingsUpdateRequestDTO.LogoWeb, layoutSettingsDb.LogoWeb);
-                layoutSettingsDb.LogoMobile = await GetByteArray(LogoWebValidation, layoutSettingsUpdateRequestDTO.LogoWeb, layoutSettingsDb.LogoWeb);
-                layoutSettingsDb.BannerWeb = await GetByteArray(LogoWebValidation, layoutSettingsUpdateRequestDTO.LogoWeb, layoutSettingsDb.LogoWeb);
-                layoutSettingsDb.BannerMobile = await GetByteArray(LogoWebValidation, layoutSettingsUpdateRequestDTO.LogoWeb, layoutSettingsDb.LogoWeb);
-                layoutSettingsDb.IdEnvironmentType = layoutSettingsUpdateRequestDTO.IdEnvironment;
-                layoutSettingsDb.UpdateDate = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
-                _iLayoutSettingsRepository.Update(layoutSettingsDb);
-                return true;
             }
 
             Notify(FixConstants.ERROR_IN_UPDATE);
@@ -115,53 +168,96 @@ public class LayoutSettingsService : GenericService, ILayoutSettingsService
             Notify(FixConstants.ERROR_IN_UPDATE);
             return false;
         }
-
-        return true;
-    }
-
-    private bool ValidationFile(IFormFile formFile)
-    {
-        bool fileValidation = _generalMethod.ExistFile(formFile) ? _generalMethod.ValidateFile(formFile) : false;
-        return fileValidation;
-    }
-
-    private async Task<byte[]> GetByteArray(bool fileValidation, IFormFile formFile, byte[] arrByteFileDb)
-    {
-        byte[] arrByteFile = new byte[0];
-
-        if (fileValidation)
+        finally
         {
-            arrByteFile = await _generalMethod.SetFileToByteArray(formFile);
-            return arrByteFile;
+            await Task.CompletedTask;
         }
-
-        return arrByteFileDb;
     }
 
-    //public async Task<LayoutSettingsResponseDTO> GetLayoutSettingsByIdAsync(long id)
-    //{
-    //    try
-    //    {
-    //        return await (from p in _iRequiredPasswordSettingsRepository.FindBy(x => x.Id == id).AsQueryable()
-    //                      select new RequiredPasswordSettingsResponseDTO
-    //                      {
-    //                          Id = p.Id.Value,
-    //                          EnvironmentDescription = p.EnvironmentTypeSettings.Description,
-    //                          MinimalOfChars = p.MinimalOfChars,
-    //                          MustHaveNumbers = p.MustHaveNumbers,
-    //                          MustHaveSpecialChars = p.MustHaveSpecialChars,
-    //                          MustHaveUpperCaseLetter = p.MustHaveUpperCaseLetter,
-    //                          StatusDescription = p.GetStatusDescription()
-    //                      }).FirstOrDefaultAsync();
-    //    }
-    //    catch
-    //    {
-    //        Notify(FixConstants.ERROR_IN_GETID);
-    //        return default;
-    //    }
-    //    finally
-    //    {
-    //        await Task.CompletedTask;
-    //    }
-    //}
+    public async Task<bool> LogicDeleteLayoutSettingsByIdAsync(long id)
+    {
+        try
+        {
+            LayoutSettings layoutSettingsDb = _iLayoutSettingsRepository.GetById(id);
+
+            if (GuardClauses.ObjectIsNotNull(layoutSettingsDb))
+            {
+                layoutSettingsDb.UpdateDate = layoutSettingsDb.GetNewUpdateDate();
+                layoutSettingsDb.Status = false;
+                _iLayoutSettingsRepository.Update(layoutSettingsDb);
+                return true;
+            }
+            else
+            {
+                Notify(FixConstants.ERROR_IN_DELETELOGIC);
+                return false;
+            }
+        }
+        catch (Exception)
+        {
+            Notify(FixConstants.ERROR_IN_DELETELOGIC);
+            return false;
+        }
+        finally
+        {
+            await Task.CompletedTask;
+        }
+    }
+
+    public async Task<bool> ReactiveLayoutSettingsByIdAsync(long id)
+    {
+        try
+        {
+            LayoutSettings layoutSettingsDb = _iLayoutSettingsRepository.GetById(id);
+
+            if (GuardClauses.ObjectIsNotNull(layoutSettingsDb))
+            {
+                layoutSettingsDb.UpdateDate = layoutSettingsDb.GetNewUpdateDate();
+                layoutSettingsDb.Status = true;
+                _iLayoutSettingsRepository.Update(layoutSettingsDb);
+                return true;
+            }
+            else
+            {
+                Notify(FixConstants.ERROR_IN_UPDATESTATUS);
+                return false;
+            }
+        }
+        catch (Exception)
+        {
+            Notify(FixConstants.ERROR_IN_UPDATESTATUS);
+            return false;
+        }
+        finally
+        {
+            await Task.CompletedTask;
+        }
+    }
+
+    public async Task<IEnumerable<LayoutSettingsExcelDTO>> GetAllLayoutSettingsExcelAsync()
+    {
+        try
+        {
+            return await (from p in _iLayoutSettingsRepository.GetAllInclude("EnvironmentTypeSettings")
+                          orderby p.EnvironmentTypeSettings.Id ascending
+                          select new LayoutSettingsExcelDTO()
+                          {
+                              EnvironmentDescription = p.EnvironmentTypeSettings.Description,
+                              DocumentFileContentToUpload = p.DocumentFileContentToUpload,
+                              ImageFileContentToUpload = p.ImageFileContentToUpload,
+                              MaxDocumentFileSize = p.MaxDocumentFileSize,
+                              MaxImageFileSize = p.MaxImageFileSize,
+                              StatusDescription = p.GetStatusDescription()
+                          }).ToListAsync();
+        }
+        catch
+        {
+            Notify(FixConstants.ERROR_IN_GETALL);
+            return Enumerable.Empty<LayoutSettingsExcelDTO>();
+        }
+        finally
+        {
+            await Task.CompletedTask;
+        }
+    }
 }

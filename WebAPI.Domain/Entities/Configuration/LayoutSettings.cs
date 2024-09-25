@@ -12,10 +12,10 @@ public class LayoutSettings : GenericEntity
     public string DocumentFileContentToUpload { get; set; }
 
     [DisplayName("MaxImageFileSize")]
-    public int MaxImageFileSize { get; set; }
+    public double MaxImageFileSize { get; set; }
 
     [DisplayName("MaxDocumentFileSize")]
-    public int MaxDocumentFileSize { get; set; }
+    public double MaxDocumentFileSize { get; set; }
 
     public virtual EnvironmentTypeSettings EnvironmentTypeSettings { get; set; }
     public virtual long? IdEnvironmentType { get; set; }

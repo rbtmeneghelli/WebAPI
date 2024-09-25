@@ -137,11 +137,11 @@ public class RequiredPasswordSettingsService : GenericService, IRequiredPassword
         }
     }
 
-    public async Task<bool> UpdateRequiredPasswordSettingsAsync(long id, RequiredPasswordSettings requiredPasswordSettings)
+    public async Task<bool> UpdateRequiredPasswordSettingsAsync(RequiredPasswordSettings requiredPasswordSettings)
     {
         try
         {
-            RequiredPasswordSettings requiredPasswordSettingsDb = _iRequiredPasswordSettingsRepository.GetById(id);
+            RequiredPasswordSettings requiredPasswordSettingsDb = _iRequiredPasswordSettingsRepository.GetById(requiredPasswordSettings.Id.Value);
 
             if (GuardClauses.ObjectIsNotNull(requiredPasswordSettingsDb))
             {

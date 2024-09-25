@@ -38,6 +38,7 @@ public partial class WebAPIContext
     public virtual DbSet<LogSettings> LogSettings { get; set; }
     public virtual DbSet<RequiredPasswordSettings> RequiredPasswordSettings { get; set; }
     public virtual DbSet<EnvironmentTypeSettings> EnvironmentTypeSettings { get; set; }
+    public virtual DbSet<UploadSettings> UploadSettings { get; set; }
 
     #endregion
 }

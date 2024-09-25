@@ -1,7 +1,6 @@
 ﻿using WebAPI.Domain.Constants;
 using WebAPI.Domain.EntitiesDTO.Configuration;
 using WebAPI.Domain.Interfaces.Repository;
-using WebAPI.Domain.Interfaces.Services.Tools;
 
 namespace WebAPI.Controllers.V1.Configuration;
 
@@ -13,11 +12,9 @@ public sealed class UploadSettingsController : GenericController
 {
     private readonly IGenericConfigurationService _iGenericConfigurationService;
     private readonly GeneralMethod _generalMethod;
-    private readonly IFileService<RequiredPasswordSettingsExcelDTO> _iFileService;
 
     public UploadSettingsController(
         IGenericConfigurationService iGenericConfigurationService,
-        IFileService<RequiredPasswordSettingsExcelDTO> iFileService,
         IMapper iMapperService,
         IHttpContextAccessor iHttpContextAccessor,
         IGenericNotifyLogsService iGenericNotifyLogsService)
@@ -25,14 +22,13 @@ public sealed class UploadSettingsController : GenericController
     {
         _iGenericConfigurationService = iGenericConfigurationService;
         _generalMethod = GeneralMethod.GetLoadExtensionMethods();
-        _iFileService = iFileService;
     }
 
     [HttpGet("GetByEnvironment")]
     public async Task<IActionResult> GetByEnvironment()
     {
-        var existRequiredPasswordSettings = await _iGenericConfigurationService.UploadSettingsService.ExistUploadSettingsByEnvironmentAsync();
-        if (existRequiredPasswordSettings)
+        var existUploadSettings = await _iGenericConfigurationService.UploadSettingsService.ExistUploadSettingsByEnvironmentAsync();
+        if (existUploadSettings)
         {
             var model = await _iGenericConfigurationService.UploadSettingsService.GetUploadSettingsByEnvironmentAsync();
             return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
@@ -44,8 +40,8 @@ public sealed class UploadSettingsController : GenericController
     [HttpGet("GetById/{id:long}")]
     public async Task<IActionResult> GetById(long id)
     {
-        var existRequiredPasswordSettings = await _iGenericConfigurationService.UploadSettingsService.ExistUploadSettingsByIdAsync(id);
-        if (existRequiredPasswordSettings)
+        var existUploadSettings = await _iGenericConfigurationService.UploadSettingsService.ExistUploadSettingsByIdAsync(id);
+        if (existUploadSettings)
         {
             var model = await _iGenericConfigurationService.UploadSettingsService.GetUploadSettingsByIdAsync(id);
             return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);

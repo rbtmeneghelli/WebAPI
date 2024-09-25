@@ -20,6 +20,7 @@ public class GenericUnitofWorkRepository : IGenericUnitofWorkRepository
     public ILayoutSettingsRepository LayoutSettingsRepository { get; }
     public ILogSettingsRepository LogSettingsRepository { get; }
     public IRequiredPasswordSettingsRepository RequiredPasswordSettingsRepository { get; }
+    public IUploadSettingsRepository UploadSettingsRepository { get; }
 
     public GenericUnitofWorkRepository(
         IAuditRepository AuditRepository,
@@ -35,7 +36,8 @@ public class GenericUnitofWorkRepository : IGenericUnitofWorkRepository
         IExpirationPasswordSettingsRepository ExpirationPasswordSettingsRepository,
         ILayoutSettingsRepository LayoutSettingsRepository,
         ILogSettingsRepository LogSettingsRepository,
-        IRequiredPasswordSettingsRepository RequiredPasswordSettingsRepository
+        IRequiredPasswordSettingsRepository RequiredPasswordSettingsRepository,
+        IUploadSettingsRepository UploadSettingsRepository
         )
     {
         this.AuditRepository = AuditRepository ?? throw new ArgumentNullException(nameof(AuditRepository));
@@ -53,6 +55,7 @@ public class GenericUnitofWorkRepository : IGenericUnitofWorkRepository
         this.LayoutSettingsRepository = LayoutSettingsRepository ?? throw new ArgumentNullException(nameof(LayoutSettingsRepository));
         this.LogSettingsRepository = LogSettingsRepository ?? throw new ArgumentNullException(nameof(LogSettingsRepository));
         this.RequiredPasswordSettingsRepository = RequiredPasswordSettingsRepository ?? throw new ArgumentNullException(nameof(RequiredPasswordSettingsRepository));
+        this.UploadSettingsRepository = UploadSettingsRepository ?? throw new ArgumentNullException(nameof(UploadSettingsRepository));
     }
 
     public void Dispose()

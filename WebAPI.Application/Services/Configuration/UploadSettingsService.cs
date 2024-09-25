@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using NPOI.Util.ArrayExtensions;
 using WebAPI.Application.Generic;
 using WebAPI.Domain.Constants;
 using WebAPI.Domain.Entities.Configuration;
@@ -37,21 +38,21 @@ public class UploadSettingsService : GenericService, IUploadSettingsService
     {
         try
         {
-            return await(from p in _iUploadSettingsRepository.FindBy(x => x.IdEnvironmentType == (int)_environmentVariables.Environment).AsQueryable()
-                         select new UploadSettingsResponseDTO
-                         {
-                             Id = p.Id.Value,
-                             EnvironmentDescription = p.EnvironmentTypeSettings.Description,
-                             LogoWeb = p.LogoWeb,
-                             LogoWebDescription = p.LogoWebDescription,
-                             LogoMobile = p.LogoMobile,
-                             LogoMobileDescription = p.LogoMobileDescription,
-                             BannerWeb = p.BannerWeb,
-                             BannerWebDescription = p.BannerWebDescription,
-                             BannerMobile = p.BannerMobile,
-                             BannerMobileDescription = p.BannerMobileDescription,
-                             StatusDescription = p.GetStatusDescription()
-                         }).FirstOrDefaultAsync();
+            return await (from p in _iUploadSettingsRepository.FindBy(x => x.IdEnvironmentType == (int)_environmentVariables.Environment).AsQueryable()
+                          select new UploadSettingsResponseDTO
+                          {
+                              Id = p.Id.Value,
+                              EnvironmentDescription = p.EnvironmentTypeSettings.Description,
+                              LogoWeb = p.LogoWeb,
+                              LogoWebDescription = p.LogoWebDescription,
+                              LogoMobile = p.LogoMobile,
+                              LogoMobileDescription = p.LogoMobileDescription,
+                              BannerWeb = p.BannerWeb,
+                              BannerWebDescription = p.BannerWebDescription,
+                              BannerMobile = p.BannerMobile,
+                              BannerMobileDescription = p.BannerMobileDescription,
+                              StatusDescription = p.GetStatusDescription()
+                          }).FirstOrDefaultAsync();
         }
         catch
         {
@@ -68,21 +69,21 @@ public class UploadSettingsService : GenericService, IUploadSettingsService
     {
         try
         {
-            return await(from p in _iUploadSettingsRepository.FindBy(x => x.Id == id).AsQueryable()
-                         select new UploadSettingsResponseDTO
-                         {
-                             Id = p.Id.Value,
-                             EnvironmentDescription = p.EnvironmentTypeSettings.Description,
-                             LogoWeb = p.LogoWeb,
-                             LogoWebDescription = p.LogoWebDescription,
-                             LogoMobile = p.LogoMobile,
-                             LogoMobileDescription = p.LogoMobileDescription,
-                             BannerWeb = p.BannerWeb,
-                             BannerWebDescription = p.BannerWebDescription,
-                             BannerMobile = p.BannerMobile,
-                             BannerMobileDescription = p.BannerMobileDescription,           
-                             StatusDescription = p.GetStatusDescription()
-                         }).FirstOrDefaultAsync();
+            return await (from p in _iUploadSettingsRepository.FindBy(x => x.Id == id).AsQueryable()
+                          select new UploadSettingsResponseDTO
+                          {
+                              Id = p.Id.Value,
+                              EnvironmentDescription = p.EnvironmentTypeSettings.Description,
+                              LogoWeb = p.LogoWeb,
+                              LogoWebDescription = p.LogoWebDescription,
+                              LogoMobile = p.LogoMobile,
+                              LogoMobileDescription = p.LogoMobileDescription,
+                              BannerWeb = p.BannerWeb,
+                              BannerWebDescription = p.BannerWebDescription,
+                              BannerMobile = p.BannerMobile,
+                              BannerMobileDescription = p.BannerMobileDescription,
+                              StatusDescription = p.GetStatusDescription()
+                          }).FirstOrDefaultAsync();
         }
         catch
         {
@@ -124,10 +125,12 @@ public class UploadSettingsService : GenericService, IUploadSettingsService
             }
 
             string[] arrExtensions = layoutSettings.ImageFileContentToUpload.Split(',');
-            bool LogoWebValidation = _generalMethod.ValidateFile(uploadSettingsCreateRequestDTO.LogoWeb);
-            bool LogoMobileValidation = _generalMethod.ValidateFile(uploadSettingsCreateRequestDTO.LogoMobile);
-            bool BannerWebValidation = _generalMethod.ValidateFile(uploadSettingsCreateRequestDTO.BannerWeb);
-            bool BannerMobileValidation = _generalMethod.ValidateFile(uploadSettingsCreateRequestDTO.BannerMobile);
+            double maxSizeFile = layoutSettings.MaxImageFileSize;
+
+            bool LogoWebValidation = _generalMethod.ValidateFile(uploadSettingsCreateRequestDTO.LogoWeb, arrExtensions, maxSizeFile);
+            bool LogoMobileValidation = _generalMethod.ValidateFile(uploadSettingsCreateRequestDTO.LogoMobile, arrExtensions, maxSizeFile);
+            bool BannerWebValidation = _generalMethod.ValidateFile(uploadSettingsCreateRequestDTO.BannerWeb, arrExtensions, maxSizeFile);
+            bool BannerMobileValidation = _generalMethod.ValidateFile(uploadSettingsCreateRequestDTO.BannerMobile, arrExtensions, maxSizeFile);
 
             if (!LogoWebValidation)
             {
@@ -161,13 +164,13 @@ public class UploadSettingsService : GenericService, IUploadSettingsService
             UploadSettings uploadSettings = new UploadSettings()
             {
                 LogoWeb = arrLogoWeb,
-                LogoWebDescription = uploadSettingsCreateRequestDTO.LogoWeb.FileName ?? string.Empty,
+                LogoWebDescription = uploadSettingsCreateRequestDTO.LogoWeb.FileName ?? StringExtensionMethod.GetEmptyString(),
                 LogoMobile = arrLogoMobile,
-                LogoMobileDescription = uploadSettingsCreateRequestDTO.LogoMobile.FileName ?? string.Empty,
+                LogoMobileDescription = uploadSettingsCreateRequestDTO.LogoMobile.FileName ?? StringExtensionMethod.GetEmptyString(),
                 BannerWeb = arrBannerWeb,
-                BannerWebDescription = uploadSettingsCreateRequestDTO.BannerWeb.FileName ?? string.Empty,
+                BannerWebDescription = uploadSettingsCreateRequestDTO.BannerWeb.FileName ?? StringExtensionMethod.GetEmptyString(),
                 BannerMobile = arrBannerMobile,
-                BannerMobileDescription = uploadSettingsCreateRequestDTO.BannerMobile.FileName ?? string.Empty,
+                BannerMobileDescription = uploadSettingsCreateRequestDTO.BannerMobile.FileName ?? StringExtensionMethod.GetEmptyString(),
                 CreateDate = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil(),
                 Status = true,
                 IdEnvironmentType = uploadSettingsCreateRequestDTO.IdEnvironment
@@ -203,15 +206,35 @@ public class UploadSettingsService : GenericService, IUploadSettingsService
             {
                 if (uploadSettingsDb.Status)
                 {
-                    bool LogoWebValidation = ValidationFile(uploadSettingsUpdateRequestDTO.LogoWeb);
-                    bool LogoMobileValidation = ValidationFile(uploadSettingsUpdateRequestDTO.LogoMobile);
-                    bool BannerWebValidation = ValidationFile(uploadSettingsUpdateRequestDTO.BannerWeb);
-                    bool BannerMobileValidation = ValidationFile(uploadSettingsUpdateRequestDTO.BannerMobile);
+                    string[] arrExtensions = layoutSettings.ImageFileContentToUpload.Split(',');
+                    double maxSizeFile = layoutSettings.MaxImageFileSize;
+
+                    bool LogoWebValidation = ValidationFile(uploadSettingsUpdateRequestDTO.LogoWeb, arrExtensions, maxSizeFile);
+                    bool LogoMobileValidation = ValidationFile(uploadSettingsUpdateRequestDTO.LogoMobile, arrExtensions, maxSizeFile);
+                    bool BannerWebValidation = ValidationFile(uploadSettingsUpdateRequestDTO.BannerWeb, arrExtensions, maxSizeFile);
+                    bool BannerMobileValidation = ValidationFile(uploadSettingsUpdateRequestDTO.BannerMobile, arrExtensions, maxSizeFile);
 
                     uploadSettingsDb.LogoWeb = await GetByteArray(LogoWebValidation, uploadSettingsUpdateRequestDTO.LogoWeb, uploadSettingsDb.LogoWeb);
+                    uploadSettingsDb.LogoWebDescription = LogoWebValidation ?
+                                                          uploadSettingsDb.LogoWebDescription :
+                                                          uploadSettingsUpdateRequestDTO.LogoWeb.FileName ?? StringExtensionMethod.GetEmptyString();
+
                     uploadSettingsDb.LogoMobile = await GetByteArray(LogoMobileValidation, uploadSettingsUpdateRequestDTO.LogoMobile, uploadSettingsDb.LogoMobile);
+                    uploadSettingsDb.LogoMobileDescription = LogoMobileValidation ?
+                                                             uploadSettingsDb.LogoMobileDescription :
+                                                             uploadSettingsUpdateRequestDTO.LogoMobile.FileName ?? StringExtensionMethod.GetEmptyString();
+
                     uploadSettingsDb.BannerWeb = await GetByteArray(BannerWebValidation, uploadSettingsUpdateRequestDTO.BannerWeb, uploadSettingsDb.BannerWeb);
+                    uploadSettingsDb.BannerWebDescription = BannerWebValidation ?
+                                                            uploadSettingsDb.BannerWebDescription :
+                                                            uploadSettingsUpdateRequestDTO.BannerWeb.FileName ?? StringExtensionMethod.GetEmptyString();
+
                     uploadSettingsDb.BannerMobile = await GetByteArray(BannerMobileValidation, uploadSettingsUpdateRequestDTO.BannerMobile, uploadSettingsDb.BannerMobile);
+                    uploadSettingsDb.BannerMobileDescription = BannerWebValidation ?
+                                                               uploadSettingsDb.BannerMobileDescription :
+                                                               uploadSettingsUpdateRequestDTO.BannerMobile.FileName ?? StringExtensionMethod.GetEmptyString();
+
+
                     uploadSettingsDb.IdEnvironmentType = uploadSettingsUpdateRequestDTO.IdEnvironment;
                     uploadSettingsDb.UpdateDate = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
                     _iUploadSettingsRepository.Update(uploadSettingsDb);
@@ -296,9 +319,9 @@ public class UploadSettingsService : GenericService, IUploadSettingsService
         }
     }
 
-    private bool ValidationFile(IFormFile formFile)
+    private bool ValidationFile(IFormFile formFile, string[] arrExtensions, double maxSizeFile)
     {
-        bool fileValidation = _generalMethod.ExistFile(formFile) ? _generalMethod.ValidateFile(formFile) : false;
+        bool fileValidation = _generalMethod.ExistFile(formFile) ? _generalMethod.ValidateFile(formFile, arrExtensions, maxSizeFile) : false;
         return fileValidation;
     }
 

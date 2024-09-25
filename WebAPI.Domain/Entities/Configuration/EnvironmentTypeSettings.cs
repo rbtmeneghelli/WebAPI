@@ -17,4 +17,5 @@ public class EnvironmentTypeSettings : GenericEntity
     public virtual AuthenticationSettings AuthenticationSettings { get; set; }
     public virtual LayoutSettings LayoutSettings { get; set; }
     public virtual LogSettings LogSettings { get; set; }
+    public virtual UploadSettings UploadSettings { get; set; }
 }

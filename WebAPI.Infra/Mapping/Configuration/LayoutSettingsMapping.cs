@@ -29,10 +29,6 @@ public class LayoutSettingsMapping : GenericMapping<LayoutSettings>
 
     private void ConfigureColumns()
     {
-        _builder.Property(x => x.LogoWeb).IsRequired().HasColumnType("varbinary(max)").HasColumnName("LogoWeb");
-        _builder.Property(x => x.LogoMobile).IsRequired().HasColumnType("varbinary(max)").HasColumnName("LogoMobile");
-        _builder.Property(x => x.BannerWeb).IsRequired().HasColumnType("varbinary(max)").HasColumnName("BannerWeb");
-        _builder.Property(x => x.BannerMobile).IsRequired().HasColumnType("varbinary(max)").HasColumnName("BannerMobile");
         _builder.Property(x => x.ImageFileContentToUpload).IsRequired().HasMaxLength(80).HasColumnName("ImageFileContentToUpload");
         _builder.Property(x => x.DocumentFileContentToUpload).IsRequired().HasMaxLength(80).HasColumnName("DocumentFileContentToUpload");
         _builder.Property(x => x.MaxImageFileSize).IsRequired().HasDefaultValue(20).HasColumnName("MaxImageFileSize");

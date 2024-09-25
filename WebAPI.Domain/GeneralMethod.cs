@@ -19,6 +19,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using WebAPI.Domain.Constants;
 using WebAPI.Domain.ExtensionMethods;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace WebAPI.Domain;
 
@@ -66,6 +67,23 @@ public sealed class GeneralMethod
             Id = int.Parse(columns[0]),
             Description = columns[1]
         };
+    }
+
+    private string ValidateContentTypeFile(string key)
+    {
+        Dictionary<string, string> dictionary = new()
+        {
+            { ".jpg", "image/jpeg" },
+            { ".jpeg", "image/jpeg" },
+            { ".png", "image/png" },
+            { ".pdf", "application/pdf" },
+            { ".mp4", "video/mp4" }
+        };
+
+        if(dictionary.TryGetValue(key, out var value))
+         return value;
+
+        return StringExtensionMethod.GetEmptyString();
     }
 
     #endregion
@@ -1378,16 +1396,19 @@ public sealed class GeneralMethod
         return list;
     }
 
-    public bool ValidateFile(IFormFile formFile)
+    public bool ValidateFile(IFormFile formFile, string[] arrExtensions, double maxSizeFile)
     {
-        //// Verifica a extensão
-        //var extension = Path.GetExtension(formFile.FileName).ToLowerInvariant();
-        //if (!AllowedExtensions.Contains(extension))
-        //    return false;
+        var extension = Path.GetExtension(formFile.FileName).ToLowerInvariant();
+        var contentType = ValidateContentTypeFile(extension);
 
-        //// Verifica o tipo MIME
-        //if (!AllowedContentTypes.Contains(file.ContentType))
-        //    return false;
+        if (!arrExtensions.Contains(extension))
+            return false;
+
+        if (!formFile.ContentType.Equals(contentType))
+            return false;
+
+        if (formFile.Length > CalculateMaxSizeFile(maxSizeFile, EnumFileSize.MB))
+            return false;
 
         return true;
     }
@@ -1400,29 +1421,20 @@ public sealed class GeneralMethod
         return true;
     }
 
-    //        public async Task<IEnumerable<TModel>> ReadCsvDataFromIFormFile(IFormFile formFile)
-    //{
-    //    var list = Enumerable.Empty<TModel>();
+    public double CalculateMaxSizeFile(double size, EnumFileSize enumFileSize)
+    {
 
-    //    using (var ms = new MemoryStream())
-    //    {
-    //        await formFile.CopyToAsync(ms);
-    //        string base64 = Convert.ToBase64String(ms.ToArray());
+        double maxSize = enumFileSize switch
+        {
+            EnumFileSize.KB => size * 1024,
+            EnumFileSize.MB => size * 1024 * 1024,
+            EnumFileSize.GB => size * 1024 * 1024 * 1024,
+            EnumFileSize.TB => size * 1024 * 1024 * 1024 * 1024,
+            _ => size
+        };
 
-    //        using (var mss = new MemoryStream(Convert.FromBase64String(base64.Substring(base64.IndexOf(',') + 1))))
-    //        {
-    //            using (var reader = new StreamReader(ms))
-    //            {
-    //                using (var csvReader = new CsvReader(reader, new CultureInfo("pt-BR")))
-    //                {
-    //                    list = csvReader.GetRecords<TModel>();
-    //                }
-    //            }
-    //        }
-    //    }
-
-    //    return list;
-    //}
+        return maxSize;
+    }
 }
 
 public sealed class UriBuilderSite : UriBuilderAbstract

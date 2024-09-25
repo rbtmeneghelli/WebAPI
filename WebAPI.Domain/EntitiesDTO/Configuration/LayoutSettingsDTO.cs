@@ -1,25 +1,14 @@
 ﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace WebAPI.Domain.EntitiesDTO.Configuration;
 
-public record LayoutSettingsResponseDTO
+public record LayoutSettingsExcelDTO
 {
-    [Display(Name = "Id", Description = "Id do registro")]
-    public long Id { get; set; }
-
-    [Display(Name = "LogoWeb", Description = "Logo da aplicação Web")]
-    public byte[] LogoWeb { get; set; }
-
-    [Display(Name = "BannerWeb", Description = "Banner da aplicação Web")]
-    public byte[] BannerWeb { get; set; }
-
-    [Display(Name = "LogoMobile", Description = "Logo da aplicação Mobile")]
-    public byte[] LogoMobile { get; set; }
-
-    [Display(Name = "BannerMobile", Description = "Banner da aplicação Mobile")]
-    public byte[] BannerMobile { get; set; }
+    [DisplayName("EnvironmentDescription")]
+    public string EnvironmentDescription { get; set; }
 
     [Required]
     [Display(Name = "BannerMobile", Description = "Banner da aplicação Mobile")]
@@ -31,11 +20,38 @@ public record LayoutSettingsResponseDTO
 
     [Required]
     [Display(Name = "BannerMobile", Description = "Tamanho máximo do arquivo imagem")]
-    public int MaxImageFileSize { get; set; }
+    public double MaxImageFileSize { get; set; }
 
     [Required]
     [Display(Name = "MaxDocumentFileSize", Description = "Tamanho máximo do arquivo documento")]
-    public int MaxDocumentFileSize { get; set; }
+    public double MaxDocumentFileSize { get; set; }
+
+    [Display(Name = "Status", Description = "Status do registro")]
+    public string StatusDescription { get; set; }
+}
+public record LayoutSettingsResponseDTO
+{
+    [Display(Name = "Id", Description = "Id do registro")]
+    public long Id { get; set; }
+
+    [DisplayName("EnvironmentDescription")]
+    public string EnvironmentDescription { get; set; }
+
+    [Required]
+    [Display(Name = "BannerMobile", Description = "Banner da aplicação Mobile")]
+    public string ImageFileContentToUpload { get; set; }
+
+    [Required]
+    [Display(Name = "BannerMobile", Description = "Banner da aplicação Mobile")]
+    public string DocumentFileContentToUpload { get; set; }
+
+    [Required]
+    [Display(Name = "BannerMobile", Description = "Tamanho máximo do arquivo imagem")]
+    public double MaxImageFileSize { get; set; }
+
+    [Required]
+    [Display(Name = "MaxDocumentFileSize", Description = "Tamanho máximo do arquivo documento")]
+    public double MaxDocumentFileSize { get; set; }
 
     [Display(Name = "Status", Description = "Status do registro")]
     public string StatusDescription { get; set; }
@@ -48,22 +64,6 @@ public record LayoutSettingsCreateRequestDTO
     public long? Id { get; set; }
 
     [Required]
-    [Display(Name = "LogoWeb", Description = "Logo da aplicação Web")]
-    public IFormFile LogoWeb { get; set; }
-
-    [Required]
-    [Display(Name = "BannerWeb", Description = "Banner da aplicação Web")]
-    public IFormFile BannerWeb { get; set; }
-
-    [Required]
-    [Display(Name = "LogoMobile", Description = "Logo da aplicação Mobile")]
-    public IFormFile LogoMobile { get; set; }
-
-    [Required]
-    [Display(Name = "BannerMobile", Description = "Banner da aplicação Mobile")]
-    public IFormFile BannerMobile { get; set; }
-
-    [Required]
     [Display(Name = "BannerMobile", Description = "Banner da aplicação Mobile")]
     public string ImageFileContentToUpload { get; set; }
 
@@ -73,11 +73,11 @@ public record LayoutSettingsCreateRequestDTO
 
     [Required]
     [Display(Name = "BannerMobile", Description = "Tamanho máximo do arquivo imagem")]
-    public int MaxImageFileSize { get; set; }
+    public double MaxImageFileSize { get; set; }
 
     [Required]
     [Display(Name = "MaxDocumentFileSize", Description = "Tamanho máximo do arquivo documento")]
-    public int MaxDocumentFileSize { get; set; }
+    public double MaxDocumentFileSize { get; set; }
 
     [Required]
     [Display(Name = "IdEnvironment", Description = "Id do ambiente")]
@@ -90,18 +90,6 @@ public record LayoutSettingsUpdateRequestDTO
     [Display(Name = "Id", Description = "Id do registro")]
     public long? Id { get; set; }
 
-    [Display(Name = "LogoWeb", Description = "Logo da aplicação Web")]
-    public IFormFile LogoWeb { get; set; }
-
-    [Display(Name = "BannerWeb", Description = "Banner da aplicação Web")]
-    public IFormFile BannerWeb { get; set; }
-
-    [Display(Name = "LogoMobile", Description = "Logo da aplicação Mobile")]
-    public IFormFile LogoMobile { get; set; }
-
-    [Display(Name = "BannerMobile", Description = "Banner da aplicação Mobile")]
-    public IFormFile BannerMobile { get; set; }
-
     [Required]
     [Display(Name = "BannerMobile", Description = "Banner da aplicação Mobile")]
     public string ImageFileContentToUpload { get; set; }
@@ -112,11 +100,11 @@ public record LayoutSettingsUpdateRequestDTO
 
     [Required]
     [Display(Name = "BannerMobile", Description = "Tamanho máximo do arquivo imagem")]
-    public int MaxImageFileSize { get; set; }
+    public double MaxImageFileSize { get; set; }
 
     [Required]
     [Display(Name = "MaxDocumentFileSize", Description = "Tamanho máximo do arquivo documento")]
-    public int MaxDocumentFileSize { get; set; }
+    public double MaxDocumentFileSize { get; set; }
 
     [Required]
     [Display(Name = "IdEnvironment", Description = "Id do ambiente")]

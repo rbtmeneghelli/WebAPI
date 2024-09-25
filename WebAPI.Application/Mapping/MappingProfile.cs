@@ -189,5 +189,24 @@ public class MappingProfile : AutoMapper.Profile
         .ForMember(dest => dest.EnableSsl, act => act.MapFrom(src => src.EnableSsl))
         .ForMember(dest => dest.IdEnvironmentType, act => act.MapFrom(src => src.IdEnvironment))
         .ForMember(dest => dest.UpdateDate, act => act.MapFrom(src => DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()));
+
+        CreateMap<LayoutSettingsCreateRequestDTO, LayoutSettings>()
+        .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
+        .ForMember(dest => dest.ImageFileContentToUpload, act => act.MapFrom(src => src.ImageFileContentToUpload))
+        .ForMember(dest => dest.DocumentFileContentToUpload, act => act.MapFrom(src => src.DocumentFileContentToUpload))
+        .ForMember(dest => dest.MaxDocumentFileSize, act => act.MapFrom(src => src.MaxDocumentFileSize))
+        .ForMember(dest => dest.MaxImageFileSize, act => act.MapFrom(src => src.MaxImageFileSize))
+        .ForMember(dest => dest.IdEnvironmentType, act => act.MapFrom(src => src.IdEnvironment))
+        .ForMember(dest => dest.CreateDate, act => act.MapFrom(src => DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()))
+        .ForMember(dest => dest.Status, act => act.MapFrom(src => true));
+
+        CreateMap<LayoutSettingsUpdateRequestDTO, LayoutSettings>()
+        .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
+        .ForMember(dest => dest.ImageFileContentToUpload, act => act.MapFrom(src => src.ImageFileContentToUpload))
+        .ForMember(dest => dest.DocumentFileContentToUpload, act => act.MapFrom(src => src.DocumentFileContentToUpload))
+        .ForMember(dest => dest.MaxDocumentFileSize, act => act.MapFrom(src => src.MaxDocumentFileSize))
+        .ForMember(dest => dest.MaxImageFileSize, act => act.MapFrom(src => src.MaxImageFileSize))
+        .ForMember(dest => dest.IdEnvironmentType, act => act.MapFrom(src => src.IdEnvironment))
+        .ForMember(dest => dest.UpdateDate, act => act.MapFrom(src => DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()));
     }
 }

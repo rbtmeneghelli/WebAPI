@@ -56,6 +56,7 @@ public partial class WebAPIContext : DbContext
         modelBuilder.ApplyConfiguration(new LogSettingsMapping());
         modelBuilder.ApplyConfiguration(new RequiredPasswordSettingsMapping());
         modelBuilder.ApplyConfiguration(new EnvironmentTypeSettingsMapping());
+        modelBuilder.ApplyConfiguration(new UploadSettingsMapping());
 
         #endregion
 
