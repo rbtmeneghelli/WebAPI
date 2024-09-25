@@ -78,7 +78,7 @@ public sealed class LogSettingsController : GenericController
     }
 
     [HttpPut("Update")]
-    public async Task<IActionResult> Update(int id, [FromBody] LogSettingsUpdateRequestDTO logSettingsUpdateRequestDTO)
+    public async Task<IActionResult> Update(long id, [FromBody] LogSettingsUpdateRequestDTO logSettingsUpdateRequestDTO)
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
@@ -90,7 +90,7 @@ public sealed class LogSettingsController : GenericController
             return CustomResponse();
         }
 
-        if (await _iGenericConfigurationService.LogSettingsService.ExistLogSettingsByIdAsync(logSettingsUpdateRequest.Id.Value))
+        if (await _iGenericConfigurationService.LogSettingsService.ExistLogSettingsByIdAsync(logSettingsUpdateRequest.Id.GetValueOrDefault()))
         {
             var result = await _iGenericConfigurationService.LogSettingsService.UpdateLogSettingsAsync(logSettingsUpdateRequest);
             if (result)
@@ -103,7 +103,7 @@ public sealed class LogSettingsController : GenericController
     }
 
     [HttpDelete("LogicDelete/{id:long}")]
-    public async Task<IActionResult> LogicDelete(int id)
+    public async Task<IActionResult> LogicDelete(long id)
     {
         if (await _iGenericConfigurationService.LogSettingsService.ExistLogSettingsByIdAsync(id))
         {

@@ -78,7 +78,7 @@ public sealed class EmailSettingsController : GenericController
     }
 
     [HttpPut("Update")]
-    public async Task<IActionResult> Update(int id, [FromBody] EmailSettingsUpdateRequestDTO emailSettingsUpdateRequestDTO)
+    public async Task<IActionResult> Update(long id, [FromBody] EmailSettingsUpdateRequestDTO emailSettingsUpdateRequestDTO)
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
@@ -90,7 +90,7 @@ public sealed class EmailSettingsController : GenericController
             return CustomResponse();
         }
 
-        if (await _iGenericConfigurationService.EmailSettingsService.ExistEmailSettingsByIdAsync(emailSettingsUpdateRequest.Id.Value))
+        if (await _iGenericConfigurationService.EmailSettingsService.ExistEmailSettingsByIdAsync(emailSettingsUpdateRequest.Id.GetValueOrDefault()))
         {
             var result = await _iGenericConfigurationService.EmailSettingsService.UpdateEmailSettingsAsync(emailSettingsUpdateRequest);
             if (result)
@@ -103,7 +103,7 @@ public sealed class EmailSettingsController : GenericController
     }
 
     [HttpDelete("LogicDelete/{id:long}")]
-    public async Task<IActionResult> LogicDelete(int id)
+    public async Task<IActionResult> LogicDelete(long id)
     {
         if (await _iGenericConfigurationService.EmailSettingsService.ExistEmailSettingsByIdAsync(id))
         {

@@ -80,7 +80,7 @@ public sealed class AuthenticationSettingsController : GenericController
     }
 
     [HttpPut("Update")]
-    public async Task<IActionResult> Update(int id, [FromBody] AuthenticationSettingsUpdateRequestDTO authenticationSettingsUpdateRequestDTO)
+    public async Task<IActionResult> Update(long id, [FromBody] AuthenticationSettingsUpdateRequestDTO authenticationSettingsUpdateRequestDTO)
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
@@ -92,7 +92,7 @@ public sealed class AuthenticationSettingsController : GenericController
             return CustomResponse();
         }
 
-        if (await _iGenericConfigurationService.AuthenticationSettingsService.ExistAuthenticationSettingsByIdAsync(authenticationSettingsRequest.Id.Value))
+        if (await _iGenericConfigurationService.AuthenticationSettingsService.ExistAuthenticationSettingsByIdAsync(authenticationSettingsRequest.Id.GetValueOrDefault()))
         {
             var result = await _iGenericConfigurationService.AuthenticationSettingsService.UpdateAuthenticationSettingsAsync(authenticationSettingsRequest);
             if (result)
@@ -105,7 +105,7 @@ public sealed class AuthenticationSettingsController : GenericController
     }
 
     [HttpDelete("LogicDelete/{id:long}")]
-    public async Task<IActionResult> LogicDelete(int id)
+    public async Task<IActionResult> LogicDelete(long id)
     {
         if (await _iGenericConfigurationService.AuthenticationSettingsService.ExistAuthenticationSettingsByIdAsync(id))
         {
@@ -150,39 +150,4 @@ public sealed class AuthenticationSettingsController : GenericController
 
         return CustomNotFound();
     }
-
-    /// <summary>
-    /// Esse endpoint ira armazenar arquivos por X tempo, e depois será atualizado após 5 minutos.
-    /// </summary>
-    /// <returns></returns>
-    //[HttpGet("loadBanners")]
-    //public async Task<IActionResult> LoadBanners()
-    //{
-    //    if (!_memoryCacheService.TryGet<IEnumerable<Region>>("FilesCache", out var cached))
-    //    {
-    //        var files = await _regionService.GetAllRegionAsync();
-
-    //        _memoryCacheService.Set("FilesCache", files);
-
-    //        return CustomResponse(files);
-    //    }
-    //    else
-    //    {
-    //        var files = _memoryCacheService.Get<IEnumerable<Region>>("FilesCache");
-    //        return CustomResponse(files);
-    //    }
-    //}
-
-    //
-    //[HttpPost("uploadMultFiles")]
-    //public IActionResult UploadFiles([FromForm] IEnumerable<MultFiles> multFiles)
-    //{
-    //    if (multFiles is null)
-    //    {
-    //        NotificationError("Nenhum arquivo foi enviado.");
-    //        return CustomResponse();
-    //    }
-
-    //    return CustomResponse();
-    //}
 }

@@ -4,6 +4,6 @@ namespace WebAPI.Domain.Interfaces.Services.Configuration;
 
 public interface ILayoutSettingsService
 {
-    Task<bool> CreateLayoutSettingsRequestDTO(LayoutSettingsCreateRequestDTO layoutSettingsCreateRequestDTO);
-    Task<bool> UpdateLayoutSettingsRequestDTO(LayoutSettingsUpdateRequestDTO layoutSettingsUpdateRequestDTO);
+    Task<bool> CreateUploadSettingsRequestDTO(LayoutSettingsCreateRequestDTO layoutSettingsCreateRequestDTO);
+    Task<bool> UpdateUploadSettingsRequestDTO(LayoutSettingsUpdateRequestDTO layoutSettingsUpdateRequestDTO);
 }

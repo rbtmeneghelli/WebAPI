@@ -177,13 +177,13 @@ public class EnvironmentTypeSettingsService : GenericService, IEnvironmentTypeSe
             }
             else
             {
-                Notify(FixConstants.ERROR_IN_DELETELOGIC);
+                Notify(FixConstants.ERROR_IN_UPDATESTATUS);
                 return false;
             }
         }
         catch (Exception)
         {
-            Notify(FixConstants.ERROR_IN_DELETELOGIC);
+            Notify(FixConstants.ERROR_IN_UPDATESTATUS);
             return false;
         }
         finally

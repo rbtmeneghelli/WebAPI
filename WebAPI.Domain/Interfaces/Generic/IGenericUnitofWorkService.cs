@@ -32,4 +32,5 @@ public interface IGenericConfigurationService
     IRequiredPasswordSettingsService RequiredPasswordSettingsService { get; }
     IEmailDisplaySettingsService EmailDisplaySettingsService { get; }
     IEmailSettingsService EmailSettingsService { get; }
+    IUploadSettingsService UploadSettingsService { get; }
 }

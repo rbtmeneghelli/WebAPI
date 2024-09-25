@@ -1,7 +1,5 @@
 ﻿using WebAPI.Domain.Constants;
-using WebAPI.Domain.Entities.Configuration;
 using WebAPI.Domain.Entities.ControlPanel;
-using WebAPI.Domain.EntitiesDTO.Configuration;
 using WebAPI.Domain.EntitiesDTO.ControlPanel;
 using WebAPI.Domain.Enums;
 using WebAPI.Domain.ExtensionMethods;
@@ -106,7 +104,7 @@ public sealed class UsersController : GenericController
     }
 
     [HttpPut("Update")]
-    public async Task<IActionResult> Update(int id, [FromBody] UserRequestDTO userRequestDTO)
+    public async Task<IActionResult> Update(long id, [FromBody] UserRequestDTO userRequestDTO)
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
@@ -118,7 +116,7 @@ public sealed class UsersController : GenericController
             return CustomResponse();
         }
 
-        if (await _iUserService.ExistByIdAsync(id))
+        if (await _iUserService.ExistByIdAsync(userRequestDTO.Id.GetValueOrDefault()))
         {
             var result = await _iUserService.UpdateAsync(id, user);
             if (result)
@@ -131,7 +129,7 @@ public sealed class UsersController : GenericController
     }
 
     [HttpDelete("LogicDelete/{id:long}")]
-    public async Task<IActionResult> LogicDelete(int id)
+    public async Task<IActionResult> LogicDelete(long id)
     {
         if (await _iUserService.ExistByIdAsync(id))
         {
@@ -151,7 +149,7 @@ public sealed class UsersController : GenericController
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpDelete("PhysicalDelete/{id:long}")]
-    public async Task<IActionResult> PhysicalDelete(int id)
+    public async Task<IActionResult> PhysicalDelete(long id)
     {
         var existId = await _iUserService.ExistByIdAsync(id);
         var canDelete = await _iUserService.CanDeleteAsync(id);

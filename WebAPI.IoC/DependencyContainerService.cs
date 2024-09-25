@@ -221,7 +221,8 @@ public static class DependencyContainerService
         .AddScoped<IEmailService, EmailService>()
         .AddScoped<IEmailFactory, EmailFactory>()
         .AddScoped<IEmailDisplaySettingsService, EmailDisplaySettingsService>()
-        .AddScoped<IEmailSettingsService, EmailSettingsService>();
+        .AddScoped<IEmailSettingsService, EmailSettingsService>()
+        .AddScoped<IUploadSettingsService, UploadSettingsService>();
 
         services
        .AddScoped<IAuthenticationSettingsRepository, AuthenticationSettingsRepository>()
@@ -231,7 +232,8 @@ public static class DependencyContainerService
        .AddScoped<ILogSettingsRepository, LogSettingsRepository>()
        .AddScoped<IRequiredPasswordSettingsRepository, RequiredPasswordSettingsRepository>()
        .AddScoped<IEmailDisplaySettingsRepository, EmailDisplaySettingsRepository>()
-       .AddScoped<IEmailSettingsRepository, EmailSettingsRepository>();
+       .AddScoped<IEmailSettingsRepository, EmailSettingsRepository>()
+       .AddScoped<IUploadSettingsRepository, UploadSettingsRepository>();
 
         #endregion
 
