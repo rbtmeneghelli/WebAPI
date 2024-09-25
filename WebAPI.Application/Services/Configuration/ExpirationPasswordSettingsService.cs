@@ -131,11 +131,11 @@ public class ExpirationPasswordSettingsService : GenericService, IExpirationPass
         }
     }
 
-    public async Task<bool> UpdateExpirationPasswordSettingsAsync(long id, ExpirationPasswordSettings expirationPasswordSettings)
+    public async Task<bool> UpdateExpirationPasswordSettingsAsync(ExpirationPasswordSettings expirationPasswordSettings)
     {
         try
         {
-            ExpirationPasswordSettings expirationPasswordSettingsDb = _iExpirationPasswordSettingsRepository.GetById(id);
+            ExpirationPasswordSettings expirationPasswordSettingsDb = _iExpirationPasswordSettingsRepository.GetById(expirationPasswordSettings.Id.Value);
 
             if (GuardClauses.ObjectIsNotNull(expirationPasswordSettingsDb))
             {

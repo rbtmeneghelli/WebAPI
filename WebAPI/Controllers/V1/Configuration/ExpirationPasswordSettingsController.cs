@@ -90,9 +90,9 @@ public sealed class ExpirationPasswordSettingsController : GenericController
             return CustomResponse();
         }
 
-        if (await _iGenericConfigurationService.ExpirationPasswordSettingsService.ExistExpirationPasswordSettingsByIdAsync(id))
+        if (await _iGenericConfigurationService.ExpirationPasswordSettingsService.ExistExpirationPasswordSettingsByIdAsync(expirationPasswordSettingsRequest.Id.Value))
         {
-            var result = await _iGenericConfigurationService.ExpirationPasswordSettingsService.UpdateExpirationPasswordSettingsAsync(id, expirationPasswordSettingsRequest);
+            var result = await _iGenericConfigurationService.ExpirationPasswordSettingsService.UpdateExpirationPasswordSettingsAsync(expirationPasswordSettingsRequest);
             if (result)
                 return NoContent();
             else

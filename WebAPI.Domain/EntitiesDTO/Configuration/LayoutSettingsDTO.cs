@@ -10,16 +10,16 @@ public record LayoutSettingsResponseDTO
     public long Id { get; set; }
 
     [Display(Name = "LogoWeb", Description = "Logo da aplicação Web")]
-    public string LogoWeb { get; set; }
+    public byte[] LogoWeb { get; set; }
 
     [Display(Name = "BannerWeb", Description = "Banner da aplicação Web")]
-    public string BannerWeb { get; set; }
+    public byte[] BannerWeb { get; set; }
 
     [Display(Name = "LogoMobile", Description = "Logo da aplicação Mobile")]
-    public string LogoMobile { get; set; }
+    public byte[] LogoMobile { get; set; }
 
     [Display(Name = "BannerMobile", Description = "Banner da aplicação Mobile")]
-    public string BannerMobile { get; set; }
+    public byte[] BannerMobile { get; set; }
 
     [Required]
     [Display(Name = "BannerMobile", Description = "Banner da aplicação Mobile")]

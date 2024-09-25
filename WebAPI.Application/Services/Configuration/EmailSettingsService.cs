@@ -140,11 +140,11 @@ public class EmailSettingsService : GenericService, IEmailSettingsService
         }
     }
 
-    public async Task<bool> UpdateEmailSettingsAsync(long id, EmailSettings emailSettings)
+    public async Task<bool> UpdateEmailSettingsAsync(EmailSettings emailSettings)
     {
         try
         {
-            EmailSettings emailSettingsDb = _iEmailSettingsRepository.GetById(id);
+            EmailSettings emailSettingsDb = _iEmailSettingsRepository.GetById(emailSettings.Id.Value);
 
             if (GuardClauses.ObjectIsNotNull(emailSettingsDb))
             {

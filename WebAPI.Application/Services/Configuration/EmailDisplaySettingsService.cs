@@ -105,11 +105,11 @@ public class EmailDisplaySettingsService : GenericService, IEmailDisplaySettings
         }
     }
 
-    public async Task<bool> UpdateEmailDisplaySettingsAsync(long id, EmailDisplay emailDisplay)
+    public async Task<bool> UpdateEmailDisplaySettingsAsync(EmailDisplay emailDisplay)
     {
         try
         {
-            EmailDisplay emailDisplayDb = _iEmailDisplaySettingsRepository.GetById(id);
+            EmailDisplay emailDisplayDb = _iEmailDisplaySettingsRepository.GetById(emailDisplay.Id.Value);
 
             if (GuardClauses.ObjectIsNotNull(emailDisplayDb))
             {

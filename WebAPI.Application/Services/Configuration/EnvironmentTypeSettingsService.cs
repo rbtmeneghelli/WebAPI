@@ -97,11 +97,11 @@ public class EnvironmentTypeSettingsService : GenericService, IEnvironmentTypeSe
         }
     }
 
-    public async Task<bool> UpdateEnvironmentTypeSettingsAsync(long id, EnvironmentTypeSettings environmentTypeSettings)
+    public async Task<bool> UpdateEnvironmentTypeSettingsAsync(EnvironmentTypeSettings environmentTypeSettings)
     {
         try
         {
-            EnvironmentTypeSettings environmentTypeSettingsDb = _iEnvironmentTypeSettingsRepository.GetById(id);
+            EnvironmentTypeSettings environmentTypeSettingsDb = _iEnvironmentTypeSettingsRepository.GetById(environmentTypeSettings.Id.Value);
 
             if (GuardClauses.ObjectIsNotNull(environmentTypeSettingsDb))
             {

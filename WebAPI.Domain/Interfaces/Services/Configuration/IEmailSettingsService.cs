@@ -11,7 +11,7 @@ public interface IEmailSettingsService
     Task<bool> ExistEmailSettingsByEnvironmentAsync();
     Task<bool> ExistEmailSettingsByIdAsync(long id);
     Task<bool> CreateEmailSettingsAsync(EmailSettings emailSettings);
-    Task<bool> UpdateEmailSettingsAsync(long id, EmailSettings emailSettings);
+    Task<bool> UpdateEmailSettingsAsync(EmailSettings emailSettings);
     Task<bool> LogicDeleteEmailSettingsByIdAsync(long id);
     Task<bool> ReactiveEmailSettingsByIdAsync(long id);
     Task<IEnumerable<EmailSettingsExcelDTO>> GetAllEmailSettingsExcelAsync();

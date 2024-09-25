@@ -142,11 +142,11 @@ public class LogSettingsService : GenericService, ILogSettingsService
         }
     }
 
-    public async Task<bool> UpdateLogSettingsAsync(long id, LogSettings logSettings)
+    public async Task<bool> UpdateLogSettingsAsync(LogSettings logSettings)
     {
         try
         {
-            LogSettings logSettingsDb = _iLogSettingsRepository.GetById(id);
+            LogSettings logSettingsDb = _iLogSettingsRepository.GetById(logSettings.Id.Value);
 
             if (GuardClauses.ObjectIsNotNull(logSettingsDb))
             {

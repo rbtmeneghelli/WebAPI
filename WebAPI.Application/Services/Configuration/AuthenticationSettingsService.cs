@@ -134,11 +134,11 @@ public class AuthenticationSettingsService : GenericService, IAuthenticationSett
         }
     }
 
-    public async Task<bool> UpdateAuthenticationSettingsAsync(long id, AuthenticationSettings authenticationSettings)
+    public async Task<bool> UpdateAuthenticationSettingsAsync(AuthenticationSettings authenticationSettings)
     {
         try
         {
-            AuthenticationSettings authenticationSettingsDb = _iAuthenticationSettingsRepository.GetById(id);
+            AuthenticationSettings authenticationSettingsDb = _iAuthenticationSettingsRepository.GetById(authenticationSettings.Id.Value);
 
             if (GuardClauses.ObjectIsNotNull(authenticationSettingsDb))
             {

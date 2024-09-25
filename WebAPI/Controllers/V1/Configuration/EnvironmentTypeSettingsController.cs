@@ -77,9 +77,9 @@ public sealed class EnvironmentTypeSettingsController : GenericController
             return CustomResponse();
         }
 
-        if (await _iGenericConfigurationService.EnvironmentTypeSettingsService.ExistEnvironmentTypeSettingsByIdAsync(id))
+        if (await _iGenericConfigurationService.EnvironmentTypeSettingsService.ExistEnvironmentTypeSettingsByIdAsync(environmentTypeSettingsUpdateRequest.Id.Value))
         {
-            var result = await _iGenericConfigurationService.EnvironmentTypeSettingsService.UpdateEnvironmentTypeSettingsAsync(id, environmentTypeSettingsUpdateRequest);
+            var result = await _iGenericConfigurationService.EnvironmentTypeSettingsService.UpdateEnvironmentTypeSettingsAsync(environmentTypeSettingsUpdateRequest);
             if (result)
                 return NoContent();
             else

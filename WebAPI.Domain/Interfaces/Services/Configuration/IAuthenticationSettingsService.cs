@@ -11,7 +11,7 @@ public interface IAuthenticationSettingsService
     Task<bool> ExistAuthenticationSettingsByEnvironmentAsync();
     Task<bool> ExistAuthenticationSettingsByIdAsync(long id);
     Task<bool> CreateAuthenticationSettingsAsync(AuthenticationSettings authenticationSettings);
-    Task<bool> UpdateAuthenticationSettingsAsync(long id, AuthenticationSettings authenticationSettings);
+    Task<bool> UpdateAuthenticationSettingsAsync(AuthenticationSettings authenticationSettings);
     Task<bool> LogicDeleteAuthenticationSettingsByIdAsync(long id);
     Task<bool> ReactiveAuthenticationSettingsByIdAsync(long id);
     Task<IEnumerable<AuthenticationSettingsExcelDTO>> GetAllAuthenticationSettingsExcelAsync();

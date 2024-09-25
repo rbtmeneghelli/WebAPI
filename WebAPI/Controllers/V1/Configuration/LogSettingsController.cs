@@ -90,9 +90,9 @@ public sealed class LogSettingsController : GenericController
             return CustomResponse();
         }
 
-        if (await _iGenericConfigurationService.LogSettingsService.ExistLogSettingsByIdAsync(id))
+        if (await _iGenericConfigurationService.LogSettingsService.ExistLogSettingsByIdAsync(logSettingsUpdateRequest.Id.Value))
         {
-            var result = await _iGenericConfigurationService.LogSettingsService.UpdateLogSettingsAsync(id, logSettingsUpdateRequest);
+            var result = await _iGenericConfigurationService.LogSettingsService.UpdateLogSettingsAsync(logSettingsUpdateRequest);
             if (result)
                 return NoContent();
             else

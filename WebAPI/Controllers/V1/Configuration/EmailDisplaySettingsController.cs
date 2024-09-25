@@ -77,9 +77,9 @@ public sealed class EmailDisplaySettingsController : GenericController
             return CustomResponse();
         }
 
-        if (await _iGenericConfigurationService.EmailDisplaySettingsService.ExistEmailDisplaySettingsByIdAsync(id))
+        if (await _iGenericConfigurationService.EmailDisplaySettingsService.ExistEmailDisplaySettingsByIdAsync(emailDisplaySettingsUpdateRequest.Id.Value))
         {
-            var result = await _iGenericConfigurationService.EmailDisplaySettingsService.UpdateEmailDisplaySettingsAsync(id, emailDisplaySettingsUpdateRequest);
+            var result = await _iGenericConfigurationService.EmailDisplaySettingsService.UpdateEmailDisplaySettingsAsync(emailDisplaySettingsUpdateRequest);
             if (result)
                 return NoContent();
             else

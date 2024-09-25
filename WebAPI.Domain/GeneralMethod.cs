@@ -1377,6 +1377,52 @@ public sealed class GeneralMethod
 
         return list;
     }
+
+    public bool ValidateFile(IFormFile formFile)
+    {
+        //// Verifica a extensão
+        //var extension = Path.GetExtension(formFile.FileName).ToLowerInvariant();
+        //if (!AllowedExtensions.Contains(extension))
+        //    return false;
+
+        //// Verifica o tipo MIME
+        //if (!AllowedContentTypes.Contains(file.ContentType))
+        //    return false;
+
+        return true;
+    }
+
+    public bool ExistFile(IFormFile formFile)
+    {
+        if (formFile == null || formFile.Length == 0)
+            return false;
+
+        return true;
+    }
+
+    //        public async Task<IEnumerable<TModel>> ReadCsvDataFromIFormFile(IFormFile formFile)
+    //{
+    //    var list = Enumerable.Empty<TModel>();
+
+    //    using (var ms = new MemoryStream())
+    //    {
+    //        await formFile.CopyToAsync(ms);
+    //        string base64 = Convert.ToBase64String(ms.ToArray());
+
+    //        using (var mss = new MemoryStream(Convert.FromBase64String(base64.Substring(base64.IndexOf(',') + 1))))
+    //        {
+    //            using (var reader = new StreamReader(ms))
+    //            {
+    //                using (var csvReader = new CsvReader(reader, new CultureInfo("pt-BR")))
+    //                {
+    //                    list = csvReader.GetRecords<TModel>();
+    //                }
+    //            }
+    //        }
+    //    }
+
+    //    return list;
+    //}
 }
 
 public sealed class UriBuilderSite : UriBuilderAbstract

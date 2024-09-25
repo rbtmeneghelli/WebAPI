@@ -92,9 +92,9 @@ public sealed class AuthenticationSettingsController : GenericController
             return CustomResponse();
         }
 
-        if (await _iGenericConfigurationService.AuthenticationSettingsService.ExistAuthenticationSettingsByIdAsync(id))
+        if (await _iGenericConfigurationService.AuthenticationSettingsService.ExistAuthenticationSettingsByIdAsync(authenticationSettingsRequest.Id.Value))
         {
-            var result = await _iGenericConfigurationService.AuthenticationSettingsService.UpdateAuthenticationSettingsAsync(id, authenticationSettingsRequest);
+            var result = await _iGenericConfigurationService.AuthenticationSettingsService.UpdateAuthenticationSettingsAsync(authenticationSettingsRequest);
             if (result)
                 return NoContent();
             else

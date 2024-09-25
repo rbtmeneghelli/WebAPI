@@ -9,7 +9,7 @@ public interface IEnvironmentTypeSettingsService
     Task<EnvironmentTypeSettingsResponseDTO> GetEnvironmentTypeSettingsByIdAsync(long id);
     Task<bool> ExistEnvironmentTypeSettingsByIdAsync(long id);
     Task<bool> CreateEnvironmentTypeSettingsAsync(EnvironmentTypeSettings environmentTypeSettings);
-    Task<bool> UpdateEnvironmentTypeSettingsAsync(long id, EnvironmentTypeSettings environmentTypeSettings);
+    Task<bool> UpdateEnvironmentTypeSettingsAsync(EnvironmentTypeSettings environmentTypeSettings);
     Task<bool> LogicDeleteEnvironmentTypeSettingsByIdAsync(long id);
     Task<bool> ReactiveEnvironmentTypeSettingsByIdAsync(long id);
     Task<IEnumerable<EnvironmentTypeSettingsExcelDTO>> GetAllEnvironmentTypeSettingsExcelAsync();

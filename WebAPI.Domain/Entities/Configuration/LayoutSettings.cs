@@ -6,16 +6,16 @@ namespace WebAPI.Domain.Entities.Configuration;
 public class LayoutSettings : GenericEntity
 {
     [DisplayName("LogoWeb")]
-    public string LogoWeb { get; set; }
+    public byte[] LogoWeb { get; set; }
 
     [DisplayName("BannerWeb")]
-    public string BannerWeb { get; set; }
+    public byte[] BannerWeb { get; set; }
 
     [DisplayName("LogoMobile")]
-    public string LogoMobile { get; set; }
+    public byte[] LogoMobile { get; set; }
 
     [DisplayName("BannerMobile")]
-    public string BannerMobile { get; set; }
+    public byte[] BannerMobile { get; set; }
 
     [DisplayName("ImageFileContentToUpload")]
     public string ImageFileContentToUpload { get; set; }

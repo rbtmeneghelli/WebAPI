@@ -90,9 +90,9 @@ public sealed class EmailSettingsController : GenericController
             return CustomResponse();
         }
 
-        if (await _iGenericConfigurationService.EmailSettingsService.ExistEmailSettingsByIdAsync(id))
+        if (await _iGenericConfigurationService.EmailSettingsService.ExistEmailSettingsByIdAsync(emailSettingsUpdateRequest.Id.Value))
         {
-            var result = await _iGenericConfigurationService.EmailSettingsService.UpdateEmailSettingsAsync(id, emailSettingsUpdateRequest);
+            var result = await _iGenericConfigurationService.EmailSettingsService.UpdateEmailSettingsAsync(emailSettingsUpdateRequest);
             if (result)
                 return NoContent();
             else
