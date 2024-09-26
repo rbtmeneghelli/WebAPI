@@ -25,6 +25,7 @@ DECISÃO
     - Design Pattern >> Strategy, Factory, Repository, UnitOfWork
     - Servidor >> IIS
     - Camadas do Projeto >> API, IoC, Application, Infra, Domain, DesignPatterns, WebJobs, Tests, Environment
+    - Api Gateway >> Ocelot (Utilizo para poder utilizar duas ou mais API de forma simultanea... Ideal para Microserviços)
     
   - Motivo da decisão
     - Devido ao contexto do software optei por decidir o desenvolvimento a partir de tecnologias e ferramentas em que tenho experiencia e conhecimento tecnico aprimorado
