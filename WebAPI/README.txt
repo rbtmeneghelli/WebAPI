@@ -372,3 +372,7 @@ Parar o IIS e Iniciar o IIS novamente
 -- Passos para publicar APP Front e Back + Banco de dados pelo Azure
 >> No projeto T-SQL do meu github tem um guia do passo a passo dentro da pasta Azure
 >> https://youtu.be/9dqAOc2rJHw ou https://macoratti.net/24/09/vda160924.htm
+
+-- O framework MASSTRANSIT é valido para rotear mensagens para serviços de mensageria como RabbitMQ, Azure Service Bus, SQS e bus de serviço ActiveMQ.
+>> Sua utilização é ideal para projetos que trabalham com Microserviço
+>> https://macoratti.net/21/04/net_masstrans1.htm
