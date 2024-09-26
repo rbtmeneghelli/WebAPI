@@ -1,0 +1,46 @@
+﻿{
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/general/{everything}", // Define a URL de rota que o ocelot ira utilizar para indicar que deve ser chamado o microserviço definido no DownsStream
+      "UpstreamHttpMethod": [ "Get", "Post", "Delete", "Put", "Options" ], // Define os metodos HTTP aceitos e roteados
+      "DownstreamPathTemplate": "/api/v1/general/{everything}", // Define a URL que será utilizada na criação da requisição para o microserviço
+      "DownstreamScheme": "https", // Define o protocolo usado no request para o microserviço
+      "DownstreamHostAndPorts": [ // Define o Host e a porta utilizada na requisição para o microserviço
+        {
+          "Host": "localhost",
+          "Port": 44344 // SSLPort do arquivo LaunchSettings.Json
+        }
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/users/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Delete", "Put", "Options" ],
+      "DownstreamPathTemplate": "/api/v2/users/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44344
+        }
+      ],
+      "AddHeadersToRequest": { // Esse parametro é para poder enviar o Token junto com a requisição ao ser solicitado
+        "Authorization": "Bearer {Authorization}"
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/product/{everything}", 
+      "UpstreamHttpMethod": [ "Get", "Post", "Delete", "Put", "Options" ],
+      "DownstreamPathTemplate": "/api/product/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44369
+        }
+      ]
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "http://localhost:5187" // Define a URL base onde a nossa API gateway esta atendendo
+  }
+}

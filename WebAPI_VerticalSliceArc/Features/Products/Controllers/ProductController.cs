@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using WebAPI_VerticalSliceArc.Domain.Generics;
 using WebAPI_VerticalSliceArc.Features.Products.Commands;
 using WebAPI_VerticalSliceArc.Features.Products.Queries;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace WebAPI_VerticalSliceArc.Features.Products.Controllers;
 

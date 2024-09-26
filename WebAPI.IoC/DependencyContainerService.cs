@@ -55,6 +55,7 @@ using WebAPI.Application.Services.NfService;
 using WebAPI.Infra.Repositories.Others;
 using WebAPI.Application.Services.Graphics;
 using WebAPI.Domain.ExtensionMethods;
+using System.Runtime.CompilerServices;
 
 namespace WebAPI.IoC;
 
