@@ -123,7 +123,7 @@ public class AuditService : GenericService, IAuditService
 
     public async Task CreateAuditBySQLScript(Audit audit)
     {
-        var scriptSQL = new SqlExtensionMethod().CreateSQLInsertScript(audit, typeof(Audit));
+        var scriptSQL = SqlExtensionMethod.CreateSQLInsertScript(audit, typeof(Audit));
         await _iAuditRepositoryDapper.ExecuteQuery(scriptSQL);
     }
 }
