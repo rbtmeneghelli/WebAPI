@@ -7,6 +7,7 @@ using System.Data;
 using System.Linq.Expressions;
 using WebAPI.Application.Generic;
 using WebAPI.Domain.Entities.Others;
+//using EFCore.BulkExtensions;
 
 namespace WebAPI.Infra.Data.Repositories;
 
@@ -89,20 +90,23 @@ public partial class GenericRepository<TEntity> : IGenericRepository<TEntity> wh
         }
         catch (Exception ex)
         {
-            SaveLogError(GetValuesFromEntity(entity), entity.GetType().Name, "Add", ex.Message);
+            SaveLogError(GetValuesFromEntity(entity), entity.GetType().Name, "Create", ex.Message);
         }
     }
 
-    public virtual void AddRange(IEnumerable<TEntity> entities)
+    /// <summary>
+    /// Pacote >> EFCore.BulkExtensions ou Z.EntityFramework.Extensions.EFCore para inserir registros em massa
+    /// </summary>
+    /// <param name="entities"></param>
+    public virtual void BulkCreate(IEnumerable<TEntity> entities)
     {
         try
         {
-            DbSet.AddRange(entities);
-            SaveChanges();
+            _context.BulkInsert(entities);
         }
         catch (Exception ex)
         {
-            SaveLogError(GetValuesFromEntity(entities), entities.GetType().Name, "AddRange", ex.Message);
+            SaveLogError(GetValuesFromEntity(entities), entities.GetType().Name, "BulkCreate", ex.Message);
         }
     }
 
@@ -226,11 +230,6 @@ public partial class GenericRepository<TEntity> : IGenericRepository<TEntity> wh
         }
 
         return null;
-    }
-
-    public void BulkInsert(IEnumerable<TEntity> entities)
-    {
-        _context.BulkInsert(entities);
     }
 
     public void ExecuteDelete(Expression<Func<TEntity, bool>> predicate)

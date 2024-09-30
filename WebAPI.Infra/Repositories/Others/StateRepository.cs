@@ -52,6 +52,6 @@ public class StateRepository : IStatesRepository
 
     public void AddRange(IEnumerable<States> states)
     {
-        _iStateRepository.AddRange(states);
+        _iStateRepository.BulkCreate(states);
     }
 }

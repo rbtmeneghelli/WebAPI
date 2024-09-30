@@ -51,7 +51,7 @@ public class RegionRepository : IRegionRepository
 
     public void AddRange(IEnumerable<Region> regions)
     {
-        _iRegionRepository.AddRange(regions);
+        _iRegionRepository.BulkCreate(regions);
     }
 
     public long GetCount(Expression<Func<Region, bool>> predicate)
