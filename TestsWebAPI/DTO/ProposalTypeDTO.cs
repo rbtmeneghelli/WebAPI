@@ -1,4 +1,6 @@
-﻿namespace TestsWebAPI.DTO;
+﻿using System.Text.Json.Serialization;
+
+namespace TestsWebAPI.DTO;
 
 public class ProposalTypeDTO
 {
@@ -11,8 +13,8 @@ public class ProposalTypeDTO
 
 public class ResponseForProposalTypeDTO
 {
-    [JsonProperty("sucess")]
+    [JsonPropertyName("sucess")]
     public bool Success { get; set; }
-    [JsonProperty("data")]
+    [JsonPropertyName("data")]
     public IEnumerable<ProposalTypeDTO> Data { get; set; }
 }

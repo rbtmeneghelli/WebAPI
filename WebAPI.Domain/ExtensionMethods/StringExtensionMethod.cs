@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace WebAPI.Domain.ExtensionMethods;
@@ -13,9 +13,9 @@ public static class StringExtensionMethod
 
     public static string ApplyReplace(this string text, string oldChar, string newChar) => GuardClauses.IsNullOrWhiteSpace(text) == false ? text.Replace(oldChar, newChar) : text;
 
-    public static string SerializeObject(this object data) => JsonConvert.SerializeObject(data, Formatting.Indented);
+    public static string SerializeObject(this object data) => JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
     
-    public static TSource DeserializeObject<TSource>(this string data) => JsonConvert.DeserializeObject<TSource>(data);
+    public static TSource DeserializeObject<TSource>(this string data) => JsonSerializer.Deserialize<TSource>(data);
     
     public static StringBuilder BuildString(IEnumerable<string> listStrings, bool hasWordBreak)
     {

@@ -1,27 +1,27 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace WebAPI.Domain.Models.NFE.Impostos;
 
 public sealed record NFE_Produto
 {
-    [JsonProperty("cProd")]
+    [JsonPropertyName("cProd")]
     public string Produto_Cprod { get; set; }
-    [JsonProperty("xProd")]
+    [JsonPropertyName("xProd")]
     public string Produto_Xprod { get; set; }
-    [JsonProperty("CFOP")]
+    [JsonPropertyName("CFOP")]
     public string Produto_Cfop { get; set; }
-    [JsonProperty("uCom")]
+    [JsonPropertyName("uCom")]
     public string Produto_Ucom { get; set; }
-    [JsonProperty("qCom")]
+    [JsonPropertyName("qCom")]
     public string Produto_Qcom { get; set; }
-    [JsonProperty("vUnCom")]
+    [JsonPropertyName("vUnCom")]
     public string Produto_Vuncom { get; set; }
-    [JsonProperty("vProd")]
+    [JsonPropertyName("vProd")]
     public string Produto_Vprod { get; set; }
-    [JsonProperty("uTrib")]
+    [JsonPropertyName("uTrib")]
     public string Produto_Utrib { get; set; }
-    [JsonProperty("qTrib")]
+    [JsonPropertyName("qTrib")]
     public string Produto_Qtrib { get; set; }
-    [JsonProperty("vUnTrib")]
+    [JsonPropertyName("vUnTrib")]
     public string Produto_Vuntrib { get; set; }
 }

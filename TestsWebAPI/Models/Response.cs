@@ -1,19 +1,21 @@
-﻿namespace TestsWebAPI.Models;
+﻿using System.Text.Json.Serialization;
+
+namespace TestsWebAPI.Models;
 
 public class ResponseForToken
 {
-    [JsonProperty("sucess")]
+    [JsonPropertyName("sucess")]
     public bool Success { get; set; }
-    [JsonProperty("data")]
+    [JsonPropertyName("data")]
     public ResponseFromToken Data { get; set; }
 }
 
 public class ResponseFromToken
 {
-    [JsonProperty("vinculoCorretora")]
+    [JsonPropertyName("vinculoCorretora")]
     public bool VinculoCorretora { get; set; }
-    [JsonProperty("token")]
+    [JsonPropertyName("token")]
     public string Token { get; set; }
-    [JsonProperty("expiredays")]
+    [JsonPropertyName("expiredays")]
     public int Expiredays { get; set; }
 }

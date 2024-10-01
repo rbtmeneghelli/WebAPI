@@ -40,12 +40,12 @@ public abstract class GenericControllerTest : IClassFixture<BuilderServiceProvid
 
     protected StringContent GetParamsToString<T>(T data) where T : class
     {
-        return new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "Application/json");
+        return new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "Application/json");
     }
 
     protected StringContent GetParamsToBase64<T>(T data) where T : class
     {
-        return new StringContent(Convert.ToBase64String(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(data))), Encoding.UTF8, "Application/json");
+        return new StringContent(Convert.ToBase64String(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(data))), Encoding.UTF8, "Application/json");
     }
 
     protected bool IsSuccessStatusCode(HttpResponseMessage response) => response.IsSuccessStatusCode;

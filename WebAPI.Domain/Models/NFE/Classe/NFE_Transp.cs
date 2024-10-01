@@ -1,18 +1,18 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 using WebAPI.Domain.Models.NFE.Transporte;
 
 namespace WebAPI.Domain.Models.NFE.Classe;
 
 public sealed record NFE_Transp
 {
-    [JsonProperty("modFrete")]
+    [JsonPropertyName("modFrete")]
     public string ModFrete { get; set; }
-    [JsonProperty("transporta")]
+    [JsonPropertyName("transporta")]
     public NFE_Transporta Transporta { get; set; }
-    [JsonProperty("veicTransp")]
+    [JsonPropertyName("veicTransp")]
     public NFE_VeicTransp VeicTransp { get; set; }
-    [JsonProperty("reboque")]
+    [JsonPropertyName("reboque")]
     public NFE_Reboque Reboque { get; set; }
-    [JsonProperty("vol")]
+    [JsonPropertyName("vol")]
     public NFE_Vol Vol { get; set; }
 }

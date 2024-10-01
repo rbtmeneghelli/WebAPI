@@ -43,6 +43,11 @@ namespace WebAPI.Infra.Data.Repositories
             await _idbConnection.ExecuteAsync(sql: sqlQuery);
         }
 
+        public async Task ExecuteQueryParams(string sqlQuery, DynamicParameters parameters)
+        {
+            await _idbConnection.ExecuteAsync(sql: sqlQuery, param: parameters);
+        }
+
         public void Dispose()
         {
             _idbConnection?.Dispose();

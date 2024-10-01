@@ -1,35 +1,35 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace WebAPI.Domain.Models.NFE.Total;
 
 public sealed record NFE_IcmsTot
 {
-    [JsonProperty("vBC")]
+    [JsonPropertyName("vBC")]
     public string Vbc { get; set; }
-    [JsonProperty("vICMS")]
+    [JsonPropertyName("vICMS")]
     public string Vicms { get; set; }
-    [JsonProperty("vBCST")]
+    [JsonPropertyName("vBCST")]
     public string Vbcst { get; set; }
-    [JsonProperty("vST")]
+    [JsonPropertyName("vST")]
     public string Vst { get; set; }
-    [JsonProperty("vProd")]
+    [JsonPropertyName("vProd")]
     public string Vprod { get; set; }
-    [JsonProperty("vFrete")]
+    [JsonPropertyName("vFrete")]
     public string Vfrete { get; set; }
-    [JsonProperty("vSeg")]
+    [JsonPropertyName("vSeg")]
     public string Vseg { get; set; }
-    [JsonProperty("vDesc")]
+    [JsonPropertyName("vDesc")]
     public string Vdesc { get; set; }
-    [JsonProperty("vII")]
+    [JsonPropertyName("vII")]
     public string Vii { get; set; }
-    [JsonProperty("vIPI")]
+    [JsonPropertyName("vIPI")]
     public string Vipi { get; set; }
-    [JsonProperty("vPIS")]
+    [JsonPropertyName("vPIS")]
     public string Vpis { get; set; }
-    [JsonProperty("vCOFINS")]
+    [JsonPropertyName("vCOFINS")]
     public string Vcofins { get; set; }
-    [JsonProperty("vOutro")]
+    [JsonPropertyName("vOutro")]
     public string Voutro { get; set; }
-    [JsonProperty("vNF")]
+    [JsonPropertyName("vNF")]
     public string Vnf { get; set; }
 }

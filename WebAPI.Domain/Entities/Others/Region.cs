@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
-using System.Diagnostics;
+﻿using System.Diagnostics;
+using System.Text.Json.Serialization;
 using WebAPI.Domain.Entities.Generic;
 using WebAPI.Domain.EntitiesDTO.Others;
 
@@ -8,9 +8,9 @@ namespace WebAPI.Domain.Entities.Others;
 [DebuggerDisplay("Id: {Id}, Nome: {Name}, Sigla: {Initials}")]
 public class Region : GenericEntity
 {
-    [JsonProperty("Nome")]
+    [JsonPropertyName("Nome")]
     public string Name { get; set; }
-    [JsonProperty("Sigla")]
+    [JsonPropertyName("Sigla")]
     public string Initials { get; set; }
     public IEnumerable<States> States { get; set; }
 

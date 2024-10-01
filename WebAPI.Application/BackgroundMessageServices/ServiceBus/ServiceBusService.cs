@@ -1,5 +1,5 @@
 ﻿using Azure.Messaging.ServiceBus;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace WebAPI.Application.BackgroundMessageServices.ServiceBus;
 
@@ -17,7 +17,7 @@ public sealed class ServiceBusService<TEntity> : IServiceBusService<TEntity> whe
         await using (var client = new ServiceBusClient(_EnvironmentVariables.ServiceBusSettings.Server))
         {
             ServiceBusSender sender = client.CreateSender(queueName);
-            ServiceBusMessage message = new ServiceBusMessage(JsonConvert.SerializeObject(entity));
+            ServiceBusMessage message = new ServiceBusMessage(JsonSerializer.Serialize(entity));
             await sender.SendMessageAsync(message);
         }
     }

@@ -1,35 +1,35 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace WebAPI.Domain.Models.NFE.Outros;
 
 public sealed record NFE_Dest
 {
-    [JsonProperty("CNPJ")]
+    [JsonPropertyName("CNPJ")]
     public string Cnpj { get; set; }
-    [JsonProperty("xNome")]
+    [JsonPropertyName("xNome")]
     public string Nome { get; set; }
-    [JsonProperty("xLgr")]
+    [JsonPropertyName("xLgr")]
     public string Logradouro { get; set; }
-    [JsonProperty("nro")]
+    [JsonPropertyName("nro")]
     public string Numero { get; set; }
-    [JsonProperty("xCpl")]
+    [JsonPropertyName("xCpl")]
     public string Complemento { get; set; }
-    [JsonProperty("xBairro")]
+    [JsonPropertyName("xBairro")]
     public string Bairro { get; set; }
-    [JsonProperty("cMun")]
+    [JsonPropertyName("cMun")]
     public string CodMunicipio { get; set; }
-    [JsonProperty("xMun")]
+    [JsonPropertyName("xMun")]
     public string Municipio { get; set; }
-    [JsonProperty("UF")]
+    [JsonPropertyName("UF")]
     public string UF { get; set; }
-    [JsonProperty("CEP")]
+    [JsonPropertyName("CEP")]
     public string Cep { get; set; }
-    [JsonProperty("cPais")]
+    [JsonPropertyName("cPais")]
     public string CodigoPais { get; set; }
-    [JsonProperty("xPais")]
+    [JsonPropertyName("xPais")]
     public string Pais { get; set; }
-    [JsonProperty("fone")]
+    [JsonPropertyName("fone")]
     public string Telefone { get; set; }
-    [JsonProperty("IE")]
+    [JsonPropertyName("IE")]
     public string IE { get; set; }
 }

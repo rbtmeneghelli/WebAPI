@@ -1,21 +1,21 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace WebAPI.Domain.Models.NFE.Impostos;
 
 public sealed record NFE_ICMS
 {
-    [JsonProperty("tipo")]
+    [JsonPropertyName("tipo")]
     public string Icms_Tipo { get; set; }
-    [JsonProperty("orig")]
+    [JsonPropertyName("orig")]
     public string Icms_Orig { get; set; }
-    [JsonProperty("CST")]
+    [JsonPropertyName("CST")]
     public string Icms_Cst { get; set; }
-    [JsonProperty("modBC")]
+    [JsonPropertyName("modBC")]
     public string Icms_ModBc { get; set; }
-    [JsonProperty("vBC")]
+    [JsonPropertyName("vBC")]
     public string Icms_Vbc { get; set; }
-    [JsonProperty("pICMS")]
+    [JsonPropertyName("pICMS")]
     public string Icms_Picms { get; set; }
-    [JsonProperty("vICMS")]
+    [JsonPropertyName("vICMS")]
     public string Icms_Vicms { get; set; }
 }

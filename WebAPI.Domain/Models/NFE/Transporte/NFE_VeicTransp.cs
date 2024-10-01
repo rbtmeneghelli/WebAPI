@@ -1,13 +1,13 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace WebAPI.Domain.Models.NFE.Transporte;
 
 public sealed record NFE_VeicTransp
 {
-    [JsonProperty("placa")]
+    [JsonPropertyName("placa")]
     public string Placa { get; set; }
-    [JsonProperty("UF")]
+    [JsonPropertyName("UF")]
     public string UF { get; set; }
-    [JsonProperty("RNTC")]
+    [JsonPropertyName("RNTC")]
     public string RNTC { get; set; }
 }

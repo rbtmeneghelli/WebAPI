@@ -1,18 +1,18 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace WebAPI.Domain.Models
 {
     public sealed class FirebaseNotification
     {
-        [JsonProperty("notification")]
+        [JsonPropertyName("notification")]
         public FirebaseNotificationDetails Notification { get; set; }
     }
 
     public sealed class FirebaseNotificationDetails
     {
-        [JsonProperty("title")]
+        [JsonPropertyName("title")]
         public string Title { get; set; }
-        [JsonProperty("body")]
+        [JsonPropertyName("body")]
         public string Body { get; set; }
 
         public FirebaseNotificationDetails()

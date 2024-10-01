@@ -1,9 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace WebAPI.Domain.Models.NFE.Transporte;
 
 public sealed record NFE_Lacre
 {
-    [JsonProperty("nLacre")]
+    [JsonPropertyName("nLacre")]
     public string Nlacre { get; set; }
 }

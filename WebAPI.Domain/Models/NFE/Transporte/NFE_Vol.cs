@@ -1,21 +1,21 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace WebAPI.Domain.Models.NFE.Transporte;
 
 public class NFE_Vol
 {
-    [JsonProperty("qVol")]
+    [JsonPropertyName("qVol")]
     public string Qvol { get; set; }
-    [JsonProperty("esp")]
+    [JsonPropertyName("esp")]
     public string Esp { get; set; }
-    [JsonProperty("marca")]
+    [JsonPropertyName("marca")]
     public string Marca { get; set; }
-    [JsonProperty("nVol")]
+    [JsonPropertyName("nVol")]
     public string Nvol { get; set; }
-    [JsonProperty("pesoL")]
+    [JsonPropertyName("pesoL")]
     public string PesoL { get; set; }
-    [JsonProperty("pesoB")]
+    [JsonPropertyName("pesoB")]
     public string PesoB { get; set; }
-    [JsonProperty("lacre")]
+    [JsonPropertyName("lacre")]
     public NFE_Lacre Lacre { get; set; }
 }

@@ -1,6 +1,9 @@
 ﻿using WebAPI.Domain.Attributes;
 using System.Reflection;
 using System.Text;
+using Dapper;
+using System.Data;
+using WebAPI.Domain.Entities.Others;
 
 namespace WebAPI.Domain.ExtensionMethods;
 
@@ -152,7 +155,6 @@ public static class SqlExtensionMethod
 
     public static string CreateRandomKey(int maxKeyLength = 10) => $"select substring(TRIM(REPLACE(CONVERT(VARCHAR(50),NEWID()),'-','')),1,{maxKeyLength})";
     public static string ConvertFieldDateTimeToString(string fieldName) => $"Convert(Varchar, {fieldName}, 103)";
-    public static string IncludeCOALESCEConditionOnUpdateQuery(string fieldName, string fieldValue) => $"COALESCE({fieldValue},{fieldName})";
     public static string IncludeIIFConditionOnUpdateQuery(string fieldName, int fieldValue) => $"IIF(fieldValue > 0, {fieldValue}, {fieldName})";
     public static string IncludeIIFConditionOnUpdateQuery(string fieldName, decimal fieldValue) => $"IIF(fieldValue > 0, {fieldValue}, {fieldName})";
     public static string IncludeIIFConditionOnUpdateQuery(string fieldName, double fieldValue) => $"IIF(fieldValue > 0, {fieldValue}, {fieldName})";

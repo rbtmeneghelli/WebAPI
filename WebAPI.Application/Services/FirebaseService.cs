@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json;
 using WebAPI.Application.Generic;
 using WebAPI.Domain.Constants;
 using WebAPI.Domain.ExtensionMethods;
@@ -28,7 +28,7 @@ public class FirebaseService : GenericService, IFirebaseService
         var currentDate = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil().ToLongDateString();
 
         //Build Notification and Token
-        var postData = Newtonsoft.Json.JsonConvert.SerializeObject(new
+        var postData = JsonSerializer.Serialize(new
         {
             to = tokenUser,
             firebaseNotificationDetails,
@@ -77,7 +77,7 @@ public class FirebaseService : GenericService, IFirebaseService
     {
         RequestData requestDataDto = new RequestData();
 
-        string jsonData = JsonConvert.SerializeObject(new
+        string jsonData = JsonSerializer.Serialize(new
         {
             message = new FirebaseNotification()
             {

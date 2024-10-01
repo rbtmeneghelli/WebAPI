@@ -1,17 +1,17 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace WebAPI.Domain.Models.NFE.Impostos;
 
 public sealed record NFE_COFINS
 {
-    [JsonProperty("tipo")]
+    [JsonPropertyName("tipo")]
     public string Cofins_Tipo { get; set; }
-    [JsonProperty("CST")]
+    [JsonPropertyName("CST")]
     public string Cofins_Cst { get; set; }
-    [JsonProperty("vBC")]
+    [JsonPropertyName("vBC")]
     public string Cofins_Vbc { get; set; }
-    [JsonProperty("pCOFINS")]
+    [JsonPropertyName("pCOFINS")]
     public string Cofins_Pcofins { get; set; }
-    [JsonProperty("vCOFINS")]
+    [JsonPropertyName("vCOFINS")]
     public string Cofins_Vcofins { get; set; }
 }

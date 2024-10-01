@@ -1,4 +1,5 @@
-﻿using WebAPI.Application.Factory;
+﻿using Dapper;
+using WebAPI.Application.Factory;
 using WebAPI.Application.Generic;
 using WebAPI.Domain.Constants;
 using WebAPI.Domain.Entities.Others;
@@ -50,8 +51,8 @@ public class AuditService : GenericService, IAuditService
 
     public async Task<PagedResult<AuditResponseDTO>> GetAllDapperAsync(AuditFilter filter)
     {
-        string sql = @"select count(*) from audits " +
-        @"select Id = Id, TableName = Table_Name, ActionName = Action_Name from audits where (Table_Name = '" + filter.TableName + "')";
+        string sql = @"select count(*) from ControlPanel_Audit " +
+        @"select Id = Id, TableName = Table_Name, ActionName = Action_Name from ControlPanel_Audit where (Table_Name = '" + filter.TableName + "')";
         var reader = await _iAuditRepositoryDapper.QueryMultiple(sql);
 
         var queryResult = from x in reader.Result.AsQueryable()
@@ -125,5 +126,95 @@ public class AuditService : GenericService, IAuditService
     {
         var scriptSQL = SqlExtensionMethod.CreateSQLInsertScript(audit, typeof(Audit));
         await _iAuditRepositoryDapper.ExecuteQuery(scriptSQL);
+    }
+
+    /// <summary>
+    /// O DbType do Tipo AnsiString é para ser aplicado, quando o campo for Criptografado
+    /// </summary>
+    /// <param name="audit"></param>
+    /// <returns></returns>
+    public async Task CreateAuditByDapper(Audit audit)
+    {
+        string scriptSQL = $@"INSERT INTO ControlPanel_Audit(TableName,ActionName,KeyValues,OldValues,NewValues, CreateDate, Status)
+                              VALUES(@TableName,@ActionName,@KeyValues,@OldValues,@NewValues, @CreateDate, @Status)";
+
+        DynamicParameters parameters = new DynamicParameters();
+
+        parameters.Add("@TableName", audit.TableName, dbType: DbType.String, direction: ParameterDirection.Input, size: 100);
+        parameters.Add("@ActionName", audit.ActionName, dbType: DbType.String, direction: ParameterDirection.Input, size: 80);
+        parameters.Add("@KeyValues", audit.KeyValues, dbType: DbType.DateTime, direction: ParameterDirection.Input, size: 10000);
+        parameters.Add("@OldValues", audit.OldValues, dbType: DbType.String, direction: ParameterDirection.Input, size: 10000);
+        parameters.Add("@NewValues", audit.NewValues, dbType: DbType.String, direction: ParameterDirection.Input, size: 10000);
+        parameters.Add("@CreateDate", DateOnlyExtensionMethods.GetDateTimeNowFromBrazil(), dbType: DbType.DateTime2, direction: ParameterDirection.Input);
+        parameters.Add("@Status", true, dbType: DbType.Boolean, direction: ParameterDirection.Input);
+
+        await _iAuditRepositoryDapper.ExecuteQueryParams(scriptSQL, parameters);
+    }
+
+    public async Task UpdateAuditByDapper(Audit audit)
+    {
+        string scriptSQL = $@"UPDATE ControlPanel_Audit SET 
+                              TableName = COALESCE(@TableName,TableName)
+                              ActionName = COALESCE(@ActionName,ActionName)
+                              KeyValues = COALESCE(@KeyValues,KeyValues)
+                              OldValues = COALESCE(@OldValues,OldValues)
+                              NewValues = COALESCE(@NewValues,NewValues)
+                              UpdateDate = @UpdateDate
+                              WHERE Id = @Id";
+
+        DynamicParameters parameters = new DynamicParameters();
+
+        parameters.Add("@TableName", audit.TableName, DbType.String, ParameterDirection.Input, size: 100);
+        parameters.Add("@ActionName", audit.ActionName, DbType.String, ParameterDirection.Input, size: 80);
+        parameters.Add("@KeyValues", audit.KeyValues, dbType: DbType.DateTime, direction: ParameterDirection.Input, size: 10000);
+        parameters.Add("@OldValues", audit.OldValues, dbType: DbType.String, direction: ParameterDirection.Input, size: 10000);
+        parameters.Add("@NewValues", audit.NewValues, dbType: DbType.String, direction: ParameterDirection.Input, size: 10000);
+        parameters.Add("@UpdateDate", DateOnlyExtensionMethods.GetDateTimeNowFromBrazil(), dbType: DbType.DateTime2, direction: ParameterDirection.Input);
+        parameters.Add("@Id", audit.Id);
+
+        await _iAuditRepositoryDapper.ExecuteQueryParams(scriptSQL, parameters);
+    }
+
+    public async Task DeleteAuditByDapper(Audit audit, bool isLogicDelete = true)
+    {
+        DynamicParameters parameters = new DynamicParameters();
+
+        if (isLogicDelete)
+        {
+            string scriptSQLUpdate = $@"UPDATE ControlPanel_Audit SET 
+                                    Status = @Status,
+                                    UpdateDate = @UpdateDate
+                                    WHERE Id = @Id";
+
+            parameters.Add("@Status", false, dbType: DbType.Boolean, direction: ParameterDirection.Input);
+            parameters.Add("@UpdateDate", DateOnlyExtensionMethods.GetDateTimeNowFromBrazil(), dbType: DbType.DateTime2, direction: ParameterDirection.Input);
+            parameters.Add("@Id", audit.Id);
+
+            await _iAuditRepositoryDapper.ExecuteQueryParams(scriptSQLUpdate, parameters);
+        }
+        else
+        {
+            string scriptSQLDelete = $@"DELETE FROM ControlPanel_Audit WHERE Id = @Id";
+
+            parameters.Add("@Id", audit.Id);
+
+            await _iAuditRepositoryDapper.ExecuteQueryParams(scriptSQLDelete, parameters);
+        }
+    }
+
+    public async Task ReactiveAuditByDapper(Audit audit)
+    {
+        DynamicParameters parameters = new DynamicParameters();
+
+        string scriptSQLUpdate = $@"UPDATE ControlPanel_Audit SET 
+                                    Status = @Status,
+                                    UpdateDate = @UpdateDate
+                                    WHERE Id = @Id";
+
+        parameters.Add("@Status", true, dbType: DbType.Boolean, direction: ParameterDirection.Input);
+        parameters.Add("@UpdateDate", DateOnlyExtensionMethods.GetDateTimeNowFromBrazil(), dbType: DbType.DateTime2, direction: ParameterDirection.Input);
+        parameters.Add("@Id", audit.Id);
+
+        await _iAuditRepositoryDapper.ExecuteQueryParams(scriptSQLUpdate, parameters);
     }
 }

@@ -1,19 +1,19 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace WebAPI.Domain.Models.NFE.Transporte;
 
 public class NFE_Transporta
 {
-    [JsonProperty("CNPJ")]
+    [JsonPropertyName("CNPJ")]
     public string Cnpj { get; set; }
-    [JsonProperty("xNome")]
+    [JsonPropertyName("xNome")]
     public string Nome { get; set; }
-    [JsonProperty("IE")]
+    [JsonPropertyName("IE")]
     public string IE { get; set; }
-    [JsonProperty("xEnder")]
+    [JsonPropertyName("xEnder")]
     public string Endereco { get; set; }
-    [JsonProperty("xMun")]
+    [JsonPropertyName("xMun")]
     public string Municipio { get; set; }
-    [JsonProperty("UF")]
+    [JsonPropertyName("UF")]
     public string UF { get; set; }
 }

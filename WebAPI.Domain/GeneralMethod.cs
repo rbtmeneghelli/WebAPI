@@ -2,7 +2,6 @@
 using WebAPI.Domain.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
@@ -19,7 +18,6 @@ using System.Xml;
 using System.Xml.Serialization;
 using WebAPI.Domain.Constants;
 using WebAPI.Domain.ExtensionMethods;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace WebAPI.Domain;
 
@@ -464,8 +462,8 @@ public sealed class GeneralMethod
 
     public DataTable ConvertDynamicListToDataTable(IEnumerable<dynamic> list)
     {
-        var json = JsonConvert.SerializeObject(list);
-        DataTable dt = (DataTable)JsonConvert.DeserializeObject(json, (typeof(DataTable)));
+        var json = JsonSerializer.Serialize(list);
+        DataTable dt = (DataTable)JsonSerializer.Deserialize(json, (typeof(DataTable)));
         return dt;
     }
 
@@ -753,7 +751,7 @@ public sealed class GeneralMethod
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(xml);
             doc = RemoveXmlDeclaration(doc);
-            var json = JsonConvert.SerializeXmlNode(doc, Newtonsoft.Json.Formatting.Indented, true);
+            var json = JsonSerializer.Serialize(doc, new JsonSerializerOptions { WriteIndented = true });
             return json.ToString();
         }
 

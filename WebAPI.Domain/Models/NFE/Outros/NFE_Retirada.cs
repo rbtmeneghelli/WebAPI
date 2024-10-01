@@ -1,23 +1,23 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace WebAPI.Domain.Models.NFE.Outros;
 
 public sealed record NFE_Retirada
 {
-    [JsonProperty("CNPJ")]
+    [JsonPropertyName("CNPJ")]
     public string Cnpj { get; set; }
-    [JsonProperty("xLgr")]
+    [JsonPropertyName("xLgr")]
     public string Logradouro { get; set; }
-    [JsonProperty("nro")]
+    [JsonPropertyName("nro")]
     public string Numero { get; set; }
-    [JsonProperty("xCpl")]
+    [JsonPropertyName("xCpl")]
     public string Complemento { get; set; }
-    [JsonProperty("xBairro")]
+    [JsonPropertyName("xBairro")]
     public string Bairro { get; set; }
-    [JsonProperty("cMun")]
+    [JsonPropertyName("cMun")]
     public string CodigoMunicipio { get; set; }
-    [JsonProperty("xMun")]
+    [JsonPropertyName("xMun")]
     public string Municipio { get; set; }
-    [JsonProperty("UF")]
+    [JsonPropertyName("UF")]
     public string UF { get; set; }
 }

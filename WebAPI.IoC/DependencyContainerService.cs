@@ -17,7 +17,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,7 +35,6 @@ using SqlConnection = Microsoft.Data.SqlClient.SqlConnection;
 using WebAPI.Application.Generic;
 using WebAPI.Application.Factory;
 using WebAPI.Application.BackgroundMessageServices.RabbitMQ;
-using Newtonsoft.Json;
 using WebAPI.Domain.Enums;
 using WebAPI.Domain.Interfaces.Services.Tools;
 using WebAPI.Domain.Interfaces.Services.Configuration;
@@ -54,8 +52,7 @@ using WebAPI.Domain.Interfaces.Services.NfService;
 using WebAPI.Application.Services.NfService;
 using WebAPI.Infra.Repositories.Others;
 using WebAPI.Application.Services.Graphics;
-using WebAPI.Domain.ExtensionMethods;
-using System.Runtime.CompilerServices;
+using System.Text.Json;
 
 namespace WebAPI.IoC;
 
@@ -670,11 +667,11 @@ public static class DependencyContainerService
             opt.ConnectionStringSettings.DefaultConnectionToDocker = data["WebAPI_Docker"];
             if(data["WebAPI_RabbitMQ"] != null)
             {
-                opt.RabbitMQSettings = JsonConvert.DeserializeObject<RabbitMQSettings>(data["WebAPI_RabbitMQ"]);
+                opt.RabbitMQSettings = JsonSerializer.Deserialize<RabbitMQSettings>(data["WebAPI_RabbitMQ"]);
             }
-            opt.KafkaSettings = JsonConvert.DeserializeObject<KafkaSettings>(data["WebAPI_Kafka"]);
-            opt.ServiceBusSettings = JsonConvert.DeserializeObject<ServiceBusSettings>(data["WebAPI_ServiceBus"]);
-            opt.SendGridSettings = JsonConvert.DeserializeObject<SendGridSettings>(data["WebAPI_SendGrid"]);
+            opt.KafkaSettings = JsonSerializer.Deserialize<KafkaSettings>(data["WebAPI_Kafka"]);
+            opt.ServiceBusSettings = JsonSerializer.Deserialize<ServiceBusSettings>(data["WebAPI_ServiceBus"]);
+            opt.SendGridSettings = JsonSerializer.Deserialize<SendGridSettings>(data["WebAPI_SendGrid"]);
             Enum.TryParse(data["WebAPI_Environment"], out EnumEnvironment environment);
             opt.Environment = environment;
             #endregion

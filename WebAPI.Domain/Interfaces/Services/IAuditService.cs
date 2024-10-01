@@ -12,4 +12,8 @@ public interface IAuditService
     Task<PagedResult<AuditResponseDTO>> GetAllPaginateAsync(AuditFilter filter);
     Task<bool> ExistByIdAsync(long id);
     Task CreateAuditBySQLScript(Audit audit);
+    Task CreateAuditByDapper(Audit audit);
+    Task UpdateAuditByDapper(Audit audit);
+    Task DeleteAuditByDapper(Audit audit, bool isLogicDelete = true);
+    Task ReactiveAuditByDapper(Audit audit);
 }

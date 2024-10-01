@@ -1,43 +1,43 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace WebAPI.Domain.Models.NFE.Outros;
 
 public sealed record NFE_Ide
 {
-    [JsonProperty("cUF")]
+    [JsonPropertyName("cUF")]
     public string CodigoUF { get; set; }
-    [JsonProperty("cNF")]
+    [JsonPropertyName("cNF")]
     public string codigoNF { get; set; }
-    [JsonProperty("natOp")]
+    [JsonPropertyName("natOp")]
     public string NatOp { get; set; }
-    [JsonProperty("indPag")]
+    [JsonPropertyName("indPag")]
     public string IndPag { get; set; }
-    [JsonProperty("mod")]
+    [JsonPropertyName("mod")]
     public string Mod { get; set; }
-    [JsonProperty("serie")]
+    [JsonPropertyName("serie")]
     public string Serie { get; set; }
-    [JsonProperty("nNF")]
+    [JsonPropertyName("nNF")]
     public string NumeroNF { get; set; }
-    [JsonProperty("dEmi")]
+    [JsonPropertyName("dEmi")]
     public string DataEmissao { get; set; }
-    [JsonProperty("dSaiEnt")]
+    [JsonPropertyName("dSaiEnt")]
     public string DSaiEnt { get; set; }
-    [JsonProperty("tpNF")]
+    [JsonPropertyName("tpNF")]
     public string TipoNF { get; set; }
-    [JsonProperty("cMunFG")]
+    [JsonPropertyName("cMunFG")]
     public string CodigoMunicipioFG { get; set; }
-    [JsonProperty("tpImp")]
+    [JsonPropertyName("tpImp")]
     public string TipoImp { get; set; }
-    [JsonProperty("tpEmis")]
+    [JsonPropertyName("tpEmis")]
     public string TipoEmis { get; set; }
-    [JsonProperty("cDV")]
+    [JsonPropertyName("cDV")]
     public string CodigoDV { get; set; }
-    [JsonProperty("tpAmb")]
+    [JsonPropertyName("tpAmb")]
     public string TipoAmb { get; set; }
-    [JsonProperty("finNFe")]
+    [JsonPropertyName("finNFe")]
     public string FinNFe { get; set; }
-    [JsonProperty("procEmi")]
+    [JsonPropertyName("procEmi")]
     public string ProcEmi { get; set; }
-    [JsonProperty("verProc")]
+    [JsonPropertyName("verProc")]
     public string VerProc { get; set; }
 }
