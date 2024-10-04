@@ -13,6 +13,10 @@ public class EnvironmentVariables
     public ServiceBusSettings ServiceBusSettings { get; set; }
     public SendGridSettings SendGridSettings { get; set; }
     public EnumEnvironment Environment { get; set; }
+    public string AzureFileShareAccountName { get; set; } = "Azure-FileShare-AccountName";
+    public string AzureFileShareKeyValue { get; set; } = "Azure-FileShare-KeyValue";
+    public string AzureKeyVaultUrl { get; set; } = "Azure-KeyVault-Url";
+    public string AzureConnectionStringStorage { get; set; } = "CONNECTION_STRING_STORAGE";
 
     public EnvironmentVariables()
     {

@@ -53,6 +53,7 @@ using WebAPI.Application.Services.NfService;
 using WebAPI.Infra.Repositories.Others;
 using WebAPI.Application.Services.Graphics;
 using System.Text.Json;
+using WebAPI.Application.Services.AzureService;
 
 namespace WebAPI.IoC;
 
@@ -259,7 +260,8 @@ public static class DependencyContainerService
         .AddScoped<INfService, NfService>()
         .AddScoped<IFirebaseService, FirebaseService>()
         .AddTransient<IProblemDetailsFactory, ProblemDetailsFactory>()
-        .AddScoped<ISendGridService, SendGridService>();
+        .AddScoped<ISendGridService, SendGridService>()
+        .AddScoped<IAzureService, AzureService>();
     }
 
     public static void RegisterMapperConfig(this IServiceCollection services)
