@@ -13,9 +13,9 @@ public static class ModelBuilderExtensions
         {
             Id = 1,
             Token = string.Empty,
-            Data = Constants.GetDateTimeNowFromBrazil(),
-            HoraInicial = null,
-            HoraFinal = null
+            Data = FixConstants.GetDateTimeNowFromBrazil(),
+            InitialHour = null,
+            FinalHour = null
         });
     }
 }

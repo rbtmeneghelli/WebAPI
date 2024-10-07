@@ -1,4 +1,10 @@
-﻿namespace TestsWebAPI.Configuration;
+﻿using WebAPI.Application.Services;
+using WebAPI.Domain.Interfaces.Repository;
+using WebAPI.Domain.Interfaces.Services;
+using WebAPI.Domain.Interfaces.Services.Tools;
+using WebAPI.Infra.Repositories.Others;
+
+namespace TestsWebAPI.Configuration;
 
 public class BuilderServiceProvider
 {
@@ -8,13 +14,15 @@ public class BuilderServiceProvider
     {
         var serviceCollection = new ServiceCollection();
         serviceCollection.AddHttpClient();
-        serviceCollection.AddDbContext<WebAPITestContext>(opt => opt.UseInMemoryDatabase("DefaultMemoryAPI"));
-        //serviceCollection.AddDbContext<DefaultWebAPITestContext>(opts => opts.UseSqlServer(defaultConnection, b => b.MinBatchSize(5).MaxBatchSize(50).MigrationsAssembly(typeof(DefaultWebAPITestContext).Assembly.FullName)));
-        //serviceCollection.AddScoped<WebAPITestContext>();
-        serviceCollection.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositoryTest<>));
-        serviceCollection.AddScoped<IAuthenticateEntityRepositoryTest, AuthenticateEntityRepositoryTest>();
-        serviceCollection.AddScoped<IAuthenticateEntityServiceTest, AuthenticateEntityServiceTest>();
-        serviceCollection.AddScoped<IGeneralServiceTest, GeneralServiceTest>();
+        serviceCollection.AddDbContext<WebAPITestContext>(opt => opt.UseInMemoryDatabase("WebMemoryAPI"));
+        serviceCollection
+        .AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositoryTest<>))
+        .AddScoped<IAuthenticateEntityRepositoryTest, AuthenticateEntityRepositoryTest>()
+        .AddScoped<IAuthenticateEntityServiceTest, AuthenticateEntityServiceTest>()
+        .AddScoped<IGeneralServiceTest, GeneralServiceTest>()
+        .AddScoped<INotificationMessageService, NotificationMessageService>()
+        .AddScoped<IRegionService, RegionService>()
+        .AddScoped<IRegionRepository, RegionRepository>();
         ServiceProvider = serviceCollection.BuildServiceProvider();
         var context = ServiceProvider.GetRequiredService<WebAPITestContext>();
         context.Database.EnsureCreated();

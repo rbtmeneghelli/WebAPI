@@ -1,9 +1,6 @@
-﻿using DefaultWebApiTest.Services;
-using Moq;
+﻿namespace TestsWebAPI.Controllers.V1;
 
-namespace TestsWebAPI.Controllers.V1;
-
-public class AuthenticateTestControllerTest : GenericControllerTest
+public sealed class AuthenticateTestControllerTest : GenericControllerTest
 {
     public AuthenticateTestControllerTest(BuilderServiceProvider builderServiceProvider) : base(builderServiceProvider)
     {
@@ -12,10 +9,8 @@ public class AuthenticateTestControllerTest : GenericControllerTest
     [Theory(DisplayName = "Autenticação de usuario")]
     [InlineData("teste@gmail.com", "Teste@456")]
     [Trait("Metodo Authenticate", "Parametros (Login e Senha)")]
-    public void Authenticate(string user, string password)
+    public async Task Authenticate(string user, string password)
     {
-        string url = GetUrl(ConstantsURL.URL_AUTHENTICATE);
-
         if (_authenticateEntityService.ExistAuthentication() == false)
         {
             _authenticateEntityService.InsertDefaultAuthenticate();
@@ -23,9 +18,9 @@ public class AuthenticateTestControllerTest : GenericControllerTest
 
         var login = new Login(user, password);
 
-        var response = _httpClient.PostAsync(url, GetParamsToBase64<Login>(login)).GetAwaiter().GetResult();
+        var response = await _httpClient.PostAsync(ConstantsURL.URL_AUTHENTICATE, GetParamsToBase64<Login>(login));
 
-        if (IsSuccessStatusCode(response))
+        if (response.IsSuccessStatusCode)
         {
 
             var responseForToken = _generalService.DeserializeObjectToObj<ResponseForToken>(response.Content);
@@ -33,15 +28,15 @@ public class AuthenticateTestControllerTest : GenericControllerTest
             {
                 AuthenticateEntity authenticateEntity = _authenticateEntityService.GetAuthenticate();
                 authenticateEntity.Token = responseForToken.Data.Token;
-                authenticateEntity.Data = Constants.GetDateTimeNowFromBrazil();
-                authenticateEntity.HoraInicial = Constants.GetDateTimeNowFromBrazil().TimeOfDay;
-                authenticateEntity.HoraFinal = Constants.GetDateTimeNowFromBrazil().AddHours(2).TimeOfDay;
+                authenticateEntity.Data = FixConstants.GetDateTimeNowFromBrazil();
+                authenticateEntity.InitialHour = FixConstants.GetDateTimeNowFromBrazil().TimeOfDay;
+                authenticateEntity.FinalHour = FixConstants.GetDateTimeNowFromBrazil().AddHours(2).TimeOfDay;
                 _authenticateEntityService.UpdateAuthenticate(authenticateEntity);
             }
         }
         else
         {
-            Assert.True(false, Constants.URL_AUTHENTICATE_FAIL);
+            Assert.False(false, FixConstants.URL_AUTHENTICATE_FAIL);
         }
     }
 
@@ -57,5 +52,11 @@ public class AuthenticateTestControllerTest : GenericControllerTest
             Assert.Equal(1L, result.Id);
         else
             Assert.False(false);
+    }
+
+    [Fact(DisplayName = "Verificar se o usuario de autenticação está com o token valido")]
+    public void UserIsAuthenticated()
+    {
+        Assert.True(_tokenIsValid, "Token validado com sucesso");
     }
 }

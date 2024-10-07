@@ -14,9 +14,9 @@ public class AuthenticateEntityServiceTest : IAuthenticateEntityServiceTest
         return new AuthenticateEntity()
         {
             Token = string.Empty,
-            Data = Constants.GetDateTimeNowFromBrazil(),
-            HoraInicial = Constants.GetDateTimeNowFromBrazil().TimeOfDay,
-            HoraFinal = Constants.GetDateTimeNowFromBrazil().TimeOfDay
+            Data = FixConstants.GetDateTimeNowFromBrazil(),
+            InitialHour = FixConstants.GetDateTimeNowFromBrazil().TimeOfDay,
+            FinalHour = FixConstants.GetDateTimeNowFromBrazil().TimeOfDay
         };
     }
 
@@ -34,10 +34,10 @@ public class AuthenticateEntityServiceTest : IAuthenticateEntityServiceTest
     {
         DateTime currentDateTime = DateTime.Now;
 
-        if (authenticateEntity.Data.HasValue && authenticateEntity.HoraInicial.HasValue && authenticateEntity.HoraFinal.HasValue)
+        if (authenticateEntity.Data.HasValue && authenticateEntity.InitialHour.HasValue && authenticateEntity.FinalHour.HasValue)
             return currentDateTime.Date == authenticateEntity.Data.Value.Date &&
-                   currentDateTime.TimeOfDay >= authenticateEntity.HoraInicial &&
-                   currentDateTime.TimeOfDay <= authenticateEntity.HoraFinal;
+                   currentDateTime.TimeOfDay >= authenticateEntity.InitialHour &&
+                   currentDateTime.TimeOfDay <= authenticateEntity.FinalHour;
 
         return false;
     }

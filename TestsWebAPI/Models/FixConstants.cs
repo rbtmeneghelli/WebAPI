@@ -1,6 +1,6 @@
 ﻿namespace TestsWebAPI.Models;
 
-public static class Constants
+public static class FixConstants
 {
     public const string TOKEN_INVALID = "O token de autenticação está invalido. por favor renove o token para prosseguir seus testes.";
     public const string TOKEN_NOT_EXIST = "O token de autenticação não existe. por favor cria-lo.";
@@ -24,6 +24,6 @@ public static class Constants
 public static class ConstantsURL
 {
     public const string API_URL = "http://localhost:7071/api/";
-    public const string URL_AUTHENTICATE = "authenticate";
-    public const string URL_GET_PROPOSALTYPE = "proposaltype/get";
+    public const string URL_AUTHENTICATE = $"{ConstantsURL.API_URL}authenticate";
+    public const string URL_GET_PROPOSALTYPE = $"{ConstantsURL.API_URL}proposaltype/get";
 }

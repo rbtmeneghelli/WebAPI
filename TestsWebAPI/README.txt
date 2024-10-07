@@ -1,0 +1,2 @@
+﻿Esse projeto teste segue o modelo Triple A que diz que todo o teste de unidade deve possuir três etapas: Arrange (Preparar o teste), Act (Rodar o teste) e Assert (Verificar as asserções).
+>> Nas controllers desse projeto temos a aplicação desse padrão!

@@ -1,4 +1,7 @@
 ﻿using System.Text;
+using WebAPI.Domain.Interfaces.Repository;
+using WebAPI.Domain.Interfaces.Services;
+using WebAPI.Domain.Interfaces.Services.Tools;
 
 namespace TestsWebAPI.Controllers.Generic;
 
@@ -6,37 +9,42 @@ public abstract class GenericControllerTest : IClassFixture<BuilderServiceProvid
 {
     protected ServiceProvider _serviceProvider;
     protected readonly IAuthenticateEntityServiceTest _authenticateEntityService;
-    protected string _authToken = string.Empty;
+    protected readonly IGeneralServiceTest _generalService;
     protected readonly HttpClient _httpClient;
     protected readonly HttpClient _httpClientAuthentication;
-    protected readonly IGeneralServiceTest _generalService;
+
+    protected bool _existAuthentication = false;
+    protected bool _tokenIsValid = false;
+    protected string _authToken = string.Empty;
+
+    private void ApplyTokenAuthentication()
+    {
+        _existAuthentication = _authenticateEntityService.ExistAuthentication();
+
+        if (_existAuthentication)
+        {
+            AuthenticateEntity authenticationEntity = _authenticateEntityService.GetAuthenticate(1L);
+            if (_authenticateEntityService.IsValidAuthentication(authenticationEntity))
+            {
+                _tokenIsValid = true;
+                _httpClientAuthentication.DefaultRequestHeaders.Add("Authorization", "Bearer " + authenticationEntity.Token);
+            }
+            else
+            {
+                _tokenIsValid = false;
+            }
+        }
+    }
 
     public GenericControllerTest(BuilderServiceProvider builderServiceProvider)
     {
         _serviceProvider = builderServiceProvider.ServiceProvider;
-        _authenticateEntityService = GetAuthenticateEntityService();
-        _httpClient = GetHttpClientFactoryService();
-        _httpClientAuthentication = GetHttpClientFactoryService();
-        _generalService = GetGeneralService();
-
-        if (_authenticateEntityService.ExistAuthentication())
-        {
-            AuthenticateEntity authenticationEntity = _authenticateEntityService.GetAuthenticate(1L);
-            if (_authenticateEntityService.IsValidAuthentication(authenticationEntity))
-                SetTokenAuthentication(authenticationEntity.Token);
-        }
-        else
-        {
-            throw new Exception(Constants.TOKEN_NOT_EXIST);
-        }
+        _authenticateEntityService = _serviceProvider.GetService<IAuthenticateEntityServiceTest>();
+        _httpClient = _serviceProvider.GetService<IHttpClientFactory>().CreateClient();
+        _httpClientAuthentication = _serviceProvider.GetService<IHttpClientFactory>().CreateClient();
+        _generalService = _serviceProvider.GetService<IGeneralServiceTest>();
+        ApplyTokenAuthentication();
     }
-
-    private void SetTokenAuthentication(string token) => _httpClientAuthentication.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
-    private IAuthenticateEntityServiceTest GetAuthenticateEntityService() => _serviceProvider.GetService<IAuthenticateEntityServiceTest>();
-    private HttpClient GetHttpClientFactoryService() => _serviceProvider.GetService<IHttpClientFactory>().CreateClient();
-    private IGeneralServiceTest GetGeneralService() => _serviceProvider.GetService<IGeneralServiceTest>();
-
-    protected string GetUrl(string path) => $"{ConstantsURL.API_URL}{path}";
 
     protected StringContent GetParamsToString<T>(T data) where T : class
     {
@@ -47,8 +55,6 @@ public abstract class GenericControllerTest : IClassFixture<BuilderServiceProvid
     {
         return new StringContent(Convert.ToBase64String(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(data))), Encoding.UTF8, "Application/json");
     }
-
-    protected bool IsSuccessStatusCode(HttpResponseMessage response) => response.IsSuccessStatusCode;
 
     protected async Task<HttpResponseMessage> GetAsync(string url)
     {

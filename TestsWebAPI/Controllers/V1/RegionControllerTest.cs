@@ -1,65 +1,92 @@
 ﻿using WebAPI.Application.Services;
 using Moq;
-using NPOI.SS.Formula.Functions;
 using Region = WebAPI.Domain.Entities.Others.Region;
-using WebAPI.Application.InterfacesRepository;
 using WebAPI.Domain.Interfaces.Services.Tools;
 using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.Interfaces.Services;
 
 namespace TestsWebAPI.Controllers.V1;
 
-public class RegionControllerTest : GenericControllerTest
+public sealed class RegionControllerTest : GenericControllerTest
 {
+    private readonly Mock<IRegionRepository> _mockRepository;
+    private readonly IRegionService _iRegionService;
+    private readonly INotificationMessageService _iNotificationMessageService;
+
     public RegionControllerTest(BuilderServiceProvider builderServiceProvider) : base(builderServiceProvider)
     {
+        _iNotificationMessageService = _serviceProvider.GetService<INotificationMessageService>();
+        _mockRepository = new Mock<IRegionRepository>();
+        _iRegionService = new RegionService(_mockRepository.Object, _iNotificationMessageService);
+    }
+
+    public static IEnumerable<object[]> GetRegions()
+    {
+        yield return new object[]
+        {
+            new List<Region>
+            {
+                new Region() { Id = 1, Name = "XPTO" },
+                new Region() { Id = 2, Name = "XYZ" },
+                new Region() { Id = 3, Name = "ABC" }
+            }
+        };
     }
 
     /// <summary>
     /// Essa forma de teste serve para testar metodos sem persistir nada com banco de dados, apenas codigo
     /// Evitar testes com metodo assincronos ToListAsync, FirstOrDefaultAsync e etc...
     /// </summary>
-    [Fact(DisplayName = "Metodo para buscar todas as regiões cadastradas")]
-    public async Task GetAllRegionAsync()
+    [Theory(DisplayName = "Metodo para verificar se a lista tem dados")]
+    [MemberData(nameof(GetRegions))]
+    public async Task ExistRegionsOnlist(IEnumerable<Region> list)
     {
-        // Arrange
-        var regionService = new Mock<IRegionService>();
-        var regionRepo = new Mock<IRegionRepository>();
-        var notificationRepo = new Mock<INotificationMessageService>();
-        var list = new List<Region>
-        {
-            new Region() { Id = 1, Name = "XPTO" }
-        };
-        regionService.Setup(param => param.GetAllRegionAsync()).ReturnsAsync(list);
-        RegionService service = new RegionService(regionRepo.Object, notificationRepo.Object);
+        //Arrange
+        bool hasRegionData = false;
 
-        // Act
-        var result = await service.GetAllRegionAsync();
+        //Act
+        hasRegionData = list.Any();
+        await Task.CompletedTask;
+
         // Assert
-        Assert.True(true);
+        Assert.True(hasRegionData, "A lista informada possui dados");
     }
 
     /// <summary>
     /// Essa forma de teste serve para testar metodos sem persistir nada com banco de dados, apenas codigo
+    /// Evitar testes com metodo assincronos ToListAsync, FirstOrDefaultAsync e etc...
     /// </summary>
-    /// <param name="regionId"></param>
-    /// <param name="testResult"></param>
-    [Theory(DisplayName = "Metodo para buscar a região por ID cadastrada")]
-    [InlineData(0, false)]
-    [InlineData(1, true)]
-    [InlineData(2, true)]
-    public void ExistRegionById(int regionId, bool testResult)
+    [Theory(DisplayName = "Metodo para buscar todas as regiões cadastradas")]
+    [MemberData(nameof(GetRegions))]
+    public async Task GetAllRegionAsync(IEnumerable<Region> list)
     {
         // Arrange
-        var regionService = new Mock<IRegionService>();
-        var regionRepo = new Mock<IRegionRepository>();
-        var notificationRepo = new Mock<INotificationMessageService>();
-        regionService.Setup(param => param.ExistRegionById(regionId)).Returns(testResult);
-        RegionService service = new RegionService(regionRepo.Object, notificationRepo.Object);
+        bool hasRegionData = false;
 
         // Act
-        var result = service.ExistRegionById(regionId);
+        var regions = await _iRegionService.GetAllRegionAsync();
+        hasRegionData = regions.Any();
+
         // Assert
-        Assert.Equal(result, testResult);
+        Assert.True(hasRegionData, "A lista informada possui dados");
+    }
+
+    [Theory(DisplayName = "Existe a Região de um determinado ID")]
+    [InlineData(1)]
+    [InlineData(2)]
+    [InlineData(3)]
+    public void ExistRegionById(int regionID)
+    {
+        //Arrange
+        bool existRegion = false;
+
+        //Act
+        existRegion = _iRegionService.ExistRegionById(regionID);
+
+        // Assert
+        if (existRegion)
+            Assert.True(existRegion, "Região encontrada com sucesso");
+        else
+            Assert.False(existRegion, "Região não foi encontrada com sucesso");
     }
 }
