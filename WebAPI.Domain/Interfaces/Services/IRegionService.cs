@@ -21,4 +21,8 @@ public interface IRegionService
     bool ExistRegionById(long regionId);
     long GetCount(Expression<Func<Region, bool>> predicate);
     bool ExistRegion();
+    Task<Region> Add(Region region);
+    Task<Region> Update(Region region);
+    Task Delete(Region region);
+    Task<IQueryable<Region>> GetQueryAbleRegionAsync();
 }

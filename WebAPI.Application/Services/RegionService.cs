@@ -1,6 +1,7 @@
 ﻿using WebAPI.Application.Factory;
 using WebAPI.Application.Generic;
 using WebAPI.Domain.Constants;
+using WebAPI.Domain.Cryptography;
 using WebAPI.Domain.Entities.Others;
 using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Domain.Filters.Others;
@@ -26,7 +27,8 @@ public class RegionService : GenericService, IRegionService
 
     public bool ExistRegionById(long regionId)
     {
-        return _iRegionRepository.Exist(param => param.Id.Value == regionId);
+        bool result = _iRegionRepository.Exist(param => param.Id.Value == regionId);
+        return result;
     }
 
     public bool ExistRegion()
@@ -129,6 +131,66 @@ public class RegionService : GenericService, IRegionService
     {
         return _iRegionRepository.GetCount(predicate);
     }
+
+    public async Task<Region> Add(Region region)
+    {
+        try
+        {
+            _iRegionRepository.Add(region);
+        }
+        catch (Exception ex)
+        {
+            Notify(FixConstants.ERROR_IN_ADD);
+        }
+        finally
+        {
+            await Task.CompletedTask;
+        }
+
+        return region;
+    }
+
+    public async Task<Region> Update(Region region)
+    {
+        try
+        {
+            _iRegionRepository.Update(region);
+        }
+        catch (Exception ex)
+        {
+            Notify(FixConstants.ERROR_IN_ADD);
+        }
+        finally
+        {
+            await Task.CompletedTask;
+        }
+
+        return region;
+    }
+
+    public async Task Delete(Region region)
+    {
+        try
+        {
+            _iRegionRepository.Remove(region);
+        }
+        catch (Exception ex)
+        {
+            Notify(FixConstants.ERROR_IN_ADD);
+        }
+        finally
+        {
+            await Task.CompletedTask;
+        }
+    }
+
+    public async Task<IQueryable<Region>> GetQueryAbleRegionAsync()
+    {
+        var result = _iRegionRepository.GetAll();
+        await Task.CompletedTask;
+        return result;
+    }
+
 
     private async Task<IQueryable<Region>> GetAllWithFilterAsync(RegionFilter filter)
     {

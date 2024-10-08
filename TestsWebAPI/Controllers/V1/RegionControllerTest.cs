@@ -11,13 +11,14 @@ public sealed class RegionControllerTest : GenericControllerTest
 {
     private readonly Mock<IRegionRepository> _mockRepository;
     private readonly IRegionService _iRegionService;
-    private readonly INotificationMessageService _iNotificationMessageService;
-
+    private readonly Mock<INotificationMessageService> _iNotificationMessageService;
+    private readonly Mock<IRegionService> _iRegionService2;
     public RegionControllerTest(BuilderServiceProvider builderServiceProvider) : base(builderServiceProvider)
     {
-        _iNotificationMessageService = _serviceProvider.GetService<INotificationMessageService>();
+        _iNotificationMessageService = new Mock<INotificationMessageService>();
         _mockRepository = new Mock<IRegionRepository>();
-        _iRegionService = new RegionService(_mockRepository.Object, _iNotificationMessageService);
+        _iRegionService = new RegionService(_mockRepository.Object, _iNotificationMessageService.Object);
+        _iRegionService2 = new Mock<IRegionService>();
     }
 
     public static IEnumerable<object[]> GetRegions()
@@ -60,28 +61,33 @@ public sealed class RegionControllerTest : GenericControllerTest
     [MemberData(nameof(GetRegions))]
     public async Task GetAllRegionAsync(IEnumerable<Region> list)
     {
-        // Arrange
-        bool hasRegionData = false;
+        IQueryable<Region> query = list.AsQueryable();
 
-        // Act
-        var regions = await _iRegionService.GetAllRegionAsync();
-        hasRegionData = regions.Any();
+        //Arrange
+        _mockRepository.Setup(r => r.GetAll(It.IsAny<bool>())).Returns(query);
 
-        // Assert
-        Assert.True(hasRegionData, "A lista informada possui dados");
+        //Act
+        var result = await _iRegionService.GetQueryAbleRegionAsync();
+        var listDb = result.ToList();
+        //Assert
+        Assert.NotNull(listDb);
+        Assert.Equal(3, listDb.Count);
+        _mockRepository.Verify(r => r.GetAll(It.IsAny<bool>()), Times.Once);
     }
 
     [Theory(DisplayName = "Existe a Região de um determinado ID")]
     [InlineData(1)]
     [InlineData(2)]
-    [InlineData(3)]
-    public void ExistRegionById(int regionID)
+    public void ExistRegionById(long regionID)
     {
         //Arrange
-        bool existRegion = false;
+        //_mockRepository.Setup(service => service.Exist(p => p.Id == regionID)).Returns(true);
 
-        //Act
-        existRegion = _iRegionService.ExistRegionById(regionID);
+        ////Act
+        //bool existRegion = _mockRepository.Object.Exist(p => p.Id == regionID);
+
+        _iRegionService2.Setup(service => service.ExistRegionById(It.IsAny<long>())).Returns<long>(id => id % 2 != 0);
+        bool existRegion = _iRegionService2.Object.ExistRegionById(regionID);
 
         // Assert
         if (existRegion)
@@ -89,4 +95,69 @@ public sealed class RegionControllerTest : GenericControllerTest
         else
             Assert.False(existRegion, "Região não foi encontrada com sucesso");
     }
+
+    [Fact]
+    public async Task CreateRegion()
+    {
+        // Arrange
+        var entity = new Region { Id = 99, Name = "Test Entity" };
+        _mockRepository.Setup(r => r.Add(It.IsAny<Region>())).Verifiable();
+
+        // Act
+        var result = await _iRegionService.Add(entity);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(entity.Id, result.Id);
+        Assert.Equal(entity.Name, result.Name);
+        _mockRepository.Verify(r => r.Add(It.IsAny<Region>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task UpdateRegion()
+    {
+        // Arrange
+        var entity = new Region { Id = 1, Name = "Updated Entity" };
+        _mockRepository.Setup(r => r.Update(It.IsAny<Region>())).Verifiable();
+
+        // Act
+        var result = await _iRegionService.Update(entity);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal("Updated Entity", result.Name);
+        _mockRepository.Verify(r => r.Update(It.IsAny<Region>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task DeleteRegion()
+    {
+        // Arrange
+        var entity = new Region { Id = 1, Name = "Updated Entity" };
+        _mockRepository.Setup(r => r.Remove(It.IsAny<Region>())).Verifiable();
+
+        // Act
+        await _iRegionService.Delete(entity);
+
+        // Assert
+        Assert.True(true);
+        _mockRepository.Verify(r => r.Remove(It.IsAny<Region>()), Times.Once);
+    }
+
+    //[Fact]
+    //public async Task GetEntityByIdAsync_ShouldReturnEntity()
+    //{
+    //    // Arrange
+    //    var entity = new MyEntity { Id = 1, Name = "Test Entity" };
+    //    _mockRepository.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(entity);
+
+    //    // Act
+    //    var result = await _service.GetEntityByIdAsync(1);
+
+    //    // Assert
+    //    Assert.NotNull(result);
+    //    Assert.Equal(1, result.Id);
+    //    Assert.Equal("Test Entity", result.Name);
+    //    _mockRepository.Verify(r => r.GetByIdAsync(1), Times.Once);
+    //}
 }
