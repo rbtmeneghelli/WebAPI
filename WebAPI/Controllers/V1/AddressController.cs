@@ -45,7 +45,7 @@ public class AddressController : GenericController
             Domain.ValueObject.AddressData modelCep = new Domain.ValueObject.AddressData();
             if (refreshCep && GuardClauses.IsNullOrWhiteSpace(cep) == false)
             {
-                modelCep = await _iAddressService.GetByCepAsync(cep);
+                modelCep = await _iAddressService.GetAddressByCepAsync(cep);
                 RequestData requestData = await _iGeneralService.RequestDataToExternalAPIAsync(string.Format($"{FixConstantsUrl.URL_TO_GET_CEP}{0}", cep));
                 if (requestData.IsSuccess)
                 {
@@ -53,14 +53,14 @@ public class AddressController : GenericController
                     if (GuardClauses.ObjectIsNotNull(modelCepAPI))
                     {
                         modelCepAPI.StateId = await _iStatesService.GetStateByInitialsAsync(modelCepAPI.Uf);
-                        await _iAddressService.RefreshCepAsync(new RefreshCep(cep, modelCep, modelCepAPI));
-                        modelCep = await _iAddressService.GetByCepAsync(cep);
+                        await _iAddressService.RefreshAddressAsync(new RefreshCep(cep, modelCep, modelCepAPI));
+                        modelCep = await _iAddressService.GetAddressByCepAsync(cep);
                     }
                 }
             }
             else
             {
-                modelCep = await _iAddressService.GetByCepAsync(cep);
+                modelCep = await _iAddressService.GetAddressByCepAsync(cep);
             }
             return CustomResponse(modelCep);
         }
@@ -77,7 +77,7 @@ public class AddressController : GenericController
         try
         {
             IEnumerable<Region> listRegion = await _iRegionService.GetAllRegionAsync();
-            IEnumerable<States> listStates = await _iStatesService.GetAllStatesAsync();
+            IEnumerable<States> listStates = await _iStatesService.GetAllStateAsync();
 
             if (refreshEstados)
             {
@@ -91,7 +91,7 @@ public class AddressController : GenericController
                         {
                             await _iRegionService.RefreshRegionAsync(listStatesAPI);
                             await _iStatesService.RefreshStatesAsync(new RefreshStates(listStates, listStatesAPI, listRegion));
-                            listStates = await _iStatesService.GetAllStatesAsync();
+                            listStates = await _iStatesService.GetAllStateAsync();
                         }
                     }
                 }
@@ -183,7 +183,7 @@ public class AddressController : GenericController
                         Initials = z.Sigla
                     }).ToList();
 
-                    await _iRegionService.AddRegionsAsync(list);
+                    await _iRegionService.CreateRegionsAsync(list);
                 }
             }
 
@@ -218,7 +218,7 @@ public class AddressController : GenericController
                         RegionId = listRegion.FirstOrDefault(z => z.Initials == x.Region.Initials).Id.GetValueOrDefault(0)
                     }).ToList();
 
-                    await _iStatesService.AddStatesAsync(listStates);
+                    await _iStatesService.CreateStatesAsync(listStates);
                 }
             }
 

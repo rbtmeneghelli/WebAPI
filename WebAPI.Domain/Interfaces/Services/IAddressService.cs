@@ -5,9 +5,9 @@ namespace WebAPI.Domain.Interfaces.Services;
 
 public interface IAddressService
 {
-    Task RefreshCepAsync(RefreshCep refreshCep);
-    Task<Domain.ValueObject.AddressData> GetByCepAsync(string cep);
-    Task<bool> UpdateStatusByIdAsync(long id);
-    Task<IEnumerable<Domain.ValueObject.AddressData>> GetAllWithLikeAsync(string paremeter);
-    Task<PagedResult<Domain.ValueObject.AddressData>> GetAllWithPaginateAsync(CepFilter filter);
+    Task RefreshAddressAsync(RefreshCep refreshCep);
+    Task<Domain.ValueObject.AddressData> GetAddressByCepAsync(string cep);
+    Task<bool> UpdateAddressStatusByIdAsync(long id);
+    Task<IEnumerable<Domain.ValueObject.AddressData>> GetAllAddressWithLikeAsync(string paremeter);
+    Task<PagedResult<Domain.ValueObject.AddressData>> GetAllAddressWithPaginateAsync(CepFilter filter);
 }

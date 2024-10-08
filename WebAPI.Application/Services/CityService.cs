@@ -18,13 +18,13 @@ public class CityService : GenericService, ICityService
         _iCityRepository = iCityRepository;
     }
 
-    public async Task<IEnumerable<long>> GetIdStatesAsync()
+    public async Task<IEnumerable<long>> GetCityByIdStatesAsync()
     {
-        var list = await GetAllEntityAsync();
+        var list = await GetAllCityEntityAsync();
         return (from x in list select x.IdState.Value).Distinct();
     }
 
-    public async Task<PagedResult<CityResponseDTO>> GetAllFromUfAsync(int idState = 25, int? page = 1, int? limit = int.MaxValue)
+    public async Task<PagedResult<CityResponseDTO>> GetAllCityFromUfAsync(int idState = 25, int? page = 1, int? limit = int.MaxValue)
     {
         try
         {
@@ -50,7 +50,7 @@ public class CityService : GenericService, ICityService
         }
     }
 
-    public async Task<IEnumerable<CityResponseDTO>> GetAllEntityAsync()
+    public async Task<IEnumerable<CityResponseDTO>> GetAllCityEntityAsync()
     {
         return await (from p in _iCityRepository.FindBy(x => true).AsQueryable()
                       orderby p.Name ascending
@@ -65,7 +65,7 @@ public class CityService : GenericService, ICityService
                       }).ToListAsync();
     }
 
-    public async Task<CityResponseDTO> GetByIdAsync(int id)
+    public async Task<CityResponseDTO> GetCityByIdAsync(int id)
     {
         return await (from p in _iCityRepository.FindBy(x => x.Id == id).AsQueryable()
                       orderby p.Name ascending
@@ -80,13 +80,13 @@ public class CityService : GenericService, ICityService
                       }).FirstOrDefaultAsync();
     }
 
-    public Task AddAsync(City city)
+    public Task CreateCityAsync(City city)
     {
         _iCityRepository.Add(city);
         return Task.CompletedTask;
     }
 
-    public Task RemoveAsync(long id)
+    public Task DeleteCityAsync(long id)
     {
         City city = _iCityRepository.GetById(id);
 
@@ -96,7 +96,7 @@ public class CityService : GenericService, ICityService
         return Task.CompletedTask;
     }
 
-    public Task UpdateAsync(City city)
+    public Task UpdateCityAsync(City city)
     {
         City entityBase = _iCityRepository.FindBy(a => a.Id == city.Id).FirstOrDefault();
 
@@ -144,7 +144,7 @@ public class CityService : GenericService, ICityService
         }
     }
 
-    public async Task<bool> CheckCityExistAsync(string city, long idState)
+    public async Task<bool> ExistCityByCityIdStateAsync(string city, long idState)
     {
         return await Task.FromResult(_iCityRepository.Exist(a => a.Name == city && a.StateId == idState));
     }

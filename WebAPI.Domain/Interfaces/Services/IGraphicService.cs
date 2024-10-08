@@ -1,5 +1,4 @@
 ﻿using WebAPI.Application.Services.Graphics;
-using WebAPI.Domain.Models.Charts;
 
 namespace WebAPI.Domain.Interfaces.Services;
 

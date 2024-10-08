@@ -8,17 +8,17 @@ namespace WebAPI.Domain.Interfaces.Services;
 
 public interface IUserService
 {
-    Task<IEnumerable<UserResponseDTO>> GetAllAsync();
-    Task<PagedResult<UserResponseDTO>> GetAllPaginateAsync(UserFilter filter);
-    Task<UserResponseDTO> GetByIdAsync(long id);
-    Task<UserResponseDTO> GetByLoginAsync(string login);
+    Task<IEnumerable<UserResponseDTO>> GetAllUserAsync();
+    Task<PagedResult<UserResponseDTO>> GetAllUserPaginateAsync(UserFilter filter);
+    Task<UserResponseDTO> GetUserByIdAsync(long id);
+    Task<UserResponseDTO> GetUserByLoginAsync(string login);
     Task<IEnumerable<DropDownList>> GetUsersAsync();
-    Task<bool> AddAsync(User user);
-    Task<bool> UpdateAsync(long id, User user);
-    Task<bool> DeletePhysicalAsync(long id);
-    Task<bool> DeleteLogicAsync(long id);
-    Task<bool> ExistByIdAsync(long id);
-    Task<bool> CanDeleteAsync(long id);
-    Task<bool> ReactiveUserAsync(long id);
-    Task<bool> ExistByLoginAsync(string login);
+    Task<bool> CreateUserAsync(User user);
+    Task<bool> UpdateUserAsync(long id, User user);
+    Task<bool> DeleteUserPhysicalAsync(long id);
+    Task<bool> DeleteUserLogicAsync(long id);
+    Task<bool> ExistUserByIdAsync(long id);
+    Task<bool> CanDeleteUserByIdAsync(long id);
+    Task<bool> ReactiveUserByIdAsync(long id);
+    Task<bool> ExistUserByLoginAsync(string login);
 }

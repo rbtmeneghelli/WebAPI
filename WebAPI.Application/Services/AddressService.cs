@@ -35,7 +35,7 @@ public class AddressService : GenericService, IAddressService
                (GuardClauses.IsNullOrWhiteSpace(filter.Cep) || p.Cep.StartsWith(filter.Cep.ApplyTrim()));
     }
 
-    public async Task RefreshCepAsync(RefreshCep refreshCep)
+    public async Task RefreshAddressAsync(RefreshCep refreshCep)
     {
         try
         {
@@ -61,12 +61,12 @@ public class AddressService : GenericService, IAddressService
         }
     }
 
-    public async Task<Domain.ValueObject.AddressData> GetByCepAsync(string cep)
+    public async Task<Domain.ValueObject.AddressData> GetAddressByCepAsync(string cep)
     {
         return await _iAddressRepository.FindBy(x => x.Cep == cep).FirstOrDefaultAsync();
     }
 
-    public async Task<bool> UpdateStatusByIdAsync(long id)
+    public async Task<bool> UpdateAddressStatusByIdAsync(long id)
     {
         try
         {
@@ -86,12 +86,12 @@ public class AddressService : GenericService, IAddressService
         }
     }
 
-    public async Task<IEnumerable<AddressData>> GetAllWithLikeAsync(string parameter)
+    public async Task<IEnumerable<AddressData>> GetAllAddressWithLikeAsync(string parameter)
     {
         return await _iAddressRepository.FindBy(x => EF.Functions.Like(x.Cep, $"%{parameter}%")).ToListAsync();
     }
 
-    public async Task<PagedResult<AddressData>> GetAllWithPaginateAsync(CepFilter filter)
+    public async Task<PagedResult<AddressData>> GetAllAddressWithPaginateAsync(CepFilter filter)
     {
         try
         {

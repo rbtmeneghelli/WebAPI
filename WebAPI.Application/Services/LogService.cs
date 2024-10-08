@@ -36,14 +36,14 @@ public class LogService : GenericService, ILogService
         (GuardClauses.IsNullOrWhiteSpace(filter.Class) || p.Class.StartsWith(filter.Class.ApplyTrim()));
     }
 
-    public async Task<Log> GetByIdAsync(long id)
+    public async Task<Log> GetLogByIdAsync(long id)
     {
         return await Task.FromResult(_iLogRepository.GetById(id));
     }
 
-    public async Task<IEnumerable<Log>> GetAllWithLikeAsync(string parameter) => await _iLogRepository.FindBy(x => EF.Functions.Like(x.Class, $"%{parameter}%")).ToListAsync();
+    public async Task<IEnumerable<Log>> GetAllLogWithLikeAsync(string parameter) => await _iLogRepository.FindBy(x => EF.Functions.Like(x.Class, $"%{parameter}%")).ToListAsync();
 
-    public async Task<PagedResult<LogResponseDTO>> GetAllPaginateAsync(LogFilter filter)
+    public async Task<PagedResult<LogResponseDTO>> GetAllLogPaginateAsync(LogFilter filter)
     {
         try
         {
@@ -71,7 +71,7 @@ public class LogService : GenericService, ILogService
         }
     }
 
-    public async Task<bool> ExistByIdAsync(long id)
+    public async Task<bool> ExistLogByIdAsync(long id)
     {
         try
         {

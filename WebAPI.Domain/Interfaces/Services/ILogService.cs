@@ -7,8 +7,8 @@ namespace WebAPI.Domain.Interfaces.Services;
 
 public interface ILogService
 {
-    Task<Log> GetByIdAsync(long id);
-    Task<IEnumerable<Log>> GetAllWithLikeAsync(string parameter);
-    Task<PagedResult<LogResponseDTO>> GetAllPaginateAsync(LogFilter filter);
-    Task<bool> ExistByIdAsync(long id);
+    Task<Log> GetLogByIdAsync(long id);
+    Task<IEnumerable<Log>> GetAllLogWithLikeAsync(string parameter);
+    Task<PagedResult<LogResponseDTO>> GetAllLogPaginateAsync(LogFilter filter);
+    Task<bool> ExistLogByIdAsync(long id);
 }

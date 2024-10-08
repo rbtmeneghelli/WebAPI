@@ -38,7 +38,7 @@ public sealed class UsersController : GenericController
     [HttpGet("GetAll")]
     public async Task<IActionResult> GetAll()
     {
-        var model = _iMapperService.Map<IEnumerable<UserResponseDTO>>(await _iUserService.GetAllAsync());
+        var model = _iMapperService.Map<IEnumerable<UserResponseDTO>>(await _iUserService.GetAllUserAsync());
         return CustomResponse(model, FixConstants.SUCCESS_IN_GETALL);
     }
 
@@ -46,16 +46,16 @@ public sealed class UsersController : GenericController
     public async Task<IActionResult> GetAllPaginate([FromBody] UserFilter userFilter)
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
-        var model = await _iUserService.GetAllPaginateAsync(userFilter);
+        var model = await _iUserService.GetAllUserPaginateAsync(userFilter);
         return CustomResponse(model, FixConstants.SUCCESS_IN_GETALLPAGINATE);
     }
 
     [HttpGet("GetById/{id:long}")]
     public async Task<IActionResult> GetById(long id)
     {
-        if (await _iUserService.ExistByIdAsync(id))
+        if (await _iUserService.ExistUserByIdAsync(id))
         {
-            var model = _iMapperService.Map<UserResponseDTO>(await _iUserService.GetByIdAsync(id));
+            var model = _iMapperService.Map<UserResponseDTO>(await _iUserService.GetUserByIdAsync(id));
             return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
         }
 
@@ -65,9 +65,9 @@ public sealed class UsersController : GenericController
     [HttpGet("GetByLogin/{login}")]
     public async Task<IActionResult> GetByLogin(string login)
     {
-        if (await _iUserService.ExistByLoginAsync(login))
+        if (await _iUserService.ExistUserByLoginAsync(login))
         {
-            var model = _iMapperService.Map<UserResponseDTO>(await _iUserService.GetByLoginAsync(login));
+            var model = _iMapperService.Map<UserResponseDTO>(await _iUserService.GetUserByLoginAsync(login));
             return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
         }
 
@@ -95,7 +95,7 @@ public sealed class UsersController : GenericController
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
         User user = ApplyMapToEntity<UserRequestDTO, User>(userRequestDTO);
-        var result = await _iUserService.AddAsync(user);
+        var result = await _iUserService.CreateUserAsync(user);
 
         if (result)
             return CreatedAtAction(nameof(Create), user);
@@ -116,9 +116,9 @@ public sealed class UsersController : GenericController
             return CustomResponse();
         }
 
-        if (await _iUserService.ExistByIdAsync(userRequestDTO.Id.GetValueOrDefault()))
+        if (await _iUserService.ExistUserByIdAsync(userRequestDTO.Id.GetValueOrDefault()))
         {
-            var result = await _iUserService.UpdateAsync(id, user);
+            var result = await _iUserService.UpdateUserAsync(id, user);
             if (result)
                 return NoContent();
             else
@@ -131,9 +131,9 @@ public sealed class UsersController : GenericController
     [HttpDelete("LogicDelete/{id:long}")]
     public async Task<IActionResult> LogicDelete(long id)
     {
-        if (await _iUserService.ExistByIdAsync(id))
+        if (await _iUserService.ExistUserByIdAsync(id))
         {
-            bool result = await _iUserService.DeleteLogicAsync(id);
+            bool result = await _iUserService.DeleteUserLogicAsync(id);
             if (result)
                 return CustomResponse(default, FixConstants.SUCCESS_IN_DELETELOGIC);
             else
@@ -151,12 +151,12 @@ public sealed class UsersController : GenericController
     [HttpDelete("PhysicalDelete/{id:long}")]
     public async Task<IActionResult> PhysicalDelete(long id)
     {
-        var existId = await _iUserService.ExistByIdAsync(id);
-        var canDelete = await _iUserService.CanDeleteAsync(id);
+        var existId = await _iUserService.ExistUserByIdAsync(id);
+        var canDelete = await _iUserService.CanDeleteUserByIdAsync(id);
 
         if (existId && canDelete)
         {
-            bool result = await _iUserService.DeletePhysicalAsync(id);
+            bool result = await _iUserService.DeleteUserPhysicalAsync(id);
 
             if (result)
                 return CustomResponse(default, FixConstants.SUCCESS_IN_DELETEPHYSICAL);
@@ -173,7 +173,7 @@ public sealed class UsersController : GenericController
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
-        var list = await _iUserService.GetAllPaginateAsync(filter);
+        var list = await _iUserService.GetAllUserPaginateAsync(filter);
         if (list?.Results?.Count() > 0)
         {
             var memoryStreamResult = _generalMethod.GetMemoryStreamType(EnumMemoryStreamFile.XLSX);

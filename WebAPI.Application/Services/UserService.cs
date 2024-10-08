@@ -52,7 +52,7 @@ public class UserService : GenericService, IUserService
             (!filter.IdProfile.HasValue || filter.IdProfile == p.Employee.IdProfile);
     }
 
-    public async Task<IEnumerable<UserResponseDTO>> GetAllAsync()
+    public async Task<IEnumerable<UserResponseDTO>> GetAllUserAsync()
     {
         try
         {
@@ -82,7 +82,7 @@ public class UserService : GenericService, IUserService
         }
     }
 
-    public async Task<PagedResult<UserResponseDTO>> GetAllPaginateAsync(UserFilter filter)
+    public async Task<PagedResult<UserResponseDTO>> GetAllUserPaginateAsync(UserFilter filter)
     {
         try
         {
@@ -115,7 +115,7 @@ public class UserService : GenericService, IUserService
         }
     }
 
-    public async Task<UserResponseDTO> GetByIdAsync(long id)
+    public async Task<UserResponseDTO> GetUserByIdAsync(long id)
     {
         try
         {
@@ -143,7 +143,7 @@ public class UserService : GenericService, IUserService
         }
     }
 
-    public async Task<UserResponseDTO> GetByLoginAsync(string login)
+    public async Task<UserResponseDTO> GetUserByLoginAsync(string login)
     {
         try
         {
@@ -198,14 +198,14 @@ public class UserService : GenericService, IUserService
         }
     }
 
-    public async Task<bool> ExistByIdAsync(long id)
+    public async Task<bool> ExistUserByIdAsync(long id)
     {
         var result = _iUserRepository.Exist(x => x.Id == id);
         await Task.CompletedTask;
         return result;
     }
 
-    public async Task<bool> ExistByLoginAsync(string login)
+    public async Task<bool> ExistUserByLoginAsync(string login)
     {
         if (GuardClauses.IsNullOrWhiteSpace(login))
         {
@@ -217,7 +217,7 @@ public class UserService : GenericService, IUserService
         return result;
     }
 
-    public async Task<bool> AddAsync(User user)
+    public async Task<bool> CreateUserAsync(User user)
     {
         try
         {
@@ -248,7 +248,7 @@ public class UserService : GenericService, IUserService
         }
     }
 
-    public async Task<bool> UpdateAsync(long id, User user)
+    public async Task<bool> UpdateUserAsync(long id, User user)
     {
         try
         {
@@ -276,7 +276,7 @@ public class UserService : GenericService, IUserService
         }
     }
 
-    public async Task<bool> DeletePhysicalAsync(long id)
+    public async Task<bool> DeleteUserPhysicalAsync(long id)
     {
         try
         {
@@ -304,7 +304,7 @@ public class UserService : GenericService, IUserService
         }
     }
 
-    public async Task<bool> DeleteLogicAsync(long id)
+    public async Task<bool> DeleteUserLogicAsync(long id)
     {
         try
         {
@@ -334,7 +334,7 @@ public class UserService : GenericService, IUserService
         }
     }
 
-    public async Task<bool> CanDeleteAsync(long id)
+    public async Task<bool> CanDeleteUserByIdAsync(long id)
     {
         try
         {
@@ -351,7 +351,7 @@ public class UserService : GenericService, IUserService
         }
     }
 
-    public async Task<bool> ReactiveUserAsync(long id)
+    public async Task<bool> ReactiveUserByIdAsync(long id)
     {
         try
         {

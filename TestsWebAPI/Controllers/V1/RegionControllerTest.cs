@@ -173,7 +173,7 @@ public sealed class RegionControllerTest : GenericControllerTest
         _mockRepository.Setup(r => r.Update(It.IsAny<Region>())).Verifiable();
 
         // Act
-        var result = await _iRegionService.UpdateStatusByIdAsync(regionID);
+        var result = await _iRegionService.UpdateRegionStatusByIdAsync(regionID);
 
         // Assert
         _mockRepository.Verify(r => r.GetById(It.IsAny<long>()), Times.Once);

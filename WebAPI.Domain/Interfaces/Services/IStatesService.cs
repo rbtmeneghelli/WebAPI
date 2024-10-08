@@ -6,13 +6,13 @@ namespace WebAPI.Domain.Interfaces.Services;
 
 public interface IStatesService
 {
-    Task AddStatesAsync(IEnumerable<States> list);
+    Task CreateStatesAsync(IEnumerable<States> list);
     Task<long> GetStateByInitialsAsync(string initials);
-    Task<List<States>> GetAllStatesAsync();
+    Task<List<States>> GetAllStateAsync();
     Task RefreshStatesAsync(RefreshStates refreshStates);
-    Task<bool> UpdateStatusByIdAsync(long id);
-    Task<IEnumerable<States>> GetAllWithLikeAsync(string param);
-    Task<PagedResult<States>> GetAllWithPaginateAsync(StateFilter filter);
+    Task<bool> UpdateStateStatusByIdAsync(long id);
+    Task<IEnumerable<States>> GetAllStateWithLikeAsync(string param);
+    Task<PagedResult<States>> GetAllStateWithPaginateAsync(StateFilter filter);
     Task<List<States>> GetListStateWithoutCities();
 }
 

@@ -7,19 +7,19 @@ namespace WebAPI.Domain.Interfaces.Services;
 
 public interface IRegionService
 {
-    Task AddRegionsAsync(IEnumerable<Region> list);
+    Task CreateRegionsAsync(IEnumerable<Region> list);
 
     Task<IEnumerable<Region>> GetAllRegionAsync();
 
     Task RefreshRegionAsync(IEnumerable<States> listStatesAPI);
 
-    Task<bool> UpdateStatusByIdAsync(long id);
+    Task<bool> UpdateRegionStatusByIdAsync(long id);
 
-    Task<IEnumerable<Region>> GetAllWithLikeAsync(string parameter);
+    Task<IEnumerable<Region>> GetAllRegionWithLikeAsync(string parameter);
 
-    Task<PagedResult<Region>> GetAllWithPaginateAsync(RegionFilter filter);
+    Task<PagedResult<Region>> GetAllRegionWithPaginateAsync(RegionFilter filter);
     bool ExistRegionById(long regionId);
-    long GetCount(Expression<Func<Region, bool>> predicate);
+    long GetRegionCount(Expression<Func<Region, bool>> predicate);
     bool ExistRegion();
     Task<Region> CreateRegion(Region region);
     Task<Region> UpdateRegion(Region region);

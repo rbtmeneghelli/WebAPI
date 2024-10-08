@@ -28,9 +28,9 @@ public sealed class AuditController : GenericController
     [HttpGet("getById/{id:long}")]
     public async Task<IActionResult> GetById(long id)
     {
-        if (await _iAuditService.ExistByIdAsync(id))
+        if (await _iAuditService.ExistAuditByIdAsync(id))
         {
-            var model = _iMapperService.Map<AuditResponseDTO>(await _iAuditService.GetByIdAsync(id));
+            var model = _iMapperService.Map<AuditResponseDTO>(await _iAuditService.GetAuditByIdAsync(id));
             return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
         }
 
@@ -43,7 +43,7 @@ public sealed class AuditController : GenericController
         if (ModelStateIsInvalid())
             return CustomResponse(ModelState);
 
-        var model = await _iAuditService.GetAllPaginateAsync(filter);
+        var model = await _iAuditService.GetAllAuditPaginateAsync(filter);
 
         return CustomResponse(model, FixConstants.SUCCESS_IN_GETALLPAGINATE);
     }

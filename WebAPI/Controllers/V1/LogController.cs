@@ -28,9 +28,9 @@ public sealed class LogController : GenericController
     [HttpGet("getById/{id:long}")]
     public async Task<IActionResult> GetById(long id)
     {
-        if (await _iLogService.ExistByIdAsync(id))
+        if (await _iLogService.ExistLogByIdAsync(id))
         {
-            var model = _iMapperService.Map<UserResponseDTO>(await _iLogService.GetByIdAsync(id));
+            var model = _iMapperService.Map<UserResponseDTO>(await _iLogService.GetLogByIdAsync(id));
             return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
         }
 
@@ -42,7 +42,7 @@ public sealed class LogController : GenericController
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
-        var model = await _iLogService.GetAllPaginateAsync(filter);
+        var model = await _iLogService.GetAllLogPaginateAsync(filter);
 
         return CustomResponse(model, FixConstants.SUCCESS_IN_GETALLPAGINATE);
     }

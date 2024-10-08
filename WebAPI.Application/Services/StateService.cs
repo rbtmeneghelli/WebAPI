@@ -25,7 +25,7 @@ public class StatesService : GenericService, IStatesService
         _iCityService = iCityService;
     }
 
-    public Task AddStatesAsync(IEnumerable<States> list)
+    public Task CreateStatesAsync(IEnumerable<States> list)
     {
         _iStatesRepository.AddRange(list);
         return Task.CompletedTask;
@@ -37,7 +37,7 @@ public class StatesService : GenericService, IStatesService
         return GuardClauses.ObjectIsNotNull(state) ? state.Id.Value : 0;
     }
 
-    public async Task<List<States>> GetAllStatesAsync()
+    public async Task<List<States>> GetAllStateAsync()
     {
         return await _iStatesRepository.GetAll().ToListAsync();
     }
@@ -77,7 +77,7 @@ public class StatesService : GenericService, IStatesService
         }
     }
 
-    public async Task<bool> UpdateStatusByIdAsync(long id)
+    public async Task<bool> UpdateStateStatusByIdAsync(long id)
     {
         try
         {
@@ -97,9 +97,9 @@ public class StatesService : GenericService, IStatesService
         }
     }
 
-    public async Task<IEnumerable<States>> GetAllWithLikeAsync(string stateName) => await _iStatesRepository.FindBy(x => EF.Functions.Like(x.Name, $"%{stateName}%")).ToListAsync();
+    public async Task<IEnumerable<States>> GetAllStateWithLikeAsync(string stateName) => await _iStatesRepository.FindBy(x => EF.Functions.Like(x.Name, $"%{stateName}%")).ToListAsync();
 
-    public async Task<PagedResult<States>> GetAllWithPaginateAsync(StateFilter filter)
+    public async Task<PagedResult<States>> GetAllStateWithPaginateAsync(StateFilter filter)
     {
         try
         {
@@ -127,11 +127,11 @@ public class StatesService : GenericService, IStatesService
 
     public async Task<List<States>> GetListStateWithoutCities()
     {
-        List<States> listState = await GetAllStatesAsync();
+        List<States> listState = await GetAllStateAsync();
 
         if (listState is not null)
         {
-            IEnumerable<long> listIdState = await _iCityService.GetIdStatesAsync();
+            IEnumerable<long> listIdState = await _iCityService.GetCityByIdStatesAsync();
             foreach (long idState in listIdState)
             {
                 listState.RemoveAll(x => x.Id == idState);

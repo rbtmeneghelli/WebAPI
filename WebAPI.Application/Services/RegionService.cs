@@ -48,7 +48,7 @@ public class RegionService : GenericService, IRegionService
         return _iRegionRepository.Exist(param => param.Status == true);
     }
 
-    public Task AddRegionsAsync(IEnumerable<Region> list)
+    public Task CreateRegionsAsync(IEnumerable<Region> list)
     {
         _iRegionRepository.AddRange(list);
         return Task.CompletedTask;
@@ -91,7 +91,7 @@ public class RegionService : GenericService, IRegionService
         }
     }
 
-    public async Task<bool> UpdateStatusByIdAsync(long id)
+    public async Task<bool> UpdateRegionStatusByIdAsync(long id)
     {
         try
         {
@@ -111,14 +111,14 @@ public class RegionService : GenericService, IRegionService
         }
     }
 
-    public async Task<IEnumerable<Region>> GetAllWithLikeAsync(string parameter) => await _iRegionRepository.FindBy(x => EF.Functions.Like(x.Name, $"%{parameter}%")).ToListAsync();
+    public async Task<IEnumerable<Region>> GetAllRegionWithLikeAsync(string parameter) => await _iRegionRepository.FindBy(x => EF.Functions.Like(x.Name, $"%{parameter}%")).ToListAsync();
 
-    public async Task<PagedResult<Region>> GetAllWithPaginateAsync(RegionFilter filter)
+    public async Task<PagedResult<Region>> GetAllRegionWithPaginateAsync(RegionFilter filter)
     {
         try
         {
             var query = await GetAllWithFilterAsync(filter);
-            var queryCount = GetCount(GetPredicate(filter));
+            var queryCount = GetRegionCount(GetPredicate(filter));
 
             var queryResult = from x in query.AsQueryable()
                               orderby x.Name ascending
@@ -139,7 +139,7 @@ public class RegionService : GenericService, IRegionService
         }
     }
 
-    public long GetCount(Expression<Func<Region, bool>> predicate)
+    public long GetRegionCount(Expression<Func<Region, bool>> predicate)
     {
         return _iRegionRepository.GetCount(predicate);
     }

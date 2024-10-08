@@ -39,12 +39,12 @@ public class AuditService : GenericService, IAuditService
         return p => GuardClauses.IsNullOrWhiteSpace(filter.TableName) || p.TableName.StartsWith(filter.TableName.ApplyTrim());
     }
 
-    public async Task<Audit> GetByIdAsync(long id)
+    public async Task<Audit> GetAuditByIdAsync(long id)
     {
         return await Task.FromResult(_iAuditRepository.GetById(id));
     }
 
-    public async Task<IEnumerable<Audit>> GetAllWithLikeAsync(string parameter)
+    public async Task<IEnumerable<Audit>> GetAllAuditWithLikeAsync(string parameter)
     {
         return await _iAuditRepository.FindBy(x => EF.Functions.Like(x.TableName, $"%{parameter}%")).ToListAsync();
     }
@@ -71,7 +71,7 @@ public class AuditService : GenericService, IAuditService
         return PagedFactory.GetPaged(queryResult, PagedFactory.GetDefaultPageIndex(filter.PageIndex), PagedFactory.GetDefaultPageSize(filter.PageSize));
     }
 
-    public async Task<PagedResult<AuditResponseDTO>> GetAllPaginateAsync(AuditFilter filter)
+    public async Task<PagedResult<AuditResponseDTO>> GetAllAuditPaginateAsync(AuditFilter filter)
     {
         try
         {
@@ -100,7 +100,7 @@ public class AuditService : GenericService, IAuditService
         }
     }
 
-    public async Task<bool> ExistByIdAsync(long id)
+    public async Task<bool> ExistAuditByIdAsync(long id)
     {
         try
         {

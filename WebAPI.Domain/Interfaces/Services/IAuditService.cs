@@ -7,10 +7,10 @@ namespace WebAPI.Domain.Interfaces.Services;
 
 public interface IAuditService
 {
-    Task<Audit> GetByIdAsync(long id);
-    Task<IEnumerable<Audit>> GetAllWithLikeAsync(string parameter);
-    Task<PagedResult<AuditResponseDTO>> GetAllPaginateAsync(AuditFilter filter);
-    Task<bool> ExistByIdAsync(long id);
+    Task<Audit> GetAuditByIdAsync(long id);
+    Task<IEnumerable<Audit>> GetAllAuditWithLikeAsync(string parameter);
+    Task<PagedResult<AuditResponseDTO>> GetAllAuditPaginateAsync(AuditFilter filter);
+    Task<bool> ExistAuditByIdAsync(long id);
     Task CreateAuditBySQLScript(Audit audit);
     Task CreateAuditByDapper(Audit audit);
     Task UpdateAuditByDapper(Audit audit);
