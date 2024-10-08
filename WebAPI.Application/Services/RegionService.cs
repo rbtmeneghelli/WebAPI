@@ -1,13 +1,13 @@
 ﻿using WebAPI.Application.Factory;
 using WebAPI.Application.Generic;
 using WebAPI.Domain.Constants;
-using WebAPI.Domain.Cryptography;
 using WebAPI.Domain.Entities.Others;
 using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Domain.Filters.Others;
 using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.Interfaces.Services;
 using WebAPI.Domain.Interfaces.Services.Tools;
+using Region = WebAPI.Domain.Entities.Others.Region;
 
 namespace WebAPI.Application.Services;
 
@@ -20,9 +20,21 @@ public class RegionService : GenericService, IRegionService
         _iRegionRepository = iRegionRepository;
     }
 
+    private async Task<IQueryable<Region>> GetAllWithFilterAsync(RegionFilter filter)
+    {
+        return await Task.FromResult(_iRegionRepository.GetAll().Where(GetPredicate(filter)).AsQueryable());
+    }
+
+    private Expression<Func<Region, bool>> GetPredicate(RegionFilter filter)
+    {
+        return p =>
+               (GuardClauses.IsNullOrWhiteSpace(filter.Name) || p.Name.StartsWith(filter.Name.ApplyTrim()));
+    }
+
     public async Task<IEnumerable<Region>> GetAllRegionAsync()
     {
-        return await _iRegionRepository.GetAll().ToListAsync();
+        var result = await _iRegionRepository.GetAll().ToListAsync();
+        return result;
     }
 
     public bool ExistRegionById(long regionId)
@@ -132,7 +144,7 @@ public class RegionService : GenericService, IRegionService
         return _iRegionRepository.GetCount(predicate);
     }
 
-    public async Task<Region> Add(Region region)
+    public async Task<Region> CreateRegion(Region region)
     {
         try
         {
@@ -150,7 +162,7 @@ public class RegionService : GenericService, IRegionService
         return region;
     }
 
-    public async Task<Region> Update(Region region)
+    public async Task<Region> UpdateRegion(Region region)
     {
         try
         {
@@ -168,7 +180,7 @@ public class RegionService : GenericService, IRegionService
         return region;
     }
 
-    public async Task Delete(Region region)
+    public async Task DeleteRegion(Region region)
     {
         try
         {
@@ -191,15 +203,17 @@ public class RegionService : GenericService, IRegionService
         return result;
     }
 
-
-    private async Task<IQueryable<Region>> GetAllWithFilterAsync(RegionFilter filter)
+    public Region GetRegionById(long id)
     {
-        return await Task.FromResult(_iRegionRepository.GetAll().Where(GetPredicate(filter)).AsQueryable());
-    }
-
-    private Expression<Func<Region, bool>> GetPredicate(RegionFilter filter)
-    {
-        return p =>
-               (GuardClauses.IsNullOrWhiteSpace(filter.Name) || p.Name.StartsWith(filter.Name.ApplyTrim()));
+        try
+        {
+            var region = _iRegionRepository.GetById(id);
+            return region;
+        }
+        catch
+        {
+            Notify(FixConstants.ERROR_IN_GETID);
+            return default;
+        }
     }
 }

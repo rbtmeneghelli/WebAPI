@@ -10,15 +10,14 @@ namespace TestsWebAPI.Controllers.V1;
 public sealed class RegionControllerTest : GenericControllerTest
 {
     private readonly Mock<IRegionRepository> _mockRepository;
-    private readonly IRegionService _iRegionService;
     private readonly Mock<INotificationMessageService> _iNotificationMessageService;
-    private readonly Mock<IRegionService> _iRegionService2;
+    private readonly IRegionService _iRegionService;
+
     public RegionControllerTest(BuilderServiceProvider builderServiceProvider) : base(builderServiceProvider)
     {
         _iNotificationMessageService = new Mock<INotificationMessageService>();
         _mockRepository = new Mock<IRegionRepository>();
         _iRegionService = new RegionService(_mockRepository.Object, _iNotificationMessageService.Object);
-        _iRegionService2 = new Mock<IRegionService>();
     }
 
     public static IEnumerable<object[]> GetRegions()
@@ -61,33 +60,32 @@ public sealed class RegionControllerTest : GenericControllerTest
     [MemberData(nameof(GetRegions))]
     public async Task GetAllRegionAsync(IEnumerable<Region> list)
     {
-        IQueryable<Region> query = list.AsQueryable();
-
         //Arrange
-        _mockRepository.Setup(r => r.GetAll(It.IsAny<bool>())).Returns(query);
+        _mockRepository.Setup(r => r.GetAll(It.IsAny<bool>())).Returns(list.AsQueryable()).Verifiable();
 
         //Act
         var result = await _iRegionService.GetQueryAbleRegionAsync();
         var listDb = result.ToList();
+
         //Assert
         Assert.NotNull(listDb);
         Assert.Equal(3, listDb.Count);
         _mockRepository.Verify(r => r.GetAll(It.IsAny<bool>()), Times.Once);
     }
 
-    [Theory(DisplayName = "Existe a Região de um determinado ID")]
+    [Theory(DisplayName = "Metodo para verificar se existe a Região do ID informado")]
     [InlineData(1)]
     [InlineData(2)]
+    [InlineData(3)]
     public void ExistRegionById(long regionID)
     {
+        var arrRegionId = new long[2] { 1, 2 };
+
         //Arrange
-        //_mockRepository.Setup(service => service.Exist(p => p.Id == regionID)).Returns(true);
+        _mockRepository.Setup(service => service.Exist(p => p.Id == regionID)).Returns(arrRegionId.Contains(regionID));
 
         ////Act
-        //bool existRegion = _mockRepository.Object.Exist(p => p.Id == regionID);
-
-        _iRegionService2.Setup(service => service.ExistRegionById(It.IsAny<long>())).Returns<long>(id => id % 2 != 0);
-        bool existRegion = _iRegionService2.Object.ExistRegionById(regionID);
+        bool existRegion = _mockRepository.Object.Exist(p => p.Id == regionID);
 
         // Assert
         if (existRegion)
@@ -96,15 +94,16 @@ public sealed class RegionControllerTest : GenericControllerTest
             Assert.False(existRegion, "Região não foi encontrada com sucesso");
     }
 
-    [Fact]
-    public async Task CreateRegion()
+    [Theory(DisplayName = "Metodo para cadastrar uma nova região")]
+    [InlineData(1, "Updated Entity")]
+    public async Task CreateRegion(long regionID, string regionName)
     {
         // Arrange
-        var entity = new Region { Id = 99, Name = "Test Entity" };
+        var entity = new Region { Id = regionID, Name = regionName };
         _mockRepository.Setup(r => r.Add(It.IsAny<Region>())).Verifiable();
 
         // Act
-        var result = await _iRegionService.Add(entity);
+        var result = await _iRegionService.CreateRegion(entity);
 
         // Assert
         Assert.NotNull(result);
@@ -113,15 +112,16 @@ public sealed class RegionControllerTest : GenericControllerTest
         _mockRepository.Verify(r => r.Add(It.IsAny<Region>()), Times.Once);
     }
 
-    [Fact]
-    public async Task UpdateRegion()
+    [Theory(DisplayName = "Metodo para atualizar uma região, a partir do seu ID")]
+    [InlineData(1, "Updated Entity")]
+    public async Task UpdateRegion(long regionID, string regionName)
     {
         // Arrange
-        var entity = new Region { Id = 1, Name = "Updated Entity" };
+        var entity = new Region { Id = regionID, Name = regionName };
         _mockRepository.Setup(r => r.Update(It.IsAny<Region>())).Verifiable();
 
         // Act
-        var result = await _iRegionService.Update(entity);
+        var result = await _iRegionService.UpdateRegion(entity);
 
         // Assert
         Assert.NotNull(result);
@@ -129,35 +129,54 @@ public sealed class RegionControllerTest : GenericControllerTest
         _mockRepository.Verify(r => r.Update(It.IsAny<Region>()), Times.Once);
     }
 
-    [Fact]
-    public async Task DeleteRegion()
+    [Theory(DisplayName = "Metodo para excluir fisicamente uma região, a partir do seu ID")]
+    [InlineData(1, "Updated Entity")]
+    public async Task DeleteRegion(long regionID, string regionName)
     {
         // Arrange
-        var entity = new Region { Id = 1, Name = "Updated Entity" };
+        var entity = new Region { Id = regionID, Name = regionName };
         _mockRepository.Setup(r => r.Remove(It.IsAny<Region>())).Verifiable();
 
         // Act
-        await _iRegionService.Delete(entity);
+        await _iRegionService.DeleteRegion(entity);
 
         // Assert
         Assert.True(true);
         _mockRepository.Verify(r => r.Remove(It.IsAny<Region>()), Times.Once);
     }
 
-    //[Fact]
-    //public async Task GetEntityByIdAsync_ShouldReturnEntity()
-    //{
-    //    // Arrange
-    //    var entity = new MyEntity { Id = 1, Name = "Test Entity" };
-    //    _mockRepository.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(entity);
+    [Theory(DisplayName = "Metodo para buscar a região, a partir do seu ID")]
+    [InlineData(1, "Updated Entity")]
+    public void GetRegionById(long regionID, string regionName)
+    {
+        // Arrange
+        var entity = new Region { Id = regionID, Name = regionName };
+        _mockRepository.Setup(r => r.GetById(It.IsAny<long>())).Returns(entity);
 
-    //    // Act
-    //    var result = await _service.GetEntityByIdAsync(1);
+        // Act
+        var result = _iRegionService.GetRegionById(regionID);
 
-    //    // Assert
-    //    Assert.NotNull(result);
-    //    Assert.Equal(1, result.Id);
-    //    Assert.Equal("Test Entity", result.Name);
-    //    _mockRepository.Verify(r => r.GetByIdAsync(1), Times.Once);
-    //}
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(1, result.Id);
+        Assert.Equal("Test Entity", result.Name);
+        _mockRepository.Verify(r => r.GetById(It.IsAny<long>()), Times.Once);
+    }
+
+    [Theory(DisplayName = "Metodo para atualizar o status de uma região para Ativo/Inativo, a partir do seu ID")]
+    [InlineData(1, false)]
+    [InlineData(3, true)]
+    public async Task UpdateStatusRegionbyId(long regionID, bool regionStatus)
+    {
+        // Arrange
+        _mockRepository.Setup(r => r.GetById(It.IsAny<long>())).Returns(new Region { Id = regionID, Status = regionStatus }).Verifiable();
+        _mockRepository.Setup(r => r.Update(It.IsAny<Region>())).Verifiable();
+
+        // Act
+        var result = await _iRegionService.UpdateStatusByIdAsync(regionID);
+
+        // Assert
+        _mockRepository.Verify(r => r.GetById(It.IsAny<long>()), Times.Once);
+        _mockRepository.Verify(r => r.Update(It.IsAny<Region>()), Times.Once);
+    }
 }
