@@ -376,3 +376,8 @@ Parar o IIS e Iniciar o IIS novamente
 -- O framework MASSTRANSIT é valido para rotear mensagens para serviços de mensageria como RabbitMQ, Azure Service Bus, SQS e bus de serviço ActiveMQ.
 >> Sua utilização é ideal para projetos que trabalham com Microserviço
 >> https://macoratti.net/21/04/net_masstrans1.htm
+
+-- Biblioteca MediatR Pipeline Behaviour
+>> Essa biblioteca faz que as requisições sejam validadas via fluentValidation, antes do CQRS ser acionado para efetuar um command ou uma query.
+>> https://macoratti.net/23/04/aspc_cqrsmediat1.htm
+>> https://macoratti.net/23/04/aspc_cqrsmediat2.htm
