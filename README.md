@@ -26,6 +26,7 @@ DECISÃO
     - Servidor >> IIS
     - Camadas do Projeto >> API, IoC, Application, Infra, Domain, DesignPatterns, WebJobs, Tests, Environment
     - Api Gateway >> Ocelot (Utilizo para poder utilizar duas ou mais API de forma simultanea... Ideal para Microserviços)
+    - Monitoramento >> HealthCheck
     
 MOTIVO DA DECISÂO
   - Devido ao contexto do software optei por decidir o desenvolvimento a partir de tecnologias e ferramentas em que tenho experiencia e conhecimento tecnico aprimorado
@@ -56,13 +57,15 @@ PRINTS DO SISTEMA
 
 ![image](https://github.com/user-attachments/assets/c1d0822e-d38f-47ef-849d-5c6cf86de45a)
 
-![image](https://github.com/user-attachments/assets/b7ee00c9-5b94-4047-9cd5-0380df71c685)
+![image](https://github.com/user-attachments/assets/a884a10b-cbda-4c8f-835b-6acdede4b6dd)
 
 ![image](https://github.com/user-attachments/assets/eab1b29c-869e-4d0f-adb4-19eab68f881b)
 
 ![image](https://github.com/user-attachments/assets/83a0bb88-86ff-456d-9687-7a95a8e60137)
 
 ![image](https://github.com/user-attachments/assets/b7a7c033-b052-46f8-97ec-fcab3e46fda3)
+
+![image](https://github.com/user-attachments/assets/4176b6fd-bef3-452f-af28-718462022f69)
 
 
 
