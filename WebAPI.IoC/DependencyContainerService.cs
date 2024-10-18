@@ -54,6 +54,10 @@ using WebAPI.Infra.Repositories.Others;
 using WebAPI.Application.Services.Graphics;
 using System.Text.Json;
 using WebAPI.Application.Services.AzureService;
+using NPOI.SS.Formula.Functions;
+using Confluent.Kafka;
+using WebAPI.IoC.Middleware.HealthCheck;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace WebAPI.IoC;
 
@@ -611,7 +615,7 @@ public static class DependencyContainerService
 
         Serilog.Debugging.SelfLog.Enable(msg => Console.WriteLine(msg));
 
-        Log.Logger = new LoggerConfiguration()
+        Serilog.Log.Logger = new LoggerConfiguration()
             .Enrich.WithProperty("CreatedDate", DateTime.Now)
             .Filter.ByIncludingOnly(Matching.WithProperty("Object"))
             .WriteTo.MSSqlServer(connectionString: connectionStringLogs,
@@ -626,7 +630,7 @@ public static class DependencyContainerService
 
             ).CreateLogger();
 
-        services.AddSingleton(Log.Logger);
+        services.AddSingleton(Serilog.Log.Logger);
     }
 
     public static ColumnOptions GetSqlColumnOptions()
@@ -667,7 +671,7 @@ public static class DependencyContainerService
             opt.ConnectionStringSettings.DefaultConnection = data["WebAPI_Sql"];
             opt.ConnectionStringSettings.DefaultConnectionLogs = data["WebAPI_Logs"];
             opt.ConnectionStringSettings.DefaultConnectionToDocker = data["WebAPI_Docker"];
-            if(data["WebAPI_RabbitMQ"] != null)
+            if (data["WebAPI_RabbitMQ"] != null)
             {
                 opt.RabbitMQSettings = JsonSerializer.Deserialize<RabbitMQSettings>(data["WebAPI_RabbitMQ"]);
             }
@@ -687,5 +691,46 @@ public static class DependencyContainerService
     {
         // Execução de consumer do rabbitMQ em background da APP
         services.AddHostedService<ExcelBackGroundService>();
+    }
+
+    public static void RegisterHealthCheck(this IServiceCollection services, IConfiguration configuration)
+    {
+        #region Itens que podem ser monitorados
+
+        //AddAzureServiceBusQueue
+        //AddAzureBlobStorage
+        //AddRedis
+
+        #endregion
+
+        var connectionStringSQLServerDb = EnvironmentVariablesExtension.GetDatabaseFromEnvVar(configuration.GetConnectionString("DefaultConnection"));
+        var connectionStringSQLServerLog = EnvironmentVariablesExtension.GetDatabaseFromEnvVar(configuration.GetConnectionString("DefaultConnectionLogs"));
+        var connectionStringMongoDb = EnvironmentVariablesExtension.GetDatabaseFromEnvVar(configuration.GetConnectionString("defaultConnectionToMongoDb"));
+        var connectionServiceKafka = JsonSerializer.Deserialize<KafkaSettings>(EnvironmentVariablesExtension.GetEnvironmentVariable("WebAPI_Kafka"));
+        var connectionServiceRabbitMQ = JsonSerializer.Deserialize<RabbitMQSettings>(EnvironmentVariablesExtension.GetEnvironmentVariable(("WebAPI_RabbitMQ")));
+        var connectionServiceSendGrid = JsonSerializer.Deserialize<SendGridSettings>(EnvironmentVariablesExtension.GetEnvironmentVariable(("WebAPI_SendGrid")));
+
+        var configKafka = new ProducerConfig { BootstrapServers = connectionServiceKafka.BootstrapServers };
+
+        services
+       .AddHealthChecks()
+       .AddSqlServer(connectionStringSQLServerDb, name: "Banco de dados PROD", tags: new string[] { "db", "data" })
+       .AddSqlServer(connectionStringSQLServerLog, name: "Banco de dados PROD LOGS", tags: new string[] { "db", "logs" })
+       .AddMongoDb(connectionStringMongoDb, name: "Banco de dados Mongo", tags: new string[] { "db", "data" })
+       .AddKafka(configKafka, name: "Serviço de mensageria RabbitMQ", tags: new string[] { "queue", "data" })
+       .AddRabbitMQ($"amqp://{connectionServiceRabbitMQ.UserName}:{connectionServiceRabbitMQ.Password}@{connectionServiceRabbitMQ.HostName}:5672/", name: "Serviço de mensageria RabbitMQ", tags: new string[] { "queue", "data" })
+       .AddCheck<CustomKissLogHealthCheck>(name: "Serviço de KissLog", failureStatus: HealthStatus.Unhealthy)
+       .AddSendGrid(apiKey: connectionServiceSendGrid.ApiKey, name: "Serviço de SendGrid", failureStatus: HealthStatus.Unhealthy, tags: new string[] { "sendGrid" });
+    }
+
+    public static void RegisterHealthCheckDashboard(this IServiceCollection services)
+    {
+        services.AddHealthChecksUI(options =>
+        {
+            options.SetEvaluationTimeInSeconds(10);
+            options.MaximumHistoryEntriesPerEndpoint(10);
+            options.AddHealthCheckEndpoint("API com Health Checks", "/health");
+        })
+        .AddInMemoryStorage();
     }
 }

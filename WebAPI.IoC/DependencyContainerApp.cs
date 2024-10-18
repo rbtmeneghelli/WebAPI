@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WebAPI.Domain;
 using WebAPI.Domain.Models.EnvVarSettings;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 namespace WebAPI.IoC;
 
@@ -40,6 +42,17 @@ public static class DependencyContainerApp
             });
     }
 
+    private static void UseHealthChecks(this IApplicationBuilder app)
+    {
+        app.UseHealthChecks("/health", new HealthCheckOptions
+        {
+            Predicate = p => true,
+            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+        });
+
+        app.UseHealthChecksUI(options => { options.UIPath = "/dashboard"; });
+    }
+
     public static void UseAppConfig(this IApplicationBuilder app, IWebHostEnvironment env, IConfiguration configuration)
     {
         if (env.IsDevelopment())
@@ -68,6 +81,8 @@ public static class DependencyContainerApp
         {
             endpoints.MapControllers();
         });
+
+        app.UseHealthChecks();
 
         //app.UseHangfireDashboard("/hangfire", new DashboardOptions
         //{

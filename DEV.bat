@@ -9,7 +9,7 @@ setx WebAPI_MongoDb "mongodb://localhost:27017";
 setx WebAPI_RabbitMQ "{"HostName": "localhost", "UserName": "guest", "Password": "guest"}";
 setx WebAPI_Kafka "{"BootstrapServers": "localhost:9092"}";
 setx WebAPI_ServiceBus "{"Server": "localhost"}";
-setx WebAPI_SendGrid "{"Client": "localhost", "EmailSender": "non-reply@webapi.com.br", "EmailSenderName": "WebAPI"}"
+setx WebAPI_SendGrid "{"ApiKey": "XPTO", "Client": "localhost", "EmailSender": "non-reply@webapi.com.br", "EmailSenderName": "WebAPI"}"
 setx WebAPI_Environment "5";
 setx WebAPI_Version "1.0.0";
 

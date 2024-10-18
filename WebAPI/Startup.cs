@@ -5,7 +5,6 @@ using WebAPI.Infra.Data.Context;
 using WebAPI.IoC;
 using WebAPI.IoC.Middleware.ExceptionHandler;
 
-
 public class WebAPIContextFactory : IDesignTimeDbContextFactory<WebAPIContext>
 {
     /// <summary>
@@ -88,6 +87,8 @@ public class Startup
 
         services.AddExceptionHandler<GlobalExceptionHandler>();
         services.AddProblemDetails();
+        DependencyContainerService.RegisterHealthCheck(services, _configuration);
+        DependencyContainerService.RegisterHealthCheckDashboard(services);
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider, IConfiguration configuration)
