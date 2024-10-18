@@ -1,31 +1,33 @@
-﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
-using WebAPI.Domain;
+﻿using KissLog;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace WebAPI.IoC.Middleware.HealthCheck;
 
 public class CustomKissLogHealthCheck : IHealthCheck
 {
-    private readonly IHttpClientFactory _iHttpClientFactory;
-    private EnvironmentVariables _environmentVariables { get; }
+    private readonly IKLogger _iKLogger;
 
-    public CustomKissLogHealthCheck(IHttpClientFactory iHttpClientFactory, EnvironmentVariables environmentVariables)
+    public CustomKissLogHealthCheck(IKLogger iKLogger)
     {
-        _iHttpClientFactory = iHttpClientFactory;
-        _environmentVariables = environmentVariables;
+        _iKLogger = iKLogger;
     }
 
     public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
     {
-        using (var httpClient = _iHttpClientFactory.CreateClient())
+        try
         {
-            var response = await httpClient.GetAsync("https://api.ipify.org");
-
-            if (response.IsSuccessStatusCode)
-            {
-                return HealthCheckResult.Healthy($"Remote endpoints is healthy.");
-            }
-
-            return HealthCheckResult.Unhealthy("Remote endpoint is unhealthy");
+            _iKLogger.Info("Testing KissLog connectivity");
+            return HealthCheckResult.Healthy("KissLog is online.");
+        }
+        catch (Exception ex)
+        {
+            _iKLogger.Error("KissLog is offline: " + ex.Message);
+            return HealthCheckResult.Unhealthy("KissLog is offline.");
+        }
+        finally
+        {
+            await Task.CompletedTask;
         }
     }
 }
+

@@ -266,9 +266,9 @@ https://macoratti.net/22/12/vda191222.htm (RESTRITO AO NET 7 ou SUPERIOR)
 >> Nesse caso devemos torna-lo como byte e grava-lo, depois converte-lo ao normal ao resgatarmos a informação.
 
 -- Implementação de HealthCheck
->> O projeto WebNotes tem um modelo pratico disso!
 >> https://balta.io/blog/aspnet-health-check
 >> https://dotnetthoughts.net/implementing-health-check-aspnetcore/
+>> Para acessar o HealthCheck desse projeto, basta acessar a url: https://localhost:44344/dashboard#/healthchecks
 
 -- Implementando UnitOfWork com padrão Repository e DDD
 >> https://macoratti.net/21/06/aspnc_repuow1.htm

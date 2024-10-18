@@ -406,7 +406,7 @@ public static class DependencyContainerService
     public static IServiceCollection RegisterKissLog(this IServiceCollection services)
     {
         // Optional. Register IKLogger if you use KissLog.IKLogger instead of Microsoft.Extensions.Logging.ILogger<>
-        services.AddScoped<IKLogger>((provider) => Logger.Factory.Get());
+        services.AddSingleton<IKLogger>((provider) => Logger.Factory.Get());
 
         services.AddLogging(logging =>
         {
@@ -700,27 +700,25 @@ public static class DependencyContainerService
         //AddAzureServiceBusQueue
         //AddAzureBlobStorage
         //AddRedis
+        //.AddHangfire(options => { options.MinimumAvailableServers = 1; }, name: "Jobs", failureStatus: HealthStatus.Unhealthy, tags: new[] { "HangFire" })
+        //.AddMongoDb(connectionStringMongoDb, name: "Banco de dados Mongo", tags: new string[] { "db", "data" });
+        //.AddKafka(configKafka, name: "Serviço de mensageria Kafka", tags: new string[] { "queue", "data" })
+        //.AddSendGrid(apiKey: connectionServiceSendGrid.ApiKey, name: "Serviço de SendGrid", failureStatus: HealthStatus.Unhealthy, tags: new string[] { "sendGrid" });
 
         #endregion
 
-        var connectionStringSQLServerDb = EnvironmentVariablesExtension.GetDatabaseFromEnvVar(configuration.GetConnectionString("DefaultConnection"));
-        var connectionStringSQLServerLog = EnvironmentVariablesExtension.GetDatabaseFromEnvVar(configuration.GetConnectionString("DefaultConnectionLogs"));
-        var connectionStringMongoDb = EnvironmentVariablesExtension.GetDatabaseFromEnvVar(configuration.GetConnectionString("defaultConnectionToMongoDb"));
-        var connectionServiceKafka = JsonSerializer.Deserialize<KafkaSettings>(EnvironmentVariablesExtension.GetEnvironmentVariable("WebAPI_Kafka"));
-        var connectionServiceRabbitMQ = JsonSerializer.Deserialize<RabbitMQSettings>(EnvironmentVariablesExtension.GetEnvironmentVariable(("WebAPI_RabbitMQ")));
-        var connectionServiceSendGrid = JsonSerializer.Deserialize<SendGridSettings>(EnvironmentVariablesExtension.GetEnvironmentVariable(("WebAPI_SendGrid")));
+        var TAG_NAME = "PROD";
 
-        var configKafka = new ProducerConfig { BootstrapServers = connectionServiceKafka.BootstrapServers };
+        var connectionStringSQLServerLog = EnvironmentVariablesExtension.GetDatabaseFromEnvVar(configuration.GetConnectionString("DefaultConnectionLogs"));
+        var connectionServiceRabbitMQ = JsonSerializer.Deserialize<RabbitMQSettings>(EnvironmentVariablesExtension.GetEnvironmentVariable(("WebAPI_RabbitMQ")));
 
         services
        .AddHealthChecks()
-       .AddSqlServer(connectionStringSQLServerDb, name: "Banco de dados PROD", tags: new string[] { "db", "data" })
-       .AddSqlServer(connectionStringSQLServerLog, name: "Banco de dados PROD LOGS", tags: new string[] { "db", "logs" })
-       .AddMongoDb(connectionStringMongoDb, name: "Banco de dados Mongo", tags: new string[] { "db", "data" })
-       .AddKafka(configKafka, name: "Serviço de mensageria RabbitMQ", tags: new string[] { "queue", "data" })
-       .AddRabbitMQ($"amqp://{connectionServiceRabbitMQ.UserName}:{connectionServiceRabbitMQ.Password}@{connectionServiceRabbitMQ.HostName}:5672/", name: "Serviço de mensageria RabbitMQ", tags: new string[] { "queue", "data" })
-       .AddCheck<CustomKissLogHealthCheck>(name: "Serviço de KissLog", failureStatus: HealthStatus.Unhealthy)
-       .AddSendGrid(apiKey: connectionServiceSendGrid.ApiKey, name: "Serviço de SendGrid", failureStatus: HealthStatus.Unhealthy, tags: new string[] { "sendGrid" });
+       .AddDbContextCheck<WebAPIContext>(name: "Banco de dados", failureStatus: HealthStatus.Unhealthy, tags: new string[] { TAG_NAME })
+       .AddSqlServer(connectionStringSQLServerLog, name: "Banco de dados LOGS", failureStatus: HealthStatus.Unhealthy, tags: new string[] { TAG_NAME })
+       .AddRabbitMQ($"amqp://{connectionServiceRabbitMQ.UserName}:{connectionServiceRabbitMQ.Password}@{connectionServiceRabbitMQ.HostName}:5672/", name: "Serviço de mensageria RabbitMQ", failureStatus: HealthStatus.Unhealthy, tags: new string[] { TAG_NAME })
+       .AddCheck<CustomWebAppHealthCheck>(name: "Aplicação Web", failureStatus: HealthStatus.Unhealthy, tags: new[] { TAG_NAME })
+       .AddCheck<CustomKissLogHealthCheck>(name: "Serviço de KissLog", failureStatus: HealthStatus.Unhealthy, tags: new string[] { TAG_NAME });
     }
 
     public static void RegisterHealthCheckDashboard(this IServiceCollection services)
@@ -729,7 +727,7 @@ public static class DependencyContainerService
         {
             options.SetEvaluationTimeInSeconds(10);
             options.MaximumHistoryEntriesPerEndpoint(10);
-            options.AddHealthCheckEndpoint("API com Health Checks", "/health");
+            options.AddHealthCheckEndpoint("Monitoramento de serviços da Aplicação WEBAPI", "/health");
         })
         .AddInMemoryStorage();
     }
