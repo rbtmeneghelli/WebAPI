@@ -699,7 +699,6 @@ public static class DependencyContainerService
 
         //AddAzureServiceBusQueue
         //AddAzureBlobStorage
-        //AddRedis
         //.AddHangfire(options => { options.MinimumAvailableServers = 1; }, name: "Jobs", failureStatus: HealthStatus.Unhealthy, tags: new[] { "HangFire" })
         //.AddMongoDb(connectionStringMongoDb, name: "Banco de dados Mongo", tags: new string[] { "db", "data" });
         //.AddKafka(configKafka, name: "Serviço de mensageria Kafka", tags: new string[] { "queue", "data" })
@@ -718,7 +717,8 @@ public static class DependencyContainerService
        .AddSqlServer(connectionStringSQLServerLog, name: "Banco de dados LOGS", failureStatus: HealthStatus.Unhealthy, tags: new string[] { TAG_NAME })
        .AddRabbitMQ($"amqp://{connectionServiceRabbitMQ.UserName}:{connectionServiceRabbitMQ.Password}@{connectionServiceRabbitMQ.HostName}:5672/", name: "Serviço de mensageria RabbitMQ", failureStatus: HealthStatus.Unhealthy, tags: new string[] { TAG_NAME })
        .AddCheck<CustomWebAppHealthCheck>(name: "Aplicação Web", failureStatus: HealthStatus.Unhealthy, tags: new[] { TAG_NAME })
-       .AddCheck<CustomKissLogHealthCheck>(name: "Serviço de KissLog", failureStatus: HealthStatus.Unhealthy, tags: new string[] { TAG_NAME });
+       .AddCheck<CustomKissLogHealthCheck>(name: "Serviço de KissLog", failureStatus: HealthStatus.Unhealthy, tags: new string[] { TAG_NAME })
+       .AddRedis("localhost:6379", name: "Banco de dados REDIS", failureStatus: HealthStatus.Unhealthy, tags: new string[] { TAG_NAME });
     }
 
     public static void RegisterHealthCheckDashboard(this IServiceCollection services)
