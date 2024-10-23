@@ -18,7 +18,7 @@ using System.Runtime.Serialization;
 using WebAPI.Domain.Constants;
 using WebAPI.Domain.Interfaces.Services.Tools;
 
-namespace WebAPI.Application.Services;
+namespace WebAPI.Application.Services.Tools;
 
 public class FileService<TModel> : IFileService<TModel> where TModel : class
 {
@@ -165,7 +165,7 @@ public class FileService<TModel> : IFileService<TModel> where TModel : class
             arrPos++;
         }
 
-        for (int i = (sheet.FirstRowNum + 1); i <= sheet.LastRowNum; i++)
+        for (int i = sheet.FirstRowNum + 1; i <= sheet.LastRowNum; i++)
         {
             //TModel model = new(); //Entidade
             IRow row = sheet.GetRow(i);

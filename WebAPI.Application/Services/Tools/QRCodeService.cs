@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
 using SkiaSharp;
-using WebAPI.Domain.Interfaces.Services;
+using WebAPI.Domain.Interfaces.Services.Tools;
 using ZXing;
 using ZXing.Common;
 using ZXing.SkiaSharp;
 using static System.Net.Mime.MediaTypeNames;
 //using ZXing.SkiaSharp;
 
-namespace WebAPI.Application.Services;
+namespace WebAPI.Application.Services.Tools;
 
 public class QRCodeService : IQRCodeService
 {

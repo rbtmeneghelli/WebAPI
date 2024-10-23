@@ -4,7 +4,7 @@ using WebAPI.Domain.Constants;
 using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Domain.Interfaces.Services.Tools;
 
-namespace WebAPI.Application.Services;
+namespace WebAPI.Application.Services.Tools;
 
 public class FirebaseService : GenericService, IFirebaseService
 {

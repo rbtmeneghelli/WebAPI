@@ -58,6 +58,7 @@ using NPOI.SS.Formula.Functions;
 using Confluent.Kafka;
 using WebAPI.IoC.Middleware.HealthCheck;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using WebAPI.Application.Services.Tools;
 
 namespace WebAPI.IoC;
 
@@ -730,5 +731,10 @@ public static class DependencyContainerService
             options.AddHealthCheckEndpoint("Monitoramento de serviços da Aplicação WEBAPI", "/health");
         })
         .AddInMemoryStorage();
+    }
+
+    public static void RegisterSignalR(this IServiceCollection services)
+    {
+        services.AddSignalR();
     }
 }

@@ -17,6 +17,7 @@ public class EnvironmentVariables
     public string AzureFileShareKeyValue { get; set; } = "Azure-FileShare-KeyValue";
     public string AzureKeyVaultUrl { get; set; } = "Azure-KeyVault-Url";
     public string AzureConnectionStringStorage { get; set; } = "CONNECTION_STRING_STORAGE";
+    public TwilioSettings TwilioSettings { get; set; }
 
     public EnvironmentVariables()
     {

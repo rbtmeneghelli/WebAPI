@@ -1,4 +1,5 @@
 ﻿using WebAPI.Application.Services;
+using WebAPI.Application.Services.Tools;
 using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.Interfaces.Services;
 using WebAPI.Domain.Interfaces.Services.Tools;

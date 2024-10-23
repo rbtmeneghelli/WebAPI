@@ -5,7 +5,7 @@ using Serilog.Events;
 using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Domain.Interfaces.Services.Tools;
 
-namespace WebAPI.Application.Services;
+namespace WebAPI.Application.Services.Tools;
 
 public class GeneralLogService : IGeneralLogService
 {
@@ -65,7 +65,7 @@ public class GeneralLogService : IGeneralLogService
     public void SaveLogOnSeriLog(EnumLogger enumLogger, string className = "", string methodName = "", string messageError = "", string obj = "")
     {
         // Fazendo o Serilog funcionar pra gravarlog
-        Serilog.ILogger log = Serilog.Log.ForContext(typeof(Serilog.ILogger));
+        Serilog.ILogger log = Log.ForContext(typeof(Serilog.ILogger));
         log.Write
         (
             LogEventLevel.Information,

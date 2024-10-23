@@ -4,7 +4,7 @@ using WebAPI.Application.Generic;
 using WebAPI.Domain.Interfaces.Factory;
 using WebAPI.Domain.Interfaces.Services.Tools;
 
-namespace WebAPI.Application.Services;
+namespace WebAPI.Application.Services.Tools;
 
 public class SendGridService : GenericService, ISendGridService
 {

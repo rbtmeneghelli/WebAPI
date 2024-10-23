@@ -1,6 +1,6 @@
 ﻿using WebAPI.Domain.Interfaces.Services.Tools;
 
-namespace WebAPI.Application.Services;
+namespace WebAPI.Application.Services.Tools;
 
 public class NotificationMessageService : INotificationMessageService
 {

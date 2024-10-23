@@ -11,6 +11,7 @@ using WebAPI.Domain;
 using WebAPI.Domain.Models.EnvVarSettings;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using WebAPI.IoC.Middleware.SignalR;
 
 namespace WebAPI.IoC;
 
@@ -80,6 +81,7 @@ public static class DependencyContainerApp
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
+            //endpoints.MapHub<NotificationHub>("/notificationHub");
         });
 
         app.UseHealthChecks();

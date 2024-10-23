@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
-using WebAPI.Domain.Interfaces.Services;
+using WebAPI.Domain.Interfaces.Services.Tools;
 
-namespace WebAPI.Application.Services;
+namespace WebAPI.Application.Services.Tools;
 
 public class IpAddressService : IIpAddressService
 {

@@ -3,7 +3,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using WebAPI.Application.Generic;
 using WebAPI.Domain.Interfaces.Services.Tools;
 
-namespace WebAPI.Application.Services;
+namespace WebAPI.Application.Services.Tools;
 
 public sealed class RedisService : GenericService, IRedisService
 {

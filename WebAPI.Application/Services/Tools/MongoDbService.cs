@@ -2,7 +2,7 @@
 using WebAPI.Application.Generic;
 using WebAPI.Domain.Interfaces.Services.Tools;
 
-namespace WebAPI.Application.Services;
+namespace WebAPI.Application.Services.Tools;
 
 public sealed class MongoDbService<TEntity> : GenericService, IMongoDbService<TEntity> where TEntity : class
 {
@@ -54,7 +54,7 @@ public sealed class MongoDbService<TEntity> : GenericService, IMongoDbService<TE
         IMongoCollection<TEntity> mongoCollection = CreateMongoDbConnection();
         var filter = GenericFilter(propertyNameToFind, valueToFind);
         var existRecord = await mongoCollection.Find(filter).AnyAsync();
-        if(existRecord)
+        if (existRecord)
         {
             var update = GenericUpdateFilter(propertyNameToChange, valueToChange);
             await mongoCollection.UpdateOneAsync(filter, update);

@@ -200,6 +200,8 @@ modelBuilder.Entity<Classe>(x => { x.ToSqlQuery("SELECT * FROM VWTESTE")})
 
 -- Passo para criação de um chat ou envio de notificações a aplicação com SignalR
 >> https://www.c-sharpcorner.com/article/real-time-angular-11-application-with-signalr-and-net-5/
+>> npm install @microsoft/signalr (Biblioteca para instalar no front e configurar em seguida)
+>> Tem exemplo de seu uso no projeto WebNotes (Front quanto Back)
 
 -- Gerar diagrama de classe 
 >> Verificar se o pacote class designer está instalado, caso não esteja efetuar o passo abaixo:
@@ -273,9 +275,6 @@ https://macoratti.net/22/12/vda191222.htm (RESTRITO AO NET 7 ou SUPERIOR)
 -- Implementando UnitOfWork com padrão Repository e DDD
 >> https://macoratti.net/21/06/aspnc_repuow1.htm
 >> Tem no projeto WebAPI
-
--- Implementando SignalR com front e back
->> Tem no projeto WebNotes
 
 -- Implementando simple factory
 https://macoratti.net/21/06/c_simpfact1.htm

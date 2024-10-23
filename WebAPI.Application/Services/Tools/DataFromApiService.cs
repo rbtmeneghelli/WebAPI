@@ -2,7 +2,7 @@
 using WebAPI.Domain.Interfaces.Services.Tools;
 using WebAPI.Domain.Models.Generic;
 
-namespace WebAPI.Application.Services;
+namespace WebAPI.Application.Services.Tools;
 
 public class GetDataFromApiService<T> : IDataFromApiService<T> where T : class
 {
@@ -24,7 +24,7 @@ public class GetDataFromApiService<T> : IDataFromApiService<T> where T : class
         catch (GenericException ex)
         {
             ex.ShowDefaultExceptionMessage();
-            return default(T);
+            return default;
         }
     }
 

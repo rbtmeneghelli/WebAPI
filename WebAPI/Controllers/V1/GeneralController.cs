@@ -7,6 +7,8 @@ using WebAPI.Domain.Interfaces.Services.Configuration;
 using WebAPI.IoC.ActionFilter;
 using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.Interfaces.Services;
+using Microsoft.AspNetCore.SignalR;
+using WebAPI.IoC.Middleware.SignalR;
 
 namespace WebAPI.V1.Controllers;
 
@@ -20,6 +22,7 @@ public sealed class GeneralController : GenericController
     private readonly IFirebaseService _iFirebaseService;
     private readonly IEmailService _iEmailService;
     private readonly GeneralMethod _generalMethod;
+    private readonly IHubContext<NotificationHub> _iHubContext;
 
     private EnvironmentVariables _environmentVariables { get; }
 
@@ -31,7 +34,8 @@ public sealed class GeneralController : GenericController
         EnvironmentVariables environmentVariables,
         IMapper iMapperService,
         IHttpContextAccessor iHttpContextAccessor,
-        IGenericNotifyLogsService iGenericNotifyLogsService) 
+        IGenericNotifyLogsService iGenericNotifyLogsService,
+        IHubContext<NotificationHub> iHubContext) 
         : base(iMapperService, iHttpContextAccessor, iGenericNotifyLogsService)
     {
         _iGeneralService = iGeneralService;
@@ -40,6 +44,7 @@ public sealed class GeneralController : GenericController
         _iEmailService = iEmailService;
         _environmentVariables = environmentVariables;
         _generalMethod = GeneralMethod.GetLoadExtensionMethods();
+        _iHubContext = iHubContext;
     }
 
     [HttpGet("export2Zip/{directory}/{typeFile:int?}")]
@@ -120,6 +125,13 @@ public sealed class GeneralController : GenericController
     public async Task<IActionResult> TestSendEmail()
     {
         await _iEmailService.CustomSendEmailAsync(EnumEmail.Welcome, "teste@gmail.com", "XPTO");
+        return CustomResponse();
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetNotificationsByServer()
+    {
+        await _iHubContext.Clients.All.SendAsync("ReceiveNotification", "Mensagem enviada para aplicação pelo canal do SignalR");
         return CustomResponse();
     }
 }

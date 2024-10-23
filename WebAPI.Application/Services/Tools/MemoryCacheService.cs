@@ -2,7 +2,7 @@
 using WebAPI.Domain.Interfaces.Services.Tools;
 using WebAPI.Domain.Models.EnvVarSettings;
 
-namespace WebAPI.Application.Services;
+namespace WebAPI.Application.Services.Tools;
 
 public class MemoryCacheService : IMemoryCacheService
 {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using WebAPI.Domain.Models;
 
-namespace WebAPI.Domain.Interfaces.Services;
+namespace WebAPI.Domain.Interfaces.Services.Tools;
 
 public interface IQRCodeService : IDisposable
 {
