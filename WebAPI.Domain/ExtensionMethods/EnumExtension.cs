@@ -35,4 +35,14 @@ public static class EnumExtensionMethod
 
         return (T[])Enum.GetValues(typeof(T));
     }
+
+    public static string GetDescriptionValue(this Enum value)
+    {
+        DescriptionAttribute attribute = value.GetType()
+                                         .GetField(value.ToString())
+                                         .GetCustomAttributes(typeof(DescriptionAttribute), false)
+                                         .SingleOrDefault() as DescriptionAttribute;
+
+        return attribute == null ? value.ToString() : attribute.Description;
+    }
 }

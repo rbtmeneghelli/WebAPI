@@ -94,7 +94,7 @@ namespace WebAPI.Domain.ExtensionMethods
         }
 
         /// <summary>
-        /// Esse metodo funciona a partir do NET 9
+        /// Esse metodo funciona a partir do NET 9, tem performance melhor do que utilizar CONTAINS
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
