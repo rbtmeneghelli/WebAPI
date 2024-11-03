@@ -34,7 +34,7 @@ public sealed class AuthenticationSettingsController : GenericController
     public async Task<IActionResult> GetAll()
     {
         var model = await _iGenericConfigurationService.AuthenticationSettingsService.GetAllAuthenticationSettingsAsync();
-        return CustomResponse(model, FixConstants.SUCCESS_IN_GETALL);
+        return CustomResponse(FixConstants.BADREQUEST_CODE, model, FixConstants.SUCCESS_IN_GETALL);
     }
 
     [HttpGet("GetByEnvironment")]
@@ -44,10 +44,10 @@ public sealed class AuthenticationSettingsController : GenericController
         if (existAuthenticationSettings)
         {
             var model = await _iGenericConfigurationService.AuthenticationSettingsService.GetAuthenticationSettingsByEnvironmentAsync();
-            return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
+            return CustomResponse(FixConstants.BADREQUEST_CODE, model, FixConstants.SUCCESS_IN_GETID);
         }
 
-        return CustomNotFound();
+        return CustomResponse(FixConstants.NOTFOUND_CODE);
     }
 
     [HttpGet("GetById/{id:long}")]
@@ -57,10 +57,10 @@ public sealed class AuthenticationSettingsController : GenericController
         if (existAuthenticationSettings)
         {
             var model = await _iGenericConfigurationService.AuthenticationSettingsService.GetAuthenticationSettingsByIdAsync(id);
-            return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
+            return CustomResponse(FixConstants.BADREQUEST_CODE, model, FixConstants.SUCCESS_IN_GETID);
         }
 
-        return CustomNotFound();
+        return CustomResponse(FixConstants.NOTFOUND_CODE);
     }
 
     [HttpPost("Create")]
@@ -74,7 +74,7 @@ public sealed class AuthenticationSettingsController : GenericController
         if (result)
             return CreatedAtAction(nameof(Create), authenticationSettingsRequest);
 
-        return CustomResponse();
+        return CustomResponse(FixConstants.BADREQUEST_CODE);
     }
 
     [HttpPut("Update")]
@@ -87,7 +87,7 @@ public sealed class AuthenticationSettingsController : GenericController
         if (id != authenticationSettingsRequest.Id)
         {
             NotificationError(FixConstants.ERROR_IN_GETID);
-            return CustomResponse();
+            return CustomResponse(FixConstants.NOTFOUND_CODE);
         }
 
         if (await _iGenericConfigurationService.AuthenticationSettingsService.ExistAuthenticationSettingsByIdAsync(authenticationSettingsRequest.Id.GetValueOrDefault()))
@@ -96,10 +96,10 @@ public sealed class AuthenticationSettingsController : GenericController
             if (result)
                 return NoContent();
             else
-                return CustomResponse();
+                return CustomResponse(FixConstants.BADREQUEST_CODE);
         }
 
-        return CustomNotFound();
+        return CustomResponse(FixConstants.NOTFOUND_CODE);
     }
 
     [HttpDelete("LogicDelete/{id:long}")]
@@ -109,12 +109,12 @@ public sealed class AuthenticationSettingsController : GenericController
         {
             bool result = await _iGenericConfigurationService.AuthenticationSettingsService.LogicDeleteAuthenticationSettingsByIdAsync(id);
             if (result)
-                return CustomResponse(default, FixConstants.SUCCESS_IN_DELETELOGIC);
+                return CustomResponse(FixConstants.NOTFOUND_CODE, default, FixConstants.SUCCESS_IN_DELETELOGIC);
             else
-                return CustomResponse();
+                return CustomResponse(FixConstants.BADREQUEST_CODE);
         }
 
-        return CustomNotFound();
+        return CustomResponse(FixConstants.NOTFOUND_CODE);
     }
 
     [HttpPost("Reactive")]
@@ -124,12 +124,12 @@ public sealed class AuthenticationSettingsController : GenericController
         {
             bool result = await _iGenericConfigurationService.AuthenticationSettingsService.ReactiveAuthenticationSettingsByIdAsync(authenticationSettingsReactiveRequestDTO.Id.Value);
             if (result)
-                return CustomResponse(default, FixConstants.SUCCESS_IN_ACTIVERECORD);
+                return CustomResponse(FixConstants.BADREQUEST_CODE, default, FixConstants.SUCCESS_IN_ACTIVERECORD);
             else
-                return CustomResponse();
+                return CustomResponse(FixConstants.BADREQUEST_CODE );
         }
 
-        return CustomNotFound();
+        return CustomResponse(FixConstants.NOTFOUND_CODE);
     }
 
     [HttpPost("ExportData")]
@@ -146,6 +146,6 @@ public sealed class AuthenticationSettingsController : GenericController
             return File(memoryStreamExcel.ToArray(), memoryStreamResult.Type, excelName);
         }
 
-        return CustomNotFound();
+        return CustomResponse(FixConstants.NOTFOUND_CODE);
     }
 }

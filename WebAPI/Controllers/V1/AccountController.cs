@@ -16,9 +16,9 @@ public sealed class AccountController : GenericController
     public AccountController(
         IGeneralService iGeneralService,
         IGenericUnitOfWorkService iGenericUnitOfWorkService,
-        IMapper iMapperService, 
-        IHttpContextAccessor iHttpContextAccessor, 
-        IGenericNotifyLogsService iGenericNotifyLogsService) 
+        IMapper iMapperService,
+        IHttpContextAccessor iHttpContextAccessor,
+        IGenericNotifyLogsService iGenericNotifyLogsService)
         : base(iMapperService, iHttpContextAccessor, iGenericNotifyLogsService)
     {
         _iGeneralService = iGeneralService;
@@ -26,6 +26,9 @@ public sealed class AccountController : GenericController
     }
 
     [HttpPost("Login")]
+    [ProducesResponseType((int)FixConstants.OK_CODE)]
+    [ProducesResponseType((int)FixConstants.BADREQUEST_CODE)]
+    [ProducesResponseType((int)FixConstants.INTERNAL_CODE)]
     public async Task<IActionResult> Login([FromBody] LoginUser loginUser)
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
@@ -36,10 +39,11 @@ public sealed class AccountController : GenericController
         {
             Credentials credentials = await _iGenericUnitOfWorkService.AccountService.GetUserCredentialsAsync(loginUser.Login);
             var userToken = _iGeneralService.CreateJwtToken(credentials);
-            return CustomResponse(userToken);
+            return CustomResponse(FixConstants.BADREQUEST_CODE, userToken);
         }
         else
         {
+            NotificationError("Autenticações de usuário são invalidas");
             return CustomResponse();
         }
     }
@@ -71,9 +75,9 @@ public sealed class AccountController : GenericController
 
         var result = await _iGenericUnitOfWorkService.AccountService.ChangePasswordAsync(UserId, user);
         if (result)
-            return CustomResponse(null, FixConstants.SUCCESS_IN_CHANGEPASSWORD);
+            return CustomResponse(FixConstants.BADREQUEST_CODE, null, FixConstants.SUCCESS_IN_CHANGEPASSWORD);
 
-        return CustomResponse();
+        return CustomResponse(FixConstants.BADREQUEST_CODE);
     }
 
     [HttpGet("ResetPassword/{email}")]
@@ -82,9 +86,9 @@ public sealed class AccountController : GenericController
         var result = await _iGenericUnitOfWorkService.AccountService.ResetPasswordAsync(email);
 
         if (result)
-            return CustomResponse(null, FixConstants.SUCCESS_IN_RESETPASSWORD);
+            return CustomResponse(FixConstants.BADREQUEST_CODE, null, FixConstants.SUCCESS_IN_RESETPASSWORD);
 
-        return CustomResponse();
+        return CustomResponse(FixConstants.BADREQUEST_CODE);
     }
 
     [HttpPost("LoginRefresh")]
@@ -101,12 +105,12 @@ public sealed class AccountController : GenericController
             string dataToken = _iGeneralService.CreateJwtToken(credentials);
             var dataRefreshToken = _iGeneralService.GenerateRefreshToken();
             _iGeneralService.SaveRefreshToken(credentials.Login, dataRefreshToken);
-            return CustomResponse(new { token = dataToken, refreshToken = dataRefreshToken });
+            return CustomResponse(FixConstants.BADREQUEST_CODE, new { token = dataToken, refreshToken = dataRefreshToken });
         }
         else
         {
             NotificationError("Autenticação invalida. tente novamente!");
-            return CustomResponse();
+            return CustomResponse(FixConstants.BADREQUEST_CODE);
         }
     }
 
@@ -123,6 +127,6 @@ public sealed class AccountController : GenericController
         _iGeneralService.DeleteRefreshToken(principal.Identity.Name, tokens.RefreshToken);
         _iGeneralService.SaveRefreshToken(principal.Identity.Name, newRefreshToken);
 
-        return CustomResponse(new Tokens() { Token = newJwtToken, RefreshToken = newRefreshToken });
+        return CustomResponse(FixConstants.OK_CODE, new Tokens() { Token = newJwtToken, RefreshToken = newRefreshToken });
     }
 }

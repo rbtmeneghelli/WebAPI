@@ -34,7 +34,7 @@ public sealed class ExpirationPasswordSettingsController : GenericController
     public async Task<IActionResult> GetAll()
     {
         var model = await _iGenericConfigurationService.ExpirationPasswordSettingsService.GetAllExpirationPasswordSettingsAsync();
-        return CustomResponse(model, FixConstants.SUCCESS_IN_GETALL);
+        return CustomResponse(FixConstants.BADREQUEST_CODE, model, FixConstants.SUCCESS_IN_GETALL);
     }
 
     [HttpGet("GetByEnvironment")]
@@ -44,10 +44,10 @@ public sealed class ExpirationPasswordSettingsController : GenericController
         if (existExpirationPasswordSettings)
         {
             var model = await _iGenericConfigurationService.ExpirationPasswordSettingsService.GetExpirationPasswordSettingsByEnvironmentAsync();
-            return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
+            return CustomResponse(FixConstants.BADREQUEST_CODE, model, FixConstants.SUCCESS_IN_GETID);
         }
 
-        return CustomNotFound();
+        return CustomResponse(FixConstants.NOTFOUND_CODE);
     }
 
     [HttpGet("GetById/{id:long}")]
@@ -57,10 +57,10 @@ public sealed class ExpirationPasswordSettingsController : GenericController
         if (existExpirationPasswordSettings)
         {
             var model = await _iGenericConfigurationService.ExpirationPasswordSettingsService.GetExpirationPasswordSettingsByIdAsync(id);
-            return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
+            return CustomResponse(FixConstants.BADREQUEST_CODE, model, FixConstants.SUCCESS_IN_GETID);
         }
 
-        return CustomNotFound();
+        return CustomResponse(FixConstants.NOTFOUND_CODE);
     }
 
     [HttpPost("Create")]
@@ -99,7 +99,7 @@ public sealed class ExpirationPasswordSettingsController : GenericController
                 return CustomResponse();
         }
 
-        return CustomNotFound();
+        return CustomResponse(FixConstants.NOTFOUND_CODE);
     }
 
     [HttpDelete("LogicDelete/{id:long}")]
@@ -114,7 +114,7 @@ public sealed class ExpirationPasswordSettingsController : GenericController
                 return CustomResponse();
         }
 
-        return CustomNotFound();
+        return CustomResponse(FixConstants.NOTFOUND_CODE);
     }
 
     [HttpPost("Reactive")]
@@ -129,7 +129,7 @@ public sealed class ExpirationPasswordSettingsController : GenericController
                 return CustomResponse();
         }
 
-        return CustomNotFound();
+        return CustomResponse(FixConstants.NOTFOUND_CODE);
     }
 
     [HttpPost("ExportData")]
@@ -146,6 +146,6 @@ public sealed class ExpirationPasswordSettingsController : GenericController
             return File(memoryStreamExcel.ToArray(), memoryStreamResult.Type, excelName);
         }
 
-        return CustomNotFound();
+        return CustomResponse(FixConstants.NOTFOUND_CODE);
     }
 }

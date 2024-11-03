@@ -34,7 +34,7 @@ public sealed class RequiredPasswordSettingsController : GenericController
     public async Task<IActionResult> GetAll()
     {
         var model = await _iGenericConfigurationService.RequiredPasswordSettingsService.GetAllRequiredPasswordSettingsAsync();
-        return CustomResponse(model, FixConstants.SUCCESS_IN_GETALL);
+        return CustomResponse(FixConstants.BADREQUEST_CODE, model, FixConstants.SUCCESS_IN_GETALL);
     }
 
     [HttpGet("GetByEnvironment")]
@@ -44,10 +44,10 @@ public sealed class RequiredPasswordSettingsController : GenericController
         if (existRequiredPasswordSettings)
         {
             var model = await _iGenericConfigurationService.RequiredPasswordSettingsService.GetRequiredPasswordSettingsByEnvironmentAsync();
-            return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
+            return CustomResponse(FixConstants.BADREQUEST_CODE, model, FixConstants.SUCCESS_IN_GETID);
         }
 
-        return CustomNotFound();
+        return CustomResponse(FixConstants.NOTFOUND_CODE);
     }
 
     [HttpGet("GetById/{id:long}")]
@@ -57,10 +57,10 @@ public sealed class RequiredPasswordSettingsController : GenericController
         if (existRequiredPasswordSettings)
         {
             var model = await _iGenericConfigurationService.RequiredPasswordSettingsService.GetRequiredPasswordSettingsByIdAsync(id);
-            return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
+            return CustomResponse(FixConstants.BADREQUEST_CODE, model, FixConstants.SUCCESS_IN_GETID);
         }
 
-        return CustomNotFound();
+        return CustomResponse(FixConstants.NOTFOUND_CODE);
     }
 
     [HttpPost("Create")]
@@ -99,7 +99,7 @@ public sealed class RequiredPasswordSettingsController : GenericController
                 return CustomResponse();
         }
 
-        return CustomNotFound();
+        return CustomResponse(FixConstants.NOTFOUND_CODE);
     }
 
     [HttpDelete("LogicDelete/{id:long}")]
@@ -114,7 +114,7 @@ public sealed class RequiredPasswordSettingsController : GenericController
                 return CustomResponse();
         }
 
-        return CustomNotFound();
+        return CustomResponse(FixConstants.NOTFOUND_CODE);
     }
 
     [HttpPost("Reactive")]
@@ -129,7 +129,7 @@ public sealed class RequiredPasswordSettingsController : GenericController
                 return CustomResponse();
         }
 
-        return CustomNotFound();
+        return CustomResponse(FixConstants.NOTFOUND_CODE);
     }
 
     [HttpPost("ExportData")]
@@ -146,6 +146,6 @@ public sealed class RequiredPasswordSettingsController : GenericController
             return File(memoryStreamExcel.ToArray(), memoryStreamResult.Type, excelName);
         }
 
-        return CustomNotFound();
+        return CustomResponse(FixConstants.NOTFOUND_CODE);
     }
 }

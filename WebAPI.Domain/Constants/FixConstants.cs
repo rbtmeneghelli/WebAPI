@@ -36,6 +36,8 @@ public static class FixConstants
     public const string ERROR_IN_UPDATESTATUS = "Ocorreu um erro ao atualizar o status de um registro. Entre em contato com o Administrador";
     public const string ERROR_IN_REFRESHREGION = "Ocorreu um erro para atualizar/adicionar regiões. Entre em contato com o Administrador";
     public const string ERROR_IN_REFRESHSTATE = "Ocorreu um erro para atualizar/adicionar estados. Entre em contato com o Administrador";
+    public const string ERROR_TOKEN_INVALID = "O token informado é invalido.";
+    public const string ERROR_INTERNAL = "Ocorreu um erro interno no processamento dos dados pela API. Entre em contato com o Administrador";
 
     public const string SUCCESS_IN_LOGIN = "A autenticação foi efetuada com sucesso";
     public const string SUCCESS_IN_ADD = "O registro foi adicionado com sucesso";
@@ -66,9 +68,13 @@ public static class FixConstants
 
     public const string QUOTE = "\"";
 
-    public const int INTERNAL_ERROR_CODE = (int)HttpStatusCode.InternalServerError;
-    public const int UNAUTHORIZED_ERROR_CODE = (int)HttpStatusCode.Unauthorized;
-    public const int FORBIDDEN_ERROR_CODE = (int)HttpStatusCode.Forbidden;
+    public const int OK_CODE = (int)HttpStatusCode.OK;
+    public const int BADREQUEST_CODE = (int)HttpStatusCode.InternalServerError;
+    public const int INTERNAL_CODE = (int)HttpStatusCode.InternalServerError;
+    public const int UNAUTHORIZED_CODE = (int)HttpStatusCode.Unauthorized;
+    public const int FORBIDDEN_CODE = (int)HttpStatusCode.Forbidden;
+    public const int NOTFOUND_CODE = (int)HttpStatusCode.NotFound;
+    public const int CREATED_CODE = (int)HttpStatusCode.Created;
 
     public const string MESSAGE_ERROR_APP_EX = "Atenção! Ocorreu um erro ao processar os dados. Tente novamente!";
     public const string MESSAGE_ERROR_UNAUTH_EX = "Atenção! Usuário não possui privilegios de permissão para prosseguir com a requisição solicitada!";

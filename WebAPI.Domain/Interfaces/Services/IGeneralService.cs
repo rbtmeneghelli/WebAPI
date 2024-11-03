@@ -20,5 +20,6 @@ public interface IGeneralService
     string GetRefreshToken(string username);
     void DeleteRefreshToken(string username, string refreshToken);
     string ExtractObjectInformationsByReflection(object obj);
-    bool TokenIsValid(string jwtToken);
+    bool ValidateToken(string jwtToken);
+    object ExtractDataToken(string token);
 }

@@ -62,12 +62,12 @@ public class AddressController : GenericController
             {
                 modelCep = await _iAddressService.GetAddressByCepAsync(cep);
             }
-            return CustomResponse(modelCep);
+            return CustomResponse(FixConstants.BADREQUEST_CODE, modelCep);
         }
         catch (Exception)
         {
             NotificationError($"{FixConstants.EXCEPTION_REQUEST_API} {FixConstantsUrl.URL_TO_GET_CEP}");
-            return CustomResponse();
+            return CustomResponse(FixConstants.BADREQUEST_CODE);
         }
     }
 
@@ -96,12 +96,12 @@ public class AddressController : GenericController
                     }
                 }
             }
-            return CustomResponse(listStates);
+            return CustomResponse(FixConstants.BADREQUEST_CODE, listStates);
         }
         catch (Exception)
         {
             NotificationError($"{FixConstants.EXCEPTION_REQUEST_API} {FixConstantsUrl.URL_TO_GET_STATES}");
-            return CustomResponse();
+            return CustomResponse(FixConstants.BADREQUEST_CODE);
         }
     }
 
@@ -153,10 +153,10 @@ public class AddressController : GenericController
         catch (Exception)
         {
             NotificationError("Ocorreu um erro ao tentar adicionar cidades no sistema");
-            return CustomResponse();
+            return CustomResponse(FixConstants.BADREQUEST_CODE);
         }
 
-        return CustomResponse(null, "Cidades foram adicionadas com sucesso");
+        return CustomResponse(FixConstants.BADREQUEST_CODE, null, "Cidades foram adicionadas com sucesso");
     }
 
     [HttpGet("addRegions")]
@@ -187,12 +187,12 @@ public class AddressController : GenericController
                 }
             }
 
-            return CustomResponse(list);
+            return CustomResponse(FixConstants.BADREQUEST_CODE, list);
         }
         catch (Exception)
         {
             NotificationError($"{FixConstants.EXCEPTION_REQUEST_API} {FixConstantsUrl.URL_TO_GET_STATES}");
-            return CustomResponse();
+            return CustomResponse(FixConstants.BADREQUEST_CODE);
         }
     }
 
@@ -222,12 +222,12 @@ public class AddressController : GenericController
                 }
             }
 
-            return CustomResponse(listStates);
+            return CustomResponse(FixConstants.BADREQUEST_CODE, listStates);
         }
         catch (Exception)
         {
             NotificationError($"{FixConstants.EXCEPTION_REQUEST_API} {FixConstantsUrl.URL_TO_GET_STATES}");
-            return CustomResponse();
+            return CustomResponse(FixConstants.BADREQUEST_CODE);
         }
     }
 
@@ -244,6 +244,6 @@ public class AddressController : GenericController
         }
 
         await Task.CompletedTask;
-        return CustomResponse();
+        return CustomResponse(FixConstants.BADREQUEST_CODE);
     }
 }

@@ -34,7 +34,7 @@ public sealed class EmailDisplaySettingsController : GenericController
     public async Task<IActionResult> GetAll()
     {
         var model = await _iGenericConfigurationService.EmailDisplaySettingsService.GetAllEmailDisplaySettingsAsync();
-        return CustomResponse(model, FixConstants.SUCCESS_IN_GETALL);
+        return CustomResponse(FixConstants.BADREQUEST_CODE, model, FixConstants.SUCCESS_IN_GETALL);
     }
 
     [HttpGet("GetById/{id:long}")]
@@ -44,10 +44,10 @@ public sealed class EmailDisplaySettingsController : GenericController
         if (existEmailDisplaySettings)
         {
             var model = await _iGenericConfigurationService.EmailDisplaySettingsService.GetEmailDisplaySettingsByIdAsync(id);
-            return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
+            return CustomResponse(FixConstants.BADREQUEST_CODE, model, FixConstants.SUCCESS_IN_GETID);
         }
 
-        return CustomNotFound();
+        return CustomResponse(FixConstants.NOTFOUND_CODE);
     }
 
     [HttpPost("Create")]
@@ -86,7 +86,7 @@ public sealed class EmailDisplaySettingsController : GenericController
                 return CustomResponse();
         }
 
-        return CustomNotFound();
+        return CustomResponse(FixConstants.NOTFOUND_CODE);
     }
 
     [HttpDelete("LogicDelete/{id:long}")]
@@ -101,7 +101,7 @@ public sealed class EmailDisplaySettingsController : GenericController
                 return CustomResponse();
         }
 
-        return CustomNotFound();
+        return CustomResponse(FixConstants.NOTFOUND_CODE);
     }
 
     [HttpPost("Reactive")]
@@ -116,7 +116,7 @@ public sealed class EmailDisplaySettingsController : GenericController
                 return CustomResponse();
         }
 
-        return CustomNotFound();
+        return CustomResponse(FixConstants.NOTFOUND_CODE);
     }
 
     [HttpPost("ExportData")]
@@ -133,6 +133,6 @@ public sealed class EmailDisplaySettingsController : GenericController
             return File(memoryStreamExcel.ToArray(), memoryStreamResult.Type, excelName);
         }
 
-        return CustomNotFound();
+        return CustomResponse(FixConstants.NOTFOUND_CODE);
     }
 }

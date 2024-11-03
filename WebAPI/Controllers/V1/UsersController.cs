@@ -39,7 +39,7 @@ public sealed class UsersController : GenericController
     public async Task<IActionResult> GetAll()
     {
         var model = _iMapperService.Map<IEnumerable<UserResponseDTO>>(await _iUserService.GetAllUserAsync());
-        return CustomResponse(model, FixConstants.SUCCESS_IN_GETALL);
+        return CustomResponse(FixConstants.BADREQUEST_CODE, model, FixConstants.SUCCESS_IN_GETALL);
     }
 
     [HttpPost("GetAllPaginate")]
@@ -47,7 +47,7 @@ public sealed class UsersController : GenericController
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
         var model = await _iUserService.GetAllUserPaginateAsync(userFilter);
-        return CustomResponse(model, FixConstants.SUCCESS_IN_GETALLPAGINATE);
+        return CustomResponse(FixConstants.OK_CODE, model, FixConstants.SUCCESS_IN_GETALLPAGINATE);
     }
 
     [HttpGet("GetById/{id:long}")]
@@ -56,10 +56,10 @@ public sealed class UsersController : GenericController
         if (await _iUserService.ExistUserByIdAsync(id))
         {
             var model = _iMapperService.Map<UserResponseDTO>(await _iUserService.GetUserByIdAsync(id));
-            return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
+            return CustomResponse(FixConstants.OK_CODE, model, FixConstants.SUCCESS_IN_GETID);
         }
 
-        return CustomNotFound();
+        return CustomResponse(FixConstants.NOTFOUND_CODE);
     }
 
     [HttpGet("GetByLogin/{login}")]
@@ -68,16 +68,16 @@ public sealed class UsersController : GenericController
         if (await _iUserService.ExistUserByLoginAsync(login))
         {
             var model = _iMapperService.Map<UserResponseDTO>(await _iUserService.GetUserByLoginAsync(login));
-            return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
+            return CustomResponse(FixConstants.OK_CODE, model, FixConstants.SUCCESS_IN_GETID);
         }
 
-        return CustomNotFound();
+        return CustomResponse(FixConstants.NOTFOUND_CODE);
     }
 
     [HttpGet("GetUsers")]
     public async Task<IActionResult> GetUsers()
     {
-        return CustomResponse(await _iUserService.GetUsersAsync(), FixConstants.SUCCESS_IN_DDL);
+        return CustomResponse(FixConstants.BADREQUEST_CODE, await _iUserService.GetUsersAsync(), FixConstants.SUCCESS_IN_DDL);
     }
 
     /// <summary>
@@ -100,7 +100,7 @@ public sealed class UsersController : GenericController
         if (result)
             return CreatedAtAction(nameof(Create), user);
 
-        return CustomResponse();
+        return CustomResponse(FixConstants.BADREQUEST_CODE);
     }
 
     [HttpPut("Update")]
@@ -125,7 +125,7 @@ public sealed class UsersController : GenericController
                 return CustomResponse();
         }
 
-        return CustomNotFound();
+        return CustomResponse(FixConstants.NOTFOUND_CODE);
     }
 
     [HttpDelete("LogicDelete/{id:long}")]
@@ -140,7 +140,7 @@ public sealed class UsersController : GenericController
                 return CustomResponse();
         }
 
-        return CustomNotFound();
+        return CustomResponse(FixConstants.NOTFOUND_CODE);
     }
 
     /// <summary>
@@ -183,6 +183,6 @@ public sealed class UsersController : GenericController
             return File(memoryStreamExcel.ToArray(), memoryStreamResult.Type, excelName);
         }
 
-        return CustomNotFound();
+        return CustomResponse(FixConstants.NOTFOUND_CODE);
     }
 }

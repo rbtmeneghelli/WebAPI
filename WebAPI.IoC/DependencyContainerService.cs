@@ -59,6 +59,7 @@ using Confluent.Kafka;
 using WebAPI.IoC.Middleware.HealthCheck;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using WebAPI.Application.Services.Tools;
+using WebAPI.Domain.Constants;
 
 namespace WebAPI.IoC;
 
@@ -356,6 +357,25 @@ public static class DependencyContainerService
                       ValidAudience = configuration["TokenSettings:Audience"],
                       IssuerSigningKey = new SymmetricSecurityKey
                       (Encoding.UTF8.GetBytes(configuration["TokenSettings:Key"]))
+                  };
+                  options.Events = new JwtBearerEvents
+                  {
+                      OnAuthenticationFailed = context =>
+                      {
+                          if (context.Exception is SecurityTokenExpiredException)
+                          {
+                              context.Response.StatusCode = (int)FixConstants.FORBIDDEN_CODE;
+                              context.Response.ContentType = "application/json";
+                              var response = new
+                              {
+                                  sucesso = false,
+                                  mensagem = FixConstants.MESSAGE_ERROR_FORB_EX
+                              };
+                              return context.Response.WriteAsJsonAsync(response);
+                          }
+
+                          return Task.CompletedTask;
+                      }
                   };
               });
 

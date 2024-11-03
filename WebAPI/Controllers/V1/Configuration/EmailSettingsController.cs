@@ -34,7 +34,7 @@ public sealed class EmailSettingsController : GenericController
     public async Task<IActionResult> GetAll()
     {
         var model = await _iGenericConfigurationService.EmailSettingsService.GetAllEmailSettingsAsync();
-        return CustomResponse(model, FixConstants.SUCCESS_IN_GETALL);
+        return CustomResponse(FixConstants.BADREQUEST_CODE, model, FixConstants.SUCCESS_IN_GETALL);
     }
 
     [HttpGet("GetByEnvironment")]
@@ -44,10 +44,10 @@ public sealed class EmailSettingsController : GenericController
         if (existRequiredPasswordSettings)
         {
             var model = await _iGenericConfigurationService.EmailSettingsService.GetEmailSettingsByEnvironmentAsync();
-            return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
+            return CustomResponse(FixConstants.BADREQUEST_CODE, model, FixConstants.SUCCESS_IN_GETID);
         }
 
-        return CustomNotFound();
+        return CustomResponse(FixConstants.NOTFOUND_CODE);
     }
 
     [HttpGet("GetById/{id:long}")]
@@ -57,10 +57,10 @@ public sealed class EmailSettingsController : GenericController
         if (existEmailSettings)
         {
             var model = await _iGenericConfigurationService.EmailSettingsService.GetEmailSettingsByIdAsync(id);
-            return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
+            return CustomResponse(FixConstants.BADREQUEST_CODE, model, FixConstants.SUCCESS_IN_GETID);
         }
 
-        return CustomNotFound();
+        return CustomResponse(FixConstants.NOTFOUND_CODE);
     }
 
     [HttpPost("Create")]
@@ -99,7 +99,7 @@ public sealed class EmailSettingsController : GenericController
                 return CustomResponse();
         }
 
-        return CustomNotFound();
+        return CustomResponse(FixConstants.NOTFOUND_CODE);
     }
 
     [HttpDelete("LogicDelete/{id:long}")]
@@ -114,7 +114,7 @@ public sealed class EmailSettingsController : GenericController
                 return CustomResponse();
         }
 
-        return CustomNotFound();
+        return CustomResponse(FixConstants.NOTFOUND_CODE);
     }
 
     [HttpPost("Reactive")]
@@ -129,7 +129,7 @@ public sealed class EmailSettingsController : GenericController
                 return CustomResponse();
         }
 
-        return CustomNotFound();
+        return CustomResponse(FixConstants.NOTFOUND_CODE);
     }
 
     [HttpPost("ExportData")]
@@ -146,6 +146,6 @@ public sealed class EmailSettingsController : GenericController
             return File(memoryStreamExcel.ToArray(), memoryStreamResult.Type, excelName);
         }
 
-        return CustomNotFound();
+        return CustomResponse(FixConstants.NOTFOUND_CODE);
     }
 }

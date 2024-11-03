@@ -78,8 +78,8 @@ public sealed class GeneralMethod
             { ".mp4", "video/mp4" }
         };
 
-        if(dictionary.TryGetValue(key, out var value))
-         return value;
+        if (dictionary.TryGetValue(key, out var value))
+            return value;
 
         return StringExtensionMethod.GetEmptyString();
     }
@@ -1432,6 +1432,11 @@ public sealed class GeneralMethod
         };
 
         return maxSize;
+    }
+
+    public static JsonSerializerOptions GetConfigJson()
+    {
+        return new JsonSerializerOptions { Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
     }
 }
 

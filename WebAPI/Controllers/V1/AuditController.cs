@@ -31,10 +31,10 @@ public sealed class AuditController : GenericController
         if (await _iAuditService.ExistAuditByIdAsync(id))
         {
             var model = _iMapperService.Map<AuditResponseDTO>(await _iAuditService.GetAuditByIdAsync(id));
-            return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
+            return CustomResponse(FixConstants.OK_CODE, model, FixConstants.SUCCESS_IN_GETID);
         }
 
-        return CustomNotFound();
+        return CustomResponse(FixConstants.NOTFOUND_CODE);
     }
 
     [HttpPost("GetAllPaginate")]
@@ -45,6 +45,6 @@ public sealed class AuditController : GenericController
 
         var model = await _iAuditService.GetAllAuditPaginateAsync(filter);
 
-        return CustomResponse(model, FixConstants.SUCCESS_IN_GETALLPAGINATE);
+        return CustomResponse(FixConstants.OK_CODE, model, FixConstants.SUCCESS_IN_GETALLPAGINATE);
     }
 }

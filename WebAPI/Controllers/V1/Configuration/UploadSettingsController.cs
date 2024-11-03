@@ -33,10 +33,10 @@ public sealed class UploadSettingsController : GenericController
         if (existUploadSettings)
         {
             var model = await _iGenericConfigurationService.UploadSettingsService.GetUploadSettingsByEnvironmentAsync();
-            return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
+            return CustomResponse(FixConstants.BADREQUEST_CODE, model, FixConstants.SUCCESS_IN_GETID);
         }
 
-        return CustomNotFound();
+        return CustomResponse(FixConstants.NOTFOUND_CODE);
     }
 
     [HttpGet("GetById/{id:long}")]
@@ -46,10 +46,10 @@ public sealed class UploadSettingsController : GenericController
         if (existUploadSettings)
         {
             var model = await _iGenericConfigurationService.UploadSettingsService.GetUploadSettingsByIdAsync(id);
-            return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
+            return CustomResponse(FixConstants.BADREQUEST_CODE, model, FixConstants.SUCCESS_IN_GETID);
         }
 
-        return CustomNotFound();
+        return CustomResponse(FixConstants.NOTFOUND_CODE);
     }
 
     [HttpPost("Create")]
@@ -85,7 +85,7 @@ public sealed class UploadSettingsController : GenericController
                 return CustomResponse();
         }
 
-        return CustomNotFound();
+        return CustomResponse(FixConstants.NOTFOUND_CODE);
     }
 
     [HttpDelete("LogicDelete/{id:long}")]
@@ -100,7 +100,7 @@ public sealed class UploadSettingsController : GenericController
                 return CustomResponse();
         }
 
-        return CustomNotFound();
+        return CustomResponse(FixConstants.NOTFOUND_CODE);
     }
 
     [HttpPost("Reactive")]
@@ -115,7 +115,7 @@ public sealed class UploadSettingsController : GenericController
                 return CustomResponse();
         }
 
-        return CustomNotFound();
+        return CustomResponse(FixConstants.NOTFOUND_CODE);
     }
 
 
@@ -126,12 +126,12 @@ public sealed class UploadSettingsController : GenericController
         {
             var files = await _iGenericConfigurationService.UploadSettingsService.GetUploadSettingsByEnvironmentAsync();
             _iMemoryCacheService.Set("FilesData", files);
-            return CustomResponse(files);
+            return CustomResponse(FixConstants.OK_CODE, files);
         }
         else
         {
             var files = _iMemoryCacheService.Get<UploadSettingsResponseDTO>("FilesData");
-            return CustomResponse(files);
+            return CustomResponse(FixConstants.OK_CODE, files);
         }
     }
 }

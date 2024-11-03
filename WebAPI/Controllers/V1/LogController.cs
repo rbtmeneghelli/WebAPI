@@ -19,7 +19,7 @@ public sealed class LogController : GenericController
         ILogService iLogService,
         IMapper iMapperService,
         IHttpContextAccessor iHttpContextAccessor,
-        IGenericNotifyLogsService iGenericNotifyLogsService) 
+        IGenericNotifyLogsService iGenericNotifyLogsService)
         : base(iMapperService, iHttpContextAccessor, iGenericNotifyLogsService)
     {
         _iLogService = iLogService;
@@ -31,10 +31,10 @@ public sealed class LogController : GenericController
         if (await _iLogService.ExistLogByIdAsync(id))
         {
             var model = _iMapperService.Map<UserResponseDTO>(await _iLogService.GetLogByIdAsync(id));
-            return CustomResponse(model, FixConstants.SUCCESS_IN_GETID);
+            return CustomResponse(FixConstants.OK_CODE, model, FixConstants.SUCCESS_IN_GETID);
         }
 
-        return CustomNotFound();
+        return CustomResponse(FixConstants.NOTFOUND_CODE);
     }
 
     [HttpPost("GetAllPaginate")]
@@ -44,6 +44,6 @@ public sealed class LogController : GenericController
 
         var model = await _iLogService.GetAllLogPaginateAsync(filter);
 
-        return CustomResponse(model, FixConstants.SUCCESS_IN_GETALLPAGINATE);
+        return CustomResponse(FixConstants.OK_CODE, model, FixConstants.SUCCESS_IN_GETALLPAGINATE);
     }
 }

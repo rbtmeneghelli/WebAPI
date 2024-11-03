@@ -36,7 +36,7 @@ public sealed class MediatorController : GenericController
 
         var result = ApplyMapToEntity<IEnumerable<Region>, IEnumerable<RegionQueryFilterResponse>>(model);
 
-        return CustomResponse(result, FixConstants.SUCCESS_IN_GETALLPAGINATE);
+        return CustomResponse(FixConstants.BADREQUEST_CODE, result, FixConstants.SUCCESS_IN_GETALLPAGINATE);
     }
 
     [HttpPost("GetById")]
@@ -46,7 +46,7 @@ public sealed class MediatorController : GenericController
 
         var result = ApplyMapToEntity<Region, RegionQueryFilterResponse>(model);
 
-        return CustomResponse(result, FixConstants.SUCCESS_IN_GETID);
+        return CustomResponse(FixConstants.BADREQUEST_CODE, result, FixConstants.SUCCESS_IN_GETID);
     }
 
     [ProducesResponseType(StatusCodes.Status201Created)]
@@ -59,9 +59,9 @@ public sealed class MediatorController : GenericController
         var result = await _mediator.Send(createRegionCommandRequest);
 
         if (result)
-            return CustomResponse();
+            return CustomResponse(FixConstants.OK_CODE);
 
-        return BadRequest();
+        return CustomResponse(FixConstants.BADREQUEST_CODE);
     }
 
     [HttpPut("Update")]
@@ -74,6 +74,6 @@ public sealed class MediatorController : GenericController
         if (result)
             return NoContent();
 
-        return CustomResponse();
+        return CustomResponse(FixConstants.OK_CODE);
     }
 }

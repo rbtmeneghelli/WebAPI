@@ -328,7 +328,7 @@ public class GeneralService : GenericService, IGeneralService
         return builder.ToString();
     }
 
-    public bool TokenIsValid(string jwtToken)
+    public bool ValidateToken(string jwtToken)
     {
         var handler = new JwtSecurityTokenHandler();
         var validations = new TokenValidationParameters
@@ -346,5 +346,24 @@ public class GeneralService : GenericService, IGeneralService
         var identity = handler.ValidateToken(jwtToken, validations, out var tokenSecure).Identity as ClaimsIdentity;
 
         return identity != null ? true : false;
+    }
+
+    public object ExtractDataToken(string token)
+    {
+        var handler = new JwtSecurityTokenHandler();
+        var jwtToken = handler.ReadJwtToken(token);
+        var claims = jwtToken.Claims.ToList();
+
+        //DadosParametrosTokenDTO dadosAutenticacaoTokenDTO = new();
+        //dadosAutenticacaoTokenDTO.Id = claims[0]?.Value;
+        //dadosAutenticacaoTokenDTO.UserNum = MetodosGeral.ObterValorCampoInteiro(claims[1]?.Value);
+        //dadosAutenticacaoTokenDTO.Nome = claims[2]?.Value;
+        //dadosAutenticacaoTokenDTO.PermissoesDetalhada = claims[3]?.Value;
+        //dadosAutenticacaoTokenDTO.Servidor = MetodosGeral.ObterValorCampoInteiro(claims[4]?.Value);
+        //dadosAutenticacaoTokenDTO.PermissaoDownloadDeSIDs = MetodosGeral.ObterValorCampoBooleano(claims[5]?.Value);
+        //dadosAutenticacaoTokenDTO.DownloadLP = MetodosGeral.ObterValorCampoBooleano(claims[6]?.Value);
+        //dadosAutenticacaoTokenDTO.DataValidade = MetodosGeral.ObterValorCampoDataHora(claims[7]?.Value);
+
+        return default;
     }
 }

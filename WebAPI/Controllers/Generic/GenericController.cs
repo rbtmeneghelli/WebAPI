@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using WebAPI.Domain.Constants;
 using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Domain.Interfaces.Repository;
-using ZXing;
 
 namespace WebAPI.Controllers.Base;
 
@@ -16,7 +15,7 @@ public abstract class GenericController : ControllerBase
     protected readonly IMapper _iMapperService;
     protected readonly IHttpContextAccessor _iHttpContextAccessor;
     protected readonly IGenericNotifyLogsService _iGenericNotifyLogsService;
-    
+
     protected long UserId { get; set; }
     protected string UserName { get; set; }
     protected long ProfileId { get; set; }
@@ -50,7 +49,7 @@ public abstract class GenericController : ControllerBase
     /// <param name="type">"http://exemplo.com/problemas/nao-encontrada"</param>
     /// <returns></returns>
 
-    private IActionResult ReturnErrorDetail(string detail, string instance = "", int statusCode = FixConstants.INTERNAL_ERROR_CODE, string title = "", string type = "")
+    private IActionResult ReturnErrorDetail(string detail, string instance = "", int statusCode = FixConstants.INTERNAL_CODE, string title = "", string type = "")
     {
         return Problem(detail, instance, statusCode, title, type);
     }
@@ -99,40 +98,10 @@ public abstract class GenericController : ControllerBase
         return !_iGenericNotifyLogsService.NotificationMessageService.HaveNotification();
     }
 
-    protected IActionResult CustomResponse(object result = null, string message = "")
-    {
-        if (OperationIsValid())
-        {
-            return Ok(new
-            {
-                success = true,
-                data = result,
-                message = message
-            });
-        }
-
-        //_iKissLogService.SaveLogOnSeriLog();
-
-        return BadRequest(new
-        {
-            success = false,
-            errors = _iGenericNotifyLogsService.NotificationMessageService.GetNotifications().Select(n => n.Message)
-        });
-    }
-
     protected IActionResult CustomResponse(ModelStateDictionary modelState)
     {
         NotificationModelIsInvalid(modelState);
         return CustomResponse();
-    }
-
-    protected IActionResult CustomNotFound()
-    {
-        return NotFound(new
-        {
-            success = true,
-            message = FixConstants.SUCCESS_IN_NOTFOUND
-        });
     }
 
     protected TDestination ApplyMapToEntity<TSource, TDestination>(TSource source)
@@ -153,21 +122,21 @@ public abstract class GenericController : ControllerBase
         {
             responseError.ExceptionError = contextException.Error.GetType().Name.ToString();
             responseError.Errors = FixConstants.MESSAGE_ERROR_UNAUTH_EX;
-            responseError.StatusCode = FixConstants.UNAUTHORIZED_ERROR_CODE;
+            responseError.StatusCode = FixConstants.UNAUTHORIZED_CODE;
         }
 
         else if (contextException.Error is ApplicationException || contextException.Error is Exception)
         {
             responseError.ExceptionError = contextException.Error.GetType().Name.ToString();
             responseError.Errors = FixConstants.MESSAGE_ERROR_APP_EX;
-            responseError.StatusCode = FixConstants.INTERNAL_ERROR_CODE;
+            responseError.StatusCode = FixConstants.INTERNAL_CODE;
         }
 
         else
         {
             responseError.ExceptionError = contextException.Error.GetType().Name.ToString();
             responseError.Errors = FixConstants.MESSAGE_ERROR_APP_EX;
-            responseError.StatusCode = FixConstants.INTERNAL_ERROR_CODE;
+            responseError.StatusCode = FixConstants.INTERNAL_CODE;
         }
 
         return ReturnErrorDetail($"Ocorreu um erro interno - {responseError.Errors}, Entre em contato com o administrador.", "", responseError.StatusCode);
@@ -176,5 +145,61 @@ public abstract class GenericController : ControllerBase
     protected bool ModelStateIsInvalid()
     {
         return ModelState.IsValid ? false : true;
+    }
+
+    /// METODO OPCIONAL
+    protected IActionResult CustomResponse(int codigoStatus = FixConstants.BADREQUEST_CODE, object result = null, string mensagemResposta = "")
+    {
+        if (codigoStatus.Equals(FixConstants.NOTFOUND_CODE))
+        {
+            return NotFound(new
+            {
+                successo = false,
+                mensagem = FixConstants.SUCCESS_IN_NOTFOUND
+            });
+        }
+
+        else if (codigoStatus.Equals(FixConstants.BADREQUEST_CODE))
+        {
+            return BadRequest(new
+            {
+                successo = false,
+                mensagem = string.Join(", ", _iGenericNotifyLogsService.NotificationMessageService.GetNotifications().Select(n => n.Message))
+            });
+        }
+
+        else if (codigoStatus.Equals(FixConstants.CREATED_CODE))
+        {
+            return Created("default", new
+            {
+                successo = false,
+                mensagem = mensagemResposta
+            });
+        }
+
+        else if (codigoStatus.Equals(FixConstants.UNAUTHORIZED_CODE))
+        {
+            return Unauthorized(new
+            {
+                successo = false,
+                mensagem = FixConstants.ERROR_TOKEN_INVALID
+            });
+        }
+
+        else if (OperationIsValid())
+        {
+            return Ok(new
+            {
+                successo = true,
+                data = result,
+                mensagem = mensagemResposta
+            });
+        }
+
+        return StatusCode((int)FixConstants.INTERNAL_CODE, new
+        {
+            sucesso = false,
+            mensagem = FixConstants.ERROR_INTERNAL
+        });
     }
 }
