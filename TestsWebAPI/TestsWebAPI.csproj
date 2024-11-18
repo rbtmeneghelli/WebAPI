@@ -35,7 +35,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WebAPI.Application\WebAPI.Application.csproj" />
-    <ProjectReference Include="..\WebAPI.Infra\WebAPI.Infra.csproj" />
+    <ProjectReference Include="..\WebAPI.InfraStructure\WebAPI.InfraStructure.Data\WebAPI.InfraStructure.Data.csproj" />
   </ItemGroup>
 
 </Project>

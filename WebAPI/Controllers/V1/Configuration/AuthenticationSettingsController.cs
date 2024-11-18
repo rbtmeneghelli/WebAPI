@@ -1,6 +1,6 @@
 ﻿using WebAPI.Domain.Constants;
 using WebAPI.Domain.Entities.Configuration;
-using WebAPI.Domain.EntitiesDTO.Configuration;
+using WebAPI.Domain.DTO.Configuration;
 using WebAPI.Domain.Enums;
 using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Domain.Interfaces.Repository;

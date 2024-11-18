@@ -1,15 +1,14 @@
 ﻿using WebAPI.Domain.ExtensionMethods;
-using Microsoft.AspNetCore.Cors;
 using WebAPI.Domain.Enums;
-using WebAPI.IoC.Middleware.Security;
 using WebAPI.Domain.Interfaces.Services.Tools;
 using WebAPI.Domain.Interfaces.Services.Configuration;
-using WebAPI.IoC.ActionFilter;
 using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.Interfaces.Services;
 using Microsoft.AspNetCore.SignalR;
-using WebAPI.IoC.Middleware.SignalR;
 using WebAPI.Domain.Constants;
+using WebAPI.Infrastructure.CrossCutting.ActionFilter;
+using WebAPI.Infrastructure.CrossCutting.Middleware.Security;
+using WebAPI.Infrastructure.CrossCutting.Middleware.SignalR;
 
 namespace WebAPI.V1.Controllers;
 

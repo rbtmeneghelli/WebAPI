@@ -2,7 +2,7 @@
 using WebAPI.Application.Generic;
 using WebAPI.Domain.Constants;
 using WebAPI.Domain.Entities.Others;
-using WebAPI.Domain.EntitiesDTO.Others;
+using WebAPI.Domain.DTO.Others;
 using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Domain.Filters.Others;
 using WebAPI.Domain.Interfaces.Repository;

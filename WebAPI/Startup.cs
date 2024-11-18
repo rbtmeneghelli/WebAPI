@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore;
-using WebAPI.Infra.Data.Context;
-using WebAPI.IoC;
-using WebAPI.IoC.Middleware.ExceptionHandler;
+using WebAPI.InfraStructure.IoC.Containers;
+using WebAPI.InfraStructure.Data.Context;
+using WebAPI.Infrastructure.CrossCutting.Middleware.ExceptionHandler;
 
 public class WebAPIContextFactory : IDesignTimeDbContextFactory<WebAPIContext>
 {
@@ -52,19 +52,19 @@ public class Startup
         // Add functionality to inject IOptions<T> (Fazer o IOptions<T> na controller)
         // services.AddOptions();
 
-        DependencyContainerService.RegisterDbConnection(services, _configuration);
-        DependencyContainerService.RegisterServices(services);
-        DependencyContainerService.RegisterMapperConfig(services);
-        DependencyContainerService.RegisterConfigs(services, _configuration);
-        DependencyContainerService.RegisterPolicy(services);
-        DependencyContainerService.RegisterCorsConfigRestriction(services, _configuration);
-        DependencyContainerService.RegisterJwtConfig(services, _configuration);
-        DependencyContainerService.RegisterHttpClientConfig(services);
+        ContainerService.RegisterDbConnection(services, _configuration);
+        ContainerService.RegisterServices(services);
+        ContainerService.RegisterMapperConfig(services);
+        ContainerService.RegisterConfigs(services, _configuration);
+        ContainerService.RegisterPolicy(services);
+        ContainerService.RegisterCorsConfigRestriction(services, _configuration);
+        ContainerService.RegisterJwtConfig(services, _configuration);
+        ContainerService.RegisterHttpClientConfig(services);
         services.AddHttpContextAccessor();
-        DependencyContainerService.RegisterSeriLog(services, _configuration);
-        DependencyContainerService.RegisterKissLog(services);
-        DependencyContainerSwagger.RegisterSwaggerConfig(services);
-        DependencyContainerService.RegisterMediator(services);
+        ContainerService.RegisterSeriLog(services, _configuration);
+        ContainerService.RegisterKissLog(services);
+        ContainerSwagger.RegisterSwaggerConfig(services);
+        ContainerService.RegisterMediator(services);
         services.AddMemoryCache();
         services.AddControllers();
         services.AddApiVersioning(options =>
@@ -87,14 +87,14 @@ public class Startup
 
         services.AddExceptionHandler<GlobalExceptionHandler>();
         services.AddProblemDetails();
-        DependencyContainerService.RegisterHealthCheck(services, _configuration);
-        DependencyContainerService.RegisterHealthCheckDashboard(services);
+        ContainerService.RegisterHealthCheck(services, _configuration);
+        ContainerService.RegisterHealthCheckDashboard(services);
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider, IConfiguration configuration)
     {
-        DependencyContainerApp.UseAppConfig(app, env, configuration);
-        DependencyContainerSwagger.UseSwaggerConfig(app, provider);
+        ContainerApp.UseAppConfig(app, env, configuration);
+        ContainerSwagger.UseSwaggerConfig(app, provider);
     }
 }
 

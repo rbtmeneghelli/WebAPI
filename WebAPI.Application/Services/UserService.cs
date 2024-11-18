@@ -3,7 +3,7 @@ using WebAPI.Application.Generic;
 using WebAPI.Domain.Constants;
 using WebAPI.Domain.Cryptography;
 using WebAPI.Domain.Entities.ControlPanel;
-using WebAPI.Domain.EntitiesDTO.ControlPanel;
+using WebAPI.Domain.DTO.ControlPanel;
 using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Domain.Filters.ControlPanel;
 using WebAPI.Domain.Interfaces.Repository;

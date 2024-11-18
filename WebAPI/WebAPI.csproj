@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WebAPI.IoC\WebAPI.IoC.csproj" />
+    <ProjectReference Include="..\WebAPI.InfraStructure\WebAPI.InfraStructure.IoC\WebAPI.InfraStructure.IoC.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,5 +1,5 @@
 ﻿using WebAPI.Domain.Constants;
-using WebAPI.Domain.EntitiesDTO.ControlPanel;
+using WebAPI.Domain.DTO.ControlPanel;
 using WebAPI.Domain.Filters.Others;
 using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.Interfaces.Services;

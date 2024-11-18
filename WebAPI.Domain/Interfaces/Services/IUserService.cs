@@ -1,6 +1,6 @@
 ﻿
 using WebAPI.Domain.Entities.ControlPanel;
-using WebAPI.Domain.EntitiesDTO.ControlPanel;
+using WebAPI.Domain.DTO.ControlPanel;
 using WebAPI.Domain.Filters.ControlPanel;
 using WebAPI.Domain.Models;
 

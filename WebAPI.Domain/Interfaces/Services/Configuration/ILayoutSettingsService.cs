@@ -1,5 +1,5 @@
 ﻿using WebAPI.Domain.Entities.Configuration;
-using WebAPI.Domain.EntitiesDTO.Configuration;
+using WebAPI.Domain.DTO.Configuration;
 
 public interface ILayoutSettingsService
 {

@@ -1,5 +1,5 @@
 ﻿using WebAPI.Domain.Entities.Others;
-using WebAPI.Domain.EntitiesDTO.Others;
+using WebAPI.Domain.DTO.Others;
 using WebAPI.Domain.Models;
 
 namespace WebAPI.Domain.Interfaces.Services;

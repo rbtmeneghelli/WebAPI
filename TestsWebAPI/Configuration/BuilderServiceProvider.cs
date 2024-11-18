@@ -3,7 +3,7 @@ using WebAPI.Application.Services.Tools;
 using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.Interfaces.Services;
 using WebAPI.Domain.Interfaces.Services.Tools;
-using WebAPI.Infra.Repositories.Others;
+using WebAPI.InfraStructure.Data.Repositories.Others;
 
 namespace TestsWebAPI.Configuration;
 

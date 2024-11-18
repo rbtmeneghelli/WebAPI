@@ -4,9 +4,9 @@ using WebAPI.Domain.Cryptography;
 using WebAPI.Domain.Entities.Configuration;
 using WebAPI.Domain.Entities.ControlPanel;
 using WebAPI.Domain.Entities.Others;
-using WebAPI.Domain.EntitiesDTO.Configuration;
-using WebAPI.Domain.EntitiesDTO.ControlPanel;
-using WebAPI.Domain.EntitiesDTO.Others;
+using WebAPI.Domain.DTO.Configuration;
+using WebAPI.Domain.DTO.ControlPanel;
+using WebAPI.Domain.DTO.Others;
 using WebAPI.Domain.ExtensionMethods;
 
 namespace WebAPI.Application.Mapping;

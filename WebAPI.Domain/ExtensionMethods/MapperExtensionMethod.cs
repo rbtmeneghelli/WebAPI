@@ -1,5 +1,5 @@
 ﻿using WebAPI.Domain.Entities.ControlPanel;
-using WebAPI.Domain.EntitiesDTO.ControlPanel;
+using WebAPI.Domain.DTO.ControlPanel;
 
 namespace WebAPI.Domain.ExtensionMethods;
 

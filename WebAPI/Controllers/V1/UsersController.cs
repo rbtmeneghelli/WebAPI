@@ -1,6 +1,6 @@
 ﻿using WebAPI.Domain.Constants;
 using WebAPI.Domain.Entities.ControlPanel;
-using WebAPI.Domain.EntitiesDTO.ControlPanel;
+using WebAPI.Domain.DTO.ControlPanel;
 using WebAPI.Domain.Enums;
 using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Domain.Filters.ControlPanel;

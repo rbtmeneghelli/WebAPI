@@ -1,7 +1,7 @@
 ﻿using WebAPI.Application.Factory;
 using WebAPI.Application.Generic;
 using WebAPI.Domain.Constants;
-using WebAPI.Domain.EntitiesDTO.Others;
+using WebAPI.Domain.DTO.Others;
 using WebAPI.Domain.Entities.Others;
 using WebAPI.Domain.Interfaces.Services.Tools;
 using WebAPI.Domain.Interfaces.Services;

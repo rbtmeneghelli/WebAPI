@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using WebAPI.IoC;
+using WebAPI.InfraStructure.IoC.Containers;
 
 namespace WebJobs.Core
 {
@@ -22,7 +22,7 @@ namespace WebJobs.Core
             var host = new HostBuilder()
                 .ConfigureWebJobs(builder =>
                 {
-                    DependencyContainerService.RegisterServices(builder.Services);
+                    ContainerService.RegisterServices(builder.Services);
                     builder.AddAzureStorageBlobs();
                     builder.AddTimers();
                     builder.AddHttp();

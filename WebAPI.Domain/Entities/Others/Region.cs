@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Text.Json.Serialization;
 using WebAPI.Domain.Entities.Generic;
-using WebAPI.Domain.EntitiesDTO.Others;
+using WebAPI.Domain.DTO.Others;
 
 namespace WebAPI.Domain.Entities.Others;
 
