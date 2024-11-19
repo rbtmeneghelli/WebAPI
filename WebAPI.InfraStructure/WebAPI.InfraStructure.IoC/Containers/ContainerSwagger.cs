@@ -140,6 +140,9 @@ public class SwaggerDefaultValues : IOperationFilter
 {
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {
+        operation.Responses.Add("401", new OpenApiResponse { Description = "Não autorizado. Falha de autenticação.",  });
+        operation.Responses.Add("403", new OpenApiResponse { Description = "Forbidden" });
+
         operation.Deprecated = context.ApiDescription.IsDeprecated() ? true : OpenApiOperation.DeprecatedDefault;
 
         if (GuardClauses.ObjectIsNull(operation.Parameters))

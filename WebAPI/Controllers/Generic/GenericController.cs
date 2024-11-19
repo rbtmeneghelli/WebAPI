@@ -148,58 +148,64 @@ public abstract class GenericController : ControllerBase
     }
 
     /// METODO OPCIONAL
-    protected IActionResult CustomResponse(int codigoStatus = FixConstants.BADREQUEST_CODE, object result = null, string mensagemResposta = "")
+    protected IActionResult CustomResponse(int statusCode = FixConstants.BADREQUEST_CODE, object result = null, string messageToSend = "")
     {
-        if (codigoStatus.Equals(FixConstants.NOTFOUND_CODE))
+        if (OperationIsValid())
         {
-            return NotFound(new
+            if (statusCode.Equals(FixConstants.CREATED_CODE))
             {
-                successo = false,
-                mensagem = FixConstants.SUCCESS_IN_NOTFOUND
-            });
+                return Created("default", new
+                {
+                    success = false,
+                    message = messageToSend
+                });
+            }
+            else
+            {
+                return Ok(new
+                {
+                    success = true,
+                    data = result,
+                    message = messageToSend
+                });
+            }
         }
-
-        else if (codigoStatus.Equals(FixConstants.BADREQUEST_CODE))
+        else
         {
-            return BadRequest(new
-            {
-                successo = false,
-                mensagem = string.Join(", ", _iGenericNotifyLogsService.NotificationMessageService.GetNotifications().Select(n => n.Message))
-            });
-        }
+            messageToSend = string.Join(", ", _iGenericNotifyLogsService.NotificationMessageService.GetNotifications().Select(n => n.Message));
 
-        else if (codigoStatus.Equals(FixConstants.CREATED_CODE))
-        {
-            return Created("default", new
+            if (statusCode.Equals(FixConstants.NOTFOUND_CODE))
             {
-                successo = false,
-                mensagem = mensagemResposta
-            });
-        }
+                return NotFound(new
+                {
+                    success = false,
+                    message = FixConstants.SUCCESS_IN_NOTFOUND
+                });
+            }
 
-        else if (codigoStatus.Equals(FixConstants.UNAUTHORIZED_CODE))
-        {
-            return Unauthorized(new
+            else if (statusCode.Equals(FixConstants.BADREQUEST_CODE))
             {
-                successo = false,
-                mensagem = FixConstants.ERROR_TOKEN_INVALID
-            });
-        }
+                return BadRequest(new
+                {
+                    success = false,
+                    message = messageToSend
+                });
+            }
 
-        else if (OperationIsValid())
-        {
-            return Ok(new
+            else if (statusCode.Equals(FixConstants.UNAUTHORIZED_CODE))
             {
-                successo = true,
-                data = result,
-                mensagem = mensagemResposta
-            });
+                return Unauthorized(new
+                {
+                    success = false,
+                    message = FixConstants.ERROR_TOKEN_INVALID
+                });
+            }
         }
 
         return StatusCode((int)FixConstants.INTERNAL_CODE, new
         {
-            sucesso = false,
-            mensagem = FixConstants.ERROR_INTERNAL
+            success = false,
+            message = FixConstants.ERROR_INTERNAL
         });
     }
 }

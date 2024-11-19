@@ -89,6 +89,7 @@ public class Startup
         services.AddProblemDetails();
         ContainerService.RegisterHealthCheck(services, _configuration);
         ContainerService.RegisterHealthCheckDashboard(services);
+        ContainerService.RegisterSignalR(services);
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider, IConfiguration configuration)

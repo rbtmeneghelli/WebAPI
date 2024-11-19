@@ -61,6 +61,11 @@ using WebAPI.InfraStructure.Data.Repositories.Configuration;
 using WebAPI.Application.Factory;
 using WebAPI.Domain.Interfaces.Factory;
 using ProblemDetailsFactory = WebAPI.Application.Factory.ProblemDetailsFactory;
+using Microsoft.AspNetCore.Http.Features;
+using WebAPI.Domain.ExtensionMethods;
+using System.Buffers.Text;
+using WebAPI.Domain.Cryptography;
+using WebAPI.Infrastructure.CrossCutting.ActionFilter;
 
 namespace WebAPI.InfraStructure.IoC.Containers;
 
@@ -274,6 +279,8 @@ public static class ContainerService
         .AddTransient<IProblemDetailsFactory, ProblemDetailsFactory>()
         .AddScoped<ISendGridService, SendGridService>()
         .AddScoped<IAzureService, AzureService>();
+
+        services.AddScoped<IPBlockActionFilter, IPBlockActionFilter>();
     }
 
     public static void RegisterMapperConfig(this IServiceCollection services)
@@ -364,23 +371,89 @@ public static class ContainerService
                       IssuerSigningKey = new SymmetricSecurityKey
                       (Encoding.UTF8.GetBytes(configuration["TokenSettings:Key"]))
                   };
+                  //options.Events = new JwtBearerEvents
+                  //{
+                  //    OnAuthenticationFailed = context =>
+                  //    {
+                  //        if (context.Exception is SecurityTokenExpiredException)
+                  //        {
+                  //            context.Response.StatusCode = (int)FixConstants.FORBIDDEN_CODE;
+                  //            context.Response.ContentType = "application/json";
+                  //            var response = new
+                  //            {
+                  //                sucesso = false,
+                  //                mensagem = FixConstants.MESSAGE_ERROR_FORB_EX
+                  //            };
+                  //            return context.Response.WriteAsJsonAsync(response);
+                  //        }
+
+                  //        return Task.CompletedTask;
+                  //    }
+                  //};
+
+                  //Processo para validar token criptografado
                   options.Events = new JwtBearerEvents
                   {
-                      OnAuthenticationFailed = context =>
+                      OnMessageReceived = async context =>
                       {
-                          if (context.Exception is SecurityTokenExpiredException)
+                          var endpoint = context.HttpContext.Features.Get<IEndpointFeature>()?.Endpoint;
+                          if (endpoint != null && endpoint.Metadata.GetMetadata<IAllowAnonymous>() != null)
                           {
-                              context.Response.StatusCode = (int)FixConstants.FORBIDDEN_CODE;
+                              return;
+                          }
+
+                          else if (context.Request.Headers.TryGetValue("Authorization", out var tokenHeader))
+                          {
+                              var iGeneralService = context.HttpContext.RequestServices.GetRequiredService<IGeneralService>();
+                              var tokenAuthAPI = StringExtensionMethod.ReplaceStringText(tokenHeader.ToString(), "Bearer ", "");
+
+                              if (GuardClauses.IsNullOrWhiteSpace(tokenAuthAPI))
+                              {
+                                  return;
+                              }
+
+                              else if (Base64.IsValid(tokenAuthAPI))
+                              {
+                                  try
+                                  {
+                                      string tokenDescriptografado = CryptographyTokenService.DecryptToken(tokenAuthAPI, configuration["TokenSettings:Key"]);
+                                      if (iGeneralService.ValidateToken(tokenDescriptografado))
+                                          context.Token = tokenDescriptografado;
+                                  }
+                                  catch
+                                  {
+                                      return;
+                                  }
+                              }
+                          }
+
+                          await Task.CompletedTask;
+                          return;
+                      },
+                      OnChallenge = async context =>
+                      {
+                          if (context.Error == "invalid_token" || context.Error == "missing_token")
+                          {
+                              context.Response.StatusCode = FixConstants.FORBIDDEN_CODE;
                               context.Response.ContentType = "application/json";
-                              var response = new
+                              var responseForbidden = new
                               {
                                   sucesso = false,
                                   mensagem = FixConstants.MESSAGE_ERROR_FORB_EX
                               };
-                              return context.Response.WriteAsJsonAsync(response);
+                              await context.Response.WriteAsJsonAsync(responseForbidden);
+                              return;
                           }
 
-                          return Task.CompletedTask;
+                          context.Response.StatusCode = FixConstants.UNAUTHORIZED_CODE;
+                          context.Response.ContentType = "application/json";
+                          var response = new
+                          {
+                              sucesso = false,
+                              mensagem = FixConstants.MESSAGE_ERROR_UNAUTH_EX
+                          };
+                          await context.Response.WriteAsJsonAsync(response);
+                          return;
                       }
                   };
               });

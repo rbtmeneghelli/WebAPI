@@ -117,4 +117,8 @@ public sealed class DateOnlyExtensionMethods
     }
 
     public static bool IsAdultPerson(DateTime birthDate) => birthDate <= GetDateTimeNowFromBrazil().AddYears(-18);
+
+    /// <param name="date">"2024-11-12 17:45:00.000"</param>
+    /// <param name="format">"yyyy-MM-dd HH:mm:ss.fff"</param>
+    public static DateTime ConverterStringParaDateTime(string date, string format) => DateTime.ParseExact(date, format, System.Globalization.CultureInfo.InvariantCulture);
 }

@@ -6,6 +6,8 @@ using WebAPI.Application.Generic;
 using WebAPI.Domain.Constants;
 using WebAPI.Domain.Interfaces.Services.Tools;
 using WebAPI.Domain.Interfaces.Services;
+using WebAPI.Domain.Cryptography;
+using System.Text;
 
 namespace WebAPI.Application.Services;
 
@@ -50,7 +52,9 @@ public class GeneralService : GenericService, IGeneralService
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
         var token = tokenHandler.CreateToken(tokenDescriptor);
-        return tokenHandler.WriteToken(token);
+        var tokenAuth = tokenHandler.WriteToken(token);
+        tokenAuth = CryptographyTokenService.EncryptToken(tokenAuth, _tokenSettings.Key);
+        return tokenAuth;
     }
 
     public async Task<RequestData> RequestDataToExternalAPIAsync(string url)
@@ -340,12 +344,15 @@ public class GeneralService : GenericService, IGeneralService
             ClockSkew = TimeSpan.Zero,
             ValidIssuer = _tokenSettings.Issuer,
             ValidAudience = _tokenSettings.Audience,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtToken))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_tokenSettings.Key))
         };
 
-        var identity = handler.ValidateToken(jwtToken, validations, out var tokenSecure).Identity as ClaimsIdentity;
+        if (GuardClauses.IsNullOrWhiteSpace(jwtToken))
+            return false;
 
-        return identity != null ? true : false;
+        var tokenData = handler.ValidateToken(jwtToken, validations, out var tokenSecure).Identity as ClaimsIdentity;
+        bool tokenIsValid = tokenData != null ? true : false;
+        return tokenIsValid;
     }
 
     public object ExtractDataToken(string token)

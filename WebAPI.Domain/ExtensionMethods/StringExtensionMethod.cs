@@ -158,13 +158,13 @@ public static class StringExtensionMethod
             return value.ApplyReplace("\'", "").ApplyReplace("\"", "").ApplyTrim();
         return value;
     }
-    public static string FormatCnpj(this string texto)
+    public static string FormatCnpj(this string text)
     {
-        return Convert.ToUInt64(texto).ToString(@"00\.000\.000\/0000\-00");
+        return Convert.ToUInt64(text).ToString(@"00\.000\.000\/0000\-00");
     }
-    public static string FormatCpf(this string texto)
+    public static string FormatCpf(this string text)
     {
-        return Convert.ToUInt64(texto).ToString(@"000\.000\.000\-00");
+        return Convert.ToUInt64(text).ToString(@"000\.000\.000\-00");
     }
     public static string FormatStringBase64ToString(this string text)
     {
@@ -186,4 +186,8 @@ public static class StringExtensionMethod
     }
 
     #endregion
+
+    public static string FormatDateTimeToString(this DateTime? date) => date.HasValue ? date.Value.ToString("yyyy-MM-dd HH:mm:ss.fff") : string.Empty;
+
+    public static string ReplaceStringText(string text, string textToTrade, string newText) => Regex.Replace(text, textToTrade, newText, RegexOptions.IgnoreCase);
 }
