@@ -371,27 +371,6 @@ public static class ContainerService
                       IssuerSigningKey = new SymmetricSecurityKey
                       (Encoding.UTF8.GetBytes(configuration["TokenSettings:Key"]))
                   };
-                  //options.Events = new JwtBearerEvents
-                  //{
-                  //    OnAuthenticationFailed = context =>
-                  //    {
-                  //        if (context.Exception is SecurityTokenExpiredException)
-                  //        {
-                  //            context.Response.StatusCode = (int)FixConstants.FORBIDDEN_CODE;
-                  //            context.Response.ContentType = "application/json";
-                  //            var response = new
-                  //            {
-                  //                sucesso = false,
-                  //                mensagem = FixConstants.MESSAGE_ERROR_FORB_EX
-                  //            };
-                  //            return context.Response.WriteAsJsonAsync(response);
-                  //        }
-
-                  //        return Task.CompletedTask;
-                  //    }
-                  //};
-
-                  //Processo para validar token criptografado
                   options.Events = new JwtBearerEvents
                   {
                       OnMessageReceived = async context =>
@@ -434,6 +413,7 @@ public static class ContainerService
                       {
                           if (context.Error == "invalid_token" || context.Error == "missing_token")
                           {
+                              context.HandleResponse();
                               context.Response.StatusCode = FixConstants.FORBIDDEN_CODE;
                               context.Response.ContentType = "application/json";
                               var responseForbidden = new
@@ -445,6 +425,7 @@ public static class ContainerService
                               return;
                           }
 
+                          context.HandleResponse();
                           context.Response.StatusCode = FixConstants.UNAUTHORIZED_CODE;
                           context.Response.ContentType = "application/json";
                           var response = new
