@@ -49,7 +49,7 @@ public abstract class GenericController : ControllerBase
     /// <param name="type">"http://exemplo.com/problemas/nao-encontrada"</param>
     /// <returns></returns>
 
-    private IActionResult ReturnErrorDetail(string detail, string instance = "", int statusCode = FixConstants.INTERNAL_CODE, string title = "", string type = "")
+    private IActionResult ReturnErrorDetail(string detail, string instance = "", int statusCode = ConstantHttpStatusCode.INTERNAL_ERROR_CODE, string title = "", string type = "")
     {
         return Problem(detail, instance, statusCode, title, type);
     }
@@ -101,7 +101,7 @@ public abstract class GenericController : ControllerBase
     protected IActionResult CustomResponse(ModelStateDictionary modelState)
     {
         NotificationModelIsInvalid(modelState);
-        return CustomResponse();
+        return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
     }
 
     protected TDestination ApplyMapToEntity<TSource, TDestination>(TSource source)
@@ -122,21 +122,21 @@ public abstract class GenericController : ControllerBase
         {
             responseError.ExceptionError = contextException.Error.GetType().Name.ToString();
             responseError.Errors = FixConstants.MESSAGE_ERROR_UNAUTH_EX;
-            responseError.StatusCode = FixConstants.UNAUTHORIZED_CODE;
+            responseError.StatusCode = ConstantHttpStatusCode.UNAUTHORIZED_CODE;
         }
 
         else if (contextException.Error is ApplicationException || contextException.Error is Exception)
         {
             responseError.ExceptionError = contextException.Error.GetType().Name.ToString();
             responseError.Errors = FixConstants.MESSAGE_ERROR_APP_EX;
-            responseError.StatusCode = FixConstants.INTERNAL_CODE;
+            responseError.StatusCode = ConstantHttpStatusCode.INTERNAL_ERROR_CODE;
         }
 
         else
         {
             responseError.ExceptionError = contextException.Error.GetType().Name.ToString();
             responseError.Errors = FixConstants.MESSAGE_ERROR_APP_EX;
-            responseError.StatusCode = FixConstants.INTERNAL_CODE;
+            responseError.StatusCode = ConstantHttpStatusCode.INTERNAL_ERROR_CODE;
         }
 
         return ReturnErrorDetail($"Ocorreu um erro interno - {responseError.Errors}, Entre em contato com o administrador.", "", responseError.StatusCode);
@@ -147,65 +147,28 @@ public abstract class GenericController : ControllerBase
         return ModelState.IsValid ? false : true;
     }
 
-    /// METODO OPCIONAL
-    protected IActionResult CustomResponse(int statusCode = FixConstants.BADREQUEST_CODE, object result = null, string messageToSend = "")
+    protected IActionResult CustomResponse(int statusCode = ConstantHttpStatusCode.OK_CODE, object result = null, string messageToSend = "")
     {
-        if (OperationIsValid())
+        int[] arrStatusCode = [ConstantHttpStatusCode.OK_CODE, ConstantHttpStatusCode.CREATE_CODE];
+
+        if (OperationIsValid() && arrStatusCode.Contains(statusCode))
         {
-            if (statusCode.Equals(FixConstants.CREATED_CODE))
+            return StatusCode(statusCode, new
             {
-                return Created("default", new
-                {
-                    success = false,
-                    message = messageToSend
-                });
-            }
-            else
-            {
-                return Ok(new
-                {
-                    success = true,
-                    data = result,
-                    message = messageToSend
-                });
-            }
+                success = true,
+                data = result,
+                message = messageToSend
+            });
         }
         else
         {
-            messageToSend = string.Join(", ", _iGenericNotifyLogsService.NotificationMessageService.GetNotifications().Select(n => n.Message));
-
-            if (statusCode.Equals(FixConstants.NOTFOUND_CODE))
+            return StatusCode(statusCode, new
             {
-                return NotFound(new
-                {
-                    success = false,
-                    message = FixConstants.SUCCESS_IN_NOTFOUND
-                });
-            }
-
-            else if (statusCode.Equals(FixConstants.BADREQUEST_CODE))
-            {
-                return BadRequest(new
-                {
-                    success = false,
-                    message = messageToSend
-                });
-            }
-
-            else if (statusCode.Equals(FixConstants.UNAUTHORIZED_CODE))
-            {
-                return Unauthorized(new
-                {
-                    success = false,
-                    message = FixConstants.ERROR_TOKEN_INVALID
-                });
-            }
+                success = false,
+                message = _iGenericNotifyLogsService.NotificationMessageService.HaveNotification()
+                          ? ConstantMessageResponse.GetMessageResponse(statusCode)
+                          : string.Join(',', _iGenericNotifyLogsService.NotificationMessageService.GetNotifications().Select(n => n.Message))
+            });
         }
-
-        return StatusCode((int)FixConstants.INTERNAL_CODE, new
-        {
-            success = false,
-            message = FixConstants.ERROR_INTERNAL
-        });
     }
 }

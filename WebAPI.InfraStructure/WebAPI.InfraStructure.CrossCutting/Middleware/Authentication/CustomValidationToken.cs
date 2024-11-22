@@ -61,21 +61,21 @@ public sealed class CustomValidationToken
                             }
                             else
                             {
-                                context.Response.StatusCode = (int)FixConstants.UNAUTHORIZED_CODE;
+                                context.Response.StatusCode = ConstantHttpStatusCode.UNAUTHORIZED_CODE;
                                 await context.Response.WriteAsync(JsonSerializer.Serialize(new { mensagem = FixConstants.ERROR_TOKEN_INVALID, sucesso = false }, GeneralMethod.GetConfigJson()));
                                 return;
                             }
                         }
                         else
                         {
-                            context.Response.StatusCode = (int)FixConstants.UNAUTHORIZED_CODE;
+                            context.Response.StatusCode = ConstantHttpStatusCode.UNAUTHORIZED_CODE;
                             await context.Response.WriteAsync(JsonSerializer.Serialize(new { mensagem = FixConstants.ERROR_TOKEN_INVALID, sucesso = false }, GeneralMethod.GetConfigJson()));
                             return;
                         }
                     }
                     else
                     {
-                        context.Response.StatusCode = (int)FixConstants.UNAUTHORIZED_CODE;
+                        context.Response.StatusCode = ConstantHttpStatusCode.UNAUTHORIZED_CODE;
                         await context.Response.WriteAsync(JsonSerializer.Serialize(new { mensagem = FixConstants.ERROR_TOKEN_INVALID, sucesso = false }, GeneralMethod.GetConfigJson()));
                         return;
                     }
@@ -83,7 +83,7 @@ public sealed class CustomValidationToken
             }
             catch (Exception ex)
             {
-                context.Response.StatusCode = (int)FixConstants.INTERNAL_CODE;
+                context.Response.StatusCode = ConstantHttpStatusCode.INTERNAL_ERROR_CODE;
                 await context.Response.WriteAsync(JsonSerializer.Serialize(new { mensagem = ex.Message, sucesso = false }, GeneralMethod.GetConfigJson()));
                 return;
             }

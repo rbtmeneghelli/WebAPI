@@ -1,4 +1,5 @@
-﻿using WebAPI.Domain.DTO.Others;
+﻿using WebAPI.Domain.Constants;
+using WebAPI.Domain.DTO.Others;
 using WebAPI.Domain.Filters.Others;
 using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.Interfaces.Services;
@@ -31,10 +32,10 @@ public sealed class AuditController : GenericController
         if (await _iAuditService.ExistAuditByIdAsync(id))
         {
             var model = _iMapperService.Map<AuditResponseDTO>(await _iAuditService.GetAuditByIdAsync(id));
-            return CustomResponse(FixConstants.OK_CODE, model, FixConstants.SUCCESS_IN_GETID);
+            return CustomResponse(ConstantHttpStatusCode.OK_CODE, model, FixConstants.SUCCESS_IN_GETID);
         }
 
-        return CustomResponse(FixConstants.NOTFOUND_CODE);
+        return CustomResponse(ConstantHttpStatusCode.NOT_FOUND_CODE);
     }
 
     [HttpPost("GetAllPaginate")]
@@ -45,6 +46,6 @@ public sealed class AuditController : GenericController
 
         var model = await _iAuditService.GetAllAuditPaginateAsync(filter);
 
-        return CustomResponse(FixConstants.OK_CODE, model, FixConstants.SUCCESS_IN_GETALLPAGINATE);
+        return CustomResponse(ConstantHttpStatusCode.OK_CODE, model, FixConstants.SUCCESS_IN_GETALLPAGINATE);
     }
 }

@@ -31,10 +31,10 @@ public sealed class LogController : GenericController
         if (await _iLogService.ExistLogByIdAsync(id))
         {
             var model = _iMapperService.Map<UserResponseDTO>(await _iLogService.GetLogByIdAsync(id));
-            return CustomResponse(FixConstants.OK_CODE, model, FixConstants.SUCCESS_IN_GETID);
+            return CustomResponse(ConstantHttpStatusCode.OK_CODE, model, FixConstants.SUCCESS_IN_GETID);
         }
 
-        return CustomResponse(FixConstants.NOTFOUND_CODE);
+        return CustomResponse(ConstantHttpStatusCode.NOT_FOUND_CODE);
     }
 
     [HttpPost("GetAllPaginate")]
@@ -44,6 +44,6 @@ public sealed class LogController : GenericController
 
         var model = await _iLogService.GetAllLogPaginateAsync(filter);
 
-        return CustomResponse(FixConstants.OK_CODE, model, FixConstants.SUCCESS_IN_GETALLPAGINATE);
+        return CustomResponse(ConstantHttpStatusCode.OK_CODE, model, FixConstants.SUCCESS_IN_GETALLPAGINATE);
     }
 }

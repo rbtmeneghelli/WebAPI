@@ -414,7 +414,7 @@ public static class ContainerService
                           if (context.Error == "invalid_token" || context.Error == "missing_token")
                           {
                               context.HandleResponse();
-                              context.Response.StatusCode = FixConstants.FORBIDDEN_CODE;
+                              context.Response.StatusCode = ConstantHttpStatusCode.FORBIDDEN_CODE;
                               context.Response.ContentType = "application/json";
                               var responseForbidden = new
                               {
@@ -426,7 +426,7 @@ public static class ContainerService
                           }
 
                           context.HandleResponse();
-                          context.Response.StatusCode = FixConstants.UNAUTHORIZED_CODE;
+                          context.Response.StatusCode = ConstantHttpStatusCode.UNAUTHORIZED_CODE;
                           context.Response.ContentType = "application/json";
                           var response = new
                           {

@@ -62,9 +62,9 @@ public sealed class GeneralController : GenericController
         var result = await _iGeneralService.RunSqlBackupAsync(directory);
 
         if (result)
-            return CustomResponse(FixConstants.BADREQUEST_CODE, null, "Backup executado com sucesso");
+            return CustomResponse(ConstantHttpStatusCode.OK_CODE, null, "Backup executado com sucesso");
 
-        return CustomResponse(FixConstants.BADREQUEST_CODE);
+        return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
     }
 
     [HttpPost("createQRCode")]
@@ -81,10 +81,10 @@ public sealed class GeneralController : GenericController
         if (GuardClauses.ObjectIsNull(qrCodeFile) || qrCodeFile.Length == 0)
         {
             NotificationError("Nenhum arquivo foi enviado.");
-            return CustomResponse(FixConstants.BADREQUEST_CODE);
+            return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
         }
 
-        return CustomResponse(FixConstants.BADREQUEST_CODE, _iQRCodeService.ReadQrCode(qrCodeFile));
+        return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE, _iQRCodeService.ReadQrCode(qrCodeFile));
     }
 
     /// <summary>
@@ -104,12 +104,12 @@ public sealed class GeneralController : GenericController
     {
         try
         {
-            return CustomResponse(FixConstants.BADREQUEST_CODE, _environmentVariables.ConnectionStringSettings.SerializeObject(), "Variaveis de ambiente");
+            return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE, _environmentVariables.ConnectionStringSettings.SerializeObject(), "Variaveis de ambiente");
         }
         catch (Exception ex)
         {
             NotificationError("Ocorreu um erro durante a leitura das var de ambiente");
-            return CustomResponse(FixConstants.BADREQUEST_CODE);
+            return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
         }
     }
 
@@ -117,7 +117,7 @@ public sealed class GeneralController : GenericController
     public async Task<IActionResult> SendPushNotification()
     {
         await _iFirebaseService.SendPushNotification_V2("Xpto", "isso e um teste");
-        return CustomResponse(FixConstants.OK_CODE);
+        return CustomResponse(ConstantHttpStatusCode.OK_CODE);
     }
 
     [HttpGet("testSendEmail")]
@@ -125,13 +125,13 @@ public sealed class GeneralController : GenericController
     public async Task<IActionResult> TestSendEmail()
     {
         await _iEmailService.CustomSendEmailAsync(EnumEmail.Welcome, "teste@gmail.com", "XPTO");
-        return CustomResponse(FixConstants.OK_CODE);
+        return CustomResponse(ConstantHttpStatusCode.OK_CODE);
     }
 
     [HttpGet]
     public async Task<IActionResult> GetNotificationsByServer()
     {
         await _iHubContext.Clients.All.SendAsync("ReceiveNotification", "Mensagem enviada para aplicação pelo canal do SignalR");
-        return CustomResponse(FixConstants.OK_CODE);
+        return CustomResponse(ConstantHttpStatusCode.OK_CODE);
     }
 }

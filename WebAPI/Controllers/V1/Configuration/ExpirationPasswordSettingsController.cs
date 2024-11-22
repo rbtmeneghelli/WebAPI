@@ -34,7 +34,7 @@ public sealed class ExpirationPasswordSettingsController : GenericController
     public async Task<IActionResult> GetAll()
     {
         var model = await _iGenericConfigurationService.ExpirationPasswordSettingsService.GetAllExpirationPasswordSettingsAsync();
-        return CustomResponse(FixConstants.BADREQUEST_CODE, model, FixConstants.SUCCESS_IN_GETALL);
+        return CustomResponse(ConstantHttpStatusCode.OK_CODE, model, FixConstants.SUCCESS_IN_GETALL);
     }
 
     [HttpGet("GetByEnvironment")]
@@ -44,10 +44,10 @@ public sealed class ExpirationPasswordSettingsController : GenericController
         if (existExpirationPasswordSettings)
         {
             var model = await _iGenericConfigurationService.ExpirationPasswordSettingsService.GetExpirationPasswordSettingsByEnvironmentAsync();
-            return CustomResponse(FixConstants.BADREQUEST_CODE, model, FixConstants.SUCCESS_IN_GETID);
+            return CustomResponse(ConstantHttpStatusCode.OK_CODE, model, FixConstants.SUCCESS_IN_GETID);
         }
 
-        return CustomResponse(FixConstants.NOTFOUND_CODE);
+        return CustomResponse(ConstantHttpStatusCode.NOT_FOUND_CODE);
     }
 
     [HttpGet("GetById/{id:long}")]
@@ -57,10 +57,10 @@ public sealed class ExpirationPasswordSettingsController : GenericController
         if (existExpirationPasswordSettings)
         {
             var model = await _iGenericConfigurationService.ExpirationPasswordSettingsService.GetExpirationPasswordSettingsByIdAsync(id);
-            return CustomResponse(FixConstants.BADREQUEST_CODE, model, FixConstants.SUCCESS_IN_GETID);
+            return CustomResponse(ConstantHttpStatusCode.OK_CODE, model, FixConstants.SUCCESS_IN_GETID);
         }
 
-        return CustomResponse(FixConstants.NOTFOUND_CODE);
+        return CustomResponse(ConstantHttpStatusCode.NOT_FOUND_CODE);
     }
 
     [HttpPost("Create")]
@@ -72,9 +72,9 @@ public sealed class ExpirationPasswordSettingsController : GenericController
         var result = await _iGenericConfigurationService.ExpirationPasswordSettingsService.CreateExpirationPasswordSettingsAsync(expirationPasswordSettingsRequest);
 
         if (result)
-            return CreatedAtAction(nameof(Create), expirationPasswordSettingsRequest);
+            return CustomResponse(ConstantHttpStatusCode.CREATE_CODE, expirationPasswordSettingsRequest);
 
-        return CustomResponse();
+        return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
     }
 
     [HttpPut("Update")]
@@ -87,19 +87,19 @@ public sealed class ExpirationPasswordSettingsController : GenericController
         if (id != expirationPasswordSettingsRequest.Id)
         {
             NotificationError(FixConstants.ERROR_IN_GETID);
-            return CustomResponse();
+            return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
         }
 
         if (await _iGenericConfigurationService.ExpirationPasswordSettingsService.ExistExpirationPasswordSettingsByIdAsync(expirationPasswordSettingsRequest.Id.GetValueOrDefault()))
         {
             var result = await _iGenericConfigurationService.ExpirationPasswordSettingsService.UpdateExpirationPasswordSettingsAsync(expirationPasswordSettingsRequest);
             if (result)
-                return NoContent();
+                return CustomResponse(ConstantHttpStatusCode.NO_CONTENT_CODE);
             else
-                return CustomResponse();
+                return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
         }
 
-        return CustomResponse(FixConstants.NOTFOUND_CODE);
+        return CustomResponse(ConstantHttpStatusCode.NOT_FOUND_CODE);
     }
 
     [HttpDelete("LogicDelete/{id:long}")]
@@ -111,10 +111,10 @@ public sealed class ExpirationPasswordSettingsController : GenericController
             if (result)
                 return CustomResponse(default, FixConstants.SUCCESS_IN_DELETELOGIC);
             else
-                return CustomResponse();
+                return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
         }
 
-        return CustomResponse(FixConstants.NOTFOUND_CODE);
+        return CustomResponse(ConstantHttpStatusCode.NOT_FOUND_CODE);
     }
 
     [HttpPost("Reactive")]
@@ -124,12 +124,12 @@ public sealed class ExpirationPasswordSettingsController : GenericController
         {
             bool result = await _iGenericConfigurationService.ExpirationPasswordSettingsService.ReactiveExpirationPasswordSettingsByIdAsync(expirationPasswordSettingsReactiveRequestDTO.Id.Value);
             if (result)
-                return CustomResponse(default, FixConstants.SUCCESS_IN_ACTIVERECORD);
+                return CustomResponse(ConstantHttpStatusCode.OK_CODE, FixConstants.SUCCESS_IN_ACTIVERECORD);
             else
-                return CustomResponse();
+                return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
         }
 
-        return CustomResponse(FixConstants.NOTFOUND_CODE);
+        return CustomResponse(ConstantHttpStatusCode.NOT_FOUND_CODE);
     }
 
     [HttpPost("ExportData")]
@@ -146,6 +146,6 @@ public sealed class ExpirationPasswordSettingsController : GenericController
             return File(memoryStreamExcel.ToArray(), memoryStreamResult.Type, excelName);
         }
 
-        return CustomResponse(FixConstants.NOTFOUND_CODE);
+        return CustomResponse(ConstantHttpStatusCode.NOT_FOUND_CODE);
     }
 }

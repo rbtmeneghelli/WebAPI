@@ -34,7 +34,7 @@ public sealed class EnvironmentTypeSettingsController : GenericController
     public async Task<IActionResult> GetAll()
     {
         var model = await _iGenericConfigurationService.EnvironmentTypeSettingsService.GetAllEnvironmentTypeSettingsAsync();
-        return CustomResponse(FixConstants.BADREQUEST_CODE, model, FixConstants.SUCCESS_IN_GETALL);
+        return CustomResponse(ConstantHttpStatusCode.OK_CODE, model, FixConstants.SUCCESS_IN_GETALL);
     }
 
     [HttpGet("GetById/{id:long}")]
@@ -44,10 +44,10 @@ public sealed class EnvironmentTypeSettingsController : GenericController
         if (existRequiredPasswordSettings)
         {
             var model = await _iGenericConfigurationService.EnvironmentTypeSettingsService.GetEnvironmentTypeSettingsByIdAsync(id);
-            return CustomResponse(FixConstants.BADREQUEST_CODE, model, FixConstants.SUCCESS_IN_GETID);
+            return CustomResponse(ConstantHttpStatusCode.OK_CODE, model, FixConstants.SUCCESS_IN_GETID);
         }
 
-        return CustomResponse(FixConstants.NOTFOUND_CODE);
+        return CustomResponse(ConstantHttpStatusCode.NOT_FOUND_CODE);
     }
 
     [HttpPost("Create")]
@@ -59,9 +59,9 @@ public sealed class EnvironmentTypeSettingsController : GenericController
         var result = await _iGenericConfigurationService.EnvironmentTypeSettingsService.CreateEnvironmentTypeSettingsAsync(environmentTypeSettingsCreateRequest);
 
         if (result)
-            return CreatedAtAction(nameof(Create), environmentTypeSettingsCreateRequest);
+            return CustomResponse(ConstantHttpStatusCode.CREATE_CODE, environmentTypeSettingsCreateRequest);
 
-        return CustomResponse();
+        return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
     }
 
     [HttpPut("Update")]
@@ -74,19 +74,19 @@ public sealed class EnvironmentTypeSettingsController : GenericController
         if (id != environmentTypeSettingsUpdateRequest.Id)
         {
             NotificationError(FixConstants.ERROR_IN_GETID);
-            return CustomResponse();
+            return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
         }
 
         if (await _iGenericConfigurationService.EnvironmentTypeSettingsService.ExistEnvironmentTypeSettingsByIdAsync(environmentTypeSettingsUpdateRequest.Id.GetValueOrDefault()))
         {
             var result = await _iGenericConfigurationService.EnvironmentTypeSettingsService.UpdateEnvironmentTypeSettingsAsync(environmentTypeSettingsUpdateRequest);
             if (result)
-                return NoContent();
+                return CustomResponse(ConstantHttpStatusCode.NO_CONTENT_CODE);
             else
-                return CustomResponse();
+                return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
         }
 
-        return CustomResponse(FixConstants.NOTFOUND_CODE);
+        return CustomResponse(ConstantHttpStatusCode.NOT_FOUND_CODE);
     }
 
     [HttpDelete("LogicDelete/{id:long}")]
@@ -96,12 +96,12 @@ public sealed class EnvironmentTypeSettingsController : GenericController
         {
             bool result = await _iGenericConfigurationService.EnvironmentTypeSettingsService.LogicDeleteEnvironmentTypeSettingsByIdAsync(id);
             if (result)
-                return CustomResponse(default, FixConstants.SUCCESS_IN_DELETELOGIC);
+                return CustomResponse(ConstantHttpStatusCode.OK_CODE, FixConstants.SUCCESS_IN_DELETELOGIC);
             else
-                return CustomResponse();
+                return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
         }
 
-        return CustomResponse(FixConstants.NOTFOUND_CODE);
+        return CustomResponse(ConstantHttpStatusCode.NOT_FOUND_CODE);
     }
 
     [HttpPost("Reactive")]
@@ -111,12 +111,12 @@ public sealed class EnvironmentTypeSettingsController : GenericController
         {
             bool result = await _iGenericConfigurationService.EnvironmentTypeSettingsService.ReactiveEnvironmentTypeSettingsByIdAsync(environmentTypeSettingsReactiveRequestDTO.Id.Value);
             if (result)
-                return CustomResponse(default, FixConstants.SUCCESS_IN_ACTIVERECORD);
+                return CustomResponse(ConstantHttpStatusCode.OK_CODE, FixConstants.SUCCESS_IN_ACTIVERECORD);
             else
-                return CustomResponse();
+                return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
         }
 
-        return CustomResponse(FixConstants.NOTFOUND_CODE);
+        return CustomResponse(ConstantHttpStatusCode.NOT_FOUND_CODE);
     }
 
     [HttpPost("ExportData")]
@@ -133,7 +133,7 @@ public sealed class EnvironmentTypeSettingsController : GenericController
             return File(memoryStreamExcel.ToArray(), memoryStreamResult.Type, excelName);
         }
 
-        return CustomResponse(FixConstants.NOTFOUND_CODE);
+        return CustomResponse(ConstantHttpStatusCode.NOT_FOUND_CODE);
     }
 }
 

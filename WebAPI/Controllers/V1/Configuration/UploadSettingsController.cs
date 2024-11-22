@@ -33,10 +33,10 @@ public sealed class UploadSettingsController : GenericController
         if (existUploadSettings)
         {
             var model = await _iGenericConfigurationService.UploadSettingsService.GetUploadSettingsByEnvironmentAsync();
-            return CustomResponse(FixConstants.BADREQUEST_CODE, model, FixConstants.SUCCESS_IN_GETID);
+            return CustomResponse(ConstantHttpStatusCode.OK_CODE, model, FixConstants.SUCCESS_IN_GETID);
         }
 
-        return CustomResponse(FixConstants.NOTFOUND_CODE);
+        return CustomResponse(ConstantHttpStatusCode.NOT_FOUND_CODE);
     }
 
     [HttpGet("GetById/{id:long}")]
@@ -46,10 +46,10 @@ public sealed class UploadSettingsController : GenericController
         if (existUploadSettings)
         {
             var model = await _iGenericConfigurationService.UploadSettingsService.GetUploadSettingsByIdAsync(id);
-            return CustomResponse(FixConstants.BADREQUEST_CODE, model, FixConstants.SUCCESS_IN_GETID);
+            return CustomResponse(ConstantHttpStatusCode.OK_CODE, model, FixConstants.SUCCESS_IN_GETID);
         }
 
-        return CustomResponse(FixConstants.NOTFOUND_CODE);
+        return CustomResponse(ConstantHttpStatusCode.NOT_FOUND_CODE);
     }
 
     [HttpPost("Create")]
@@ -60,9 +60,9 @@ public sealed class UploadSettingsController : GenericController
         var result = await _iGenericConfigurationService.UploadSettingsService.CreateUploadSettingsAsync(uploadSettingsCreateRequestDTO);
 
         if (result)
-            return CreatedAtAction(nameof(Create), uploadSettingsCreateRequestDTO);
+            return CustomResponse(ConstantHttpStatusCode.CREATE_CODE, uploadSettingsCreateRequestDTO);
 
-        return CustomResponse();
+        return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
     }
 
     [HttpPut("Update")]
@@ -73,19 +73,19 @@ public sealed class UploadSettingsController : GenericController
         if (id != uploadSettingsUpdateRequestDTO.Id)
         {
             NotificationError(FixConstants.ERROR_IN_GETID);
-            return CustomResponse();
+            return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
         }
 
         if (await _iGenericConfigurationService.UploadSettingsService.ExistUploadSettingsByIdAsync(uploadSettingsUpdateRequestDTO.Id.GetValueOrDefault()))
         {
             var result = await _iGenericConfigurationService.UploadSettingsService.UpdateUploadSettingsAsync(uploadSettingsUpdateRequestDTO);
             if (result)
-                return NoContent();
+                return CustomResponse(ConstantHttpStatusCode.NO_CONTENT_CODE);
             else
-                return CustomResponse();
+                return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
         }
 
-        return CustomResponse(FixConstants.NOTFOUND_CODE);
+        return CustomResponse(ConstantHttpStatusCode.NOT_FOUND_CODE);
     }
 
     [HttpDelete("LogicDelete/{id:long}")]
@@ -95,12 +95,12 @@ public sealed class UploadSettingsController : GenericController
         {
             bool result = await _iGenericConfigurationService.UploadSettingsService.LogicDeleteUploadSettingsByIdAsync(id);
             if (result)
-                return CustomResponse(default, FixConstants.SUCCESS_IN_DELETELOGIC);
+                return CustomResponse(ConstantHttpStatusCode.OK_CODE, FixConstants.SUCCESS_IN_DELETELOGIC);
             else
-                return CustomResponse();
+                return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
         }
 
-        return CustomResponse(FixConstants.NOTFOUND_CODE);
+        return CustomResponse(ConstantHttpStatusCode.NOT_FOUND_CODE);
     }
 
     [HttpPost("Reactive")]
@@ -110,12 +110,12 @@ public sealed class UploadSettingsController : GenericController
         {
             bool result = await _iGenericConfigurationService.UploadSettingsService.ReactiveUploadSettingsByIdAsync(requiredPasswordSettingsReactiveRequestDTO.Id.Value);
             if (result)
-                return CustomResponse(default, FixConstants.SUCCESS_IN_ACTIVERECORD);
+                return CustomResponse(ConstantHttpStatusCode.OK_CODE, FixConstants.SUCCESS_IN_ACTIVERECORD);
             else
-                return CustomResponse();
+                return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
         }
 
-        return CustomResponse(FixConstants.NOTFOUND_CODE);
+        return CustomResponse(ConstantHttpStatusCode.NOT_FOUND_CODE);
     }
 
 
@@ -126,12 +126,12 @@ public sealed class UploadSettingsController : GenericController
         {
             var files = await _iGenericConfigurationService.UploadSettingsService.GetUploadSettingsByEnvironmentAsync();
             _iMemoryCacheService.Set("FilesData", files);
-            return CustomResponse(FixConstants.OK_CODE, files);
+            return CustomResponse(ConstantHttpStatusCode.OK_CODE, files);
         }
         else
         {
             var files = _iMemoryCacheService.Get<UploadSettingsResponseDTO>("FilesData");
-            return CustomResponse(FixConstants.OK_CODE, files);
+            return CustomResponse(ConstantHttpStatusCode.OK_CODE, files);
         }
     }
 }

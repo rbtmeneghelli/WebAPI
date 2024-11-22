@@ -4,6 +4,7 @@ using FixConstants = WebAPI.Domain.Constants.FixConstants;
 using WebAPI.Domain.Entities.Others;
 using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.CQRS.Queries;
+using WebAPI.Domain.Constants;
 
 namespace WebAPI.V1.Controllers;
 
@@ -36,7 +37,7 @@ public sealed class MediatorController : GenericController
 
         var result = ApplyMapToEntity<IEnumerable<Region>, IEnumerable<RegionQueryFilterResponse>>(model);
 
-        return CustomResponse(FixConstants.BADREQUEST_CODE, result, FixConstants.SUCCESS_IN_GETALLPAGINATE);
+        return CustomResponse(ConstantHttpStatusCode.OK_CODE, result, FixConstants.SUCCESS_IN_GETALLPAGINATE);
     }
 
     [HttpPost("GetById")]
@@ -46,7 +47,7 @@ public sealed class MediatorController : GenericController
 
         var result = ApplyMapToEntity<Region, RegionQueryFilterResponse>(model);
 
-        return CustomResponse(FixConstants.BADREQUEST_CODE, result, FixConstants.SUCCESS_IN_GETID);
+        return CustomResponse(ConstantHttpStatusCode.OK_CODE, result, FixConstants.SUCCESS_IN_GETID);
     }
 
     [ProducesResponseType(StatusCodes.Status201Created)]
@@ -59,9 +60,9 @@ public sealed class MediatorController : GenericController
         var result = await _mediator.Send(createRegionCommandRequest);
 
         if (result)
-            return CustomResponse(FixConstants.OK_CODE);
+            return CustomResponse(ConstantHttpStatusCode.OK_CODE);
 
-        return CustomResponse(FixConstants.BADREQUEST_CODE);
+        return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
     }
 
     [HttpPut("Update")]
@@ -74,6 +75,6 @@ public sealed class MediatorController : GenericController
         if (result)
             return NoContent();
 
-        return CustomResponse(FixConstants.OK_CODE);
+        return CustomResponse(ConstantHttpStatusCode.OK_CODE);
     }
 }
