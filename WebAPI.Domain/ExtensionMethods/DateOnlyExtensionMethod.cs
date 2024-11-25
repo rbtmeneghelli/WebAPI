@@ -59,7 +59,7 @@ public sealed class DateOnlyExtensionMethods
     public static DateTime GetDateTimeNowFromBrazil()
     {
         TimeZoneInfo tz = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time");
-        DateTime dateTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, tz);
+        DateTime dateTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow.ToUniversalTime(), tz);
         return dateTime;
     }
 
