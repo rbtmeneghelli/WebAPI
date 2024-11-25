@@ -21,6 +21,8 @@ public class FreshContextInstanceBackgroundService : BackgroundService
             {
 
             }
+
+            await Task.Delay(1000, stoppingToken); // Atraso de 1 segundo
         }
     }
 }
