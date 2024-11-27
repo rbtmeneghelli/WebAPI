@@ -95,6 +95,7 @@ public static class ConstantMessageResponse
     public const string UNAUTHORIZED_CODE = "Você não tem permissão para efetuar o processamento dessa ação";
     public const string INTERNAL_ERROR_CODE = "Ocorreu um erro interno durante o processamento dos dados pela API. Entre em contato com o Administrador";
     public const string CREATE_CODE = "O Registro foi criado com sucesso";
+    public const string FORBIDDEN_CODE = "Acesso negado! O token fornecido não possui privilegio para efetuar tal ação";
 
     public static string GetMessageResponse(int statusCode)
     {

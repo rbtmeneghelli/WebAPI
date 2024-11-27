@@ -10,6 +10,11 @@ namespace WebAPI.Controllers.Base;
 [EnableCors("EnableCORS")]
 [Produces("application/json")]
 [ApiController]
+[ProducesResponseType(ConstantHttpStatusCode.OK_CODE)]
+[ProducesResponseType(ConstantHttpStatusCode.BAD_REQUEST_CODE)]
+[ProducesResponseType(ConstantHttpStatusCode.UNAUTHORIZED_CODE)]
+[ProducesResponseType(ConstantHttpStatusCode.FORBIDDEN_CODE)]
+[ProducesResponseType(ConstantHttpStatusCode.INTERNAL_ERROR_CODE)]
 public abstract class GenericController : ControllerBase
 {
     protected readonly IMapper _iMapperService;

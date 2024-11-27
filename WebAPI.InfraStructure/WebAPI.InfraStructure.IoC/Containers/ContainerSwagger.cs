@@ -7,6 +7,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using WebAPI.Domain;
 using WebAPI.Infrastructure.CrossCutting.Middleware.Swagger;
+using Microsoft.AspNetCore.Mvc;
+using WebAPI.Domain.Constants;
+using Amazon.Runtime.Internal.Transform;
 
 namespace WebAPI.InfraStructure.IoC.Containers;
 
@@ -140,9 +143,12 @@ public class SwaggerDefaultValues : IOperationFilter
 {
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {
-        operation.Responses.Add("401", new OpenApiResponse { Description = "Não autorizado. Falha de autenticação.",  });
-        operation.Responses.Add("403", new OpenApiResponse { Description = "Forbidden" });
-
+        operation.Responses.Remove("400");
+        operation.Responses.Remove("500");
+        operation.Responses.Add(ConstantHttpStatusCode.BAD_REQUEST_CODE.ToString(), new OpenApiResponse { Description = ConstantMessageResponse.BAD_REQUEST_CODE, });
+        operation.Responses.Add(ConstantHttpStatusCode.UNAUTHORIZED_CODE.ToString(), new OpenApiResponse { Description = ConstantMessageResponse.UNAUTHORIZED_CODE,  });
+        operation.Responses.Add(ConstantHttpStatusCode.FORBIDDEN_CODE.ToString(), new OpenApiResponse { Description = ConstantMessageResponse.FORBIDDEN_CODE });
+        operation.Responses.Add(ConstantHttpStatusCode.INTERNAL_ERROR_CODE.ToString(), new OpenApiResponse { Description = ConstantMessageResponse.INTERNAL_ERROR_CODE });
         operation.Deprecated = context.ApiDescription.IsDeprecated() ? true : OpenApiOperation.DeprecatedDefault;
 
         if (GuardClauses.ObjectIsNull(operation.Parameters))

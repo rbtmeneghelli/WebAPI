@@ -26,9 +26,6 @@ public sealed class AccountController : GenericController
     }
 
     [HttpPost("Login")]
-    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE)]
-    [ProducesResponseType(ConstantHttpStatusCode.BAD_REQUEST_CODE)]
-    [ProducesResponseType(ConstantHttpStatusCode.INTERNAL_ERROR_CODE)]
     public async Task<IActionResult> Login([FromBody] LoginUser loginUser)
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
