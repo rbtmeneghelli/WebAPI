@@ -1,10 +1,12 @@
-﻿using WebAPI.Domain.Models;
+﻿using System.Linq;
+using System.Text;
+using WebAPI.Domain.Models;
 
 namespace WebAPI.Domain.ExtensionMethods;
 
 public sealed class LINQExtensionMethods
 {
-    #region Função de agregação do LINQ
+    #region Função de agregação do LINQ (Metodo útil para somar, concatenar ou calcular médias agrupadas.)
 
     public string AgregateStrings(IEnumerable<string> source)
     {
@@ -30,6 +32,56 @@ public sealed class LINQExtensionMethods
         );
     }
 
+    public string AggregateByBeforeNET9()
+    {
+        StringBuilder sb = new StringBuilder();
+
+        // Array de Tuplas
+        (string nome, string departamento, int diasFerias)[] funcionarios =
+        [
+           ("João Duda", "IT", 12),
+           ("Jane Soares", "Marketing", 18),
+           ("Jose Silva", "IT", 28),
+           ("Maria Fernandez", "RH", 17),
+           ("Nivia Maria", "Marketing", 5),
+           ("Maria Moreti", "RH", 9)
+        ];
+
+        var diasFeriasDepartamento = funcionarios
+        .GroupBy(funci => funci.departamento)
+        .ToDictionary(group => group.Key, group => group.Sum(funci => funci.diasFerias))
+        .AsEnumerable();
+
+        foreach (var entry in diasFeriasDepartamento)
+            sb.AppendLine($"O Departamento {entry.Key} possui um total de {entry.Value} dias de férias a cumprir.");
+
+        return sb.ToString();
+    }
+
+    //public string AggregateByNET9()
+    //{
+    //    StringBuilder sb = new StringBuilder();
+
+    //    // Array de Tuplas
+    //    (string nome, string departamento, int diasFerias)[] funcionarios =
+    //    [
+    //       ("João Duda", "IT", 12),
+    //       ("Jane Soares", "Marketing", 18),
+    //       ("Jose Silva", "IT", 28),
+    //       ("Maria Fernandez", "RH", 17),
+    //       ("Nivia Maria", "Marketing", 5),
+    //       ("Maria Moreti", "RH", 9)
+    //    ];
+
+    //    //var diasFeriasDepartamento = funcionarios
+    //    //.AggregateBy(emp => emp.departamento, 0, (acc, funci) => acc + funci.diasFerias);
+
+    //    foreach (var entry in diasFeriasDepartamento)
+    //        sb.AppendLine($"O Departamento {entry.Key} possui um total de {entry.Value} dias de férias a cumprir.");
+
+    //    return sb.ToString();
+    //}
+
     #endregion
 
     #region Funções de Quantificadores 
@@ -44,6 +96,166 @@ public sealed class LINQExtensionMethods
     {
         // Se existir um Elemento que Atenda a condição predicate, será retornado TRUE. Senão FALSE
         return source.Exists(predicate); // predicate => x => x % 2 == 0
+    }
+
+    #endregion
+
+    #region Função para retornar quantidade de dados dentro de uma lista ou array
+
+    public int GetQtdItensFromList<T>(IEnumerable<T> list, Func<T, bool> predicate) where T : class
+    {
+        if (GuardClauses.ObjectIsNull(predicate))
+            return list.Count();
+        else
+            return list.Count(predicate);
+    }
+
+    public long GetQtdItensFromBigList<T>(IEnumerable<T> list, Func<T, bool> predicate) where T : class
+    {
+        if (GuardClauses.ObjectIsNull(predicate))
+            return list.LongCount();
+        else
+            return list.LongCount(predicate);
+    }
+
+    public string CountByBeforeNET9()
+    {
+        StringBuilder sb = new StringBuilder();
+
+        // Array de Tuplas
+        (string nome, string sobrenome)[] pessoas =
+        [
+           ("João", "Donato"),
+           ("Janice", "Silva"),
+           ("João", "Sanches"),
+           ("Maria", "Silveira"),
+           ("Pedro", "Sobrinho"),
+           ("Janice", "Fernandez"),
+           ("Maria", "Moretii")
+        ];
+
+        var contaNomes = pessoas
+           .GroupBy(p => p.nome)
+           .ToDictionary(group => group.Key, group => group.Count())
+           .AsEnumerable();
+
+        foreach (var entry in contaNomes)
+        {
+            sb.AppendLine($"O Nome {entry.Key} aparece {entry.Value} vezes");
+        }
+
+        return sb.ToString();
+    }
+
+    //public string CountByNET9()
+    //{
+    //    StringBuilder sb = new StringBuilder();
+
+    //    // Array de Tuplas
+    //    (string nome, string sobrenome)[] pessoas =
+    //    [
+    //       ("João", "Donato"),
+    //       ("Janice", "Silva"),
+    //       ("João", "Sanches"),
+    //       ("Maria", "Silveira"),
+    //       ("Pedro", "Sobrinho"),
+    //       ("Janice", "Fernandez"),
+    //       ("Maria", "Moretii")
+    //    ];
+
+    //    var contaNomes = pessoas.CountBy(p => p.nome);
+
+    //    foreach (var entry in contaNomes)
+    //    {
+    //        sb.Append($"O Nome {entry.Key} aparece {entry.Value} vezes");
+    //    }
+
+    //    return sb.ToString();
+    //}
+
+    //public (string resultado, int total) GetCountBy(List<DropDownList> list)
+    //{
+    //    var result = list.CountBy(p => p.Description);
+    //    return (result.Key, result.Value);
+    //}
+
+    #endregion;
+
+    #region Função para obter o index dos valores de uma lista ou array
+
+    public string GetIndexBeforeNET9()
+    {
+        StringBuilder sb = new StringBuilder();
+
+        var alunos = new[]
+        {
+           "Jose Sanches",
+           "Janice Pereira",
+           "Carlos Nogueira",
+           "João Silveira"
+        };
+
+        // antes
+        foreach (var (index, aluno) in alunos.Select((m, i) => (i, m)))
+            sb.AppendLine($"Aluno {index}: {aluno}");
+
+        return sb.ToString();
+    }
+
+    //public string GetIndexNET9()
+    //{
+    //    StringBuilder sb = new StringBuilder();
+
+    //    var alunos = new[]
+    //    {
+    //       "Jose Sanches",
+    //       "Janice Pereira",
+    //       "Carlos Nogueira",
+    //       "João Silveira"
+    //    };
+
+    //    // antes
+    //    foreach (var (index, aluno) in alunos.Index())
+    //        Console.WriteLine($"Aluno {index}: {aluno}");
+
+    //    return sb.ToString();
+    //}
+
+    //public (string resultado, int total) GetIndexFromList(List<DropDownList> list)
+    //{
+    //    var result = list.Index();
+    //    return result;
+    //}
+
+    #endregion
+
+    #region Função de ordenação do LINQ
+
+    public IEnumerable<T> GetListOrderAsc<T>(IEnumerable<T> list)
+    {
+        return list.Order().ToList();
+    }
+
+    public IEnumerable<DropDownList> GetListOrderByAsc(IEnumerable<DropDownList> list)
+    {
+        return list.OrderBy(x => x.Id).ToList();
+    }
+
+    public IEnumerable<DropDownList> GetListOrderByDesc(IEnumerable<DropDownList> list)
+    {
+        return list.OrderByDescending(x => x.Id).ToList();
+    }
+
+    public IEnumerable<T> GetListReverse<T>(IEnumerable<T> list)
+    {
+        list.Reverse(); // Faz a inversão da ordem dos valores de uma lista
+        return list;
+    }
+
+    public IEnumerable<T> GetListSortAsc<T>(List<T> list)
+    {
+        list.Sort(); // Faz a ordenação da lista em ordem crescente, seguindo o algoritmo de quicksort
+        return list;
     }
 
     #endregion
@@ -115,22 +327,6 @@ public sealed class LINQExtensionMethods
             return list.LastOrDefault(predicate);
     }
 
-    public int GetQtdItensFromList<T>(IEnumerable<T> list, Func<T, bool> predicate) where T : class
-    {
-        if (GuardClauses.ObjectIsNull(predicate))
-            return list.Count();
-        else
-            return list.Count(predicate);
-    }
-
-    public long GetQtdItensFromBigList<T>(IEnumerable<T> list, Func<T, bool> predicate) where T : class
-    {
-        if (GuardClauses.ObjectIsNull(predicate))
-            return list.LongCount();
-        else
-            return list.LongCount(predicate);
-    }
-
     public decimal GetTotalItensFromList<T>(IEnumerable<T> list, Func<T, decimal> predicate) where T : class
     {
         return list.Sum(predicate);
@@ -182,64 +378,6 @@ public sealed class LINQExtensionMethods
         return newSource;
     }
 
-    #region Lista do tipo IEnumerable é para somente leitura, onde não é possivel alterar os valores originais
-
-    public IEnumerable<T> ConvertArrInIEnumerable<T>(T[] array) => array.AsEnumerable();
-
-    public IEnumerable<T> ConvertListInIEnumerable<T>(List<T> list) => list.AsEnumerable();
-
-    /// <summary>
-    /// Metodo disponivel no NET 9
-    /// </summary>
-    //public (string resultado, int total) GetCountBy(List<DropDownList> list)
-    //{
-    //    var result = list.CountBy(p => p.Description);
-    //    return (result.Key, result.Value);
-    //}
-
-    /// <summary>
-    /// Metodo disponivel no NET 9
-    /// </summary>
-    //public (string resultado, int total) GetIndexFromList(List<DropDownList> list)
-    //{
-    //    var result = list.Index();
-    //    return result;
-    //}
-
-    #endregion
-
-
-    #region Função de ordenação do LINQ
-
-    public IEnumerable<T> GetListOrderAsc<T>(IEnumerable<T> list)
-    {
-        return list.Order().ToList();
-    }
-
-    public IEnumerable<DropDownList> GetListOrderByAsc(IEnumerable<DropDownList> list)
-    {
-        return list.OrderBy(x => x.Id).ToList();
-    }
-
-    public IEnumerable<DropDownList> GetListOrderByDesc(IEnumerable<DropDownList> list)
-    {
-        return list.OrderByDescending(x => x.Id).ToList();
-    }
-
-    public IEnumerable<T> GetListReverse<T>(IEnumerable<T> list)
-    {
-        list.Reverse(); // Faz a inversão da ordem dos valores de uma lista
-        return list;
-    }
-
-    public IEnumerable<T> GetListSortAsc<T>(List<T> list)
-    {
-        list.Sort(); // Faz a ordenação da lista em ordem crescente, seguindo o algoritmo de quicksort
-        return list;
-    }
-
-    #endregion
-
     public bool ListItensIsAllOk(List<DropDownList> source, Func<DropDownList, bool> predicate)
     {
         return source.TrueForAll(x => x.Id > 0);
@@ -249,6 +387,14 @@ public sealed class LINQExtensionMethods
     {
         return list.Chunk(pageSize).ElementAt(pageIndex).AsEnumerable();
     }
+
+    #region Lista do tipo IEnumerable é para somente leitura, onde não é possivel alterar os valores originais
+
+    public IEnumerable<T> ConvertArrInIEnumerable<T>(T[] array) => array.AsEnumerable();
+
+    public IEnumerable<T> ConvertListInIEnumerable<T>(List<T> list) => list.AsEnumerable();
+
+    #endregion
 }
 
 

@@ -10,6 +10,7 @@ using WebAPI.Infrastructure.CrossCutting.Middleware.Swagger;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Domain.Constants;
 using Amazon.Runtime.Internal.Transform;
+using System.Collections.Generic;
 
 namespace WebAPI.InfraStructure.IoC.Containers;
 
@@ -143,10 +144,18 @@ public class SwaggerDefaultValues : IOperationFilter
 {
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {
-        operation.Responses.Remove("400");
-        operation.Responses.Remove("500");
+        int[] arrHttpStatusCode = [
+            ConstantHttpStatusCode.BAD_REQUEST_CODE,
+            ConstantHttpStatusCode.UNAUTHORIZED_CODE,
+            ConstantHttpStatusCode.FORBIDDEN_CODE,
+            ConstantHttpStatusCode.INTERNAL_ERROR_CODE
+        ];
+
+        for (var i = 0; i <= arrHttpStatusCode.Length - 1; i++)
+            operation.Responses.Remove(arrHttpStatusCode[i].ToString());
+
         operation.Responses.Add(ConstantHttpStatusCode.BAD_REQUEST_CODE.ToString(), new OpenApiResponse { Description = ConstantMessageResponse.BAD_REQUEST_CODE, });
-        operation.Responses.Add(ConstantHttpStatusCode.UNAUTHORIZED_CODE.ToString(), new OpenApiResponse { Description = ConstantMessageResponse.UNAUTHORIZED_CODE,  });
+        operation.Responses.Add(ConstantHttpStatusCode.UNAUTHORIZED_CODE.ToString(), new OpenApiResponse { Description = ConstantMessageResponse.UNAUTHORIZED_CODE, });
         operation.Responses.Add(ConstantHttpStatusCode.FORBIDDEN_CODE.ToString(), new OpenApiResponse { Description = ConstantMessageResponse.FORBIDDEN_CODE });
         operation.Responses.Add(ConstantHttpStatusCode.INTERNAL_ERROR_CODE.ToString(), new OpenApiResponse { Description = ConstantMessageResponse.INTERNAL_ERROR_CODE });
         operation.Deprecated = context.ApiDescription.IsDeprecated() ? true : OpenApiOperation.DeprecatedDefault;
