@@ -14,13 +14,13 @@ namespace WebAPI.Application.Services;
 public class GeneralService : GenericService, IGeneralService
 {
     private List<RefreshTokens> _refreshTokens = new List<RefreshTokens>();
-    private TokenSettings _tokenSettings { get; }
     private readonly IHttpClientFactory _iHttpClientFactory;
     private readonly GeneralMethod _generalMethod;
+    private EnvironmentVariables _environmentVariables { get; }
 
-    public GeneralService(TokenSettings tokenSettings, INotificationMessageService iNotificationMessageService, IHttpClientFactory iHttpClientFactory) : base(iNotificationMessageService)
+    public GeneralService(EnvironmentVariables environmentVariables, INotificationMessageService iNotificationMessageService, IHttpClientFactory iHttpClientFactory) : base(iNotificationMessageService)
     {
-        _tokenSettings = tokenSettings;
+        _environmentVariables = environmentVariables;
         _iHttpClientFactory = iHttpClientFactory;
         _generalMethod = GeneralMethod.GetLoadExtensionMethods();
     }
@@ -34,11 +34,11 @@ public class GeneralService : GenericService, IGeneralService
     public string CreateJwtToken(Credentials credentials)
     {
         JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(_tokenSettings.Key);
+        var key = Encoding.ASCII.GetBytes(_environmentVariables.TokenSettings.Key);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
-            Issuer = _tokenSettings.Issuer,
-            Audience = _tokenSettings.Audience,
+            Issuer = _environmentVariables.TokenSettings.Issuer,
+            Audience = _environmentVariables.TokenSettings.Audience,
             Subject = new ClaimsIdentity(new Claim[]
             {
                     //new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
@@ -48,12 +48,12 @@ public class GeneralService : GenericService, IGeneralService
                     new Claim("DateAccess", credentials.AccessDate.ToShortDateString()),
                     new Claim("TimeAccess", credentials.AccessDate.ToString("HH:mm:ss"))
             }),
-            Expires = DateTime.UtcNow.AddSeconds(_tokenSettings.Seconds),
+            Expires = DateTime.UtcNow.AddSeconds(_environmentVariables.TokenSettings.Seconds),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
         var token = tokenHandler.CreateToken(tokenDescriptor);
         var tokenAuth = tokenHandler.WriteToken(token);
-        tokenAuth = CryptographyTokenService.EncryptToken(tokenAuth, _tokenSettings.Key);
+        tokenAuth = CryptographyTokenService.EncryptToken(tokenAuth, _environmentVariables.TokenSettings.Key);
         return tokenAuth;
     }
 
@@ -248,7 +248,7 @@ public class GeneralService : GenericService, IGeneralService
     public string GenerateToken(IEnumerable<Claim> claims)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(_tokenSettings.Key);
+        var key = Encoding.ASCII.GetBytes(_environmentVariables.TokenSettings.Key);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
@@ -270,7 +270,7 @@ public class GeneralService : GenericService, IGeneralService
 
     public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
     {
-        var key = Encoding.ASCII.GetBytes(_tokenSettings.Key);
+        var key = Encoding.ASCII.GetBytes(_environmentVariables.TokenSettings.Key);
 
         var tokenValidationParameters = new TokenValidationParameters
         {
@@ -342,9 +342,9 @@ public class GeneralService : GenericService, IGeneralService
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
             ClockSkew = TimeSpan.Zero,
-            ValidIssuer = _tokenSettings.Issuer,
-            ValidAudience = _tokenSettings.Audience,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_tokenSettings.Key))
+            ValidIssuer = _environmentVariables.TokenSettings.Issuer,
+            ValidAudience = _environmentVariables.TokenSettings.Audience,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_environmentVariables.TokenSettings.Key))
         };
 
         if (GuardClauses.IsNullOrWhiteSpace(jwtToken))

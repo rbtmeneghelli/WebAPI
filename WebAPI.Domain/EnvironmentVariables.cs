@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using WebAPI.Domain.Enums;
 using WebAPI.Domain.ExtensionMethods;
+using WebAPI.Domain.Models;
 using WebAPI.Domain.Models.EnvVarSettings;
 
 namespace WebAPI.Domain;
@@ -18,6 +19,7 @@ public class EnvironmentVariables
     public string AzureKeyVaultUrl { get; set; } = "Azure-KeyVault-Url";
     public string AzureConnectionStringStorage { get; set; } = "CONNECTION_STRING_STORAGE";
     public TwilioSettings TwilioSettings { get; set; }
+    public TokenSettings TokenSettings { get; set; }
 
     public EnvironmentVariables()
     {
@@ -26,6 +28,7 @@ public class EnvironmentVariables
         KafkaSettings = new KafkaSettings();
         ServiceBusSettings = new ServiceBusSettings();
         SendGridSettings = new SendGridSettings();
+        TokenSettings = new();
     }
 
     public static bool LoadEnvironmentVariables(IConfiguration configuration)
@@ -61,6 +64,7 @@ public static class EnvironmentVariablesExtension
             { configuration.GetSection($"SendGridSettings:Data").Value, GetEnvironmentVariable(configuration.GetSection($"SendGridSettings:Data").Value).ToString() },
             { configuration.GetSection($"WebAPI_Settings:Version").Value, GetEnvironmentVariable(configuration.GetSection($"WebAPI_Settings:Version").Value).ToString() },
             { configuration.GetSection($"WebAPI_Settings:Environment").Value, GetEnvironmentVariable(configuration.GetSection($"WebAPI_Settings:Environment").Value).ToString() },
+             { configuration.GetSection($"WebAPI_Settings:Token").Value, GetEnvironmentVariable(configuration.GetSection($"WebAPI_Settings:Token").Value).ToString() },
         };
 
         return envVariables;

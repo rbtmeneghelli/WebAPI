@@ -12,5 +12,6 @@ setx WebAPI_ServiceBus "{"Server": "localhost"}";
 setx WebAPI_SendGrid "{"ApiKey": "XPTO", "Client": "localhost", "EmailSender": "non-reply@webapi.com.br", "EmailSenderName": "WebAPI"}"
 setx WebAPI_Environment "5";
 setx WebAPI_Version "1.0.0";
+setx WebAPI_Token "{"Key": "fedaf7d8863b48e197b9287d492b708e", "Issuer": "DefaultAPIServer", "Audience": "https://localhost", "Seconds": "3600"}"
 
 pause

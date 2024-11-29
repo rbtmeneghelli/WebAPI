@@ -49,7 +49,6 @@ using WebAPI.Domain.Interfaces.Services;
 using WebAPI.Application.Services.Graphics;
 using WebAPI.Domain.Interfaces.Services.NfService;
 using WebAPI.Application.Services.NfService;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using WebAPI.Application.Services.AzureService;
 using WebAPI.Domain.Models;
 using WebAPI.Application.Services.Configuration;
@@ -293,10 +292,6 @@ public static class ContainerService
 
     public static void RegisterConfigs(this IServiceCollection services, IConfiguration configuration)
     {
-        var tokenConfiguration = new TokenSettings();
-        configuration.Bind("TokenSettings", tokenConfiguration);
-        services.AddSingleton(tokenConfiguration);
-
         var cacheConfiguration = new CacheSettings();
         configuration.Bind("CacheSettings", cacheConfiguration);
         services.AddSingleton(cacheConfiguration);
@@ -352,6 +347,8 @@ public static class ContainerService
 
     public static void RegisterJwtConfig(this IServiceCollection services, IConfiguration configuration)
     {
+        var tokenSettings = JsonSerializer.Deserialize<TokenSettings>(Environment.GetEnvironmentVariable("WebAPI_Token"));
+
         services.AddAuthentication
               (x =>
               {
@@ -369,10 +366,10 @@ public static class ContainerService
                       ValidateLifetime = true,
                       ValidateIssuerSigningKey = true,
                       ClockSkew = TimeSpan.Zero,
-                      ValidIssuer = configuration["TokenSettings:Issuer"],
-                      ValidAudience = configuration["TokenSettings:Audience"],
+                      ValidIssuer = tokenSettings.Issuer,
+                      ValidAudience = tokenSettings.Audience,
                       IssuerSigningKey = new SymmetricSecurityKey
-                      (Encoding.UTF8.GetBytes(configuration["TokenSettings:Key"]))
+                      (Encoding.UTF8.GetBytes(tokenSettings.Key))
                   };
                   options.Events = new JwtBearerEvents
                   {
@@ -764,6 +761,7 @@ public static class ContainerService
             opt.SendGridSettings = JsonSerializer.Deserialize<SendGridSettings>(data["WebAPI_SendGrid"]);
             Enum.TryParse(data["WebAPI_Environment"], out EnumEnvironment environment);
             opt.Environment = environment;
+            opt.TokenSettings = JsonSerializer.Deserialize<TokenSettings>(data["WebAPI_Token"]);
             #endregion
         };
 
