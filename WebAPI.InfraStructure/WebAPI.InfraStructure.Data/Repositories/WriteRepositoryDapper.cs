@@ -4,7 +4,7 @@ using WebAPI.Application.Generic;
 
 namespace WebAPI.InfraStructure.Data.Repositories;
 
-public class WriteRepositoryDapper<TEntity> : GenericRepositoryDapper, IWriteRepositoryDapper
+public class WriteRepositoryDapper : GenericRepositoryDapper, IWriteRepositoryDapper
 {
     public WriteRepositoryDapper(IDbConnection idbConnection) : base(idbConnection) { }
 

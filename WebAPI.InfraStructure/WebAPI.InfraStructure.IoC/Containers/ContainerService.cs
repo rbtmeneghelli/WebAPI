@@ -66,6 +66,7 @@ using WebAPI.Domain.ExtensionMethods;
 using System.Buffers.Text;
 using WebAPI.Domain.Cryptography;
 using WebAPI.Infrastructure.CrossCutting.ActionFilter;
+using WebAPI.Domain.Interfaces.Generic;
 
 namespace WebAPI.InfraStructure.IoC.Containers;
 
@@ -208,8 +209,10 @@ public static class ContainerService
         #region Generics
 
         services
-        .AddScoped(typeof(IGenericRepository<>), typeof(ReadRepository<>))
-        .AddScoped(typeof(IGenericRepositoryDapper<>), typeof(GenericRepositoryDapper<>))
+        .AddScoped(typeof(IReadRepository<>), typeof(ReadRepository<>))
+        .AddScoped(typeof(IWriteRepository<>), typeof(WriteRepository<>))
+        .AddScoped(typeof(IReadRepositoryDapper<>), typeof(ReadRepositoryDapper<>))
+        .AddScoped<IWriteRepositoryDapper,WriteRepositoryDapper>()
         .AddScoped(typeof(IFileService<>), typeof(FileService<>))
         .AddScoped(typeof(IMongoDbService<>), typeof(MongoDbService<>))
         .AddTransient(typeof(IRabbitMQService<>), typeof(RabbitMQService<>));

@@ -1,46 +1,50 @@
 ﻿using System.Linq.Expressions;
-using WebAPI.Application.Generic;
 using WebAPI.Domain.Entities.Configuration;
+using WebAPI.Domain.Interfaces.Generic;
 using WebAPI.Domain.Interfaces.Repository.Configuration;
 
 namespace WebAPI.InfraStructure.Data.Repositories.Configuration;
 
 public class ExpirationPasswordSettingsRepository : IExpirationPasswordSettingsRepository
 {
-    private readonly IGenericRepository<ExpirationPasswordSettings> _iExpirationPasswordSettingsRepository;
+    private readonly IReadRepository<ExpirationPasswordSettings> _iExpirationPasswordSettingsReadRepository;
+    private readonly IWriteRepository<ExpirationPasswordSettings> _iExpirationPasswordSettingsWriteRepository;
 
-    public ExpirationPasswordSettingsRepository(IGenericRepository<ExpirationPasswordSettings> iExpirationPasswordSettingsRepository)
+    public ExpirationPasswordSettingsRepository(
+        IReadRepository<ExpirationPasswordSettings> iExpirationPasswordSettingsReadRepository,
+        IWriteRepository<ExpirationPasswordSettings> iExpirationPasswordSettingsWriteRepository)
     {
-        _iExpirationPasswordSettingsRepository = iExpirationPasswordSettingsRepository;
+        _iExpirationPasswordSettingsReadRepository = iExpirationPasswordSettingsReadRepository;
+        _iExpirationPasswordSettingsWriteRepository = iExpirationPasswordSettingsWriteRepository;
     }
 
     public IQueryable<ExpirationPasswordSettings> GetAllInclude(string includeData, bool hasTracking = false)
     {
-        return _iExpirationPasswordSettingsRepository.GetAllInclude(includeData, hasTracking);
+        return _iExpirationPasswordSettingsReadRepository.GetAllInclude(includeData, hasTracking);
     }
 
     public IQueryable<ExpirationPasswordSettings> FindBy(Expression<Func<ExpirationPasswordSettings, bool>> predicate, bool hasTracking = false)
     {
-        return _iExpirationPasswordSettingsRepository.FindBy(predicate, hasTracking);
+        return _iExpirationPasswordSettingsReadRepository.FindBy(predicate, hasTracking);
     }
 
     public ExpirationPasswordSettings GetById(long id)
     {
-        return _iExpirationPasswordSettingsRepository.GetById(id);
+        return _iExpirationPasswordSettingsReadRepository.GetById(id);
     }
 
     public bool Exist(Expression<Func<ExpirationPasswordSettings, bool>> predicate)
     {
-        return _iExpirationPasswordSettingsRepository.Exist(predicate);
+        return _iExpirationPasswordSettingsReadRepository.Exist(predicate);
     }
 
     public void Create(ExpirationPasswordSettings expirationPasswordSettings)
     {
-        _iExpirationPasswordSettingsRepository.Create(expirationPasswordSettings);
+        _iExpirationPasswordSettingsWriteRepository.Create(expirationPasswordSettings);
     }
 
     public void Update(ExpirationPasswordSettings expirationPasswordSettings)
     {
-        _iExpirationPasswordSettingsRepository.Update(expirationPasswordSettings);
+        _iExpirationPasswordSettingsWriteRepository.Update(expirationPasswordSettings);
     }
 }

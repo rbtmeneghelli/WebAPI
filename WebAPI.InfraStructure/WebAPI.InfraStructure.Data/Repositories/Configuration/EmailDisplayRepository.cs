@@ -1,46 +1,50 @@
 ﻿using System.Linq.Expressions;
-using WebAPI.Application.Generic;
 using WebAPI.Domain.Entities.Configuration;
+using WebAPI.Domain.Interfaces.Generic;
 using WebAPI.Domain.Interfaces.Repository.Configuration;
 
 namespace WebAPI.InfraStructure.Data.Repositories.Configuration;
 
 public class EmailDisplaySettingsRepository : IEmailDisplaySettingsRepository
 {
-    private readonly IGenericRepository<EmailDisplay> _iEmailDisplayRepository;
+    private readonly IReadRepository<EmailDisplay> _iEmailDisplayReadRepository;
+    private readonly IWriteRepository<EmailDisplay> _iEmailDisplayWriteRepository;
 
-    public EmailDisplaySettingsRepository(IGenericRepository<EmailDisplay> iEmailDisplayRepository)
+    public EmailDisplaySettingsRepository(
+        IReadRepository<EmailDisplay> iEmailDisplayReadRepository,
+        IWriteRepository<EmailDisplay> iEmailDisplayWriteRepository)
     {
-        _iEmailDisplayRepository = iEmailDisplayRepository;
+        _iEmailDisplayReadRepository = iEmailDisplayReadRepository;
+        _iEmailDisplayWriteRepository = iEmailDisplayWriteRepository;
     }
 
     public IQueryable<EmailDisplay> GetAllInclude(string includeData, bool hasTracking = false)
     {
-        return _iEmailDisplayRepository.GetAllInclude(includeData, hasTracking);
+        return _iEmailDisplayReadRepository.GetAllInclude(includeData, hasTracking);
     }
 
     public IQueryable<EmailDisplay> FindBy(Expression<Func<EmailDisplay, bool>> predicate, bool hasTracking = false)
     {
-        return _iEmailDisplayRepository.FindBy(predicate, hasTracking);
+        return _iEmailDisplayReadRepository.FindBy(predicate, hasTracking);
     }
 
     public EmailDisplay GetById(long id)
     {
-        return _iEmailDisplayRepository.GetById(id);
+        return _iEmailDisplayReadRepository.GetById(id);
     }
 
     public bool Exist(Expression<Func<EmailDisplay, bool>> predicate)
     {
-        return _iEmailDisplayRepository.Exist(predicate);
+        return _iEmailDisplayReadRepository.Exist(predicate);
     }
 
     public void Create(EmailDisplay emailDisplay)
     {
-        _iEmailDisplayRepository.Create(emailDisplay);
+        _iEmailDisplayWriteRepository.Create(emailDisplay);
     }
 
     public void Update(EmailDisplay emailDisplay)
     {
-        _iEmailDisplayRepository.Update(emailDisplay);
+        _iEmailDisplayWriteRepository.Update(emailDisplay);
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Linq.Expressions;
-using WebAPI.Application.Generic;
+using WebAPI.Domain.Interfaces.Generic;
 using WebAPI.InfraStructure.Data.Context;
 
 namespace WebAPI.InfraStructure.Data.Repositories;

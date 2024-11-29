@@ -1,36 +1,36 @@
 ﻿using System.Linq.Expressions;
-using WebAPI.Application.Generic;
 using WebAPI.Domain.Entities.Others;
+using WebAPI.Domain.Interfaces.Generic;
 using WebAPI.Domain.Interfaces.Repository;
 
 namespace WebAPI.InfraStructure.Data.Repositories.Others;
 
 public class LogRepository : ILogRepository
 {
-    private readonly IGenericRepository<Log> _iLogRepository;
+    private readonly IReadRepository<Log> _iLogReadRepository;
 
-    public LogRepository(IGenericRepository<Log> iLogRepository)
+    public LogRepository(IReadRepository<Log> iLogReadRepository)
     {
-        _iLogRepository = iLogRepository;
+        _iLogReadRepository = iLogReadRepository;
     }
 
     public bool Exist(Expression<Func<Log, bool>> predicate)
     {
-        return _iLogRepository.Exist(predicate);
+        return _iLogReadRepository.Exist(predicate);
     }
 
     public IQueryable<Log> FindBy(Expression<Func<Log, bool>> predicate, bool hasTracking = false)
     {
-        return _iLogRepository.FindBy(predicate, hasTracking);
+        return _iLogReadRepository.FindBy(predicate, hasTracking);
     }
 
     public IQueryable<Log> GetAll(bool hasTracking = false)
     {
-        return _iLogRepository.GetAll(hasTracking);
+        return _iLogReadRepository.GetAll(hasTracking);
     }
 
     public Log GetById(long id)
     {
-        return _iLogRepository.GetById(id);
+        return _iLogReadRepository.GetById(id);
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace WebAPI.Application.Generic;
+namespace WebAPI.Domain.Interfaces.Generic;
 
 public interface IReadRepository<TEntity> : IDisposable where TEntity : class
 {

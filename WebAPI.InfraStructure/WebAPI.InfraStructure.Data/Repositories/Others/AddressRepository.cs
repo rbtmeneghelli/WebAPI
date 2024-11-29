@@ -1,41 +1,45 @@
 ﻿using System.Linq.Expressions;
 using WebAPI.Domain.ValueObject;
-using WebAPI.Application.Generic;
 using WebAPI.Domain.Interfaces.Repository;
+using WebAPI.Domain.Interfaces.Generic;
 
 namespace WebAPI.InfraStructure.Data.Repositories.Others;
 
 public class AddressRepository : IAddressRepository
 {
-    private readonly IGenericRepository<AddressData> _iAddressDataRepository;
+    private readonly IReadRepository<AddressData> _iAddressDataReadRepository;
+    private readonly IWriteRepository<AddressData> _iAddressDataWriteRepository;
 
-    public AddressRepository(IGenericRepository<AddressData> iAddressDataRepository)
+    public AddressRepository(
+        IReadRepository<AddressData> iAddressDataReadRepository,
+        IWriteRepository<AddressData> iAddressDataWriteRepository)
     {
-        _iAddressDataRepository = iAddressDataRepository;
+        _iAddressDataReadRepository = iAddressDataReadRepository;
+        _iAddressDataWriteRepository = iAddressDataWriteRepository;
     }
 
     public IQueryable<AddressData> GetAll(bool hasTracking = false)
     {
-        return _iAddressDataRepository.GetAll(hasTracking);
-    }
-
-    public void Update(AddressData ceps)
-    {
-        _iAddressDataRepository.Update(ceps);
-    }
-
-    public void Add(AddressData ceps)
-    {
-        _iAddressDataRepository.Create(ceps);
+        return _iAddressDataReadRepository.GetAll(hasTracking);
     }
 
     public IQueryable<AddressData> FindBy(Expression<Func<AddressData, bool>> predicate, bool hasTracking = false)
     {
-        return _iAddressDataRepository.FindBy(predicate, hasTracking);
+        return _iAddressDataReadRepository.FindBy(predicate, hasTracking);
     }
 
     public AddressData GetById(long id)
     {
-        return _iAddressDataRepository.GetById(id);
+        return _iAddressDataReadRepository.GetById(id);
+    }
+
+    public void Update(AddressData ceps)
+    {
+        _iAddressDataWriteRepository.Update(ceps);
+    }
+
+    public void Add(AddressData ceps)
+    {
+        _iAddressDataWriteRepository.Create(ceps);
     }
 }

@@ -1,51 +1,50 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using WebAPI.Application.Generic;
+﻿using System.Linq.Expressions;
 using WebAPI.Domain.Entities.Configuration;
+using WebAPI.Domain.Interfaces.Generic;
 using WebAPI.Domain.Interfaces.Repository.Configuration;
 
 namespace WebAPI.InfraStructure.Data.Repositories.Configuration;
 
 public class EmailSettingsRepository : IEmailSettingsRepository
 {
-    private readonly IGenericRepository<EmailSettings> _iEmailSettingsRepository;
+    private readonly IReadRepository<EmailSettings> _iEmailSettingsReadRepository;
+    private readonly IWriteRepository<EmailSettings> _iEmailSettingsWriteRepository;
 
-    public EmailSettingsRepository(IGenericRepository<EmailSettings> iEmailSettingsRepository)
+    public EmailSettingsRepository(
+        IReadRepository<EmailSettings> iEmailSettingsReadRepository,
+        IWriteRepository<EmailSettings> iEmailSettingsWriteRepository)
     {
-        _iEmailSettingsRepository = iEmailSettingsRepository;
+        _iEmailSettingsReadRepository = iEmailSettingsReadRepository;
+        _iEmailSettingsWriteRepository = iEmailSettingsWriteRepository;
     }
 
     public IQueryable<EmailSettings> GetAllInclude(string includeData, bool hasTracking = false)
     {
-        return _iEmailSettingsRepository.GetAllInclude(includeData, hasTracking);
+        return _iEmailSettingsReadRepository.GetAllInclude(includeData, hasTracking);
     }
 
     public IQueryable<EmailSettings> FindBy(Expression<Func<EmailSettings, bool>> predicate, bool hasTracking = false)
     {
-        return _iEmailSettingsRepository.FindBy(predicate, hasTracking);
+        return _iEmailSettingsReadRepository.FindBy(predicate, hasTracking);
     }
 
     public EmailSettings GetById(long id)
     {
-        return _iEmailSettingsRepository.GetById(id);
+        return _iEmailSettingsReadRepository.GetById(id);
     }
 
     public bool Exist(Expression<Func<EmailSettings, bool>> predicate)
     {
-        return _iEmailSettingsRepository.Exist(predicate);
+        return _iEmailSettingsReadRepository.Exist(predicate);
     }
 
     public void Create(EmailSettings emailSettings)
     {
-        _iEmailSettingsRepository.Create(emailSettings);
+        _iEmailSettingsWriteRepository.Create(emailSettings);
     }
 
     public void Update(EmailSettings emailSettings)
     {
-        _iEmailSettingsRepository.Update(emailSettings);
+        _iEmailSettingsWriteRepository.Update(emailSettings);
     }
 }

@@ -6,13 +6,14 @@ using WebAPI.Domain.Entities.Configuration;
 using WebAPI.Domain.Interfaces.Services.Tools;
 using WebAPI.Domain.Interfaces.Services.Configuration;
 using WebAPI.Domain.Interfaces.Factory;
+using WebAPI.Domain.Interfaces.Generic;
 
 namespace WebAPI.Application.Services.Configuration;
 
 public class EmailService : GenericService, IEmailService
 {
-    private readonly IGenericRepository<EmailSettings> _iEmailTypeRepository;
-    private readonly IGenericRepository<EmailDisplay> _iEmailDisplayRepository;
+    private readonly IReadRepository<EmailSettings> _iEmailTypeRepository;
+    private readonly IReadRepository<EmailDisplay> _iEmailDisplayRepository;
     private readonly IEmailFactory _iEmailFactory;
     private EnvironmentVariables _environmentVariables;
     private EmailSettings _emailSettings;
@@ -20,8 +21,8 @@ public class EmailService : GenericService, IEmailService
     public EmailService(
         EnvironmentVariables environmentVariables,
         INotificationMessageService notificationMessageService,
-        IGenericRepository<EmailSettings> iEmailTypeRepository,
-        IGenericRepository<EmailDisplay> iEmailDisplayRepository,
+        IReadRepository<EmailSettings> iEmailTypeRepository,
+        IReadRepository<EmailDisplay> iEmailDisplayRepository,
         IEmailFactory iEmailFactory
         ) : base(notificationMessageService)
     {

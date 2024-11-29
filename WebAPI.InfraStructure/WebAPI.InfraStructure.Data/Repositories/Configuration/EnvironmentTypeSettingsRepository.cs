@@ -1,51 +1,55 @@
 ﻿using System.Linq.Expressions;
-using WebAPI.Application.Generic;
 using WebAPI.Domain.Entities.Configuration;
+using WebAPI.Domain.Interfaces.Generic;
 using WebAPI.Domain.Interfaces.Repository.Configuration;
 
 namespace WebAPI.InfraStructure.Data.Repositories.Configuration;
 
 public class EnvironmentTypeSettingsRepository : IEnvironmentTypeSettingsRepository
 {
-    private readonly IGenericRepository<EnvironmentTypeSettings> _iEnvironmentTypeSettingsRepository;
+    private readonly IReadRepository<EnvironmentTypeSettings> _iEnvironmentTypeSettingsReadRepository;
+    private readonly IWriteRepository<EnvironmentTypeSettings> _iEnvironmentTypeSettingsWriteRepository;
 
-    public EnvironmentTypeSettingsRepository(IGenericRepository<EnvironmentTypeSettings> iEnvironmentTypeSettingsRepository)
+    public EnvironmentTypeSettingsRepository(
+        IReadRepository<EnvironmentTypeSettings> iEnvironmentTypeSettingsReadRepository,
+        IWriteRepository<EnvironmentTypeSettings> iEnvironmentTypeSettingsWriteRepository)
     {
-        _iEnvironmentTypeSettingsRepository = iEnvironmentTypeSettingsRepository;
+        _iEnvironmentTypeSettingsReadRepository = iEnvironmentTypeSettingsReadRepository;
+        _iEnvironmentTypeSettingsWriteRepository = iEnvironmentTypeSettingsWriteRepository;
     }
 
     public IQueryable<EnvironmentTypeSettings> GetAll(bool hasTracking = false)
     {
-        return _iEnvironmentTypeSettingsRepository.GetAll(hasTracking);
+        return _iEnvironmentTypeSettingsReadRepository.GetAll(hasTracking);
     }
 
     public IQueryable<EnvironmentTypeSettings> GetAllInclude(string includeData, bool hasTracking = false)
     {
-        return _iEnvironmentTypeSettingsRepository.GetAllInclude(includeData, hasTracking);
+        return _iEnvironmentTypeSettingsReadRepository.GetAllInclude(includeData, hasTracking);
     }
 
     public IQueryable<EnvironmentTypeSettings> FindBy(Expression<Func<EnvironmentTypeSettings, bool>> predicate, bool hasTracking = false)
     {
-        return _iEnvironmentTypeSettingsRepository.FindBy(predicate, hasTracking);
+        return _iEnvironmentTypeSettingsReadRepository.FindBy(predicate, hasTracking);
     }
 
     public EnvironmentTypeSettings GetById(long id)
     {
-        return _iEnvironmentTypeSettingsRepository.GetById(id);
+        return _iEnvironmentTypeSettingsReadRepository.GetById(id);
     }
 
     public bool Exist(Expression<Func<EnvironmentTypeSettings, bool>> predicate)
     {
-        return _iEnvironmentTypeSettingsRepository.Exist(predicate);
+        return _iEnvironmentTypeSettingsReadRepository.Exist(predicate);
     }
 
     public void Create(EnvironmentTypeSettings environmentTypeSettings)
     {
-        _iEnvironmentTypeSettingsRepository.Create(environmentTypeSettings);
+        _iEnvironmentTypeSettingsWriteRepository.Create(environmentTypeSettings);
     }
 
     public void Update(EnvironmentTypeSettings environmentTypeSettings)
     {
-        _iEnvironmentTypeSettingsRepository.Update(environmentTypeSettings);
+        _iEnvironmentTypeSettingsWriteRepository.Update(environmentTypeSettings);
     }
 }

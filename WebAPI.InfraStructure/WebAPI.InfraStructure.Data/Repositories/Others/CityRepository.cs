@@ -2,56 +2,60 @@
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using WebAPI.Domain.ExtensionMethods;
-using WebAPI.Application.Generic;
 using WebAPI.Domain.Entities.Others;
 using WebAPI.Domain.Interfaces.Repository;
+using WebAPI.Domain.Interfaces.Generic;
 
 namespace WebAPI.InfraStructure.Data.Repositories.Others;
 
 public class CityRepository : ICityRepository
 {
     private readonly WebAPIContext _context;
-    private readonly IGenericRepository<City> _iCityRepository;
+    private readonly IReadRepository<City> _iCityReadRepository;
+    private readonly IWriteRepository<City> _iCityWriteRepository;
 
-    public CityRepository(IGenericRepository<City> iCityRepository, WebAPIContext context)
+    public CityRepository(
+        IReadRepository<City> iCityReadRepository,
+        IWriteRepository<City> iCityWriteRepository,
+        WebAPIContext context)
     {
-        _iCityRepository = iCityRepository;
+        _iCityReadRepository = iCityReadRepository;
+        _iCityWriteRepository = iCityWriteRepository;
         _context = context;
     }
 
     public IQueryable<City> GetAll(bool hasTracking = false)
     {
-        return _iCityRepository.GetAll(hasTracking);
+        return _iCityReadRepository.GetAll(hasTracking);
     }
 
     public IQueryable<City> FindBy(Expression<Func<City, bool>> predicate, bool hasTracking = false)
     {
-        return _iCityRepository.FindBy(predicate, hasTracking);
+        return _iCityReadRepository.FindBy(predicate, hasTracking);
     }
-
-    public void Add(City city)
-    {
-        _iCityRepository.Create(city);
-    }
-
-    public void Update(City city)
-    {
-        _iCityRepository.Update(city);
-    }
-
     public City GetById(long id)
     {
-        return _iCityRepository.GetById(id);
+        return _iCityReadRepository.GetById(id);
     }
 
     public bool Exist(Expression<Func<City, bool>> predicate)
     {
-        return _iCityRepository.Exist(predicate);
+        return _iCityReadRepository.Exist(predicate);
+    }
+
+    public void Add(City city)
+    {
+        _iCityWriteRepository.Create(city);
+    }
+
+    public void Update(City city)
+    {
+        _iCityWriteRepository.Update(city);
     }
 
     public void Remove(City city)
     {
-        _iCityRepository.Remove(city);
+        _iCityWriteRepository.Remove(city);
     }
 
     /// <summary>

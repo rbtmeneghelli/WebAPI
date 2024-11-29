@@ -1,61 +1,66 @@
 ﻿using System.Linq.Expressions;
-using WebAPI.Application.Generic;
 using WebAPI.Domain.Entities.Others;
+using WebAPI.Domain.Interfaces.Generic;
 using WebAPI.Domain.Interfaces.Repository;
 
 namespace WebAPI.InfraStructure.Data.Repositories.Others;
 
 public class RegionRepository : IRegionRepository
 {
-    private readonly IGenericRepository<Region> _iRegionRepository;
+    private readonly IReadRepository<Region> _iRegionReadRepository;
+    private readonly IWriteRepository<Region> _iRegionWriteRepository;
 
-    public RegionRepository(IGenericRepository<Region> iRegionRepository)
+    public RegionRepository(
+        IReadRepository<Region> iRegionReadRepository,
+        IWriteRepository<Region> iRegionWriteRepository
+    )
     {
-        _iRegionRepository = iRegionRepository;
-    }
-
-    public void Add(Region region)
-    {
-        _iRegionRepository.Create(region);
+        _iRegionReadRepository = iRegionReadRepository;
+        _iRegionWriteRepository = iRegionWriteRepository;
     }
 
     public bool Exist(Expression<Func<Region, bool>> predicate)
     {
-        return _iRegionRepository.Exist(predicate);
+        return _iRegionReadRepository.Exist(predicate);
     }
 
     public IQueryable<Region> FindBy(Expression<Func<Region, bool>> predicate, bool hasTracking = false)
     {
-        return _iRegionRepository.FindBy(predicate, hasTracking);
+        return _iRegionReadRepository.FindBy(predicate, hasTracking);
     }
 
     public IQueryable<Region> GetAll(bool hasTracking = false)
     {
-        return _iRegionRepository.GetAll(hasTracking);
+        return _iRegionReadRepository.GetAll(hasTracking);
     }
 
     public Region GetById(long id)
     {
-        return _iRegionRepository.GetById(id);
-    }
-
-    public void Remove(Region region)
-    {
-        _iRegionRepository.Remove(region);
-    }
-
-    public void Update(Region region)
-    {
-        _iRegionRepository.Update(region);
-    }
-
-    public void AddRange(IEnumerable<Region> regions)
-    {
-        _iRegionRepository.BulkCreate(regions);
+        return _iRegionReadRepository.GetById(id);
     }
 
     public long GetCount(Expression<Func<Region, bool>> predicate)
     {
-        return _iRegionRepository.GetCount(predicate);
+        return _iRegionReadRepository.GetCount(predicate);
+    }
+
+    public void Add(Region region)
+    {
+        _iRegionWriteRepository.Create(region);
+    }
+
+    public void AddRange(IEnumerable<Region> regions)
+    {
+        _iRegionWriteRepository.BulkCreate(regions);
+    }
+
+    public void Update(Region region)
+    {
+        _iRegionWriteRepository.Update(region);
+    }
+
+    public void Remove(Region region)
+    {
+        _iRegionWriteRepository.Remove(region);
     }
 }
