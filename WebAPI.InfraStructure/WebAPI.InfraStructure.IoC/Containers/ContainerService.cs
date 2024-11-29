@@ -208,7 +208,7 @@ public static class ContainerService
         #region Generics
 
         services
-        .AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>))
+        .AddScoped(typeof(IGenericRepository<>), typeof(ReadRepository<>))
         .AddScoped(typeof(IGenericRepositoryDapper<>), typeof(GenericRepositoryDapper<>))
         .AddScoped(typeof(IFileService<>), typeof(FileService<>))
         .AddScoped(typeof(IMongoDbService<>), typeof(MongoDbService<>))

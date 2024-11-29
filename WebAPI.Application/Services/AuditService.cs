@@ -9,6 +9,7 @@ using WebAPI.Domain.Filters.Others;
 using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.Interfaces.Services;
 using WebAPI.Domain.Interfaces.Services.Tools;
+using WebAPI.Domain.Interfaces.Generic;
 
 
 namespace WebAPI.Application.Services;
@@ -16,12 +17,18 @@ namespace WebAPI.Application.Services;
 public class AuditService : GenericService, IAuditService
 {
     private readonly IAuditRepository _iAuditRepository;
-    private readonly IGenericRepositoryDapper<Audit> _iAuditRepositoryDapper;
+    private readonly IReadRepositoryDapper<Audit> _iAuditReadRepositoryDapper;
+    private readonly IWriteRepositoryDapper _iAuditWriteRepositoryDapper;
 
-    public AuditService(IAuditRepository iAuditRepository, IGenericRepositoryDapper<Audit> iAuditRepositoryDapper, INotificationMessageService iNotificationMessageService) : base(iNotificationMessageService)
+    public AuditService(
+        IAuditRepository iAuditRepository, 
+        IReadRepositoryDapper<Audit> iAuditReadRepositoryDapper,
+        IWriteRepositoryDapper iAuditWriteRepositoryDapper,
+        INotificationMessageService iNotificationMessageService) : base(iNotificationMessageService)
     {
         _iAuditRepository = iAuditRepository;
-        _iAuditRepositoryDapper = iAuditRepositoryDapper;
+        _iAuditReadRepositoryDapper = iAuditReadRepositoryDapper;
+        _iAuditWriteRepositoryDapper = iAuditWriteRepositoryDapper;
     }
 
     private async Task<IQueryable<Audit>> GetAllWithFilterAsync(AuditFilter filter)
@@ -53,7 +60,7 @@ public class AuditService : GenericService, IAuditService
     {
         string sql = @"select count(*) from ControlPanel_Audit " +
         @"select Id = Id, TableName = Table_Name, ActionName = Action_Name from ControlPanel_Audit where (Table_Name = '" + filter.TableName + "')";
-        var reader = await _iAuditRepositoryDapper.QueryMultiple(sql);
+        var reader = await _iAuditReadRepositoryDapper.QueryMultiple(sql);
 
         var queryResult = from x in reader.Result.AsQueryable()
                           orderby x.UpdateDate descending
@@ -125,7 +132,7 @@ public class AuditService : GenericService, IAuditService
     public async Task CreateAuditBySQLScript(Audit audit)
     {
         var scriptSQL = SqlExtensionMethod.CreateSQLInsertScript(audit, typeof(Audit));
-        await _iAuditRepositoryDapper.ExecuteQuery(scriptSQL);
+        await _iAuditWriteRepositoryDapper.ExecuteQuery(scriptSQL);
     }
 
     /// <summary>
@@ -148,7 +155,7 @@ public class AuditService : GenericService, IAuditService
         parameters.Add("@CreateDate", DateOnlyExtensionMethods.GetDateTimeNowFromBrazil(), dbType: DbType.DateTime2, direction: ParameterDirection.Input);
         parameters.Add("@Status", true, dbType: DbType.Boolean, direction: ParameterDirection.Input);
 
-        await _iAuditRepositoryDapper.ExecuteQueryParams(scriptSQL, parameters);
+        await _iAuditWriteRepositoryDapper.ExecuteQueryParams(scriptSQL, parameters);
     }
 
     public async Task UpdateAuditByDapper(Audit audit)
@@ -172,7 +179,7 @@ public class AuditService : GenericService, IAuditService
         parameters.Add("@UpdateDate", DateOnlyExtensionMethods.GetDateTimeNowFromBrazil(), dbType: DbType.DateTime2, direction: ParameterDirection.Input);
         parameters.Add("@Id", audit.Id);
 
-        await _iAuditRepositoryDapper.ExecuteQueryParams(scriptSQL, parameters);
+        await _iAuditWriteRepositoryDapper.ExecuteQueryParams(scriptSQL, parameters);
     }
 
     public async Task DeleteAuditByDapper(Audit audit, bool isLogicDelete = true)
@@ -190,7 +197,7 @@ public class AuditService : GenericService, IAuditService
             parameters.Add("@UpdateDate", DateOnlyExtensionMethods.GetDateTimeNowFromBrazil(), dbType: DbType.DateTime2, direction: ParameterDirection.Input);
             parameters.Add("@Id", audit.Id);
 
-            await _iAuditRepositoryDapper.ExecuteQueryParams(scriptSQLUpdate, parameters);
+            await _iAuditWriteRepositoryDapper.ExecuteQueryParams(scriptSQLUpdate, parameters);
         }
         else
         {
@@ -198,7 +205,7 @@ public class AuditService : GenericService, IAuditService
 
             parameters.Add("@Id", audit.Id);
 
-            await _iAuditRepositoryDapper.ExecuteQueryParams(scriptSQLDelete, parameters);
+            await _iAuditWriteRepositoryDapper.ExecuteQueryParams(scriptSQLDelete, parameters);
         }
     }
 
@@ -215,6 +222,6 @@ public class AuditService : GenericService, IAuditService
         parameters.Add("@UpdateDate", DateOnlyExtensionMethods.GetDateTimeNowFromBrazil(), dbType: DbType.DateTime2, direction: ParameterDirection.Input);
         parameters.Add("@Id", audit.Id);
 
-        await _iAuditRepositoryDapper.ExecuteQueryParams(scriptSQLUpdate, parameters);
+        await _iAuditWriteRepositoryDapper.ExecuteQueryParams(scriptSQLUpdate, parameters);
     }
 }
