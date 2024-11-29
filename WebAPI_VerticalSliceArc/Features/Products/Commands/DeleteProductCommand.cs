@@ -1,6 +1,5 @@
 ﻿using FluentResults;
 using MediatR;
-using WebAPI_VerticalSlice.Features.Products;
 
 namespace WebAPI_VerticalSliceArc.Features.Products.Commands;
 
@@ -8,16 +7,16 @@ public record DeleteProductCommand(long? Id, bool IsLogicDelete = true) : IReque
 
 public class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand, Result>
 {
-    private readonly ProdutoRepository _produtoRepository;
+    private readonly IProdutoRepository _iprodutoRepository;
 
-    public DeleteProductCommandHandler(ProdutoRepository produtoRepository)
+    public DeleteProductCommandHandler(IProdutoRepository iprodutoRepository)
     {
-        _produtoRepository = produtoRepository;
+        _iprodutoRepository = iprodutoRepository;
     }
 
     public async Task<Result> Handle(DeleteProductCommand command, CancellationToken cancellationToken)
     {
-        var product = await _produtoRepository.GetProductByIdAsync(command.Id.Value);
+        var product = await _iprodutoRepository.GetProductByIdAsync(command.Id.Value);
 
         if (product is null)
             return Result.Fail("Produto não encontrado!");
@@ -25,11 +24,11 @@ public class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand,
         if (command.IsLogicDelete)
         {
             product.Delete();
-            await _produtoRepository.UpdateProductAsync(product);
+            await _iprodutoRepository.UpdateProductAsync(product);
         }
         else
         {
-            await _produtoRepository.DeleteProductAsync(product);
+            await _iprodutoRepository.DeleteProductAsync(product);
         }
 
         return Result.Ok();

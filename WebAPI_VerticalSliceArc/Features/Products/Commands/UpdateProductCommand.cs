@@ -1,6 +1,5 @@
 ﻿using FluentResults;
 using MediatR;
-using WebAPI_VerticalSlice.Features.Products;
 
 namespace WebAPI_VerticalSliceArc.Features.Products.Commands;
 
@@ -8,22 +7,22 @@ public record UpdateProductCommand(long? Id, string Name, decimal Price) : IRequ
 
 public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, Result>
 {
-    private readonly ProdutoRepository _produtoRepository;
+    private readonly IProdutoRepository _iprodutoRepository;
 
-    public UpdateProductCommandHandler(ProdutoRepository produtoRepository)
+    public UpdateProductCommandHandler(IProdutoRepository iprodutoRepository)
     {
-        _produtoRepository = produtoRepository;
+        _iprodutoRepository = iprodutoRepository;
     }
 
     public async Task<Result> Handle(UpdateProductCommand command, CancellationToken cancellationToken)
     {
-        var product = await _produtoRepository.GetProductByIdAsync(command.Id.Value);
+        var product = await _iprodutoRepository.GetProductByIdAsync(command.Id.Value);
         
         if (product is null)
             return Result.Fail("Produto não encontrado!");
 
         product.Update(command.Name, command.Price);
-        await _produtoRepository.UpdateProductAsync(product);
+        await _iprodutoRepository.UpdateProductAsync(product);
         return Result.Ok();
     }
 }

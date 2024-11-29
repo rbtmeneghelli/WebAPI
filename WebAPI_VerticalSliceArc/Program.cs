@@ -6,6 +6,8 @@ using System.Reflection;
 using WebAPI_VerticalSlice.Features.Products;
 using WebAPI_VerticalSlice.InfraStructure.Context;
 using WebAPI_VerticalSliceArc.Domain.Generics;
+using WebAPI_VerticalSliceArc.Domain.Generics.Interfaces;
+using WebAPI_VerticalSliceArc.Features.Products;
 
 namespace WebAPI_VerticalSliceArc
 {
@@ -21,8 +23,9 @@ namespace WebAPI_VerticalSliceArc
             .UseInMemoryDatabase("VerticalSliceAPIDB")
             .ConfigureWarnings(p => p.Ignore(InMemoryEventId.TransactionIgnoredWarning)));
 
-            builder.Services.AddScoped(typeof(GenericRepository<>));
-            builder.Services.AddScoped<ProdutoRepository>();
+            builder.Services.AddScoped(typeof(IGenericReadRepository<>),typeof(GenericReadRepository<>));
+            builder.Services.AddScoped(typeof(IGenericWriteRepository<>), typeof(GenericWriteRepository<>));
+            builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
             builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
 
             builder.Services.AddEndpointsApiExplorer();
