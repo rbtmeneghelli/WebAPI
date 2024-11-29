@@ -4,12 +4,12 @@ using WebAPI_VerticalSliceArc.Features.Products;
 
 namespace WebAPI_VerticalSlice.Features.Products;
 
-public sealed class ProdutoRepository : IProdutoRepository
+public class ProductRepository : IProductRepository
 {
     private IGenericReadRepository<ProductEntity> _iProductReadRepository;
     private IGenericWriteRepository<ProductEntity> _iProductWriteRepository;
 
-    public ProdutoRepository(
+    public ProductRepository(
     IGenericReadRepository<ProductEntity> iProductReadRepository,
     IGenericWriteRepository<ProductEntity> iProductWriteRepository
     )

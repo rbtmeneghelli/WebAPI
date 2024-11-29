@@ -23,9 +23,9 @@ namespace WebAPI_VerticalSliceArc
             .UseInMemoryDatabase("VerticalSliceAPIDB")
             .ConfigureWarnings(p => p.Ignore(InMemoryEventId.TransactionIgnoredWarning)));
 
-            builder.Services.AddScoped(typeof(IGenericReadRepository<>),typeof(GenericReadRepository<>));
+            builder.Services.AddScoped(typeof(IGenericReadRepository<>), typeof(GenericReadRepository<>));
             builder.Services.AddScoped(typeof(IGenericWriteRepository<>), typeof(GenericWriteRepository<>));
-            builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
+            builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
 
             builder.Services.AddEndpointsApiExplorer();

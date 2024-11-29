@@ -2,7 +2,7 @@
 
 namespace WebAPI_VerticalSliceArc.Features.Products;
 
-public interface IProdutoRepository
+public interface IProductRepository
 {
     Task<IEnumerable<ProductEntity>> GetAllProductsAsync();
     Task<ProductEntity> GetProductByIdAsync(long productId);

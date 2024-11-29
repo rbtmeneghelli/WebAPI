@@ -3,7 +3,7 @@ using WebAPI_VerticalSliceArc.Domain.Generics.Interfaces;
 
 namespace WebAPI_VerticalSliceArc.Domain.Generics;
 
-public class GenericWriteRepository<TEntity> : GenericRepository<TEntity>, IGenericWriteRepository<TEntity> where TEntity : GenericEntity
+public class GenericWriteRepository<TEntity> : GenericRepository<TEntity>, IGenericWriteRepository<TEntity> where TEntity : class
 {
     public GenericWriteRepository(WebAPIDbContext dbContext) : base(dbContext) { }
 

@@ -380,3 +380,5 @@ Parar o IIS e Iniciar o IIS novamente
 >> Essa biblioteca faz que as requisições sejam validadas via fluentValidation, antes do CQRS ser acionado para efetuar um command ou uma query.
 >> https://macoratti.net/23/04/aspc_cqrsmediat1.htm
 >> https://macoratti.net/23/04/aspc_cqrsmediat2.htm
+
+Utilizar senha padrão >> 123Mudar

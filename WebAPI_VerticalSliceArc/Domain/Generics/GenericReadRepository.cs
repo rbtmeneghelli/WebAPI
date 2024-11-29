@@ -4,7 +4,7 @@ using WebAPI_VerticalSliceArc.Domain.Generics.Interfaces;
 
 namespace WebAPI_VerticalSliceArc.Domain.Generics;
 
-public class GenericReadRepository<TEntity> : GenericRepository<TEntity>, IGenericReadRepository<TEntity> where TEntity : GenericEntity
+public class GenericReadRepository<TEntity> : GenericRepository<TEntity>, IGenericReadRepository<TEntity> where TEntity : class
 {
     public GenericReadRepository(WebAPIDbContext dbContext) : base(dbContext) { }
 

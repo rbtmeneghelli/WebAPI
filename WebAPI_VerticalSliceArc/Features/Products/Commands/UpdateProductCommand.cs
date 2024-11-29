@@ -1,5 +1,6 @@
 ﻿using FluentResults;
 using MediatR;
+using WebAPI_VerticalSlice.Features.Products;
 
 namespace WebAPI_VerticalSliceArc.Features.Products.Commands;
 
@@ -7,9 +8,9 @@ public record UpdateProductCommand(long? Id, string Name, decimal Price) : IRequ
 
 public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, Result>
 {
-    private readonly IProdutoRepository _iprodutoRepository;
+    private readonly IProductRepository _iprodutoRepository;
 
-    public UpdateProductCommandHandler(IProdutoRepository iprodutoRepository)
+    public UpdateProductCommandHandler(IProductRepository iprodutoRepository)
     {
         _iprodutoRepository = iprodutoRepository;
     }

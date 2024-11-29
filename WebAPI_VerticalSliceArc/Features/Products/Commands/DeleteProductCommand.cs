@@ -1,5 +1,6 @@
 ﻿using FluentResults;
 using MediatR;
+using WebAPI_VerticalSlice.Features.Products;
 
 namespace WebAPI_VerticalSliceArc.Features.Products.Commands;
 
@@ -7,9 +8,9 @@ public record DeleteProductCommand(long? Id, bool IsLogicDelete = true) : IReque
 
 public class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand, Result>
 {
-    private readonly IProdutoRepository _iprodutoRepository;
+    private readonly IProductRepository _iprodutoRepository;
 
-    public DeleteProductCommandHandler(IProdutoRepository iprodutoRepository)
+    public DeleteProductCommandHandler(IProductRepository iprodutoRepository)
     {
         _iprodutoRepository = iprodutoRepository;
     }

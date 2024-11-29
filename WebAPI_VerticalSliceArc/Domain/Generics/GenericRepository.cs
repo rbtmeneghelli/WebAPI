@@ -3,7 +3,7 @@ using WebAPI_VerticalSlice.InfraStructure.Context;
 
 namespace WebAPI_VerticalSliceArc.Domain.Generics;
 
-public abstract class GenericRepository<TEntity> : IDisposable where TEntity : GenericEntity
+public abstract class GenericRepository<TEntity> : IDisposable where TEntity : class
 {
     protected readonly WebAPIDbContext _dbContext;
     protected readonly DbSet<TEntity> _dbSet;

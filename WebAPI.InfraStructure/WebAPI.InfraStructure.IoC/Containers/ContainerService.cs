@@ -384,6 +384,7 @@ public static class ContainerService
                           else if (context.Request.Headers.TryGetValue("Authorization", out var tokenHeader))
                           {
                               var iGeneralService = context.HttpContext.RequestServices.GetRequiredService<IGeneralService>();
+                              var environmentVariables = context.HttpContext.RequestServices.GetRequiredService<EnvironmentVariables>();
                               var tokenAuthAPI = StringExtensionMethod.ReplaceStringText(tokenHeader.ToString(), "Bearer ", "");
 
                               if (GuardClauses.IsNullOrWhiteSpace(tokenAuthAPI))
@@ -395,7 +396,7 @@ public static class ContainerService
                               {
                                   try
                                   {
-                                      string tokenDescriptografado = CryptographyTokenService.DecryptToken(tokenAuthAPI, configuration["TokenSettings:Key"]);
+                                      string tokenDescriptografado = CryptographyTokenService.DecryptToken(tokenAuthAPI, environmentVariables.TokenSettings.Key);
                                       if (iGeneralService.ValidateToken(tokenDescriptografado))
                                           context.Token = tokenDescriptografado;
                                   }

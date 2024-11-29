@@ -8,9 +8,9 @@ public record CreateProductCommand(string Name, decimal Price) : IRequest<Result
 
 public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, Result<long?>>
 {
-    private readonly IProdutoRepository _iprodutoRepository;
+    private readonly IProductRepository _iprodutoRepository;
 
-    public CreateProductCommandHandler(IProdutoRepository iprodutoRepository)
+    public CreateProductCommandHandler(IProductRepository iprodutoRepository)
     {
         _iprodutoRepository = iprodutoRepository;
     }

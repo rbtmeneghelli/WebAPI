@@ -1,4 +1,5 @@
 ﻿using WebAPI.Domain.Constants;
+using WebAPI.Domain.Cryptography;
 using WebAPI.Domain.Entities.ControlPanel;
 using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.Interfaces.Services;

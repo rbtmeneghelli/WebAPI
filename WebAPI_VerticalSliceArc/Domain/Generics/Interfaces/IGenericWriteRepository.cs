@@ -2,7 +2,7 @@
 
 namespace WebAPI_VerticalSliceArc.Domain.Generics.Interfaces;
 
-public interface IGenericWriteRepository<TEntity> where TEntity : GenericEntity
+public interface IGenericWriteRepository<TEntity> where TEntity : class
 {
     Task CreateAsync(TEntity entity);
     Task UpdateAsync(TEntity entity);
