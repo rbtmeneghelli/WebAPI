@@ -66,6 +66,7 @@ using System.Buffers.Text;
 using WebAPI.Domain.Cryptography;
 using WebAPI.Infrastructure.CrossCutting.ActionFilter;
 using WebAPI.Domain.Interfaces.Generic;
+using Microsoft.AspNetCore.ResponseCompression;
 
 namespace WebAPI.InfraStructure.IoC.Containers;
 
@@ -819,5 +820,22 @@ public static class ContainerService
     public static void RegisterSignalR(this IServiceCollection services)
     {
         services.AddSignalR();
+    }
+
+    public static void RegistrarCompressaoDados(this IServiceCollection services)
+    {
+        services.AddResponseCompression(options =>
+        {
+            options.Providers.Add<BrotliCompressionProvider>();
+            options.Providers.Add<GzipCompressionProvider>();
+            // Restringir a compactação dos dados somente para JSON ou algum outro tipo de formatação
+            // options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[] { "application/json" }); 
+        });
+    }
+
+    public static void RegistrarHttpContextAccessor(this IServiceCollection services)
+    {
+        //Efetuando esse comando, será possivel utilizar a classe IHttpContextAccessor via Dependency Injection
+        services.AddHttpContextAccessor();
     }
 }

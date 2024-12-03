@@ -54,6 +54,21 @@ public static class ContainerApp
         app.UseHealthChecksUI(options => { options.UIPath = "/dashboard"; });
     }
 
+    public static void UseCompressaoDados(this IApplicationBuilder app)
+    {
+        app.UseResponseCompression();
+
+        app.Use(async (context, next) =>
+        {
+            if (!context.Request.Headers.ContainsKey("Accept-Encoding"))
+            {
+                context.Request.Headers["Accept-Encoding"] = "gzip, br";
+            }
+
+            await next();
+        });
+    }
+
     public static void UseAppConfig(this IApplicationBuilder app, IWebHostEnvironment env, IConfiguration configuration)
     {
         if (env.IsDevelopment())
