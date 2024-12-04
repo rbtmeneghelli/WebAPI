@@ -382,3 +382,32 @@ Parar o IIS e Iniciar o IIS novamente
 >> https://macoratti.net/23/04/aspc_cqrsmediat2.htm
 
 Utilizar senha padrão >> 123Mudar
+
+-- Configuração para documentação para REST API, a partir do NET 9.0
+>> O swagger não vem mais integrado com o projeto
+>> A biblioteca padrão para documentação de API, a partir do NET 9.0 e a OPENAPI (Biblioteca Microsoft.AspNetCore.OpenApi)
+>> Biblioteca SWAGGER e SCALAR são OPENSOURCE
+>> A propriedade launchBrowser do arquivo launchSettings.json por padrão está igual a FALSE. Ao tornar ela true os endpoints da API serão exibidos numa pagina do browser.
+>> A propriedade launchUrl do arquivo launchSettings.json tem que ser inserida, abaixo do launchBrowser.
+>> A propriedade launchUrl do arquivo launchSettings.json para a biblioteca scalar, configurar desse jeito >> launchUrl: "swagger"
+>> A propriedade launchUrl do arquivo launchSettings.json para a biblioteca swagger, configurar desse jeito >> launchUrl: "scalar/v1"
+
+* Biblioteca SCALAR (AspNetCore.Scalar):
+
+builder.Services.AddOpenApi();
+
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+    app.MapScalarApiReference();
+}
+
+* Biblioteca SWAGGER (Swashbuckle.AspNetCore.SwaggerUI):
+
+builder.Services.AddOpenApi();
+
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+    app.UseSwaggerUI(options => options.SwaggerEndpoint("/openapi/v1.json", "xpto API"));
+}
