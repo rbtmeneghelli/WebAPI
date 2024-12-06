@@ -6,7 +6,7 @@ TITULO
 STATUS
   - Responsável >> Roberto Meneghelli
   - Criado em 06/12/2022
-  - Atualizado em 17/10/2024
+  - Atualizado em 06/12/2024
   - Tempo de entrega >> Nenhum, projeto de escopo aberto
 
 CONTEXTO
@@ -17,7 +17,7 @@ DECISÃO
   - Para desenvolvimento desse software foi escolhido as seguintes tecnologias:
     - NET 6.0 e C# 10, Atualizado para NET 8.0 e C# 12
     - Arquiterura >> REST API
-    - Modelo de Dominio >> Domain Driven Design (DDD) e Test Driven Design (TDD) 
+    - Modelo de Dominio >> Clean Architeture, Vertical Slide, Domain Driven Design (DDD) e Test Driven Design (TDD) 
     - Banco de dados >> SQL Server 2017
     - Mensageria >> RabbitMQ
     - Linguagem de Programação >> C#
@@ -27,12 +27,14 @@ DECISÃO
     - Camadas do Projeto >> API, IoC, Application, Infra, Domain, DesignPatterns, WebJobs, Tests, Environment
     - Api Gateway >> Ocelot (Utilizo para poder utilizar duas ou mais API de forma simultanea... Ideal para Microserviços)
     - Monitoramento >> HealthCheck
+    - Framework >> Entity Framework CORE
+    - Documentação da API >> Swagger
     
 MOTIVO DA DECISÂO
   - Devido ao contexto do software optei por decidir o desenvolvimento a partir de tecnologias e ferramentas em que tenho experiencia e conhecimento tecnico aprimorado
     
 LIMITAÇÔES
-  - Não possui integração com projeto frontend para teste visual do usuário, somente testes a partir da documentação Swagger
+  - Não possui integração com projeto frontend para teste visual do usuário, somente testes a partir da documentação Swagger ou postman
   - O projeto não está publicado em um servidor externo, impossibilitando seu acesso por outros usuarios
   - Camada de proteção de acesso as API integradas ao API Gateway Ocelot não está implementado no momento...
     
