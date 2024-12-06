@@ -16,7 +16,7 @@ CONTEXTO
 DECISÃO
   - Para desenvolvimento desse software foi escolhido as seguintes tecnologias:
     - NET 6.0 e C# 10, Atualizado para NET 8.0 e C# 12
-    - Arquiterura >> REST API com Clean Architeture
+    - Arquiterura >> REST API com Clean Architeture e Vertical Slice Architecture
     - Modelo de Dominio >> Clean Architeture, Vertical Slide, Domain Driven Design (DDD) e Test Driven Design (TDD) 
     - Padrões de Gerenciamento de Dados: Strategy, Factory, UnitOfWork e Repository, CQRS
     - Banco de dados >> SQL Server 2017
