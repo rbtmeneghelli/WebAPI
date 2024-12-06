@@ -16,18 +16,18 @@ CONTEXTO
 DECISÃO
   - Para desenvolvimento desse software foi escolhido as seguintes tecnologias:
     - NET 6.0 e C# 10, Atualizado para NET 8.0 e C# 12
-    - Arquiterura >> REST API
+    - Arquiterura >> REST API com Clean Architeture
     - Modelo de Dominio >> Clean Architeture, Vertical Slide, Domain Driven Design (DDD) e Test Driven Design (TDD) 
+    - Padrões de Gerenciamento de Dados: Strategy, Factory, UnitOfWork e Repository, CQRS
     - Banco de dados >> SQL Server 2017
     - Mensageria >> RabbitMQ
     - Linguagem de Programação >> C#
     - Repositorio de Codigo >> GitHub
-    - Design Pattern >> Strategy, Factory, Repository, UnitOfWork
     - Servidor >> IIS
     - Camadas do Projeto >> API, IoC, Application, Infra, Domain, DesignPatterns, WebJobs, Tests, Environment
     - Api Gateway >> Ocelot (Utilizo para poder utilizar duas ou mais API de forma simultanea... Ideal para Microserviços)
     - Monitoramento >> HealthCheck
-    - Framework >> Entity Framework CORE
+    - Framework >> Entity Framework CORE e Dapper
     - Documentação da API >> Swagger
     
 MOTIVO DA DECISÂO
