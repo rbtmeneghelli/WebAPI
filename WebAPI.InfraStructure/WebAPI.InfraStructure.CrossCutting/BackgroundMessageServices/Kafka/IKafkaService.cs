@@ -1,4 +1,4 @@
-﻿namespace WebAPI.Application.BackgroundMessageServices.Kafka;
+﻿namespace WebAPI.Infrastructure.CrossCutting.BackgroundMessageServices.Kafka;
 
 public interface IKafkaService<TEntity> : IDisposable where TEntity : class
 {

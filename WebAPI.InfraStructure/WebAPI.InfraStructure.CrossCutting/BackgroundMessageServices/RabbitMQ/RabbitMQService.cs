@@ -1,8 +1,10 @@
 ﻿using WebAPI.Domain.ExtensionMethods;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using WebAPI.Domain;
+using System.Text;
 
-namespace WebAPI.Application.BackgroundMessageServices.RabbitMQ;
+namespace WebAPI.Infrastructure.CrossCutting.BackgroundMessageServices.RabbitMQ;
 
 public sealed class RabbitMQService<TEntity> : IRabbitMQService<TEntity> where TEntity : class
 {

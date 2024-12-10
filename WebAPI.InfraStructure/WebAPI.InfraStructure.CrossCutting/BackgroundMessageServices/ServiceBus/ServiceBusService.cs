@@ -1,7 +1,8 @@
 ﻿using Azure.Messaging.ServiceBus;
 using System.Text.Json;
+using WebAPI.Domain;
 
-namespace WebAPI.Application.BackgroundMessageServices.ServiceBus;
+namespace WebAPI.Infrastructure.CrossCutting.BackgroundMessageServices.ServiceBus;
 
 public sealed class ServiceBusService<TEntity> : IServiceBusService<TEntity> where TEntity : class
 {

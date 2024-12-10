@@ -1,7 +1,8 @@
 ﻿using Confluent.Kafka;
+using WebAPI.Domain;
 using WebAPI.Domain.ExtensionMethods;
 
-namespace WebAPI.Application.BackgroundMessageServices.Kafka;
+namespace WebAPI.Infrastructure.CrossCutting.BackgroundMessageServices.Kafka;
 
 public sealed class KafkaService<TEntity> : IKafkaService<TEntity> where TEntity : class
 {

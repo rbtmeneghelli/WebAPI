@@ -34,12 +34,10 @@ using KissLog.Formatters;
 using Serilog.Sinks.MSSqlServer;
 using WebAPI.Domain.Models.EnvVarSettings;
 using WebAPI.Domain.Enums;
-using WebAPI.Application.BackgroundServices.RabbitMQ.Consumers;
 using WebAPI.Infrastructure.CrossCutting.BackgroundServices;
 using WebAPI.Infrastructure.CrossCutting.Middleware.HealthCheck;
 using Serilog;
 using Serilog.Filters;
-using WebAPI.Application.BackgroundMessageServices.RabbitMQ;
 using WebAPI.Domain.Interfaces.Services.Tools;
 using WebAPI.InfraStructure.Data.Repositories;
 using WebAPI.InfraStructure.Data.Repositories.Others;
@@ -67,6 +65,8 @@ using WebAPI.Domain.Cryptography;
 using WebAPI.Infrastructure.CrossCutting.ActionFilter;
 using WebAPI.Domain.Interfaces.Generic;
 using Microsoft.AspNetCore.ResponseCompression;
+using WebAPI.Infrastructure.CrossCutting.BackgroundMessageServices.RabbitMQ.Consumers;
+using WebAPI.Infrastructure.CrossCutting.BackgroundMessageServices.RabbitMQ;
 
 namespace WebAPI.InfraStructure.IoC.Containers;
 

@@ -41,11 +41,4 @@
     <ProjectReference Include="..\WebAPI.Domain\WebAPI.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="BackgroundMessageServices\Kafka\Consumers\" />
-    <Folder Include="BackgroundMessageServices\Kafka\Publishers\" />
-    <Folder Include="BackgroundMessageServices\ServiceBus\Consumers\" />
-    <Folder Include="BackgroundMessageServices\ServiceBus\Publishers\" />
-  </ItemGroup>
-
 </Project>

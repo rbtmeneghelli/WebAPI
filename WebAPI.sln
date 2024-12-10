@@ -5,13 +5,13 @@ VisualStudioVersion = 17.9.34714.143
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAPI", "WebAPI\WebAPI.csproj", "{6DABCDA0-4EF2-44AB-BFE6-2583146B833D}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1. WebAPI_Project", "1. WebAPI_Project", "{7A63D73B-45AC-4B77-A8A3-31094071532D}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4. WebAPI_Project", "4. WebAPI_Project", "{7A63D73B-45AC-4B77-A8A3-31094071532D}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. WebAPI_Application", "3. WebAPI_Application", "{BFF07E98-3D2C-44C6-B845-B3ECEA7276B9}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2. WebAPI_Application", "2. WebAPI_Application", "{BFF07E98-3D2C-44C6-B845-B3ECEA7276B9}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5. WebAPI_Domain", "5. WebAPI_Domain", "{E07F3A7E-507A-4041-89A8-5097532B2EA9}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1. WebAPI_Domain", "1. WebAPI_Domain", "{E07F3A7E-507A-4041-89A8-5097532B2EA9}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4. WebAPI_InfraStructure", "4. WebAPI_InfraStructure", "{7B07CE38-7389-4879-BE39-4BE12B672E28}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. WebAPI_InfraStructure", "3. WebAPI_InfraStructure", "{7B07CE38-7389-4879-BE39-4BE12B672E28}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "6. WebAPI_DesignPatterns", "6. WebAPI_DesignPatterns", "{92061A33-FDF7-4D2B-906A-2E3D9F381349}"
 EndProject
@@ -33,7 +33,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebJobs.Core", "WebJobs.Cor
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{C1B0BE22-EFD3-4BD8-90C0-6A785337867E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "9. WebAPI_Environment", "9. WebAPI_Environment", "{FC2A7367-72D6-4E3E-9530-EA0557CC8034}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5. WebAPI_Environment", "5. WebAPI_Environment", "{FC2A7367-72D6-4E3E-9530-EA0557CC8034}"
 	ProjectSection(SolutionItems) = preProject
 		DEV.bat = DEV.bat
 	EndProjectSection
@@ -44,13 +44,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAPI_Gateway", "WebAPI_Ga
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAPI.InfraStructure.CrossCutting", "WebAPI.InfraStructure\WebAPI.InfraStructure.CrossCutting\WebAPI.InfraStructure.CrossCutting.csproj", "{7366BE50-7731-4EB3-B04D-D741E3C4D40A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4.2 WebAPI.InfraStructure.CrossCutting", "4.2 WebAPI.InfraStructure.CrossCutting", "{A62C2EF2-9820-447E-8B76-3CBE9AAC0FEC}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3.2 WebAPI.InfraStructure.CrossCutting", "3.2 WebAPI.InfraStructure.CrossCutting", "{A62C2EF2-9820-447E-8B76-3CBE9AAC0FEC}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4.1 WebAPI.InfraStructure.Data", "4.1 WebAPI.InfraStructure.Data", "{0933A953-AA4A-4E73-9ED0-58A33A2A2F36}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3.1 WebAPI.InfraStructure.Data", "3.1 WebAPI.InfraStructure.Data", "{0933A953-AA4A-4E73-9ED0-58A33A2A2F36}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAPI.InfraStructure.Data", "WebAPI.InfraStructure\WebAPI.InfraStructure.Data\WebAPI.InfraStructure.Data.csproj", "{1642BEE6-439D-4E92-B6E3-A94383C40DB2}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4.3 WebAPI.InfraStructure.IoC", "4.3 WebAPI.InfraStructure.IoC", "{6517DBDC-0D7E-4215-BF6E-FF9ADA5E5AA1}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3.3 WebAPI.InfraStructure.IoC", "3.3 WebAPI.InfraStructure.IoC", "{6517DBDC-0D7E-4215-BF6E-FF9ADA5E5AA1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAPI.InfraStructure.IoC", "WebAPI.InfraStructure\WebAPI.InfraStructure.IoC\WebAPI.InfraStructure.IoC.csproj", "{B524BDD8-7575-4FAE-B221-9FF1DEE21455}"
 EndProject

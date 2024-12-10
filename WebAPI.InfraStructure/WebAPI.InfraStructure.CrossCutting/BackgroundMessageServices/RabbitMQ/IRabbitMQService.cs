@@ -1,6 +1,6 @@
 ﻿using RabbitMQ.Client;
 
-namespace WebAPI.Application.BackgroundMessageServices.RabbitMQ;
+namespace WebAPI.Infrastructure.CrossCutting.BackgroundMessageServices.RabbitMQ;
 
 public interface IRabbitMQService<TEntity> where TEntity : class
 {

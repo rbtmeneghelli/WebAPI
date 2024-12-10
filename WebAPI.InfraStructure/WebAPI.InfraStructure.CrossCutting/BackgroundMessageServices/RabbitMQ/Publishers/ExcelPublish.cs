@@ -1,8 +1,9 @@
 ﻿using RabbitMQ.Client;
+using System.Text;
 using System.Text.Json;
-using WebAPI.Application.BackgroundMessageServices.RabbitMQ;
+using WebAPI.Domain.Models;
 
-namespace WebAPI.Application.BackgroundServices.RabbitMQ.Publishers;
+namespace WebAPI.Infrastructure.CrossCutting.BackgroundMessageServices.RabbitMQ.Publishers;
 
 public sealed class QueueExcelFilePublish
 {

@@ -1,4 +1,4 @@
-﻿namespace WebAPI.Application.BackgroundMessageServices.ServiceBus;
+﻿namespace WebAPI.Infrastructure.CrossCutting.BackgroundMessageServices.ServiceBus;
 
 public interface IServiceBusService<TEntity> : IDisposable where TEntity : class
 {

@@ -10,4 +10,11 @@
     <ProjectReference Include="..\WebAPI.InfraStructure.Data\WebAPI.InfraStructure.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="BackgroundMessageServices\Kafka\Consumers\" />
+    <Folder Include="BackgroundMessageServices\Kafka\Publishers\" />
+    <Folder Include="BackgroundMessageServices\ServiceBus\Consumers\" />
+    <Folder Include="BackgroundMessageServices\ServiceBus\Publishers\" />
+  </ItemGroup>
+
 </Project>

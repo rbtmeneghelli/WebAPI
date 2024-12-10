@@ -1,10 +1,11 @@
 ﻿using Microsoft.Extensions.Hosting;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using System.Text;
 using WebAPI.Domain.ExtensionMethods;
-using WebAPI.Application.BackgroundMessageServices.RabbitMQ;
+using WebAPI.Domain.Models;
 
-namespace WebAPI.Application.BackgroundServices.RabbitMQ.Consumers;
+namespace WebAPI.Infrastructure.CrossCutting.BackgroundMessageServices.RabbitMQ.Consumers;
 
 public sealed class ExcelBackGroundService : BackgroundService
 {
