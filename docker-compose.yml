@@ -1,62 +1,83 @@
-version: '3.4'
+version: '3.8'
 
 services:
+  # WebAPI: sua aplicação de API REST
   webapi:
-    image: ${DOCKER_REGISTRY-}webapi
+    image: webapi:latest  # Use a imagem que você criou ou puxe uma do Docker Hub
     build:
       context: .
-      dockerfile: WebAPI/Dockerfile
+      dockerfile: Dockerfile  # Se você estiver construindo a partir de um Dockerfile
     ports:
-      - "8081:80"
+      - "9000:80"  # Mapeie a porta da sua API
     depends_on:
-      - sqldata
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8081/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 10s
-
-  sqldata:
-    image: mcr.microsoft.com/mssql/server:2019-latest
+      - sqlserver
+      - rabbitmq
+      - seq
     environment:
-      - SA_PASSWORD=Numsey#2024
+      - ASPNETCORE_ENVIRONMENT=Development
+      - SQLSERVER_CONNECTION_STRING=Server=sqlserver;Database=WebAPIDb;User=sa;Password=yourStrong!Passw0rd;
+      - RABBITMQ_URI=amqp://rabbitmq:5672
+      - SEQ_URI=http://seq:5341
+      - HANGFIRE_DASHBOARD_URI=http://webapi/hangfire
+      - SWAGGER_ENABLED=true
+    networks:
+      - webapi-network
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:80/health"]
+      interval: 30s
+      retries: 3
+      start_period: 10s
+      timeout: 10s
+
+  # SQL Server
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: sqlserver
+    environment:
       - ACCEPT_EULA=Y
+      - SA_PASSWORD=yourStrong!Passw0rd
+    ports:
+      - "1433:1433"
+    networks:
+      - webapi-network
     volumes:
-      - c:\dados\volumes\mssql:/var/opt/mssql/data
+      - sql_data:/var/opt/mssql
+
+  # RabbitMQ
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
     ports:
-      - "1450:1433"
-    healthcheck:
-      test: ["CMD-SHELL", "pidof sqlservr"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 10s
+      - "15672:15672"  # Para acessar o painel de gerenciamento RabbitMQ
+      - "5672:5672"    # Porta AMQP
+    networks:
+      - webapi-network
 
-  healthcheck:
-    image: curlimages/curl
-    command: ["curl", "-f", "http://webapi:8081/health"]
-    depends_on:
-      - webapi
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://webapi:8081/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 10s
+  # Seq: ferramenta de log agregador
+  seq:
+    image: datalust/seq:latest
+    container_name: seq
+    ports:
+      - "5341:5341"
+    networks:
+      - webapi-network
+    environment:
+      - SEQ_ACCEPT_EULA=Y
 
+  # Hangfire: Fila de background para tarefas
   hangfire:
-    image: ${DOCKER_REGISTRY-}hangfire
-    build:
-      context: .
-      dockerfile: Hangfire/Dockerfile
+    image: hangfireio/hangfire
+    container_name: hangfire
+    ports:
+      - "5000:5000"  # Porta para o painel de administração Hangfire
+    networks:
+      - webapi-network
     depends_on:
       - webapi
-    ports:
-      - "5000:5000"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/hangfire"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 10s
+
+volumes:
+  sql_data:
+
+networks:
+  webapi-network:
+    driver: bridge
