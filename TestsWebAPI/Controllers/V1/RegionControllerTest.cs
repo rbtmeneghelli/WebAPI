@@ -70,6 +70,7 @@ public sealed class RegionControllerTest : GenericControllerTest
         //Assert
         Assert.NotNull(listDb);
         Assert.Equal(3, listDb.Count);
+
         _mockRepository.Verify(r => r.GetAll(It.IsAny<bool>()), Times.Once);
     }
 
@@ -110,6 +111,7 @@ public sealed class RegionControllerTest : GenericControllerTest
         Assert.Equal(entity.Id, result.Id);
         Assert.Equal(entity.Name, result.Name);
         _mockRepository.Verify(r => r.Add(It.IsAny<Region>()), Times.Once);
+        //_mockRepository.Verify(r => r.Add(It.IsAny<Region>()), Times.Never); //Para caso de falha durante o processo, utilizar sempre o Times.Never
     }
 
     [Theory(DisplayName = "Metodo para atualizar uma região, a partir do seu ID")]
