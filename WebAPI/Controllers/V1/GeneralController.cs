@@ -9,6 +9,7 @@ using WebAPI.Domain.Constants;
 using WebAPI.Infrastructure.CrossCutting.ActionFilter;
 using WebAPI.Infrastructure.CrossCutting.Middleware.Security;
 using WebAPI.Infrastructure.CrossCutting.Middleware.SignalR;
+using WebAPI.Domain.Interfaces.Generic;
 
 namespace WebAPI.V1.Controllers;
 
@@ -23,6 +24,7 @@ public sealed class GeneralController : GenericController
     private readonly IEmailService _iEmailService;
     private readonly GeneralMethod _generalMethod;
     private readonly IHubContext<NotificationHub> _iHubContext;
+    private readonly ISqlRepository _iSqlRepository;
 
     private EnvironmentVariables _environmentVariables { get; }
 
@@ -35,7 +37,8 @@ public sealed class GeneralController : GenericController
         IMapper iMapperService,
         IHttpContextAccessor iHttpContextAccessor,
         IGenericNotifyLogsService iGenericNotifyLogsService,
-        IHubContext<NotificationHub> iHubContext) 
+        IHubContext<NotificationHub> iHubContext,
+        ISqlRepository iSqlRepository) 
         : base(iMapperService, iHttpContextAccessor, iGenericNotifyLogsService)
     {
         _iGeneralService = iGeneralService;
@@ -45,6 +48,7 @@ public sealed class GeneralController : GenericController
         _environmentVariables = environmentVariables;
         _generalMethod = GeneralMethod.GetLoadExtensionMethods();
         _iHubContext = iHubContext;
+        _iSqlRepository = iSqlRepository;
     }
 
     [HttpGet("export2Zip/{directory}/{typeFile:int?}")]
@@ -59,7 +63,7 @@ public sealed class GeneralController : GenericController
     [HttpGet("backup/{directory}")]
     public async Task<IActionResult> Backup(string directory)
     {
-        var result = await _iGeneralService.RunSqlBackupAsync(directory);
+        var result = await _iSqlRepository.RunSqlBackupAsync(directory);
 
         if (result)
             return CustomResponse(ConstantHttpStatusCode.OK_CODE, null, "Backup executado com sucesso");

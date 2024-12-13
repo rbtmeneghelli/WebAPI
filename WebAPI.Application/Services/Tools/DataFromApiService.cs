@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Json;
+using WebAPI.Domain.Constants;
 using WebAPI.Domain.Interfaces.Services.Tools;
 using WebAPI.Domain.Models.Generic;
 
@@ -73,5 +74,64 @@ public class GetDataFromApiService<T> : IDataFromApiService<T> where T : class
             ex.ShowDefaultExceptionMessage();
             return false;
         }
+    }
+
+    public async Task<RequestData> RequestDataToExternalAPIAsync(string url)
+    {
+        RequestData requestDataDto = new RequestData();
+
+        try
+        {
+            var client = _iHttpClientFactory.CreateClient("Signed");
+            client.BaseAddress = new Uri(url);
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            client.Timeout = TimeSpan.FromMinutes(1);
+            var response = await client.GetAsync(url);
+            if (response.IsSuccessStatusCode)
+            {
+                requestDataDto.Data = await response.Content.ReadAsStringAsync();
+                requestDataDto.IsSuccess = true;
+                return requestDataDto;
+            }
+        }
+        catch
+        {
+            requestDataDto.Data = $"{FixConstants.EXCEPTION_REQUEST_API} {url}";
+            requestDataDto.IsSuccess = false;
+        }
+        return requestDataDto;
+    }
+
+    public async Task<RequestData> RequestLoginAsync(string url, string key = "")
+    {
+        RequestData requestDataDto = new RequestData();
+        try
+        {
+            var client = _iHttpClientFactory.CreateClient("Signed");
+            client.BaseAddress = new Uri(url);
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            client.Timeout = TimeSpan.FromMinutes(1);
+            var stringContent = new StringContent(key, Encoding.UTF8, "application/xml");
+            HttpResponseMessage response = await client.PostAsync(url, stringContent);
+            if (response.IsSuccessStatusCode)
+            {
+                requestDataDto.Data = await response.Content.ReadAsStringAsync();
+                requestDataDto.IsSuccess = true;
+            }
+            else
+            {
+                requestDataDto.Data = $"{FixConstants.EXCEPTION_REQUEST_API} {url}";
+                requestDataDto.IsSuccess = false;
+            }
+            return requestDataDto;
+        }
+        catch
+        {
+            requestDataDto.Data = $"{FixConstants.EXCEPTION_REQUEST_API} {url}";
+            requestDataDto.IsSuccess = false;
+        }
+        return requestDataDto;
     }
 }

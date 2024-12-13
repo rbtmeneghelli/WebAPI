@@ -4,6 +4,7 @@ using WebAPI.Domain.Entities.Others;
 using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.Interfaces.Services;
+using WebAPI.Domain.Interfaces.Services.Tools;
 using WebAPI.Domain.Validations;
 
 namespace WebAPI.Controllers.V1;
@@ -15,14 +16,14 @@ public class AddressController : GenericController
 {
     private readonly IAddressService _iAddressService;
     private readonly IStatesService _iStatesService;
-    private readonly IGeneralService _iGeneralService;
+    private readonly IDataFromApiService<RequestData> _iDataFromApiService;
     private readonly IRegionService _iRegionService;
     private readonly ICityService _iCityService;
 
     public AddressController(
         IAddressService iAddressService,
         IStatesService iStatesService,
-        IGeneralService iGeneralService,
+        IDataFromApiService<RequestData> iDataFromApiService,
         IRegionService iRegionService,
         ICityService iCityService,
         IMapper iMapperService, 
@@ -32,7 +33,7 @@ public class AddressController : GenericController
     {
         _iAddressService = iAddressService;
         _iStatesService = iStatesService;
-        _iGeneralService = iGeneralService;
+        _iDataFromApiService = iDataFromApiService;
         _iRegionService = iRegionService;
         _iCityService = iCityService;
     }
@@ -46,7 +47,7 @@ public class AddressController : GenericController
             if (refreshCep && GuardClauses.IsNullOrWhiteSpace(cep) == false)
             {
                 modelCep = await _iAddressService.GetAddressByCepAsync(cep);
-                RequestData requestData = await _iGeneralService.RequestDataToExternalAPIAsync(string.Format($"{FixConstantsUrl.URL_TO_GET_CEP}{0}", cep));
+                RequestData requestData = await _iDataFromApiService.RequestDataToExternalAPIAsync(string.Format($"{FixConstantsUrl.URL_TO_GET_CEP}{0}", cep));
                 if (requestData.IsSuccess)
                 {
                     Domain.ValueObject.AddressData modelCepAPI = requestData.Data.DeserializeObject<Domain.ValueObject.AddressData>();
@@ -83,7 +84,7 @@ public class AddressController : GenericController
             {
                 if (GuardClauses.ObjectIsNotNull(listStates) && GuardClauses.HaveDataOnList(listStates))
                 {
-                    RequestData requestData = await _iGeneralService.RequestDataToExternalAPIAsync(FixConstantsUrl.URL_TO_GET_STATES);
+                    RequestData requestData = await _iDataFromApiService.RequestDataToExternalAPIAsync(FixConstantsUrl.URL_TO_GET_STATES);
                     if (requestData.IsSuccess)
                     {
                         IEnumerable<States> listStatesAPI = requestData.Data.DeserializeObject<IEnumerable<States>>();
@@ -129,7 +130,7 @@ public class AddressController : GenericController
             foreach (States state in states.Where(x => x.Initials != City.GetDFNickNameFromIBGE()))
             {
 
-                requestData = await _iGeneralService.RequestDataToExternalAPIAsync(string.Format(FixConstantsUrl.URL_TO_GET_CITIES, state.Initials));
+                requestData = await _iDataFromApiService.RequestDataToExternalAPIAsync(string.Format(FixConstantsUrl.URL_TO_GET_CITIES, state.Initials));
 
                 if (requestData.IsSuccess)
                 {
@@ -165,7 +166,7 @@ public class AddressController : GenericController
         try
         {
             List<Region> list = new List<Region>();
-            RequestData requestData = await _iGeneralService.RequestDataToExternalAPIAsync(FixConstantsUrl.URL_TO_GET_STATES);
+            RequestData requestData = await _iDataFromApiService.RequestDataToExternalAPIAsync(FixConstantsUrl.URL_TO_GET_STATES);
             if (requestData.IsSuccess)
             {
                 IEnumerable<States> listStatesAPI = requestData.Data.DeserializeObject<IEnumerable<States>>();
@@ -203,7 +204,7 @@ public class AddressController : GenericController
         {
             IEnumerable<Region> listRegion = await _iRegionService.GetAllRegionAsync();
             List<States> listStates = new List<States>();
-            RequestData requestData = await _iGeneralService.RequestDataToExternalAPIAsync(FixConstantsUrl.URL_TO_GET_STATES);
+            RequestData requestData = await _iDataFromApiService.RequestDataToExternalAPIAsync(FixConstantsUrl.URL_TO_GET_STATES);
             if (requestData.IsSuccess)
             {
                 IEnumerable<States> listStatesAPI = requestData.Data.DeserializeObject<IEnumerable<States>>();

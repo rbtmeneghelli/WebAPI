@@ -114,6 +114,61 @@ public sealed class SqlRepository : ISqlRepository
         return _context.Database.GetConnectionString();
     }
 
+    public async Task<bool> RunSqlProcedureAsync(string procName, string paramName, string paramValue)
+    {
+        SqlConnection sqlConnObj = new SqlConnection(GetConnectionStringFromDatabase());
+
+        try
+        {
+            SqlCommand sqlCmd = new SqlCommand(procName, sqlConnObj);
+            sqlCmd.CommandType = CommandType.StoredProcedure;
+            sqlCmd.Parameters.AddWithValue(paramName, paramValue);
+            sqlConnObj.Open();
+            await sqlCmd.ExecuteNonQueryAsync();
+        }
+        catch(Exception ex)
+        {
+            SaveLogErrorSql(procName, "Script", "ExecuteProcedureSql", ex.Message);
+            return false;
+        }
+        finally
+        {
+            sqlConnObj.Close();
+        }
+
+        return true;
+    }
+
+    public async Task<bool> RunSqlBackupAsync(string directory)
+    {
+        string dir = GuardClauses.IsNullOrWhiteSpace(directory) ? Directory.GetCurrentDirectory() : directory;
+        SqlConnection sqlConnObj = new SqlConnection(GetConnectionStringFromDatabase());
+
+        try
+        {
+            string nomeArquivo = $"DefaultAPI_{GuidExtensionMethod.GetGuidDigits("N")}.bak";
+            if (File.Exists(Path.Combine(dir, nomeArquivo)))
+            {
+                File.Delete(Path.Combine(dir, nomeArquivo));
+            }
+            string query = $"Backup database {sqlConnObj.Database} to disk='{dir}\\{nomeArquivo}'";
+            SqlCommand sqlCmd = new SqlCommand(query, sqlConnObj);
+            sqlConnObj.Open();
+            await sqlCmd.ExecuteNonQueryAsync();
+        }
+        catch
+        {
+            SaveLogErrorSql("Backup", "Script", "ExecuteBackup", FixConstants.ERROR_IN_BACKUP);
+            return false;
+        }
+        finally
+        {
+            sqlConnObj.Close();
+        }
+
+        return true;
+    }
+
     private SqlDbType GetSqlDbType(Type type)
     {
         Dictionary<Type, SqlDbType> dictionary = new Dictionary<Type, SqlDbType>

@@ -1,4 +1,6 @@
-﻿namespace WebAPI.Domain.Interfaces.Services.Tools;
+﻿using WebAPI.Domain.Models;
+
+namespace WebAPI.Domain.Interfaces.Services.Tools;
 
 public interface IDataFromApiService<T> where T : class
 {
@@ -6,4 +8,6 @@ public interface IDataFromApiService<T> where T : class
     Task<IEnumerable<T>> GetListFromExternalAPI(string apiPath);
     Task<bool> PostFromExternalAPI(string apiPath, T data);
     Task<bool> PutFromExternalAPI(string apiPath, T data);
+    Task<RequestData> RequestDataToExternalAPIAsync(string url);
+    Task<RequestData> RequestLoginAsync(string url, string key = "");
 }

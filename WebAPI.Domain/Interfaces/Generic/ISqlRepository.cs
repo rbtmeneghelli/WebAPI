@@ -9,4 +9,6 @@ public interface ISqlRepository : IDisposable
     bool ExecuteSql(string sql, params object[] parameters);
     bool ExecuteProcedureSql(string sql);
     string GetConnectionStringFromDatabase();
+    Task<bool> RunSqlProcedureAsync(string procName, string paramName, string paramValue);
+    Task<bool> RunSqlBackupAsync(string directory);
 }

@@ -14,21 +14,13 @@ namespace WebAPI.Application.Services;
 public class GeneralService : GenericService, IGeneralService
 {
     private List<RefreshTokens> _refreshTokens = new List<RefreshTokens>();
-    private readonly IHttpClientFactory _iHttpClientFactory;
     private readonly GeneralMethod _generalMethod;
     private EnvironmentVariables _environmentVariables { get; }
 
-    public GeneralService(EnvironmentVariables environmentVariables, INotificationMessageService iNotificationMessageService, IHttpClientFactory iHttpClientFactory) : base(iNotificationMessageService)
+    public GeneralService(EnvironmentVariables environmentVariables, INotificationMessageService iNotificationMessageService) : base(iNotificationMessageService)
     {
         _environmentVariables = environmentVariables;
-        _iHttpClientFactory = iHttpClientFactory;
         _generalMethod = GeneralMethod.GetLoadExtensionMethods();
-    }
-
-    private SqlConnection GetSqlConnection()
-    {
-        return null;
-        //return new SqlConnection(_configuration["WebAPI_Settings:DefaultConnection"]);
     }
 
     public string CreateJwtToken(Credentials credentials)
@@ -55,118 +47,6 @@ public class GeneralService : GenericService, IGeneralService
         var tokenAuth = tokenHandler.WriteToken(token);
         tokenAuth = CryptographyTokenService.EncryptToken(tokenAuth, _environmentVariables.TokenSettings.Key);
         return tokenAuth;
-    }
-
-    public async Task<RequestData> RequestDataToExternalAPIAsync(string url)
-    {
-        RequestData requestDataDto = new RequestData();
-
-        try
-        {
-            var client = _iHttpClientFactory.CreateClient("Signed");
-            client.BaseAddress = new Uri(url);
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            client.Timeout = TimeSpan.FromMinutes(1);
-            var response = await client.GetAsync(url);
-            if (response.IsSuccessStatusCode)
-            {
-                requestDataDto.Data = await response.Content.ReadAsStringAsync();
-                requestDataDto.IsSuccess = true;
-                return requestDataDto;
-            }
-        }
-        catch
-        {
-            requestDataDto.Data = $"{FixConstants.EXCEPTION_REQUEST_API} {url}";
-            requestDataDto.IsSuccess = false;
-        }
-        return requestDataDto;
-    }
-
-    public async Task<RequestData> RequestLoginAsync(string url, string key = "")
-    {
-        RequestData requestDataDto = new RequestData();
-        try
-        {
-            var client = _iHttpClientFactory.CreateClient("Signed");
-            client.BaseAddress = new Uri(url);
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            client.Timeout = TimeSpan.FromMinutes(1);
-            var stringContent = new StringContent(key, Encoding.UTF8, "application/xml");
-            HttpResponseMessage response = await client.PostAsync(url, stringContent);
-            if (response.IsSuccessStatusCode)
-            {
-                requestDataDto.Data = await response.Content.ReadAsStringAsync();
-                requestDataDto.IsSuccess = true;
-            }
-            else
-            {
-                requestDataDto.Data = $"{FixConstants.EXCEPTION_REQUEST_API} {url}";
-                requestDataDto.IsSuccess = false;
-            }
-            return requestDataDto;
-        }
-        catch
-        {
-            requestDataDto.Data = $"{FixConstants.EXCEPTION_REQUEST_API} {url}";
-            requestDataDto.IsSuccess = false;
-        }
-        return requestDataDto;
-    }
-
-    public async Task<bool> RunSqlProcedureAsync(string procName, string paramName, string paramValue)
-    {
-        SqlConnection sqlConnObj = GetSqlConnection();
-        try
-        {
-            SqlCommand sqlCmd = new SqlCommand(procName, sqlConnObj);
-            sqlCmd.CommandType = CommandType.StoredProcedure;
-            sqlCmd.Parameters.AddWithValue(paramName, paramValue);
-            sqlConnObj.Open();
-            await sqlCmd.ExecuteNonQueryAsync();
-        }
-        catch
-        {
-            Notify(string.Format(FixConstants.ERROR_IN_PROCEDURE, procName));
-            return false;
-        }
-        finally
-        {
-            sqlConnObj.Close();
-        }
-
-        return true;
-    }
-
-    public async Task<bool> RunSqlBackupAsync(string directory)
-    {
-        string dir = GuardClauses.IsNullOrWhiteSpace(directory) ? Directory.GetCurrentDirectory() : directory;
-        SqlConnection sqlConnObj = GetSqlConnection();
-        try
-        {
-            string nomeArquivo = $"DefaultAPI_{GuidExtensionMethod.GetGuidDigits("N")}.bak";
-            if (File.Exists(Path.Combine(dir, nomeArquivo)))
-            {
-                File.Delete(Path.Combine(dir, nomeArquivo));
-            }
-            string query = $"Backup database {sqlConnObj.Database} to disk='{dir}\\{nomeArquivo}'";
-            SqlCommand sqlCmd = new SqlCommand(query, sqlConnObj);
-            sqlConnObj.Open();
-            await sqlCmd.ExecuteNonQueryAsync();
-        }
-        catch
-        {
-            Notify(FixConstants.ERROR_IN_BACKUP);
-            return false;
-        }
-        finally
-        {
-            sqlConnObj.Close();
-        }
-
-        return true;
     }
 
     public async Task<MemoryStream> Export2ZipAsync(string directory, EnumMemoryStreamFile typeFile = EnumMemoryStreamFile.PDF)
