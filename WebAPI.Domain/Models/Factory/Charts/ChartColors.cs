@@ -1,4 +1,4 @@
-﻿namespace WebAPI.Domain.Models.Charts;
+﻿namespace WebAPI.Domain.Models.Factory.Charts;
 
 public class ChartColors
 {

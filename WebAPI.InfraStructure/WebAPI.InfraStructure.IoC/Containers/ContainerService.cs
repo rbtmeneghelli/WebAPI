@@ -67,6 +67,7 @@ using WebAPI.Domain.Interfaces.Generic;
 using Microsoft.AspNetCore.ResponseCompression;
 using WebAPI.Infrastructure.CrossCutting.BackgroundMessageServices.RabbitMQ.Consumers;
 using WebAPI.Infrastructure.CrossCutting.BackgroundMessageServices.RabbitMQ;
+using WebAPI.Domain.Interfaces.Services.Charts;
 
 namespace WebAPI.InfraStructure.IoC.Containers;
 
@@ -228,6 +229,14 @@ public static class ContainerService
 
         #endregion
 
+        #region Factory
+
+        services
+        .AddScoped<IGraphicFactory, GraphicFactory>()
+        .AddScoped<IEmailFactory, EmailFactory>();
+
+        #endregion
+
         #region Configuration
 
         services
@@ -238,7 +247,6 @@ public static class ContainerService
         .AddScoped<ILogSettingsService, LogSettingsService>()
         .AddScoped<IRequiredPasswordSettingsService, RequiredPasswordSettingsService>()
         .AddScoped<IEmailService, EmailService>()
-        .AddScoped<IEmailFactory, EmailFactory>()
         .AddScoped<IEmailDisplaySettingsService, EmailDisplaySettingsService>()
         .AddScoped<IEmailSettingsService, EmailSettingsService>()
         .AddScoped<IUploadSettingsService, UploadSettingsService>();
@@ -272,8 +280,8 @@ public static class ContainerService
         .AddScoped<IGeneralService, GeneralService>()
         .AddScoped<IRegionService, RegionService>()
         .AddScoped<IStatesService, StatesService>()
-        .AddScoped<IGraphicLineService, GraphicLineService>()
-        .AddScoped<IGraphicBarService, GraphicBarService>()
+        .AddScoped<IGraphicChartJSService, GraphicChartJSService>()
+        .AddScoped<IGraphicGoogleChartService, GraphicGoogleChartService>()
         .AddScoped<IQRCodeService, QRCodeService>()
         .AddScoped<IMemoryCacheService, MemoryCacheService>()
         .AddTransient<IIpAddressService, IpAddressService>()
