@@ -834,6 +834,7 @@ public static class ContainerService
     {
         services.AddResponseCompression(options =>
         {
+            options.EnableForHttps = true;
             options.Providers.Add<BrotliCompressionProvider>();
             options.Providers.Add<GzipCompressionProvider>();
             // Restringir a compactação dos dados somente para JSON ou algum outro tipo de formatação
