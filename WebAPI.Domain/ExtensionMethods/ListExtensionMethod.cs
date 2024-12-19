@@ -134,4 +134,24 @@ public class ListExtensionMethod
     public IEnumerable<int> GetListNET9() => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
     #endregion
+
+    #region Obter os valores finais da lista, a partir do Index
+
+    public T GetItemFromListByIndex<T>(List<T> list, int index, bool firstItemsFromList) where T : class
+    {
+        if (firstItemsFromList)
+            return list[index];
+        else
+            return list[index - 1];
+    }
+
+    public T GetItemFromListByIndexNET9<T>(List<T> list, int index, bool firstItemsFromList) where T : class
+    {
+        if (firstItemsFromList)
+            return list[index];
+        else
+            return list[^index]; // Com o simbolo ^ conseguimos obter os ultimos valores pelo index da lista
+    }
+
+    #endregion
 }

@@ -1438,6 +1438,14 @@ public sealed class GeneralMethod
     {
         return new JsonSerializerOptions { Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
     }
+
+    // Com esse metodo é possivel criar um objeto em tempo de execução, com base em um JSON
+    // Nesse caso não é necessario criar classe ou record
+    public dynamic GetDynamicObjectByJSON(string jsonData)
+    {
+        dynamic objDynamic = JsonSerializer.Serialize(jsonData);
+        return objDynamic;
+    }
 }
 
 public sealed class UriBuilderSite : UriBuilderAbstract
