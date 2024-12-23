@@ -383,6 +383,9 @@ Parar o IIS e Iniciar o IIS novamente
 
 Utilizar senha padrão >> 123Mudar
 
+-- Biblioteca HybridCache >> 
+>> E uma biblioteca que faz a junção da funcionalidade IMemoryCache e da IDistributedCache. (A partir do NET 9)
+
 -- Configuração para documentação para REST API, a partir do NET 9.0
 >> O swagger não vem mais integrado com o projeto
 >> A biblioteca padrão para documentação de API, a partir do NET 9.0 e a OPENAPI (Biblioteca Microsoft.AspNetCore.OpenApi)
