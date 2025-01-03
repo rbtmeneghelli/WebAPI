@@ -56,20 +56,11 @@ public class UserService : GenericService, IUserService
     {
         try
         {
-            return await (from p in _iUserRepository.GetAll().Include(x => x.Employee).ThenInclude(x => x.Profile)
-                          orderby p.Login ascending
-                          select new UserResponseDTO()
-                          {
-                              Id = p.Id,
-                              Login = p.Login,
-                              IsAuthenticated = p.IsAuthenticated,
-                              IsActive = p.Status,
-                              Password = "-",
-                              LastPassword = "-",
-                              Employee = p.Employee.Name,
-                              Profile = p.Employee.Profile.Description,
-                              Status = p.GetStatusDescription(),
-                          }).ToListAsync();
+            var data = await (from p in _iUserRepository.GetAll().Include(x => x.Employee).ThenInclude(x => x.Profile)
+                              orderby p.Login ascending
+                              select p).ToListAsync();
+
+            return data.ToDTO();
         }
         catch
         {
@@ -88,21 +79,13 @@ public class UserService : GenericService, IUserService
         {
             var query = GetAllUsers(filter);
 
-            var queryResult = from p in query.AsQueryable()
-                              orderby p.Login ascending
-                              select new UserResponseDTO
-                              {
-                                  Id = p.Id,
-                                  Login = p.Login,
-                                  IsAuthenticated = p.IsAuthenticated,
-                                  IsActive = p.Status,
-                                  Password = "-",
-                                  LastPassword = "-",
-                                  Profile = p.Employee.Profile.Description,
-                                  Status = p.GetStatusDescription(),
-                              };
+            var queryResult = await Task.FromResult(from p in query.AsQueryable()
+                                                    orderby p.Login ascending
+                                                    select p);
 
-            return PagedFactory.GetPaged(queryResult, PagedFactory.GetDefaultPageIndex(filter.PageIndex), PagedFactory.GetDefaultPageSize(filter.PageSize));
+            var data = queryResult.ToDTO();
+
+            return PagedFactory.GetPaged(data.AsQueryable(), PagedFactory.GetDefaultPageIndex(filter.PageIndex), PagedFactory.GetDefaultPageSize(filter.PageSize));
         }
         catch (Exception ex)
         {
@@ -119,18 +102,11 @@ public class UserService : GenericService, IUserService
     {
         try
         {
-            return await (from p in _iUserRepository.FindBy(x => x.Id == id).AsQueryable()
-                          orderby p.Login ascending
-                          select new UserResponseDTO
-                          {
-                              Id = p.Id,
-                              Login = p.Login,
-                              IsAuthenticated = p.IsAuthenticated,
-                              IsActive = p.Status,
-                              Password = "-",
-                              LastPassword = "-",
-                              Status = p.GetStatusDescription(),
-                          }).FirstOrDefaultAsync();
+            var data = await (from p in _iUserRepository.FindBy(x => x.Id == id).AsQueryable()
+                              orderby p.Login ascending
+                              select p).FirstOrDefaultAsync();
+
+            return data.ToDTO();
         }
         catch
         {
@@ -147,19 +123,11 @@ public class UserService : GenericService, IUserService
     {
         try
         {
-            return await (from p in _iUserRepository.FindBy(x => x.Login == login.ApplyTrim()).AsQueryable()
-                          orderby p.Login ascending
-                          select new UserResponseDTO
-                          {
-                              Id = p.Id,
-                              Login = p.Login,
-                              IsAuthenticated = p.IsAuthenticated,
-                              IsActive = p.Status,
-                              Password = "-",
-                              LastPassword = "-",
-                              Profile = p.Employee.Profile.Description,
-                              Status = p.GetStatusDescription(),
-                          }).FirstOrDefaultAsync();
+            var data = await (from p in _iUserRepository.FindBy(x => x.Login == login.ApplyTrim()).AsQueryable()
+                              orderby p.Login ascending
+                              select p).FirstOrDefaultAsync();
+
+            return data.ToDTO();
         }
         catch
         {

@@ -5,13 +5,13 @@ using WebAPI.Domain.DTO.Configuration;
 using WebAPI.Domain.Interfaces.Repository.Configuration;
 using WebAPI.Domain.Interfaces.Services.Configuration;
 using WebAPI.Domain.Interfaces.Services.Tools;
+using WebAPI.Domain.ExtensionMethods;
 
 namespace WebAPI.Application.Services.Configuration;
 
 public class EnvironmentTypeSettingsService : GenericService, IEnvironmentTypeSettingsService
 {
     private readonly IEnvironmentTypeSettingsRepository _iEnvironmentTypeSettingsRepository;
-    private EnvironmentVariables _environmentVariables;
 
     public EnvironmentTypeSettingsService(
         IEnvironmentTypeSettingsRepository iEnvironmentTypeSettingsRepository,
@@ -20,22 +20,17 @@ public class EnvironmentTypeSettingsService : GenericService, IEnvironmentTypeSe
         : base(iNotificationMessageService)
     {
         _iEnvironmentTypeSettingsRepository = iEnvironmentTypeSettingsRepository;
-        _environmentVariables = environmentVariables;
     }
 
     public async Task<IEnumerable<EnvironmentTypeSettingsResponseDTO>> GetAllEnvironmentTypeSettingsAsync()
     {
         try
         {
-            return await (from p in _iEnvironmentTypeSettingsRepository.GetAll()
-                          orderby p.Id ascending
-                          select new EnvironmentTypeSettingsResponseDTO()
-                          {
-                              Id = p.Id.Value,
-                              EnvironmentDescription = p.Description,
-                              EnvironmentInitial = p.Initials,
-                              StatusDescription = p.GetStatusDescription()
-                          }).ToListAsync();
+            var data = await (from p in _iEnvironmentTypeSettingsRepository.GetAll()
+                              orderby p.Id ascending
+                              select p).ToListAsync();
+
+            return data.ToDTO();
         }
         catch
         {
@@ -52,14 +47,10 @@ public class EnvironmentTypeSettingsService : GenericService, IEnvironmentTypeSe
     {
         try
         {
-            return await (from p in _iEnvironmentTypeSettingsRepository.FindBy(x => x.Id == id).AsQueryable()
-                          select new EnvironmentTypeSettingsResponseDTO
-                          {
-                              Id = p.Id.Value,
-                              EnvironmentDescription = p.Description,
-                              EnvironmentInitial = p.Initials,
-                              StatusDescription = p.GetStatusDescription()
-                          }).FirstOrDefaultAsync();
+            var data = await (from p in _iEnvironmentTypeSettingsRepository.FindBy(x => x.Id == id).AsQueryable()
+                              select p).FirstOrDefaultAsync();
+
+            return data.ToDTO();
         }
         catch
         {
@@ -196,14 +187,11 @@ public class EnvironmentTypeSettingsService : GenericService, IEnvironmentTypeSe
     {
         try
         {
-            return await (from p in _iEnvironmentTypeSettingsRepository.GetAll()
-                          orderby p.Id ascending
-                          select new EnvironmentTypeSettingsExcelDTO()
-                          {
-                              EnvironmentDescription = p.Description,
-                              EnvironmentInitial = p.Initials,
-                              StatusDescription = p.GetStatusDescription()
-                          }).ToListAsync();
+            var data = await (from p in _iEnvironmentTypeSettingsRepository.GetAll()
+                              orderby p.Id ascending
+                              select p).ToListAsync();
+
+            return data.ToExcel();
         }
         catch
         {
