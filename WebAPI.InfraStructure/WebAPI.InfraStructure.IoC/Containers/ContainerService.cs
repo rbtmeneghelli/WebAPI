@@ -68,6 +68,7 @@ using Microsoft.AspNetCore.ResponseCompression;
 using WebAPI.Infrastructure.CrossCutting.BackgroundMessageServices.RabbitMQ.Consumers;
 using WebAPI.Infrastructure.CrossCutting.BackgroundMessageServices.RabbitMQ;
 using WebAPI.Domain.Interfaces.Services.Charts;
+using WebAPI.Application.Mapping;
 
 namespace WebAPI.InfraStructure.IoC.Containers;
 
@@ -296,7 +297,8 @@ public static class ContainerService
 
     public static void RegisterMapperConfig(this IServiceCollection services)
     {
-        services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+        services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies()); // >> Formato recomendado
+        //services.AddAutoMapper(typeof(MappingProfile)); >> Formato Opcional e usado para poucos perfis de mapeamento
     }
 
     public static void RegisterConfigs(this IServiceCollection services, IConfiguration configuration)
