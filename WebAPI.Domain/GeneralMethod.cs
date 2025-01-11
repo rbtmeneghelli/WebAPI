@@ -84,6 +84,46 @@ public sealed class GeneralMethod
         return StringExtensionMethod.GetEmptyString();
     }
 
+    private string GetFuseTimebyState(string state)
+    {
+        var dictionaryTimeZoneFromBrasil = new Dictionary<string, string>
+        {
+            { "AC", "America/Rio_Branco" }, // Acre
+            { "AL", "America/Maceio" },    // Alagoas
+            { "AP", "America/Belem" },     // Amapá
+            { "AM", "America/Manaus" },    // Amazonas
+            { "BA", "America/Bahia" },     // Bahia
+            { "CE", "America/Fortaleza" }, // Ceará
+            { "DF", "America/Sao_Paulo" }, // Distrito Federal
+            { "ES", "America/Sao_Paulo" }, // Espírito Santo
+            { "FN", "America/Noronha" },   // Fernando de Noronha
+            { "GO", "America/Sao_Paulo" }, // Goiás
+            { "MA", "America/Fortaleza" }, // Maranhão
+            { "MT", "America/Cuiaba" },    // Mato Grosso
+            { "MS", "America/Campo_Grande" }, // Mato Grosso do Sul
+            { "MG", "America/Sao_Paulo" }, // Minas Gerais
+            { "PA", "America/Belem" },     // Pará
+            { "PB", "America/Fortaleza" }, // Paraíba
+            { "PR", "America/Sao_Paulo" }, // Paraná
+            { "PE", "America/Recife" },    // Pernambuco
+            { "PI", "America/Fortaleza" }, // Piauí
+            { "RJ", "America/Sao_Paulo" }, // Rio de Janeiro
+            { "RN", "America/Fortaleza" }, // Rio Grande do Norte
+            { "RS", "America/Sao_Paulo" }, // Rio Grande do Sul
+            { "RO", "America/Porto_Velho" }, // Rondônia
+            { "RR", "America/Boa_Vista" },   // Roraima
+            { "SC", "America/Sao_Paulo" }, // Santa Catarina
+            { "SP", "America/Sao_Paulo" }, // São Paulo
+            { "SE", "America/Maceio" },    // Sergipe
+            { "TO", "America/Araguaina" }  // Tocantins
+        };
+
+        if (dictionaryTimeZoneFromBrasil.TryGetValue(state, out var value))
+            return value;
+
+        return string.Empty;
+    }
+
     #endregion
 
     public string RemoveMimeType(string base64)
@@ -1445,6 +1485,18 @@ public sealed class GeneralMethod
     {
         dynamic objDynamic = JsonSerializer.Serialize(jsonData);
         return objDynamic;
+    }
+
+    public DateTime CreateDateByFuseTimeState(string state)
+    {
+        string timezoneId = GetFuseTimebyState(state);
+
+        if (string.IsNullOrWhiteSpace(timezoneId))
+            return DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
+
+        TimeZoneInfo tz = TimeZoneInfo.FindSystemTimeZoneById(timezoneId);
+        return TimeZoneInfo.ConvertTime(DateTime.UtcNow, tz);
+
     }
 }
 
