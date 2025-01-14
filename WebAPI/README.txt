@@ -414,3 +414,6 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.UseSwaggerUI(options => options.SwaggerEndpoint("/openapi/v1.json", "xpto API"));
 }
+
+-- Biblioteca Dapper.Contrib => Busca facilitar o uso do Dapper para comandos padrões CRUD
+>> https://macoratti.net/23/07/net_dappercontrib1.htm

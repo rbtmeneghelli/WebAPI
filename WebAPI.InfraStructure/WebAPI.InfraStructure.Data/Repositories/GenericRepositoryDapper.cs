@@ -1,19 +1,21 @@
-﻿using System.Data;
+﻿using Microsoft.Data.SqlClient;
+using WebAPI.Domain;
 
 namespace WebAPI.InfraStructure.Data.Repositories;
 
 public abstract class GenericRepositoryDapper
 {
-    protected readonly IDbConnection _idbConnection;
+    protected EnvironmentVariables _environmentVariables;
 
-    public GenericRepositoryDapper(IDbConnection idbConnection)
+    public GenericRepositoryDapper(EnvironmentVariables environmentVariables)
     {
-        _idbConnection = idbConnection;
+        _environmentVariables = environmentVariables;
     }
+
+    public virtual SqlConnection GetDbConnection() => new SqlConnection(_environmentVariables.ConnectionStringSettings.DefaultConnection);
 
     public void Dispose()
     {
-        _idbConnection?.Dispose();
         GC.SuppressFinalize(this);
     }
 }

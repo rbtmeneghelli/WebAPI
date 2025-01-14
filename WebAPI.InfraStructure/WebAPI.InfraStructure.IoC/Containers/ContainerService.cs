@@ -186,14 +186,6 @@ public static class ContainerService
         //b => b.MinBatchSize(5).MaxBatchSize(50).MigrationsAssembly(typeof(WebAPIContext).Assembly.FullName)).
         //LogTo(Console.WriteLine, new[] { RelationalEventId.CommandExecuting })
         //.EnableSensitiveDataLogging());
-
-        //Aplica DI para uso do Dapper
-        services.AddSingleton<IDbConnection>(provider =>
-        {
-            var connection = new SqlConnection(connectionString);
-            connection.Open();
-            return connection;
-        });
     }
 
     public static void RegisterServices(this IServiceCollection services)
