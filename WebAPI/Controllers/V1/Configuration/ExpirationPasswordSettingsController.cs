@@ -1,5 +1,4 @@
 ﻿using WebAPI.Domain.Constants;
-using WebAPI.Domain.Entities.Configuration;
 using WebAPI.Domain.DTO.Configuration;
 using WebAPI.Domain.Enums;
 using WebAPI.Domain.ExtensionMethods;
@@ -20,10 +19,9 @@ public sealed class ExpirationPasswordSettingsController : GenericController
     public ExpirationPasswordSettingsController(
         IGenericConfigurationService iGenericConfigurationService,
         IFileService<ExpirationPasswordSettingsExcelDTO> iFileService,
-        IMapper iMapperService,
         IHttpContextAccessor iHttpContextAccessor,
         IGenericNotifyLogsService iGenericNotifyLogsService)
-    : base(iMapperService, iHttpContextAccessor, iGenericNotifyLogsService)
+    : base(iHttpContextAccessor, iGenericNotifyLogsService)
     {
         _iGenericConfigurationService = iGenericConfigurationService;
         _generalMethod = GeneralMethod.GetLoadExtensionMethods();
@@ -68,11 +66,10 @@ public sealed class ExpirationPasswordSettingsController : GenericController
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
-        var expirationPasswordSettingsRequest = ApplyMapToEntity<ExpirationPasswordSettingsCreateRequestDTO, ExpirationPasswordSettings>(expirationPasswordSettingsCreateRequestDTO);
-        var result = await _iGenericConfigurationService.ExpirationPasswordSettingsService.CreateExpirationPasswordSettingsAsync(expirationPasswordSettingsRequest);
+        var result = await _iGenericConfigurationService.ExpirationPasswordSettingsService.CreateExpirationPasswordSettingsAsync(expirationPasswordSettingsCreateRequestDTO);
 
         if (result)
-            return CustomResponse(ConstantHttpStatusCode.CREATE_CODE, expirationPasswordSettingsRequest);
+            return CustomResponse(ConstantHttpStatusCode.CREATE_CODE, expirationPasswordSettingsCreateRequestDTO);
 
         return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
     }
@@ -82,17 +79,15 @@ public sealed class ExpirationPasswordSettingsController : GenericController
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
-        var expirationPasswordSettingsRequest = ApplyMapToEntity<ExpirationPasswordSettingsUpdateRequestDTO, ExpirationPasswordSettings>(expirationPasswordSettingsUpdateRequestDTO);
-
-        if (id != expirationPasswordSettingsRequest.Id)
+        if (id != expirationPasswordSettingsUpdateRequestDTO.Id)
         {
             NotificationError(FixConstants.ERROR_IN_GETID);
             return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
         }
 
-        if (await _iGenericConfigurationService.ExpirationPasswordSettingsService.ExistExpirationPasswordSettingsByIdAsync(expirationPasswordSettingsRequest.Id.GetValueOrDefault()))
+        if (await _iGenericConfigurationService.ExpirationPasswordSettingsService.ExistExpirationPasswordSettingsByIdAsync(expirationPasswordSettingsUpdateRequestDTO.Id.GetValueOrDefault()))
         {
-            var result = await _iGenericConfigurationService.ExpirationPasswordSettingsService.UpdateExpirationPasswordSettingsAsync(expirationPasswordSettingsRequest);
+            var result = await _iGenericConfigurationService.ExpirationPasswordSettingsService.UpdateExpirationPasswordSettingsAsync(expirationPasswordSettingsUpdateRequestDTO);
             if (result)
                 return CustomResponse(ConstantHttpStatusCode.NO_CONTENT_CODE);
             else

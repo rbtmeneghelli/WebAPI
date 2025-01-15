@@ -20,10 +20,9 @@ public sealed class LayoutSettingsController : GenericController
     public LayoutSettingsController(
         IGenericConfigurationService iGenericConfigurationService,
         IFileService<LayoutSettingsExcelDTO> iFileService,
-        IMapper iMapperService,
         IHttpContextAccessor iHttpContextAccessor,
         IGenericNotifyLogsService iGenericNotifyLogsService)
-    : base(iMapperService, iHttpContextAccessor, iGenericNotifyLogsService)
+    : base(iHttpContextAccessor, iGenericNotifyLogsService)
     {
         _iGenericConfigurationService = iGenericConfigurationService;
         _generalMethod = GeneralMethod.GetLoadExtensionMethods();
@@ -68,11 +67,10 @@ public sealed class LayoutSettingsController : GenericController
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
-        var layoutSettingsCreateRequest = ApplyMapToEntity<LayoutSettingsCreateRequestDTO, LayoutSettings>(layoutSettingsCreateRequestDTO);
-        var result = await _iGenericConfigurationService.LayoutSettingsService.CreateLayoutSettingsAsync(layoutSettingsCreateRequest);
+        var result = await _iGenericConfigurationService.LayoutSettingsService.CreateLayoutSettingsAsync(layoutSettingsCreateRequestDTO);
 
         if (result)
-            return CustomResponse(ConstantHttpStatusCode.CREATE_CODE, layoutSettingsCreateRequest);
+            return CustomResponse(ConstantHttpStatusCode.CREATE_CODE, layoutSettingsCreateRequestDTO);
 
         return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
     }
@@ -82,17 +80,15 @@ public sealed class LayoutSettingsController : GenericController
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
-        var layoutSettingsUpdateRequest = ApplyMapToEntity<LayoutSettingsUpdateRequestDTO, LayoutSettings>(layoutSettingsUpdateRequestDTO);
-
-        if (id != layoutSettingsUpdateRequest.Id)
+        if (id != layoutSettingsUpdateRequestDTO.Id)
         {
             NotificationError(FixConstants.ERROR_IN_GETID);
             return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
         }
 
-        if (await _iGenericConfigurationService.LayoutSettingsService.ExistLayoutSettingsByIdAsync(layoutSettingsUpdateRequest.Id.GetValueOrDefault()))
+        if (await _iGenericConfigurationService.LayoutSettingsService.ExistLayoutSettingsByIdAsync(layoutSettingsUpdateRequestDTO.Id.GetValueOrDefault()))
         {
-            var result = await _iGenericConfigurationService.LayoutSettingsService.UpdateLayoutSettingsAsync(layoutSettingsUpdateRequest);
+            var result = await _iGenericConfigurationService.LayoutSettingsService.UpdateLayoutSettingsAsync(layoutSettingsUpdateRequestDTO);
             if (result)
                 return CustomResponse(ConstantHttpStatusCode.NO_CONTENT_CODE);
             else

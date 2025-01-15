@@ -20,7 +20,7 @@ public sealed class AccountController : GenericController
         IMapper iMapperService,
         IHttpContextAccessor iHttpContextAccessor,
         IGenericNotifyLogsService iGenericNotifyLogsService)
-        : base(iMapperService, iHttpContextAccessor, iGenericNotifyLogsService)
+        : base(iHttpContextAccessor, iGenericNotifyLogsService)
     {
         _iGeneralService = iGeneralService;
         _iGenericUnitOfWorkService = iGenericUnitOfWorkService;

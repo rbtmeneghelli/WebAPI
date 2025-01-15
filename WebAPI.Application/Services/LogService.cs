@@ -14,10 +14,12 @@ namespace WebAPI.Application.Services;
 public class LogService : GenericService, ILogService
 {
     private readonly ILogRepository _iLogRepository;
+    private readonly IMapperService _iMapperService;
 
-    public LogService(ILogRepository iLogRepository, INotificationMessageService iNotificationMessageService) : base(iNotificationMessageService)
+    public LogService(ILogRepository iLogRepository, INotificationMessageService iNotificationMessageService, IMapperService iMapperService) : base(iNotificationMessageService)
     {
         _iLogRepository = iLogRepository;
+        _iMapperService = iMapperService;
     }
 
     private async Task<IQueryable<Log>> GetAllWithFilterAsync(LogFilter filter)
@@ -36,9 +38,10 @@ public class LogService : GenericService, ILogService
         (GuardClauses.IsNullOrWhiteSpace(filter.Class) || p.Class.StartsWith(filter.Class.ApplyTrim()));
     }
 
-    public async Task<Log> GetLogByIdAsync(long id)
+    public async Task<LogResponseDTO> GetLogByIdAsync(long id)
     {
-        return await Task.FromResult(_iLogRepository.GetById(id));
+        var data = await Task.FromResult(_iLogRepository.GetById(id));
+        return _iMapperService.ApplyMapToEntity<Log, LogResponseDTO>(data);
     }
 
     public async Task<IEnumerable<Log>> GetAllLogWithLikeAsync(string parameter) => await _iLogRepository.FindBy(x => EF.Functions.Like(x.Class, $"%{parameter}%")).ToListAsync();

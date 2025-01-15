@@ -8,8 +8,8 @@ public interface ILayoutSettingsService
     Task<LayoutSettingsResponseDTO> GetLayoutSettingsByIdAsync(long id);
     Task<bool> ExistLayoutSettingsByEnvironmentAsync();
     Task<bool> ExistLayoutSettingsByIdAsync(long id);
-    Task<bool> CreateLayoutSettingsAsync(LayoutSettings requiredPasswordSettings);
-    Task<bool> UpdateLayoutSettingsAsync(LayoutSettings requiredPasswordSettings);
+    Task<bool> CreateLayoutSettingsAsync(LayoutSettingsCreateRequestDTO layoutSettingsCreateRequestDTO);
+    Task<bool> UpdateLayoutSettingsAsync(LayoutSettingsUpdateRequestDTO layoutSettingsUpdateRequestDTO);
     Task<bool> LogicDeleteLayoutSettingsByIdAsync(long id);
     Task<bool> ReactiveLayoutSettingsByIdAsync(long id);
     Task<IEnumerable<LayoutSettingsExcelDTO>> GetAllLayoutSettingsExcelAsync();

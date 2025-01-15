@@ -1,5 +1,4 @@
 ﻿using WebAPI.Domain.Constants;
-using WebAPI.Domain.Entities.Configuration;
 using WebAPI.Domain.DTO.Configuration;
 using WebAPI.Domain.Enums;
 using WebAPI.Domain.ExtensionMethods;
@@ -20,10 +19,9 @@ public sealed class AuthenticationSettingsController : GenericController
     public AuthenticationSettingsController(
         IGenericConfigurationService iGenericConfigurationService,
         IFileService<AuthenticationSettingsExcelDTO> iFileService,
-        IMapper iMapperService,
         IHttpContextAccessor iHttpContextAccessor,
         IGenericNotifyLogsService iGenericNotifyLogsService)
-    : base(iMapperService, iHttpContextAccessor, iGenericNotifyLogsService)
+    : base(iHttpContextAccessor, iGenericNotifyLogsService)
     {
         _iGenericConfigurationService = iGenericConfigurationService;
         _generalMethod = GeneralMethod.GetLoadExtensionMethods();
@@ -68,11 +66,10 @@ public sealed class AuthenticationSettingsController : GenericController
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
-        var authenticationSettingsRequest = ApplyMapToEntity<AuthenticationSettingsCreateRequestDTO, AuthenticationSettings>(authenticationSettingsCreateRequestDTO);
-        var result = await _iGenericConfigurationService.AuthenticationSettingsService.CreateAuthenticationSettingsAsync(authenticationSettingsRequest);
+        var result = await _iGenericConfigurationService.AuthenticationSettingsService.CreateAuthenticationSettingsAsync(authenticationSettingsCreateRequestDTO);
 
         if (result)
-            return CustomResponse(ConstantHttpStatusCode.CREATE_CODE, authenticationSettingsRequest);
+            return CustomResponse(ConstantHttpStatusCode.CREATE_CODE, authenticationSettingsCreateRequestDTO);
 
         return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
     }
@@ -82,17 +79,15 @@ public sealed class AuthenticationSettingsController : GenericController
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
-        var authenticationSettingsRequest = ApplyMapToEntity<AuthenticationSettingsUpdateRequestDTO, AuthenticationSettings>(authenticationSettingsUpdateRequestDTO);
-
-        if (id != authenticationSettingsRequest.Id)
+        if (id != authenticationSettingsUpdateRequestDTO.Id)
         {
             NotificationError(FixConstants.ERROR_IN_GETID);
             return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
         }
 
-        if (await _iGenericConfigurationService.AuthenticationSettingsService.ExistAuthenticationSettingsByIdAsync(authenticationSettingsRequest.Id.GetValueOrDefault()))
+        if (await _iGenericConfigurationService.AuthenticationSettingsService.ExistAuthenticationSettingsByIdAsync(authenticationSettingsUpdateRequestDTO.Id.GetValueOrDefault()))
         {
-            var result = await _iGenericConfigurationService.AuthenticationSettingsService.UpdateAuthenticationSettingsAsync(authenticationSettingsRequest);
+            var result = await _iGenericConfigurationService.AuthenticationSettingsService.UpdateAuthenticationSettingsAsync(authenticationSettingsUpdateRequestDTO);
             if (result)
                 return CustomResponse(ConstantHttpStatusCode.NO_CONTENT_CODE);
             else

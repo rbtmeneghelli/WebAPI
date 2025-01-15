@@ -12,15 +12,18 @@ public class ExpirationPasswordSettingsService : GenericService, IExpirationPass
 {
     private readonly IExpirationPasswordSettingsRepository _iExpirationPasswordSettingsRepository;
     private EnvironmentVariables _environmentVariables;
+    private readonly IMapperService _iMapperService;
 
     public ExpirationPasswordSettingsService(
         IExpirationPasswordSettingsRepository iExpirationPasswordSettingsRepository,
         INotificationMessageService iNotificationMessageService,
-        EnvironmentVariables environmentVariables)
+        EnvironmentVariables environmentVariables,
+        IMapperService iMapperService)
         : base(iNotificationMessageService)
     {
         _iExpirationPasswordSettingsRepository = iExpirationPasswordSettingsRepository;
         _environmentVariables = environmentVariables;
+        _iMapperService = iMapperService;
     }
 
     public async Task<IEnumerable<ExpirationPasswordSettingsResponseDTO>> GetAllExpirationPasswordSettingsAsync()
@@ -113,10 +116,11 @@ public class ExpirationPasswordSettingsService : GenericService, IExpirationPass
         return result;
     }
 
-    public async Task<bool> CreateExpirationPasswordSettingsAsync(ExpirationPasswordSettings expirationPasswordSettings)
+    public async Task<bool> CreateExpirationPasswordSettingsAsync(ExpirationPasswordSettingsCreateRequestDTO expirationPasswordSettingsCreateRequestDTO)
     {
         try
         {
+            ExpirationPasswordSettings expirationPasswordSettings = _iMapperService.ApplyMapToEntity<ExpirationPasswordSettingsCreateRequestDTO, ExpirationPasswordSettings>(expirationPasswordSettingsCreateRequestDTO);
             _iExpirationPasswordSettingsRepository.Create(expirationPasswordSettings);
             return true;
         }
@@ -131,10 +135,11 @@ public class ExpirationPasswordSettingsService : GenericService, IExpirationPass
         }
     }
 
-    public async Task<bool> UpdateExpirationPasswordSettingsAsync(ExpirationPasswordSettings expirationPasswordSettings)
+    public async Task<bool> UpdateExpirationPasswordSettingsAsync(ExpirationPasswordSettingsUpdateRequestDTO expirationPasswordSettingsUpdateRequestDTO)
     {
         try
         {
+            ExpirationPasswordSettings expirationPasswordSettings = _iMapperService.ApplyMapToEntity<ExpirationPasswordSettingsUpdateRequestDTO, ExpirationPasswordSettings>(expirationPasswordSettingsUpdateRequestDTO);
             ExpirationPasswordSettings expirationPasswordSettingsDb = _iExpirationPasswordSettingsRepository.GetById(expirationPasswordSettings.Id.Value);
 
             if (GuardClauses.ObjectIsNotNull(expirationPasswordSettingsDb))

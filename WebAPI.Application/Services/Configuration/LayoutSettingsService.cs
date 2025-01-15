@@ -11,15 +11,18 @@ public class LayoutSettingsService : GenericService, ILayoutSettingsService
 {
     private readonly ILayoutSettingsRepository _iLayoutSettingsRepository;
     private EnvironmentVariables _environmentVariables;
+    private readonly IMapperService _iMapperService;
 
     public LayoutSettingsService(
         ILayoutSettingsRepository iLayoutSettingsRepository,
         INotificationMessageService iNotificationMessageService,
-        EnvironmentVariables environmentVariables)
+        EnvironmentVariables environmentVariables,
+        IMapperService iMapperService)
         : base(iNotificationMessageService)
     {
         _iLayoutSettingsRepository = iLayoutSettingsRepository;
         _environmentVariables = environmentVariables;
+        _iMapperService = iMapperService;
     }
 
     public async Task<IEnumerable<LayoutSettingsResponseDTO>> GetAllLayoutSettingsAsync()
@@ -118,10 +121,11 @@ public class LayoutSettingsService : GenericService, ILayoutSettingsService
         return result;
     }
 
-    public async Task<bool> CreateLayoutSettingsAsync(LayoutSettings layoutSettings)
+    public async Task<bool> CreateLayoutSettingsAsync(LayoutSettingsCreateRequestDTO layoutSettingsCreateRequestDTO)
     {
         try
         {
+            LayoutSettings layoutSettings = _iMapperService.ApplyMapToEntity<LayoutSettingsCreateRequestDTO, LayoutSettings>(layoutSettingsCreateRequestDTO);
             _iLayoutSettingsRepository.Create(layoutSettings);
             return true;
         }
@@ -136,10 +140,11 @@ public class LayoutSettingsService : GenericService, ILayoutSettingsService
         }
     }
 
-    public async Task<bool> UpdateLayoutSettingsAsync(LayoutSettings layoutSettings)
+    public async Task<bool> UpdateLayoutSettingsAsync(LayoutSettingsUpdateRequestDTO layoutSettingsUpdateRequestDTO)
     {
         try
         {
+            LayoutSettings layoutSettings = _iMapperService.ApplyMapToEntity<LayoutSettingsUpdateRequestDTO, LayoutSettings>(layoutSettingsUpdateRequestDTO);
             LayoutSettings layoutSettingsDb = _iLayoutSettingsRepository.GetById(layoutSettings.Id.Value);
 
             if (GuardClauses.ObjectIsNotNull(layoutSettingsDb))

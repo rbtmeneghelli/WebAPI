@@ -15,10 +15,15 @@ namespace WebAPI.Application.Services;
 public class UserService : GenericService, IUserService
 {
     private readonly IUserRepository _iUserRepository;
+    private readonly IMapperService _iMapperService;
 
-    public UserService(IUserRepository iUserRepository, INotificationMessageService iNotificationMessageService) : base(iNotificationMessageService)
+    public UserService(
+        IUserRepository iUserRepository,
+        INotificationMessageService iNotificationMessageService,
+        IMapperService iMapperService) : base(iNotificationMessageService)
     {
         _iUserRepository = iUserRepository;
+        _iMapperService = iMapperService;;
     }
 
     private IQueryable<User> GetAllUsers(UserFilter filter)
@@ -60,12 +65,13 @@ public class UserService : GenericService, IUserService
                               orderby p.Login ascending
                               select p).ToListAsync();
 
-            return data.ToDTO();
+            return _iMapperService.ApplyMapToEntity<IEnumerable<User>, IEnumerable<UserResponseDTO>>(data);
+            //return data.ToDTO();
         }
         catch
         {
             Notify(FixConstants.ERROR_IN_GETALL);
-            return Enumerable.Empty<UserResponseDTO>().ToList();
+            return Enumerable.Empty<UserResponseDTO>();
         }
         finally
         {
@@ -83,7 +89,8 @@ public class UserService : GenericService, IUserService
                                                     orderby p.Login ascending
                                                     select p);
 
-            var data = queryResult.ToDTO();
+            var data = _iMapperService.ApplyMapToEntity<IEnumerable<User>, IEnumerable<UserResponseDTO>>(queryResult);
+            //var data = queryResult.ToDTO();
 
             return PagedFactory.GetPaged(data.AsQueryable(), PagedFactory.GetDefaultPageIndex(filter.PageIndex), PagedFactory.GetDefaultPageSize(filter.PageSize));
         }
@@ -106,7 +113,8 @@ public class UserService : GenericService, IUserService
                               orderby p.Login ascending
                               select p).FirstOrDefaultAsync();
 
-            return data.ToDTO();
+            return _iMapperService.ApplyMapToEntity<User,UserResponseDTO>(data);
+            //return data.ToDTO();
         }
         catch
         {
@@ -127,7 +135,8 @@ public class UserService : GenericService, IUserService
                               orderby p.Login ascending
                               select p).FirstOrDefaultAsync();
 
-            return data.ToDTO();
+            return _iMapperService.ApplyMapToEntity<User, UserResponseDTO>(data);
+            //return data.ToDTO();
         }
         catch
         {
@@ -185,10 +194,12 @@ public class UserService : GenericService, IUserService
         return result;
     }
 
-    public async Task<bool> CreateUserAsync(User user)
+    public async Task<bool> CreateUserAsync(UserRequestDTO userRequestDTO)
     {
         try
         {
+            User user = _iMapperService.ApplyMapToEntity<UserRequestDTO, User>(userRequestDTO);
+
             if (GuardClauses.IsNullOrWhiteSpace(user.Login) || GuardClauses.IsNullOrWhiteSpace(user.Password))
             {
                 Notify("Para realizar o cadastro do login, o campo login e senha deve ser preenchido");
@@ -216,10 +227,11 @@ public class UserService : GenericService, IUserService
         }
     }
 
-    public async Task<bool> UpdateUserAsync(long id, User user)
+    public async Task<bool> UpdateUserAsync(long id, UserRequestDTO userRequestDTO)
     {
         try
         {
+            User user = _iMapperService.ApplyMapToEntity<UserRequestDTO, User>(userRequestDTO);
             User userDb = _iUserRepository.GetById(id);
 
             if (GuardClauses.ObjectIsNotNull(userDb))
@@ -344,5 +356,17 @@ public class UserService : GenericService, IUserService
         {
             await Task.CompletedTask;
         }
+    }
+
+    public async Task<IEnumerable<UserExcelDTO>> ExportData(UserFilter filter)
+    {
+        var list = await GetAllUserPaginateAsync(filter);
+
+        if (list?.Results?.Count() > 0)
+        {
+            return _iMapperService.ApplyMapToEntity<IEnumerable<UserResponseDTO>,IEnumerable<UserExcelDTO>>(list.Results);
+        }
+
+        return Enumerable.Empty<UserExcelDTO>();
     }
 }

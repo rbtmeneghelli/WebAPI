@@ -20,10 +20,9 @@ public sealed class RequiredPasswordSettingsController : GenericController
     public RequiredPasswordSettingsController(
         IGenericConfigurationService iGenericConfigurationService,
         IFileService<RequiredPasswordSettingsExcelDTO> iFileService,
-        IMapper iMapperService,
         IHttpContextAccessor iHttpContextAccessor,
         IGenericNotifyLogsService iGenericNotifyLogsService)
-    : base(iMapperService, iHttpContextAccessor, iGenericNotifyLogsService)
+    : base(iHttpContextAccessor, iGenericNotifyLogsService)
     {
         _iGenericConfigurationService = iGenericConfigurationService;
         _generalMethod = GeneralMethod.GetLoadExtensionMethods();
@@ -68,11 +67,10 @@ public sealed class RequiredPasswordSettingsController : GenericController
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
-        var requiredPasswordSettingsCreateRequest = ApplyMapToEntity<RequiredPasswordSettingsCreateRequestDTO, RequiredPasswordSettings>(requiredPasswordSettingsCreateRequestDTO);
-        var result = await _iGenericConfigurationService.RequiredPasswordSettingsService.CreateRequiredPasswordSettingsAsync(requiredPasswordSettingsCreateRequest);
+        var result = await _iGenericConfigurationService.RequiredPasswordSettingsService.CreateRequiredPasswordSettingsAsync(requiredPasswordSettingsCreateRequestDTO);
 
         if (result)
-            return CustomResponse(ConstantHttpStatusCode.OK_CODE, requiredPasswordSettingsCreateRequest);
+            return CustomResponse(ConstantHttpStatusCode.OK_CODE, requiredPasswordSettingsCreateRequestDTO);
 
         return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
     }
@@ -82,17 +80,15 @@ public sealed class RequiredPasswordSettingsController : GenericController
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
-        var requiredPasswordSettingsUpdateRequest = ApplyMapToEntity<RequiredPasswordSettingsUpdateRequestDTO, RequiredPasswordSettings>(requiredPasswordSettingsUpdateRequestDTO);
-
-        if (id != requiredPasswordSettingsUpdateRequest.Id)
+        if (id != requiredPasswordSettingsUpdateRequestDTO.Id)
         {
             NotificationError(FixConstants.ERROR_IN_GETID);
             return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
         }
 
-        if (await _iGenericConfigurationService.RequiredPasswordSettingsService.ExistRequiredPasswordSettingsByIdAsync(requiredPasswordSettingsUpdateRequest.Id.GetValueOrDefault()))
+        if (await _iGenericConfigurationService.RequiredPasswordSettingsService.ExistRequiredPasswordSettingsByIdAsync(requiredPasswordSettingsUpdateRequestDTO.Id.GetValueOrDefault()))
         {
-            var result = await _iGenericConfigurationService.RequiredPasswordSettingsService.UpdateRequiredPasswordSettingsAsync(requiredPasswordSettingsUpdateRequest);
+            var result = await _iGenericConfigurationService.RequiredPasswordSettingsService.UpdateRequiredPasswordSettingsAsync(requiredPasswordSettingsUpdateRequestDTO);
             if (result)
                 return CustomResponse(ConstantHttpStatusCode.NO_CONTENT_CODE);
             else

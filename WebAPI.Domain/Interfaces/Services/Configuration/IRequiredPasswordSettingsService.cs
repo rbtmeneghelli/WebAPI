@@ -10,8 +10,8 @@ public interface IRequiredPasswordSettingsService
     Task<RequiredPasswordSettingsResponseDTO> GetRequiredPasswordSettingsByIdAsync(long id);
     Task<bool> ExistRequiredPasswordSettingsByEnvironmentAsync();
     Task<bool> ExistRequiredPasswordSettingsByIdAsync(long id);
-    Task<bool> CreateRequiredPasswordSettingsAsync(RequiredPasswordSettings requiredPasswordSettings);
-    Task<bool> UpdateRequiredPasswordSettingsAsync(RequiredPasswordSettings requiredPasswordSettings);
+    Task<bool> CreateRequiredPasswordSettingsAsync(RequiredPasswordSettingsCreateRequestDTO requiredPasswordSettingsCreateRequestDTO);
+    Task<bool> UpdateRequiredPasswordSettingsAsync(RequiredPasswordSettingsUpdateRequestDTO requiredPasswordSettingsUpdateRequestDTO);
     Task<bool> LogicDeleteRequiredPasswordSettingsByIdAsync(long id);
     Task<bool> ReactiveRequiredPasswordSettingsByIdAsync(long id);
     Task<IEnumerable<RequiredPasswordSettingsExcelDTO>> GetAllRequiredPasswordSettingsExcelAsync();

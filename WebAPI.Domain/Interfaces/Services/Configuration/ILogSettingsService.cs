@@ -10,8 +10,8 @@ public interface ILogSettingsService
     Task<LogSettingsResponseDTO> GetLogSettingsByIdAsync(long id);
     Task<bool> ExistLogSettingsByEnvironmentAsync();
     Task<bool> ExistLogSettingsByIdAsync(long id);
-    Task<bool> CreateLogSettingsAsync(LogSettings logSettings);
-    Task<bool> UpdateLogSettingsAsync(LogSettings logSettings);
+    Task<bool> CreateLogSettingsAsync(LogSettingsCreateRequestDTO logSettingsCreateRequestDTO);
+    Task<bool> UpdateLogSettingsAsync(LogSettingsUpdateRequestDTO logSettingsUpdateRequestDTO);
     Task<bool> LogicDeleteLogSettingsByIdAsync(long id);
     Task<bool> ReactiveLogSettingsByIdAsync(long id);
     Task<IEnumerable<LogSettingsExcelDTO>> GetAllLogSettingsExcelAsync();

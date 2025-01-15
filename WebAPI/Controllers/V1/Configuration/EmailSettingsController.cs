@@ -20,10 +20,9 @@ public sealed class EmailSettingsController : GenericController
     public EmailSettingsController(
         IGenericConfigurationService iGenericConfigurationService,
         IFileService<EmailSettingsExcelDTO> iFileService,
-        IMapper iMapperService,
         IHttpContextAccessor iHttpContextAccessor,
         IGenericNotifyLogsService iGenericNotifyLogsService)
-    : base(iMapperService, iHttpContextAccessor, iGenericNotifyLogsService)
+    : base(iHttpContextAccessor, iGenericNotifyLogsService)
     {
         _iGenericConfigurationService = iGenericConfigurationService;
         _generalMethod = GeneralMethod.GetLoadExtensionMethods();
@@ -68,11 +67,10 @@ public sealed class EmailSettingsController : GenericController
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
-        var emailSettingsCreateRequest = ApplyMapToEntity<EmailSettingsCreateRequestDTO, EmailSettings>(emailSettingsCreateRequestDTO);
-        var result = await _iGenericConfigurationService.EmailSettingsService.CreateEmailSettingsAsync(emailSettingsCreateRequest);
+        var result = await _iGenericConfigurationService.EmailSettingsService.CreateEmailSettingsAsync(emailSettingsCreateRequestDTO);
 
         if (result)
-            return CustomResponse(ConstantHttpStatusCode.CREATE_CODE, emailSettingsCreateRequest);
+            return CustomResponse(ConstantHttpStatusCode.CREATE_CODE, emailSettingsCreateRequestDTO);
 
         return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
     }
@@ -82,17 +80,15 @@ public sealed class EmailSettingsController : GenericController
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
-        var emailSettingsUpdateRequest = ApplyMapToEntity<EmailSettingsUpdateRequestDTO, EmailSettings>(emailSettingsUpdateRequestDTO);
-
-        if (id != emailSettingsUpdateRequest.Id)
+        if (id != emailSettingsUpdateRequestDTO.Id)
         {
             NotificationError(FixConstants.ERROR_IN_GETID);
             return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
         }
 
-        if (await _iGenericConfigurationService.EmailSettingsService.ExistEmailSettingsByIdAsync(emailSettingsUpdateRequest.Id.GetValueOrDefault()))
+        if (await _iGenericConfigurationService.EmailSettingsService.ExistEmailSettingsByIdAsync(emailSettingsUpdateRequestDTO.Id.GetValueOrDefault()))
         {
-            var result = await _iGenericConfigurationService.EmailSettingsService.UpdateEmailSettingsAsync(emailSettingsUpdateRequest);
+            var result = await _iGenericConfigurationService.EmailSettingsService.UpdateEmailSettingsAsync(emailSettingsUpdateRequestDTO);
             if (result)
                 return CustomResponse(ConstantHttpStatusCode.NO_CONTENT_CODE);
             else

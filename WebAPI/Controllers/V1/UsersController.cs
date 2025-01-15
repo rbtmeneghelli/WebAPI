@@ -24,10 +24,9 @@ public sealed class UsersController : GenericController
     public UsersController(
         IUserService iUserService,
         IFileService<UserExcelDTO> iFileService,
-        IMapper iMapperService,
         IHttpContextAccessor iHttpContextAccessor,
         IGenericNotifyLogsService iGenericNotifyLogsService)
-        : base(iMapperService, iHttpContextAccessor, iGenericNotifyLogsService)
+        : base(iHttpContextAccessor, iGenericNotifyLogsService)
 
     {
         _iUserService = iUserService;
@@ -38,7 +37,7 @@ public sealed class UsersController : GenericController
     [HttpGet("GetAll")]
     public async Task<IActionResult> GetAll()
     {
-        var model = _iMapperService.Map<IEnumerable<UserResponseDTO>>(await _iUserService.GetAllUserAsync());
+        var model = await _iUserService.GetAllUserAsync();
         return CustomResponse(ConstantHttpStatusCode.OK_CODE, model, FixConstants.SUCCESS_IN_GETALL);
     }
 
@@ -55,7 +54,7 @@ public sealed class UsersController : GenericController
     {
         if (await _iUserService.ExistUserByIdAsync(id))
         {
-            var model = _iMapperService.Map<UserResponseDTO>(await _iUserService.GetUserByIdAsync(id));
+            var model = await _iUserService.GetUserByIdAsync(id);
             return CustomResponse(ConstantHttpStatusCode.OK_CODE, model, FixConstants.SUCCESS_IN_GETID);
         }
 
@@ -67,7 +66,7 @@ public sealed class UsersController : GenericController
     {
         if (await _iUserService.ExistUserByLoginAsync(login))
         {
-            var model = _iMapperService.Map<UserResponseDTO>(await _iUserService.GetUserByLoginAsync(login));
+            var model = await _iUserService.GetUserByLoginAsync(login);
             return CustomResponse(ConstantHttpStatusCode.OK_CODE, model, FixConstants.SUCCESS_IN_GETID);
         }
 
@@ -94,11 +93,10 @@ public sealed class UsersController : GenericController
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
-        User user = ApplyMapToEntity<UserRequestDTO, User>(userRequestDTO);
-        var result = await _iUserService.CreateUserAsync(user);
+        var result = await _iUserService.CreateUserAsync(userRequestDTO);
 
         if (result)
-            return CustomResponse(ConstantHttpStatusCode.CREATE_CODE, user);
+            return CustomResponse(ConstantHttpStatusCode.CREATE_CODE, userRequestDTO);
 
         return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
     }
@@ -108,8 +106,6 @@ public sealed class UsersController : GenericController
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
-        User user = ApplyMapToEntity<UserRequestDTO, User>(userRequestDTO);
-
         if (id != userRequestDTO.Id)
         {
             NotificationError(FixConstants.ERROR_IN_GETID);
@@ -118,7 +114,7 @@ public sealed class UsersController : GenericController
 
         if (await _iUserService.ExistUserByIdAsync(userRequestDTO.Id.GetValueOrDefault()))
         {
-            var result = await _iUserService.UpdateUserAsync(id, user);
+            var result = await _iUserService.UpdateUserAsync(id, userRequestDTO);
             if (result)
                 return CustomResponse(ConstantHttpStatusCode.NO_CONTENT_CODE);
             else
@@ -173,16 +169,10 @@ public sealed class UsersController : GenericController
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
-        var list = await _iUserService.GetAllUserPaginateAsync(filter);
-        if (list?.Results?.Count() > 0)
-        {
-            var memoryStreamResult = _generalMethod.GetMemoryStreamType(EnumMemoryStreamFile.XLSX);
-            var excelData = _iMapperService.Map<IEnumerable<UserExcelDTO>>(list.Results);
-            var excelName = $"Users._{GuidExtensionMethod.GetGuidDigits("N")}.{memoryStreamResult.Extension}";
-            var memoryStreamExcel = await _iFileService.CreateExcelFileEPPLUS(excelData, excelName);
-            return File(memoryStreamExcel.ToArray(), memoryStreamResult.Type, excelName);
-        }
-
-        return CustomResponse(ConstantHttpStatusCode.NOT_FOUND_CODE);
+        var excelData = await _iUserService.ExportData(filter);
+        var memoryStreamResult = _generalMethod.GetMemoryStreamType(EnumMemoryStreamFile.XLSX);
+        var excelName = $"Users._{GuidExtensionMethod.GetGuidDigits("N")}.{memoryStreamResult.Extension}";
+        var memoryStreamExcel = await _iFileService.CreateExcelFileEPPLUS(excelData, excelName);
+        return File(memoryStreamExcel.ToArray(), memoryStreamResult.Type, excelName);
     }
 }

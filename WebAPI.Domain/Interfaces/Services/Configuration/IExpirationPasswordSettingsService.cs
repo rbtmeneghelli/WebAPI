@@ -10,8 +10,8 @@ public interface IExpirationPasswordSettingsService
     Task<ExpirationPasswordSettingsResponseDTO> GetExpirationPasswordSettingsByIdAsync(long id);
     Task<bool> ExistExpirationPasswordSettingsByEnvironmentAsync();
     Task<bool> ExistExpirationPasswordSettingsByIdAsync(long id);
-    Task<bool> CreateExpirationPasswordSettingsAsync(ExpirationPasswordSettings expirationPasswordSettings);
-    Task<bool> UpdateExpirationPasswordSettingsAsync(ExpirationPasswordSettings expirationPasswordSettings);
+    Task<bool> CreateExpirationPasswordSettingsAsync(ExpirationPasswordSettingsCreateRequestDTO expirationPasswordSettingsCreateRequestDTO);
+    Task<bool> UpdateExpirationPasswordSettingsAsync(ExpirationPasswordSettingsUpdateRequestDTO expirationPasswordSettingsUpdateRequestDTO);
     Task<bool> LogicDeleteExpirationPasswordSettingsByIdAsync(long id);
     Task<bool> ReactiveExpirationPasswordSettingsByIdAsync(long id);
     Task<IEnumerable<ExpirationPasswordSettingsExcelDTO>> GetAllExpirationPasswordSettingsExcelAsync();

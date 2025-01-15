@@ -1,5 +1,4 @@
 ﻿using WebAPI.Domain.Constants;
-using WebAPI.Domain.Entities.Configuration;
 using WebAPI.Domain.DTO.Configuration;
 using WebAPI.Domain.Enums;
 using WebAPI.Domain.ExtensionMethods;
@@ -20,10 +19,9 @@ public sealed class EnvironmentTypeSettingsController : GenericController
     public EnvironmentTypeSettingsController(
         IGenericConfigurationService iGenericConfigurationService,
         IFileService<EnvironmentTypeSettingsExcelDTO> iFileService,
-        IMapper iMapperService,
         IHttpContextAccessor iHttpContextAccessor,
         IGenericNotifyLogsService iGenericNotifyLogsService)
-    : base(iMapperService, iHttpContextAccessor, iGenericNotifyLogsService)
+    : base(iHttpContextAccessor, iGenericNotifyLogsService)
     {
         _iGenericConfigurationService = iGenericConfigurationService;
         _generalMethod = GeneralMethod.GetLoadExtensionMethods();
@@ -55,11 +53,10 @@ public sealed class EnvironmentTypeSettingsController : GenericController
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
-        var environmentTypeSettingsCreateRequest = ApplyMapToEntity<EnvironmentTypeSettingsCreateRequestDTO, EnvironmentTypeSettings>(environmentTypeSettingsCreateRequestDTO);
-        var result = await _iGenericConfigurationService.EnvironmentTypeSettingsService.CreateEnvironmentTypeSettingsAsync(environmentTypeSettingsCreateRequest);
+        var result = await _iGenericConfigurationService.EnvironmentTypeSettingsService.CreateEnvironmentTypeSettingsAsync(environmentTypeSettingsCreateRequestDTO);
 
         if (result)
-            return CustomResponse(ConstantHttpStatusCode.CREATE_CODE, environmentTypeSettingsCreateRequest);
+            return CustomResponse(ConstantHttpStatusCode.CREATE_CODE, environmentTypeSettingsCreateRequestDTO);
 
         return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
     }
@@ -69,17 +66,15 @@ public sealed class EnvironmentTypeSettingsController : GenericController
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
-        var environmentTypeSettingsUpdateRequest = ApplyMapToEntity<EnvironmentTypeSettingsUpdateRequestDTO, EnvironmentTypeSettings>(environmentTypeSettingsUpdateRequestDTO);
-
-        if (id != environmentTypeSettingsUpdateRequest.Id)
+        if (id != environmentTypeSettingsUpdateRequestDTO.Id)
         {
             NotificationError(FixConstants.ERROR_IN_GETID);
             return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
         }
 
-        if (await _iGenericConfigurationService.EnvironmentTypeSettingsService.ExistEnvironmentTypeSettingsByIdAsync(environmentTypeSettingsUpdateRequest.Id.GetValueOrDefault()))
+        if (await _iGenericConfigurationService.EnvironmentTypeSettingsService.ExistEnvironmentTypeSettingsByIdAsync(environmentTypeSettingsUpdateRequestDTO.Id.GetValueOrDefault()))
         {
-            var result = await _iGenericConfigurationService.EnvironmentTypeSettingsService.UpdateEnvironmentTypeSettingsAsync(environmentTypeSettingsUpdateRequest);
+            var result = await _iGenericConfigurationService.EnvironmentTypeSettingsService.UpdateEnvironmentTypeSettingsAsync(environmentTypeSettingsUpdateRequestDTO);
             if (result)
                 return CustomResponse(ConstantHttpStatusCode.NO_CONTENT_CODE);
             else

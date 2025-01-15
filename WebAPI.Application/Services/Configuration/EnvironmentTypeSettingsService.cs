@@ -12,14 +12,17 @@ namespace WebAPI.Application.Services.Configuration;
 public class EnvironmentTypeSettingsService : GenericService, IEnvironmentTypeSettingsService
 {
     private readonly IEnvironmentTypeSettingsRepository _iEnvironmentTypeSettingsRepository;
+    private readonly IMapperService _iMapperService;
 
     public EnvironmentTypeSettingsService(
         IEnvironmentTypeSettingsRepository iEnvironmentTypeSettingsRepository,
         INotificationMessageService iNotificationMessageService,
-        EnvironmentVariables environmentVariables)
+        EnvironmentVariables environmentVariables,
+        IMapperService iMapperService)
         : base(iNotificationMessageService)
     {
         _iEnvironmentTypeSettingsRepository = iEnvironmentTypeSettingsRepository;
+        _iMapperService = iMapperService;
     }
 
     public async Task<IEnumerable<EnvironmentTypeSettingsResponseDTO>> GetAllEnvironmentTypeSettingsAsync()
@@ -70,10 +73,11 @@ public class EnvironmentTypeSettingsService : GenericService, IEnvironmentTypeSe
         return result;
     }
 
-    public async Task<bool> CreateEnvironmentTypeSettingsAsync(EnvironmentTypeSettings environmentTypeSettings)
+    public async Task<bool> CreateEnvironmentTypeSettingsAsync(EnvironmentTypeSettingsCreateRequestDTO environmentTypeSettingsCreateRequestDTO)
     {
         try
         {
+            EnvironmentTypeSettings environmentTypeSettings = _iMapperService.ApplyMapToEntity<EnvironmentTypeSettingsCreateRequestDTO, EnvironmentTypeSettings>(environmentTypeSettingsCreateRequestDTO);
             _iEnvironmentTypeSettingsRepository.Create(environmentTypeSettings);
             return true;
         }
@@ -88,10 +92,11 @@ public class EnvironmentTypeSettingsService : GenericService, IEnvironmentTypeSe
         }
     }
 
-    public async Task<bool> UpdateEnvironmentTypeSettingsAsync(EnvironmentTypeSettings environmentTypeSettings)
+    public async Task<bool> UpdateEnvironmentTypeSettingsAsync(EnvironmentTypeSettingsUpdateRequestDTO environmentTypeSettingsUpdateRequestDTO)
     {
         try
         {
+            EnvironmentTypeSettings environmentTypeSettings = _iMapperService.ApplyMapToEntity<EnvironmentTypeSettingsUpdateRequestDTO, EnvironmentTypeSettings>(environmentTypeSettingsUpdateRequestDTO);
             EnvironmentTypeSettings environmentTypeSettingsDb = _iEnvironmentTypeSettingsRepository.GetById(environmentTypeSettings.Id.Value);
 
             if (GuardClauses.ObjectIsNotNull(environmentTypeSettingsDb))

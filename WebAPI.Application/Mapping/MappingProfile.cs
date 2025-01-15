@@ -58,6 +58,7 @@ public class MappingProfile : AutoMapper.Profile
         CreateMap<UserResponseDTO, UserExcelDTO>().ReverseMap();
 
         CreateMap<Region, RegionQueryFilterResponse>().ReverseMap();
+        CreateMap<Region, RegionQueryByIdResponse>().ReverseMap();
 
         CreateMap<AuthenticationSettingsCreateRequestDTO, AuthenticationSettings>()
         .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))

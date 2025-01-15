@@ -20,10 +20,9 @@ public sealed class MediatorController : GenericController
 
     public MediatorController(
         IMediator mediator,
-        IMapper iMapperService, 
         IHttpContextAccessor iHttpContextAccessor,
         IGenericNotifyLogsService iGenericNotifyLogsService) 
-        : base(iMapperService, iHttpContextAccessor, iGenericNotifyLogsService)
+        : base(iHttpContextAccessor, iGenericNotifyLogsService)
     {
         _mediator = mediator;
     }
@@ -34,20 +33,14 @@ public sealed class MediatorController : GenericController
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
         var model = await _mediator.Send(findRegionQueryFilterHandler);
-
-        var result = ApplyMapToEntity<IEnumerable<Region>, IEnumerable<RegionQueryFilterResponse>>(model);
-
-        return CustomResponse(ConstantHttpStatusCode.OK_CODE, result, FixConstants.SUCCESS_IN_GETALLPAGINATE);
+        return CustomResponse(ConstantHttpStatusCode.OK_CODE, model, FixConstants.SUCCESS_IN_GETALLPAGINATE);
     }
 
     [HttpPost("GetById")]
     public async Task<IActionResult> GetById([FromBody] RegionQueryByIdRequest regionQueryByIdRequest)
     {
         var model = await _mediator.Send(regionQueryByIdRequest);
-
-        var result = ApplyMapToEntity<Region, RegionQueryFilterResponse>(model);
-
-        return CustomResponse(ConstantHttpStatusCode.OK_CODE, result, FixConstants.SUCCESS_IN_GETID);
+        return CustomResponse(ConstantHttpStatusCode.OK_CODE, model, FixConstants.SUCCESS_IN_GETID);
     }
 
     [ProducesResponseType(StatusCodes.Status201Created)]

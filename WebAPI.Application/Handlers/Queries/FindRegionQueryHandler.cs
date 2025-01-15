@@ -7,32 +7,22 @@ using WebAPI.Domain.CQRS.Queries;
 
 namespace WebAPI.Application.Handlers.Queries;
 
-public class FindRegionQueryFilterHandler : GenericService, IRequestHandler<RegionQueryFilterRequest, IEnumerable<Region>>
+public class FindRegionQueryFilterHandler : GenericService, IRequestHandler<RegionQueryFilterRequest, IEnumerable<RegionQueryFilterResponse>>
 {
     private readonly IRegionRepository _iRegionRepository;
+    private readonly IMapperService _iMapperService;
 
-    public FindRegionQueryFilterHandler(IRegionRepository iRegionRepository, INotificationMessageService iNotificationMessageService) : base(iNotificationMessageService)
+    public FindRegionQueryFilterHandler(IRegionRepository iRegionRepository, INotificationMessageService iNotificationMessageService, IMapperService iMapperService) : base(iNotificationMessageService)
     {
         _iRegionRepository = iRegionRepository;
+        _iMapperService = iMapperService;
     }
 
-    public Task<IEnumerable<Region>> Handle(RegionQueryFilterRequest request, CancellationToken cancellationToken)
+    public Task<IEnumerable<RegionQueryFilterResponse>> Handle(RegionQueryFilterRequest request, CancellationToken cancellationToken)
     {
         List<RegionQueryFilterResponse> regionQueryFilterResponses = new();
         var result = _iRegionRepository.GetAll();
-        //foreach (var item in result)
-        //{
-        //    regionQueryFilterResponses.Add(new RegionQueryFilterResponse()
-        //    {
-        //        Id = item.Id,
-        //        CreatedTime = item.CreatedTime,
-        //        Initials = item.Initials,
-        //        IsActive = item.IsActive,
-        //        Name = item.Name,
-        //        UpdateTime = item.UpdateTime,
-        //    });
-        //}
-
-        return Task.FromResult(result.AsEnumerable());
+        var data = _iMapperService.ApplyMapToEntity<IEnumerable<Region>, IEnumerable<RegionQueryFilterResponse>>(result);
+        return Task.FromResult(data);
     }
 }

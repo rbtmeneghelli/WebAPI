@@ -4,15 +4,21 @@ using WebAPI.Domain.Entities.Others;
 
 namespace WebAPI.Domain.CQRS.Queries;
 
-public class RegionQueryFilterRequest : RegionFilter, IRequest<IEnumerable<Region>>
+public class RegionQueryFilterRequest : RegionFilter, IRequest<IEnumerable<RegionQueryFilterResponse>>
 {
 }
 
-public class RegionQueryByIdRequest : Region, IRequest<Region>
-{
-}
 
 public class RegionQueryFilterResponse : Region
 {
 }
+
+public class RegionQueryByIdRequest : Region, IRequest<RegionQueryByIdResponse>
+{
+}
+
+public class RegionQueryByIdResponse : Region
+{
+}
+
 

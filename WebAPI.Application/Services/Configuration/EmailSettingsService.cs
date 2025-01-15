@@ -12,15 +12,18 @@ public class EmailSettingsService : GenericService, IEmailSettingsService
 {
     private readonly IEmailSettingsRepository _iEmailSettingsRepository;
     private EnvironmentVariables _environmentVariables;
+    private readonly IMapperService _iMapperService;
 
     public EmailSettingsService(
         IEmailSettingsRepository iEmailSettingsRepository,
         INotificationMessageService iNotificationMessageService,
-        EnvironmentVariables environmentVariables)
+        EnvironmentVariables environmentVariables,
+        IMapperService iMapperService)
         : base(iNotificationMessageService)
     {
         _iEmailSettingsRepository = iEmailSettingsRepository;
         _environmentVariables = environmentVariables;
+        _iMapperService = iMapperService;
     }
 
     public async Task<IEnumerable<EmailSettingsResponseDTO>> GetAllEmailSettingsAsync()
@@ -122,10 +125,11 @@ public class EmailSettingsService : GenericService, IEmailSettingsService
         return result;
     }
 
-    public async Task<bool> CreateEmailSettingsAsync(EmailSettings emailSettings)
+    public async Task<bool> CreateEmailSettingsAsync(EmailSettingsCreateRequestDTO emailSettingsCreateRequestDTO)
     {
         try
         {
+            EmailSettings emailSettings = _iMapperService.ApplyMapToEntity<EmailSettingsCreateRequestDTO, EmailSettings>(emailSettingsCreateRequestDTO);
             _iEmailSettingsRepository.Create(emailSettings);
             return true;
         }
@@ -140,10 +144,11 @@ public class EmailSettingsService : GenericService, IEmailSettingsService
         }
     }
 
-    public async Task<bool> UpdateEmailSettingsAsync(EmailSettings emailSettings)
+    public async Task<bool> UpdateEmailSettingsAsync(EmailSettingsUpdateRequestDTO emailSettingsUpdateRequestDTO)
     {
         try
         {
+            EmailSettings emailSettings = _iMapperService.ApplyMapToEntity<EmailSettingsUpdateRequestDTO, EmailSettings>(emailSettingsUpdateRequestDTO);
             EmailSettings emailSettingsDb = _iEmailSettingsRepository.GetById(emailSettings.Id.Value);
 
             if (GuardClauses.ObjectIsNotNull(emailSettingsDb))

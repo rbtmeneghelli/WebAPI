@@ -34,12 +34,11 @@ public sealed class GeneralController : GenericController
         IFirebaseService iFirebaseService, 
         IEmailService iEmailService,
         EnvironmentVariables environmentVariables,
-        IMapper iMapperService,
         IHttpContextAccessor iHttpContextAccessor,
         IGenericNotifyLogsService iGenericNotifyLogsService,
         IHubContext<NotificationHub> iHubContext,
         ISqlRepository iSqlRepository) 
-        : base(iMapperService, iHttpContextAccessor, iGenericNotifyLogsService)
+        : base(iHttpContextAccessor, iGenericNotifyLogsService)
     {
         _iGeneralService = iGeneralService;
         _iQRCodeService = iQRCodeService;

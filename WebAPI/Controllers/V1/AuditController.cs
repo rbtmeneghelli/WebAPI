@@ -21,7 +21,7 @@ public sealed class AuditController : GenericController
         IHttpContextAccessor iHttpContextAccessor, 
         INotificationMessageService noticationMessageService, 
         IGenericNotifyLogsService iGenericNotifyLogsService) 
-        : base(iMapperService, iHttpContextAccessor, iGenericNotifyLogsService)
+        : base(iHttpContextAccessor, iGenericNotifyLogsService)
     {
         _iAuditService = iAuditService;
     }
@@ -31,7 +31,7 @@ public sealed class AuditController : GenericController
     {
         if (await _iAuditService.ExistAuditByIdAsync(id))
         {
-            var model = _iMapperService.Map<AuditResponseDTO>(await _iAuditService.GetAuditByIdAsync(id));
+            var model = await _iAuditService.GetAuditByIdAsync(id);
             return CustomResponse(ConstantHttpStatusCode.OK_CODE, model, FixConstants.SUCCESS_IN_GETID);
         }
 

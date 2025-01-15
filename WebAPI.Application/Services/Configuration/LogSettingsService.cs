@@ -12,15 +12,18 @@ public class LogSettingsService : GenericService, ILogSettingsService
 {
     private readonly ILogSettingsRepository _iLogSettingsRepository;
     private EnvironmentVariables _environmentVariables;
+    private readonly IMapperService _iMapperService;
 
     public LogSettingsService(
         ILogSettingsRepository iLogSettingsRepository,
         INotificationMessageService iNotificationMessageService,
-        EnvironmentVariables environmentVariables)
+        EnvironmentVariables environmentVariables,
+        IMapperService iMapperService)
         : base(iNotificationMessageService)
     {
         _iLogSettingsRepository = iLogSettingsRepository;
         _environmentVariables = environmentVariables;
+        _iMapperService = iMapperService;
     }
 
     public async Task<IEnumerable<LogSettingsResponseDTO>> GetAllLogSettingsAsync()
@@ -124,10 +127,11 @@ public class LogSettingsService : GenericService, ILogSettingsService
         return result;
     }
 
-    public async Task<bool> CreateLogSettingsAsync(LogSettings logSettings)
+    public async Task<bool> CreateLogSettingsAsync(LogSettingsCreateRequestDTO logSettingsCreateRequestDTO)
     {
         try
         {
+            LogSettings logSettings = _iMapperService.ApplyMapToEntity<LogSettingsCreateRequestDTO, LogSettings>(logSettingsCreateRequestDTO);
             _iLogSettingsRepository.Create(logSettings);
             return true;
         }
@@ -142,10 +146,11 @@ public class LogSettingsService : GenericService, ILogSettingsService
         }
     }
 
-    public async Task<bool> UpdateLogSettingsAsync(LogSettings logSettings)
+    public async Task<bool> UpdateLogSettingsAsync(LogSettingsUpdateRequestDTO logSettingsUpdateRequestDTO)
     {
         try
         {
+            LogSettings logSettings = _iMapperService.ApplyMapToEntity<LogSettingsUpdateRequestDTO, LogSettings>(logSettingsUpdateRequestDTO);
             LogSettings logSettingsDb = _iLogSettingsRepository.GetById(logSettings.Id.Value);
 
             if (GuardClauses.ObjectIsNotNull(logSettingsDb))

@@ -12,15 +12,18 @@ public class RequiredPasswordSettingsService : GenericService, IRequiredPassword
 {
     private readonly IRequiredPasswordSettingsRepository _iRequiredPasswordSettingsRepository;
     private EnvironmentVariables _environmentVariables;
+    private readonly IMapperService _iMapperService;
 
     public RequiredPasswordSettingsService(
         IRequiredPasswordSettingsRepository iRequiredPasswordSettingsRepository,
         INotificationMessageService iNotificationMessageService,
-        EnvironmentVariables environmentVariables)
+        EnvironmentVariables environmentVariables,
+        IMapperService iMapperService)
         : base(iNotificationMessageService)
     {
         _iRequiredPasswordSettingsRepository = iRequiredPasswordSettingsRepository;
         _environmentVariables = environmentVariables;
+        _iMapperService = iMapperService;
     }
 
     public async Task<IEnumerable<RequiredPasswordSettingsResponseDTO>> GetAllRequiredPasswordSettingsAsync()
@@ -119,10 +122,11 @@ public class RequiredPasswordSettingsService : GenericService, IRequiredPassword
         return result;
     }
 
-    public async Task<bool> CreateRequiredPasswordSettingsAsync(RequiredPasswordSettings requiredPasswordSettings)
+    public async Task<bool> CreateRequiredPasswordSettingsAsync(RequiredPasswordSettingsCreateRequestDTO requiredPasswordSettingsCreateRequestDTO)
     {
         try
         {
+            RequiredPasswordSettings requiredPasswordSettings = _iMapperService.ApplyMapToEntity<RequiredPasswordSettingsCreateRequestDTO, RequiredPasswordSettings>(requiredPasswordSettingsCreateRequestDTO);
             _iRequiredPasswordSettingsRepository.Create(requiredPasswordSettings);
             return true;
         }
@@ -137,10 +141,11 @@ public class RequiredPasswordSettingsService : GenericService, IRequiredPassword
         }
     }
 
-    public async Task<bool> UpdateRequiredPasswordSettingsAsync(RequiredPasswordSettings requiredPasswordSettings)
+    public async Task<bool> UpdateRequiredPasswordSettingsAsync(RequiredPasswordSettingsUpdateRequestDTO requiredPasswordSettingsUpdateRequestDTO)
     {
         try
         {
+            RequiredPasswordSettings requiredPasswordSettings = _iMapperService.ApplyMapToEntity<RequiredPasswordSettingsUpdateRequestDTO, RequiredPasswordSettings>(requiredPasswordSettingsUpdateRequestDTO);
             RequiredPasswordSettings requiredPasswordSettingsDb = _iRequiredPasswordSettingsRepository.GetById(requiredPasswordSettings.Id.Value);
 
             if (GuardClauses.ObjectIsNotNull(requiredPasswordSettingsDb))

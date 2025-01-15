@@ -10,8 +10,8 @@ public interface IEmailSettingsService
     Task<EmailSettingsResponseDTO> GetEmailSettingsByIdAsync(long id);
     Task<bool> ExistEmailSettingsByEnvironmentAsync();
     Task<bool> ExistEmailSettingsByIdAsync(long id);
-    Task<bool> CreateEmailSettingsAsync(EmailSettings emailSettings);
-    Task<bool> UpdateEmailSettingsAsync(EmailSettings emailSettings);
+    Task<bool> CreateEmailSettingsAsync(EmailSettingsCreateRequestDTO emailSettingsCreateRequestDTO);
+    Task<bool> UpdateEmailSettingsAsync(EmailSettingsUpdateRequestDTO emailSettingsUpdateRequestDTO);
     Task<bool> LogicDeleteEmailSettingsByIdAsync(long id);
     Task<bool> ReactiveEmailSettingsByIdAsync(long id);
     Task<IEnumerable<EmailSettingsExcelDTO>> GetAllEmailSettingsExcelAsync();

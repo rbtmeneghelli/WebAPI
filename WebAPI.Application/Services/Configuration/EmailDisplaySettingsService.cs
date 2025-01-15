@@ -12,15 +12,18 @@ public class EmailDisplaySettingsService : GenericService, IEmailDisplaySettings
 {
     private readonly IEmailDisplaySettingsRepository _iEmailDisplaySettingsRepository;
     private EnvironmentVariables _environmentVariables;
+    private readonly IMapperService _iMapperService;
 
     public EmailDisplaySettingsService(
         IEmailDisplaySettingsRepository iEmailDisplaySettingsRepository,
         INotificationMessageService iNotificationMessageService,
-        EnvironmentVariables environmentVariables)
+        EnvironmentVariables environmentVariables,
+        IMapperService iMapperService)
         : base(iNotificationMessageService)
     {
         _iEmailDisplaySettingsRepository = iEmailDisplaySettingsRepository;
         _environmentVariables = environmentVariables;
+        _iMapperService = iMapperService;
     }
 
     public async Task<IEnumerable<EmailDisplaySettingsResponseDTO>> GetAllEmailDisplaySettingsAsync()
@@ -87,10 +90,11 @@ public class EmailDisplaySettingsService : GenericService, IEmailDisplaySettings
         return result;
     }
 
-    public async Task<bool> CreateEmailDisplaySettingsAsync(EmailDisplay emailDisplay)
+    public async Task<bool> CreateEmailDisplaySettingsAsync(EmailDisplaySettingsCreateRequestDTO emailDisplaySettingsCreateRequestDTO)
     {
         try
         {
+            EmailDisplay emailDisplay = _iMapperService.ApplyMapToEntity<EmailDisplaySettingsCreateRequestDTO, EmailDisplay>(emailDisplaySettingsCreateRequestDTO);
             _iEmailDisplaySettingsRepository.Create(emailDisplay);
             return true;
         }
@@ -105,10 +109,11 @@ public class EmailDisplaySettingsService : GenericService, IEmailDisplaySettings
         }
     }
 
-    public async Task<bool> UpdateEmailDisplaySettingsAsync(EmailDisplay emailDisplay)
+    public async Task<bool> UpdateEmailDisplaySettingsAsync(EmailDisplaySettingsUpdateRequestDTO emailDisplaySettingsUpdateRequestDTO)
     {
         try
         {
+            EmailDisplay emailDisplay = _iMapperService.ApplyMapToEntity<EmailDisplaySettingsUpdateRequestDTO, EmailDisplay>(emailDisplaySettingsUpdateRequestDTO);
             EmailDisplay emailDisplayDb = _iEmailDisplaySettingsRepository.GetById(emailDisplay.Id.Value);
 
             if (GuardClauses.ObjectIsNotNull(emailDisplayDb))

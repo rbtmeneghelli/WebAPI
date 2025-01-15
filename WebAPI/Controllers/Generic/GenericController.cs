@@ -17,7 +17,6 @@ namespace WebAPI.Controllers.Base;
 [ProducesResponseType(ConstantHttpStatusCode.INTERNAL_ERROR_CODE)]
 public abstract class GenericController : ControllerBase
 {
-    protected readonly IMapper _iMapperService;
     protected readonly IHttpContextAccessor _iHttpContextAccessor;
     protected readonly IGenericNotifyLogsService _iGenericNotifyLogsService;
 
@@ -26,9 +25,8 @@ public abstract class GenericController : ControllerBase
     protected long ProfileId { get; set; }
     protected string AppPath { get; set; }
 
-    protected GenericController(IMapper iMapperService, IHttpContextAccessor iHttpContextAccessor, IGenericNotifyLogsService iGenericNotifyLogsService)
+    protected GenericController(IHttpContextAccessor iHttpContextAccessor, IGenericNotifyLogsService iGenericNotifyLogsService)
     {
-        _iMapperService = iMapperService;
         _iHttpContextAccessor = iHttpContextAccessor;
         _iGenericNotifyLogsService = iGenericNotifyLogsService;
 
@@ -107,11 +105,6 @@ public abstract class GenericController : ControllerBase
     {
         NotificationModelIsInvalid(modelState);
         return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
-    }
-
-    protected TDestination ApplyMapToEntity<TSource, TDestination>(TSource source)
-    {
-        return _iMapperService.Map<TDestination>(source);
     }
 
     [HttpGet]

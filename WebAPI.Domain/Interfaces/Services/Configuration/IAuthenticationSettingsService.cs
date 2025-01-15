@@ -1,5 +1,4 @@
-﻿using WebAPI.Domain.Entities.Configuration;
-using WebAPI.Domain.DTO.Configuration;
+﻿using WebAPI.Domain.DTO.Configuration;
 
 namespace WebAPI.Domain.Interfaces.Services.Configuration;
 
@@ -10,8 +9,8 @@ public interface IAuthenticationSettingsService
     Task<AuthenticationSettingsResponseDTO> GetAuthenticationSettingsByIdAsync(long id);
     Task<bool> ExistAuthenticationSettingsByEnvironmentAsync();
     Task<bool> ExistAuthenticationSettingsByIdAsync(long id);
-    Task<bool> CreateAuthenticationSettingsAsync(AuthenticationSettings authenticationSettings);
-    Task<bool> UpdateAuthenticationSettingsAsync(AuthenticationSettings authenticationSettings);
+    Task<bool> CreateAuthenticationSettingsAsync(AuthenticationSettingsCreateRequestDTO authenticationSettingsCreateRequestDTO);
+    Task<bool> UpdateAuthenticationSettingsAsync(AuthenticationSettingsUpdateRequestDTO authenticationSettingsCreateRequestDTO);
     Task<bool> LogicDeleteAuthenticationSettingsByIdAsync(long id);
     Task<bool> ReactiveAuthenticationSettingsByIdAsync(long id);
     Task<IEnumerable<AuthenticationSettingsExcelDTO>> GetAllAuthenticationSettingsExcelAsync();

@@ -1,5 +1,4 @@
 ﻿using WebAPI.Domain.Constants;
-using WebAPI.Domain.DTO.ControlPanel;
 using WebAPI.Domain.Filters.Others;
 using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.Interfaces.Services;
@@ -17,10 +16,9 @@ public sealed class LogController : GenericController
 
     public LogController(
         ILogService iLogService,
-        IMapper iMapperService,
         IHttpContextAccessor iHttpContextAccessor,
         IGenericNotifyLogsService iGenericNotifyLogsService)
-        : base(iMapperService, iHttpContextAccessor, iGenericNotifyLogsService)
+        : base(iHttpContextAccessor, iGenericNotifyLogsService)
     {
         _iLogService = iLogService;
     }
@@ -30,7 +28,7 @@ public sealed class LogController : GenericController
     {
         if (await _iLogService.ExistLogByIdAsync(id))
         {
-            var model = _iMapperService.Map<UserResponseDTO>(await _iLogService.GetLogByIdAsync(id));
+            var model = await _iLogService.GetLogByIdAsync(id);
             return CustomResponse(ConstantHttpStatusCode.OK_CODE, model, FixConstants.SUCCESS_IN_GETID);
         }
 

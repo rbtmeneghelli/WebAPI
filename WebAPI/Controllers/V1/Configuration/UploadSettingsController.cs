@@ -16,10 +16,9 @@ public sealed class UploadSettingsController : GenericController
     public UploadSettingsController(
         IGenericConfigurationService iGenericConfigurationService,
         IMemoryCacheService iMemoryCacheService,
-        IMapper iMapperService,
         IHttpContextAccessor iHttpContextAccessor,
         IGenericNotifyLogsService iGenericNotifyLogsService)
-    : base(iMapperService, iHttpContextAccessor, iGenericNotifyLogsService)
+    : base(iHttpContextAccessor, iGenericNotifyLogsService)
     {
         _iGenericConfigurationService = iGenericConfigurationService;
         _iMemoryCacheService = iMemoryCacheService;

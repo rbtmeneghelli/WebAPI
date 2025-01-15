@@ -5,22 +5,27 @@ using WebAPI.Domain.DTO.Configuration;
 using WebAPI.Domain.Interfaces.Repository.Configuration;
 using WebAPI.Domain.Interfaces.Services.Configuration;
 using WebAPI.Domain.Interfaces.Services.Tools;
+using WebAPI.Domain.DTO.ControlPanel;
+using WebAPI.Domain.Filters.ControlPanel;
 
 namespace WebAPI.Application.Services.Configuration;
 
 public class AuthenticationSettingsService : GenericService, IAuthenticationSettingsService
 {
     private readonly IAuthenticationSettingsRepository _iAuthenticationSettingsRepository;
+    private readonly IMapperService _iMapperService;
     private EnvironmentVariables _environmentVariables;
 
     public AuthenticationSettingsService(
         IAuthenticationSettingsRepository iAuthenticationSettingsRepository,
         INotificationMessageService iNotificationMessageService,
-        EnvironmentVariables environmentVariables)
+        EnvironmentVariables environmentVariables,
+        IMapperService iMapperService)
         : base(iNotificationMessageService)
     {
         _iAuthenticationSettingsRepository = iAuthenticationSettingsRepository;
         _environmentVariables = environmentVariables;
+        _iMapperService = iMapperService;
     }
 
     public async Task<IEnumerable<AuthenticationSettingsResponseDTO>> GetAllAuthenticationSettingsAsync()
@@ -116,10 +121,11 @@ public class AuthenticationSettingsService : GenericService, IAuthenticationSett
         return result;
     }
 
-    public async Task<bool> CreateAuthenticationSettingsAsync(AuthenticationSettings authenticationSettings)
+    public async Task<bool> CreateAuthenticationSettingsAsync(AuthenticationSettingsCreateRequestDTO authenticationSettingsCreateRequestDTO)
     {
         try
         {
+            AuthenticationSettings authenticationSettings = _iMapperService.ApplyMapToEntity<AuthenticationSettingsCreateRequestDTO, AuthenticationSettings>(authenticationSettingsCreateRequestDTO);
             _iAuthenticationSettingsRepository.Create(authenticationSettings);
             return true;
         }
@@ -134,10 +140,11 @@ public class AuthenticationSettingsService : GenericService, IAuthenticationSett
         }
     }
 
-    public async Task<bool> UpdateAuthenticationSettingsAsync(AuthenticationSettings authenticationSettings)
+    public async Task<bool> UpdateAuthenticationSettingsAsync(AuthenticationSettingsUpdateRequestDTO authenticationSettingsCreateRequestDTO)
     {
         try
         {
+            AuthenticationSettings authenticationSettings = _iMapperService.ApplyMapToEntity<AuthenticationSettingsUpdateRequestDTO, AuthenticationSettings>(authenticationSettingsCreateRequestDTO);
             AuthenticationSettings authenticationSettingsDb = _iAuthenticationSettingsRepository.GetById(authenticationSettings.Id.Value);
 
             if (GuardClauses.ObjectIsNotNull(authenticationSettingsDb))

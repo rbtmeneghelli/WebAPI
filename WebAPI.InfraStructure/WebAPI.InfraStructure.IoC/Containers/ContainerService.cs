@@ -282,7 +282,8 @@ public static class ContainerService
         .AddScoped<IFirebaseService, FirebaseService>()
         .AddTransient<IProblemDetailsFactory, ProblemDetailsFactory>()
         .AddScoped<ISendGridService, SendGridService>()
-        .AddScoped<IAzureService, AzureService>();
+        .AddScoped<IAzureService, AzureService>()
+        .AddTransient<IMapperService, MapperService>();
 
         services.AddScoped<IPBlockActionFilter, IPBlockActionFilter>();
     }

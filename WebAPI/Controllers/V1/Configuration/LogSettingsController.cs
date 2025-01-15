@@ -20,10 +20,9 @@ public sealed class LogSettingsController : GenericController
     public LogSettingsController(
         IGenericConfigurationService iGenericConfigurationService,
         IFileService<LogSettingsExcelDTO> iFileService,
-        IMapper iMapperService,
         IHttpContextAccessor iHttpContextAccessor,
         IGenericNotifyLogsService iGenericNotifyLogsService)
-    : base(iMapperService, iHttpContextAccessor, iGenericNotifyLogsService)
+    : base(iHttpContextAccessor, iGenericNotifyLogsService)
     {
         _iGenericConfigurationService = iGenericConfigurationService;
         _generalMethod = GeneralMethod.GetLoadExtensionMethods();
@@ -68,11 +67,10 @@ public sealed class LogSettingsController : GenericController
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
-        var logSettingsCreateRequest = ApplyMapToEntity<LogSettingsCreateRequestDTO, LogSettings>(logSettingsCreateRequestDTO);
-        var result = await _iGenericConfigurationService.LogSettingsService.CreateLogSettingsAsync(logSettingsCreateRequest);
+        var result = await _iGenericConfigurationService.LogSettingsService.CreateLogSettingsAsync(logSettingsCreateRequestDTO);
 
         if (result)
-            return CustomResponse(ConstantHttpStatusCode.CREATE_CODE, logSettingsCreateRequest);
+            return CustomResponse(ConstantHttpStatusCode.CREATE_CODE, logSettingsCreateRequestDTO);
 
         return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
     }
@@ -82,17 +80,15 @@ public sealed class LogSettingsController : GenericController
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
-        var logSettingsUpdateRequest = ApplyMapToEntity<LogSettingsUpdateRequestDTO, LogSettings>(logSettingsUpdateRequestDTO);
-
-        if (id != logSettingsUpdateRequest.Id)
+        if (id != logSettingsUpdateRequestDTO.Id)
         {
             NotificationError(FixConstants.ERROR_IN_GETID);
             return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
         }
 
-        if (await _iGenericConfigurationService.LogSettingsService.ExistLogSettingsByIdAsync(logSettingsUpdateRequest.Id.GetValueOrDefault()))
+        if (await _iGenericConfigurationService.LogSettingsService.ExistLogSettingsByIdAsync(logSettingsUpdateRequestDTO.Id.GetValueOrDefault()))
         {
-            var result = await _iGenericConfigurationService.LogSettingsService.UpdateLogSettingsAsync(logSettingsUpdateRequest);
+            var result = await _iGenericConfigurationService.LogSettingsService.UpdateLogSettingsAsync(logSettingsUpdateRequestDTO);
             if (result)
                 return CustomResponse(ConstantHttpStatusCode.NO_CONTENT_CODE);
             else

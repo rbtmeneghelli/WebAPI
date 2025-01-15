@@ -19,16 +19,19 @@ public class AuditService : GenericService, IAuditService
     private readonly IAuditRepository _iAuditRepository;
     private readonly IReadRepositoryDapper<Audit> _iAuditReadRepositoryDapper;
     private readonly IWriteRepositoryDapper _iAuditWriteRepositoryDapper;
+    private readonly IMapperService _iMapperService;
 
     public AuditService(
         IAuditRepository iAuditRepository, 
         IReadRepositoryDapper<Audit> iAuditReadRepositoryDapper,
         IWriteRepositoryDapper iAuditWriteRepositoryDapper,
-        INotificationMessageService iNotificationMessageService) : base(iNotificationMessageService)
+        INotificationMessageService iNotificationMessageService,
+        IMapperService iMapperService) : base(iNotificationMessageService)
     {
         _iAuditRepository = iAuditRepository;
         _iAuditReadRepositoryDapper = iAuditReadRepositoryDapper;
         _iAuditWriteRepositoryDapper = iAuditWriteRepositoryDapper;
+        _iMapperService = iMapperService;
     }
 
     private async Task<IQueryable<Audit>> GetAllWithFilterAsync(AuditFilter filter)
@@ -46,9 +49,10 @@ public class AuditService : GenericService, IAuditService
         return p => GuardClauses.IsNullOrWhiteSpace(filter.TableName) || p.TableName.StartsWith(filter.TableName.ApplyTrim());
     }
 
-    public async Task<Audit> GetAuditByIdAsync(long id)
+    public async Task<AuditResponseDTO> GetAuditByIdAsync(long id)
     {
-        return await Task.FromResult(_iAuditRepository.GetById(id));
+        var data = await Task.FromResult(_iAuditRepository.GetById(id));
+        return _iMapperService.ApplyMapToEntity<Audit, AuditResponseDTO>(data);
     }
 
     public async Task<IEnumerable<Audit>> GetAllAuditWithLikeAsync(string parameter)

@@ -26,10 +26,9 @@ public class AddressController : GenericController
         IDataFromApiService<RequestData> iDataFromApiService,
         IRegionService iRegionService,
         ICityService iCityService,
-        IMapper iMapperService, 
         IHttpContextAccessor iHttpContextAccessor, 
         IGenericNotifyLogsService iGenericNotifyLogsService) 
-        : base(iMapperService, iHttpContextAccessor, iGenericNotifyLogsService)
+        : base(iHttpContextAccessor, iGenericNotifyLogsService)
     {
         _iAddressService = iAddressService;
         _iStatesService = iStatesService;
