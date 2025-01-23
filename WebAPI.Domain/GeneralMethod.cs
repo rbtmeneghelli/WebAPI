@@ -1498,6 +1498,44 @@ public sealed class GeneralMethod
         return TimeZoneInfo.ConvertTime(DateTime.UtcNow, tz);
 
     }
+
+    /// <summary>
+    /// Esse metodo é responsavel por carregar a carga horaria de um funcionaria durante sua semana de trabalho programada
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
+    public double GetWorkLoad(IEnumerable<dynamic> request)
+    {
+        var currentDate = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
+
+        double horasSemanais = request.Sum(item =>
+        {
+            var Entrada = TimeSpan.Parse(item.Entrada);
+            var Saida = TimeSpan.Parse(item.Saida);
+            var Intervalo = TimeSpan.Parse(item.Intervalo);
+            var Retorno = TimeSpan.Parse(item.Retorno);
+            var ViradaTurno = string.IsNullOrWhiteSpace(item.ViradaTurno) ? TimeSpan.Zero : TimeSpan.Parse(item.ViradaTurno);
+
+            var EntradaDataHora = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, Entrada.Hours, Entrada.Minutes, Entrada.Seconds);
+            var SaidaDataHora = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, Saida.Hours, Saida.Minutes, Saida.Seconds);
+            var IntervaloDataHora = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, Intervalo.Hours, Intervalo.Minutes, Intervalo.Seconds);
+            var RetornoDataHora = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, Retorno.Hours, Retorno.Minutes, Retorno.Seconds);
+            var ViradaTurnoDataHora = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, ViradaTurno.Hours, ViradaTurno.Minutes, ViradaTurno.Seconds);
+
+            var timestamps = new List<(DateTime entrada, DateTime saida)>
+            {
+                (EntradaDataHora, IntervaloDataHora),
+                (RetornoDataHora, SaidaDataHora),
+                (new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, 0, 0, 0), ViradaTurnoDataHora)
+            };
+
+
+            return timestamps.Sum(t => (t.saida - t.entrada).TotalHours);
+        });
+
+        return horasSemanais;
+    }
+
 }
 
 public sealed class UriBuilderSite : UriBuilderAbstract
