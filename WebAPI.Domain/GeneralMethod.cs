@@ -1503,26 +1503,26 @@ public sealed class GeneralMethod
 
     public double GetWorkLoad(List<dynamic> request, bool calculateWithLINQ)
     {
-        TimeSpan horasSemanais = new TimeSpan(0);
+        TimeSpan totalHorasSemanais = new TimeSpan(0);
 
         if (calculateWithLINQ)
         {
-            request.ForEach(item => horasSemanais += CalculateWorkLoad(item));
+            request.ForEach(item => totalHorasSemanais += CalculateWorkLoad(item));
         }
         else
         {
             foreach (var item in request)
             {
-                horasSemanais += CalculateWorkLoad(item);
+                totalHorasSemanais += CalculateWorkLoad(item);
             }
         }
 
-        return horasSemanais.TotalHours;
+        return totalHorasSemanais.TotalHours;
     }
 
     private TimeSpan CalculateWorkLoad(dynamic item)
     {
-        var hoje = DateTime.Now.Date;
+        var currentDate = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
         var Entrada = TimeSpan.Parse(item.Entrada);
         var Saida = TimeSpan.Parse(item.Saida);
         var Intervalo = TimeSpan.Parse(item.Intervalo);
@@ -1535,13 +1535,13 @@ public sealed class GeneralMethod
             ViradaTurno = TimeSpan.Parse(item.ViradaTurno);
         }
 
-        DateTime EntradaDataHora = new DateTime(hoje.Year, hoje.Month, hoje.Day, Entrada.Hours, Entrada.Minutes, Entrada.Seconds);
-        DateTime SaidaDataHora = new DateTime(hoje.Year, hoje.Month, hoje.Day, Saida.Hours, Saida.Minutes, Saida.Seconds);
-        DateTime IntervaloDataHora = new DateTime(hoje.Year, hoje.Month, hoje.Day, Intervalo.Hours, Intervalo.Minutes, Intervalo.Seconds);
-        DateTime RetornoDataHora = new DateTime(hoje.Year, hoje.Month, hoje.Day, Retorno.Hours, Retorno.Minutes, Retorno.Seconds);
-        DateTime ViradaTurnoDataHora = new DateTime(hoje.Year, hoje.Month, hoje.Day, ViradaTurno.Hours, ViradaTurno.Minutes, ViradaTurno.Seconds);
+        DateTime EntradaDataHora = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, Entrada.Hours, Entrada.Minutes, Entrada.Seconds);
+        DateTime SaidaDataHora = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, Saida.Hours, Saida.Minutes, Saida.Seconds);
+        DateTime IntervaloDataHora = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, Intervalo.Hours, Intervalo.Minutes, Intervalo.Seconds);
+        DateTime RetornoDataHora = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, Retorno.Hours, Retorno.Minutes, Retorno.Seconds);
+        DateTime ViradaTurnoDataHora = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, ViradaTurno.Hours, ViradaTurno.Minutes, ViradaTurno.Seconds);
 
-        TimeSpan cargaHorariaTotal = ((SaidaDataHora - EntradaDataHora) - (RetornoDataHora - IntervaloDataHora)) + (ViradaTurnoDataHora - (new DateTime(hoje.Year, hoje.Month, hoje.Day, 0, 0, 0)));
+        TimeSpan cargaHorariaTotal = ((SaidaDataHora - EntradaDataHora) - (RetornoDataHora - IntervaloDataHora)) + (ViradaTurnoDataHora - (new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, 0, 0, 0)));
 
         return cargaHorariaTotal;
     }
