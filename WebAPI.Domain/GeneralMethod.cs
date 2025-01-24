@@ -1499,43 +1499,54 @@ public sealed class GeneralMethod
 
     }
 
-    /// <summary>
-    /// Esse metodo é responsavel por carregar a carga horaria de um funcionaria durante sua semana de trabalho programada
-    /// </summary>
-    /// <param name="request"></param>
-    /// <returns></returns>
-    public double GetWorkLoad(IEnumerable<dynamic> request)
+    #region Esse metodo é responsavel por carregar a carga horaria de um funcionaria durante sua semana de trabalho programada
+
+    public double GetWorkLoad(List<dynamic> request, bool calculateWithLINQ)
     {
-        var currentDate = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
+        TimeSpan horasSemanais = new TimeSpan(0);
 
-        double horasSemanais = request.Sum(item =>
+        if (calculateWithLINQ)
         {
-            var Entrada = TimeSpan.Parse(item.Entrada);
-            var Saida = TimeSpan.Parse(item.Saida);
-            var Intervalo = TimeSpan.Parse(item.Intervalo);
-            var Retorno = TimeSpan.Parse(item.Retorno);
-            var ViradaTurno = string.IsNullOrWhiteSpace(item.ViradaTurno) ? TimeSpan.Zero : TimeSpan.Parse(item.ViradaTurno);
-
-            var EntradaDataHora = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, Entrada.Hours, Entrada.Minutes, Entrada.Seconds);
-            var SaidaDataHora = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, Saida.Hours, Saida.Minutes, Saida.Seconds);
-            var IntervaloDataHora = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, Intervalo.Hours, Intervalo.Minutes, Intervalo.Seconds);
-            var RetornoDataHora = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, Retorno.Hours, Retorno.Minutes, Retorno.Seconds);
-            var ViradaTurnoDataHora = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, ViradaTurno.Hours, ViradaTurno.Minutes, ViradaTurno.Seconds);
-
-            var timestamps = new List<(DateTime entrada, DateTime saida)>
+            request.ForEach(item => horasSemanais += CalculateWorkLoad(item));
+        }
+        else
+        {
+            foreach (var item in request)
             {
-                (EntradaDataHora, IntervaloDataHora),
-                (RetornoDataHora, SaidaDataHora),
-                (new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, 0, 0, 0), ViradaTurnoDataHora)
-            };
+                horasSemanais += CalculateWorkLoad(item);
+            }
+        }
 
-
-            return timestamps.Sum(t => (t.saida - t.entrada).TotalHours);
-        });
-
-        return horasSemanais;
+        return horasSemanais.TotalHours;
     }
 
+    private TimeSpan CalculateWorkLoad(dynamic item)
+    {
+        var hoje = DateTime.Now.Date;
+        var Entrada = TimeSpan.Parse(item.Entrada);
+        var Saida = TimeSpan.Parse(item.Saida);
+        var Intervalo = TimeSpan.Parse(item.Intervalo);
+        var Retorno = TimeSpan.Parse(item.Retorno);
+
+        TimeSpan ViradaTurno = new TimeSpan(0);
+
+        if (!string.IsNullOrWhiteSpace(item.ViradaTurno))
+        {
+            ViradaTurno = TimeSpan.Parse(item.ViradaTurno);
+        }
+
+        DateTime EntradaDataHora = new DateTime(hoje.Year, hoje.Month, hoje.Day, Entrada.Hours, Entrada.Minutes, Entrada.Seconds);
+        DateTime SaidaDataHora = new DateTime(hoje.Year, hoje.Month, hoje.Day, Saida.Hours, Saida.Minutes, Saida.Seconds);
+        DateTime IntervaloDataHora = new DateTime(hoje.Year, hoje.Month, hoje.Day, Intervalo.Hours, Intervalo.Minutes, Intervalo.Seconds);
+        DateTime RetornoDataHora = new DateTime(hoje.Year, hoje.Month, hoje.Day, Retorno.Hours, Retorno.Minutes, Retorno.Seconds);
+        DateTime ViradaTurnoDataHora = new DateTime(hoje.Year, hoje.Month, hoje.Day, ViradaTurno.Hours, ViradaTurno.Minutes, ViradaTurno.Seconds);
+
+        TimeSpan cargaHorariaTotal = ((SaidaDataHora - EntradaDataHora) - (RetornoDataHora - IntervaloDataHora)) + (ViradaTurnoDataHora - (new DateTime(hoje.Year, hoje.Month, hoje.Day, 0, 0, 0)));
+
+        return cargaHorariaTotal;
+    }
+
+    #endregion
 }
 
 public sealed class UriBuilderSite : UriBuilderAbstract
