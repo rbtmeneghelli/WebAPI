@@ -1528,20 +1528,12 @@ public sealed class GeneralMethod
         var Intervalo = TimeSpan.Parse(item.Intervalo);
         var Retorno = TimeSpan.Parse(item.Retorno);
 
-        TimeSpan ViradaTurno = new TimeSpan(0);
-
-        if (!string.IsNullOrWhiteSpace(item.ViradaTurno))
-        {
-            ViradaTurno = TimeSpan.Parse(item.ViradaTurno);
-        }
-
         DateTime EntradaDataHora = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, Entrada.Hours, Entrada.Minutes, Entrada.Seconds);
         DateTime SaidaDataHora = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, Saida.Hours, Saida.Minutes, Saida.Seconds);
         DateTime IntervaloDataHora = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, Intervalo.Hours, Intervalo.Minutes, Intervalo.Seconds);
         DateTime RetornoDataHora = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, Retorno.Hours, Retorno.Minutes, Retorno.Seconds);
-        DateTime ViradaTurnoDataHora = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, ViradaTurno.Hours, ViradaTurno.Minutes, ViradaTurno.Seconds);
-
-        TimeSpan cargaHorariaTotal = ((SaidaDataHora - EntradaDataHora) - (RetornoDataHora - IntervaloDataHora)) + (ViradaTurnoDataHora - (new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, 0, 0, 0)));
+        
+        TimeSpan cargaHorariaTotal = ((SaidaDataHora - EntradaDataHora) - (RetornoDataHora - IntervaloDataHora));
 
         return cargaHorariaTotal;
     }
