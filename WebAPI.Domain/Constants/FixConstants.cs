@@ -59,8 +59,8 @@ public static class FixConstants
 
     public const string NO_AUTHORIZATION = "Caro usuário você não tem permissão para efetuar tal ação. Entre em contato com o Administrador";
 
-    public const string DEV_FIRSTNAME = "Roberto";
-    public const string DEV_SECONDNAME = "Meneghelli";
+    public const string DEV_FIRSTNAME = "Dev";
+    public const string DEV_SECONDNAME = "WebAPI";
     public const string CONSTANTE_COM_INTERPOLACAO = $"{DEV_FIRSTNAME}-{DEV_SECONDNAME}";
 
     public const string STATUS_ACTIVE = "Ativo";

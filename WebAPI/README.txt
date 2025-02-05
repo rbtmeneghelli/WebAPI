@@ -72,7 +72,7 @@ Install-Package Microsoft.EntityFrameworkCore.InMemory
 Install-Package Microsoft.AspNetCore.Authentication.JwtBearer -Version 3.1.0
 
 - JSON para teste/geração do token via postman
-{"username":"roberto","password":"roberto"}
+{"username":"dev","password":"dev"}
 
 - Dicas:
 A tag [fromService] realiza a injeção de dependencia de forma automatica, sem necessidade de construtor.

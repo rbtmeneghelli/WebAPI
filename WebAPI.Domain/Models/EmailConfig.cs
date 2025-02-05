@@ -6,7 +6,7 @@ namespace WebAPI.Domain.Models;
 
 public class EmailConfig
 {
-    private const string EMAIL_TO = "roberto.mng.89@gmail.com";
+    private const string EMAIL_TO = "dev@test.com.br";
 
     public MailAddress EmailFrom { get; set; }
     public string EmailTo { get; set; }

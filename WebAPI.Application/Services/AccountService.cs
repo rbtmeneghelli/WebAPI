@@ -137,7 +137,7 @@ public class AccountService : GenericService, IAccountService
                     user.IsAuthenticated = false;
                     user.Status = true;
                     user.UpdateDate = user.GetNewUpdateDate();
-                    _iEmailService.CustomSendEmailAsync(EnumEmail.ResetPassword, "Roberto", _hostingEnvironment.ContentRootPath).Wait();
+                    _iEmailService.CustomSendEmailAsync(EnumEmail.ResetPassword, "Dev", _hostingEnvironment.ContentRootPath).Wait();
                     _iUserRepository.Update(user);
                     return true;
                 }

@@ -7,10 +7,20 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using WebAPI.Domain;
 using WebAPI.Infrastructure.CrossCutting.Middleware.Swagger;
-using Microsoft.AspNetCore.Mvc;
 using WebAPI.Domain.Constants;
-using Amazon.Runtime.Internal.Transform;
-using System.Collections.Generic;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using WebAPI.Domain.Models;
+using System.Text.Json;
+using Microsoft.AspNetCore.Http.Features;
+using WebAPI.Domain.ExtensionMethods;
+using System.Buffers.Text;
+using WebAPI.Domain.Cryptography;
+using WebAPI.Domain.Interfaces.Services;
+using Microsoft.AspNetCore.Http;
 
 namespace WebAPI.InfraStructure.IoC.Containers;
 
@@ -26,7 +36,9 @@ namespace WebAPI.InfraStructure.IoC.Containers;
 /// </summary>
 public static class ContainerSwagger
 {
-    public static void RegisterSwaggerConfigWithAnnotations(IServiceCollection services)
+    #region Configuração padrão do swagger
+
+    public static void RegisterDefaultSwaggerConfig(IServiceCollection services)
     {
         services.AddSwaggerGen(
         c =>
@@ -36,10 +48,68 @@ public static class ContainerSwagger
                 Title = "WebAPI - Default",
                 Version = "V1",
                 Description = "Lista de endpoints disponíveis",
-                Contact = new OpenApiContact() { Name = "Roberto Meneghelli", Email = "roberto.mng.89.com.br" },
+                Contact = new OpenApiContact() { Name = "Dev", Email = "dev@test.com.br" },
                 License = new OpenApiLicense() { Name = "MIT", Url = new Uri("https://opensource.org/licenses/MIT") }
             });
+            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                In = ParameterLocation.Header,
+                Description = "Insira o token JWT desta maneira: Bearer {seu token}",
+                Scheme = "Bearer",
+                Name = "Authorization",
+                Type = SecuritySchemeType.ApiKey,
+                BearerFormat = "JWT"
+            });
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement {
+                { new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                          Type = ReferenceType.SecurityScheme,
+                          Id = "Bearer"
+                        }
+                    },
+                    new string[] { }
+                }
+            });
+            c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "WebAPI.xml"));
         });
+    }
+
+    public static void UseSwaggerConfig(this IApplicationBuilder app)
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI(c =>
+        {
+            c.SwaggerEndpoint("/swagger/V1/swagger.json", "WbNotes");
+            c.InjectStylesheet("/Arquivos/swagger-dark.css");
+        });
+    }
+
+    #endregion
+
+    #region Configuração do swagger com varias versões
+
+    private static OpenApiSecurityScheme GetBearerConfig()
+    {
+        return new OpenApiSecurityScheme
+        {
+            Description = "Insira o token JWT desta maneira: Bearer {seu token}",
+            Name = "Authorization",
+            Scheme = "Bearer",
+            BearerFormat = "JWT",
+            In = ParameterLocation.Header,
+            Type = SecuritySchemeType.ApiKey
+        };
+    }
+
+    private static OpenApiReference GetSecurityConfig()
+    {
+        return new OpenApiReference()
+        {
+            Type = ReferenceType.SecurityScheme,
+            Id = "Bearer"
+        };
     }
 
     public static void RegisterSwaggerConfig(IServiceCollection services)
@@ -65,37 +135,6 @@ public static class ContainerSwagger
         services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
     }
 
-    /// <summary>
-    /// Faz a ligação com um Middleware customizado para que o swagger seja exibido, apenas quando o usuário estiver autenticado
-    /// Link >> https://macoratti.net/22/04/swagger_secprod1.htm
-    /// </summary>
-    public static IApplicationBuilder UseSwaggerAuthorized(this IApplicationBuilder builder)
-    {
-        return builder.UseMiddleware<SwaggerBasicAuthenticationMiddleware>();
-    }
-
-    private static OpenApiSecurityScheme GetBearerConfig()
-    {
-        return new OpenApiSecurityScheme
-        {
-            Description = "Insira o token JWT desta maneira: Bearer {seu token}",
-            Name = "Authorization",
-            Scheme = "Bearer",
-            BearerFormat = "JWT",
-            In = ParameterLocation.Header,
-            Type = SecuritySchemeType.ApiKey
-        };
-    }
-
-    private static OpenApiReference GetSecurityConfig()
-    {
-        return new OpenApiReference()
-        {
-            Type = ReferenceType.SecurityScheme,
-            Id = "Bearer"
-        };
-    }
-
     public static void UseSwaggerConfig(this IApplicationBuilder app, IApiVersionDescriptionProvider provider)
     {
         app.UseSwagger();
@@ -108,6 +147,166 @@ public static class ContainerSwagger
                     options.InjectStylesheet("/Arquivos/swagger-dark.css");
                 }
             });
+    }
+
+    #endregion
+
+    #region Configuração padrão de autenticação do swagger
+
+    public static IServiceCollection RegisterJwtTokenConfig(this IServiceCollection services)
+    {
+        var tokenSettings = JsonSerializer.Deserialize<TokenSettings>(Environment.GetEnvironmentVariable("WebAPI_Token"));
+
+        services.AddAuthentication
+              (x =>
+              {
+                  x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                  x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+              })
+              .AddJwtBearer(options =>
+              {
+                  options.RequireHttpsMetadata = false;
+                  options.SaveToken = true;
+                  options.TokenValidationParameters = new TokenValidationParameters
+                  {
+                      ValidateIssuer = false,
+                      ValidateAudience = false,
+                      ValidateLifetime = true,
+                      ValidateIssuerSigningKey = true,
+                      ClockSkew = TimeSpan.Zero,
+                      ValidIssuer = tokenSettings.Issuer,
+                      ValidAudience = tokenSettings.Audience,
+                      IssuerSigningKey = new SymmetricSecurityKey
+                      (Encoding.UTF8.GetBytes(tokenSettings.Key))
+                  };
+              });
+
+        return services;
+    }
+
+    #endregion
+
+    #region Configuração de criptografia para autenticação do swagger
+
+    public static void RegisterJwtTokenEncryptConfig(this IServiceCollection services, IConfiguration configuration)
+    {
+        var tokenSettings = JsonSerializer.Deserialize<TokenSettings>(Environment.GetEnvironmentVariable("WebAPI_Token"));
+
+        services.AddAuthentication
+              (x =>
+              {
+                  x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                  x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+              })
+              .AddJwtBearer(options =>
+              {
+                  options.RequireHttpsMetadata = false;
+                  options.SaveToken = true;
+                  options.TokenValidationParameters = new TokenValidationParameters
+                  {
+                      ValidateIssuer = false,
+                      ValidateAudience = false,
+                      ValidateLifetime = true,
+                      ValidateIssuerSigningKey = true,
+                      ClockSkew = TimeSpan.Zero,
+                      ValidIssuer = tokenSettings.Issuer,
+                      ValidAudience = tokenSettings.Audience,
+                      IssuerSigningKey = new SymmetricSecurityKey
+                      (Encoding.UTF8.GetBytes(tokenSettings.Key))
+                  };
+                  options.Events = new JwtBearerEvents
+                  {
+                      OnMessageReceived = async context =>
+                      {
+                          var endpoint = context.HttpContext.Features.Get<IEndpointFeature>()?.Endpoint;
+                          if (endpoint != null && endpoint.Metadata.GetMetadata<IAllowAnonymous>() != null)
+                          {
+                              return;
+                          }
+
+                          else if (context.Request.Headers.TryGetValue("Authorization", out var tokenHeader))
+                          {
+                              var iGeneralService = context.HttpContext.RequestServices.GetRequiredService<IGeneralService>();
+                              var environmentVariables = context.HttpContext.RequestServices.GetRequiredService<EnvironmentVariables>();
+                              var tokenAuthAPI = StringExtensionMethod.ReplaceStringText(tokenHeader.ToString(), "Bearer ", "");
+
+                              if (GuardClauses.IsNullOrWhiteSpace(tokenAuthAPI))
+                              {
+                                  return;
+                              }
+
+                              else if (Base64.IsValid(tokenAuthAPI))
+                              {
+                                  try
+                                  {
+                                      string tokenDecrypt = CryptographyTokenService.DecryptToken(tokenAuthAPI, environmentVariables.TokenSettings.Key);
+                                      if (iGeneralService.ValidateToken(tokenDecrypt))
+                                          context.Token = tokenDecrypt;
+                                  }
+                                  catch
+                                  {
+                                      return;
+                                  }
+                              }
+                          }
+
+                          await Task.CompletedTask;
+                          return;
+                      },
+                      OnChallenge = async context =>
+                      {
+                          if (context.Error == "invalid_token" || context.Error == "missing_token")
+                          {
+                              context.HandleResponse();
+                              context.Response.StatusCode = ConstantHttpStatusCode.FORBIDDEN_CODE;
+                              context.Response.ContentType = "application/json";
+                              var responseForbidden = new
+                              {
+                                  sucesso = false,
+                                  mensagem = FixConstants.MESSAGE_ERROR_FORB_EX
+                              };
+                              await context.Response.WriteAsJsonAsync(responseForbidden);
+                              return;
+                          }
+
+                          context.HandleResponse();
+                          context.Response.StatusCode = ConstantHttpStatusCode.UNAUTHORIZED_CODE;
+                          context.Response.ContentType = "application/json";
+                          var response = new
+                          {
+                              sucesso = false,
+                              mensagem = FixConstants.MESSAGE_ERROR_UNAUTH_EX
+                          };
+                          await context.Response.WriteAsJsonAsync(response);
+                          return;
+                      }
+                  };
+              });
+
+        services.AddAuthorization(auth =>
+        {
+            auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
+                .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme‌​)
+                .RequireAuthenticatedUser()
+                .Build());
+
+            auth.AddPolicy("BearerRole", new AuthorizationPolicyBuilder()
+                .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+                .RequireAuthenticatedUser()
+                .RequireClaim("Admin")
+                .Build());
+        });
+    }
+
+    #endregion
+
+    /// <summary>
+    /// Faz a ligação com um Middleware customizado para que o swagger seja exibido, apenas quando o usuário estiver autenticado
+    /// Link >> https://macoratti.net/22/04/swagger_secprod1.htm
+    /// </summary>
+    public static IApplicationBuilder UseSwaggerAuthorized(this IApplicationBuilder builder)
+    {
+        return builder.UseMiddleware<SwaggerBasicAuthenticationMiddleware>();
     }
 }
 
@@ -134,7 +333,7 @@ public class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>
             Title = "WebAPI - Default",
             Version = description.ApiVersion.ToString(),
             Description = description.IsDeprecated ? " Esta versão está obsoleta!" : "Lista de endpoints disponíveis",
-            Contact = new OpenApiContact() { Name = "Roberto Meneghelli", Email = "roberto.mng.89.com.br" },
+            Contact = new OpenApiContact() { Name = "Dev", Email = "dev@test.com.br" },
             License = new OpenApiLicense() { Name = "MIT", Url = new Uri("https://opensource.org/licenses/MIT") }
         };
     }

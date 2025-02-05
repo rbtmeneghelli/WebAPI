@@ -58,7 +58,7 @@ public class Startup
         ContainerService.RegisterConfigs(services, _configuration);
         ContainerService.RegisterPolicy(services);
         ContainerService.RegisterCorsConfigRestriction(services, _configuration);
-        ContainerService.RegisterJwtConfig(services, _configuration);
+        ContainerSwagger.RegisterJwtTokenEncryptConfig(services, _configuration);
         ContainerService.RegisterHttpClientConfig(services);
         services.AddHttpContextAccessor();
         ContainerService.RegisterSeriLog(services, _configuration);

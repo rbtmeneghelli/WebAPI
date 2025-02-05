@@ -349,116 +349,6 @@ public static class ContainerService
         });
     }
 
-    public static void RegisterJwtConfig(this IServiceCollection services, IConfiguration configuration)
-    {
-        var tokenSettings = JsonSerializer.Deserialize<TokenSettings>(Environment.GetEnvironmentVariable("WebAPI_Token"));
-
-        services.AddAuthentication
-              (x =>
-              {
-                  x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                  x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-              })
-              .AddJwtBearer(options =>
-              {
-                  options.RequireHttpsMetadata = false;
-                  options.SaveToken = true;
-                  options.TokenValidationParameters = new TokenValidationParameters
-                  {
-                      ValidateIssuer = false,
-                      ValidateAudience = false,
-                      ValidateLifetime = true,
-                      ValidateIssuerSigningKey = true,
-                      ClockSkew = TimeSpan.Zero,
-                      ValidIssuer = tokenSettings.Issuer,
-                      ValidAudience = tokenSettings.Audience,
-                      IssuerSigningKey = new SymmetricSecurityKey
-                      (Encoding.UTF8.GetBytes(tokenSettings.Key))
-                  };
-                  options.Events = new JwtBearerEvents
-                  {
-                      OnMessageReceived = async context =>
-                      {
-                          var endpoint = context.HttpContext.Features.Get<IEndpointFeature>()?.Endpoint;
-                          if (endpoint != null && endpoint.Metadata.GetMetadata<IAllowAnonymous>() != null)
-                          {
-                              return;
-                          }
-
-                          else if (context.Request.Headers.TryGetValue("Authorization", out var tokenHeader))
-                          {
-                              var iGeneralService = context.HttpContext.RequestServices.GetRequiredService<IGeneralService>();
-                              var environmentVariables = context.HttpContext.RequestServices.GetRequiredService<EnvironmentVariables>();
-                              var tokenAuthAPI = StringExtensionMethod.ReplaceStringText(tokenHeader.ToString(), "Bearer ", "");
-
-                              if (GuardClauses.IsNullOrWhiteSpace(tokenAuthAPI))
-                              {
-                                  return;
-                              }
-
-                              else if (Base64.IsValid(tokenAuthAPI))
-                              {
-                                  try
-                                  {
-                                      string tokenDescriptografado = CryptographyTokenService.DecryptToken(tokenAuthAPI, environmentVariables.TokenSettings.Key);
-                                      if (iGeneralService.ValidateToken(tokenDescriptografado))
-                                          context.Token = tokenDescriptografado;
-                                  }
-                                  catch
-                                  {
-                                      return;
-                                  }
-                              }
-                          }
-
-                          await Task.CompletedTask;
-                          return;
-                      },
-                      OnChallenge = async context =>
-                      {
-                          if (context.Error == "invalid_token" || context.Error == "missing_token")
-                          {
-                              context.HandleResponse();
-                              context.Response.StatusCode = ConstantHttpStatusCode.FORBIDDEN_CODE;
-                              context.Response.ContentType = "application/json";
-                              var responseForbidden = new
-                              {
-                                  sucesso = false,
-                                  mensagem = FixConstants.MESSAGE_ERROR_FORB_EX
-                              };
-                              await context.Response.WriteAsJsonAsync(responseForbidden);
-                              return;
-                          }
-
-                          context.HandleResponse();
-                          context.Response.StatusCode = ConstantHttpStatusCode.UNAUTHORIZED_CODE;
-                          context.Response.ContentType = "application/json";
-                          var response = new
-                          {
-                              sucesso = false,
-                              mensagem = FixConstants.MESSAGE_ERROR_UNAUTH_EX
-                          };
-                          await context.Response.WriteAsJsonAsync(response);
-                          return;
-                      }
-                  };
-              });
-
-        services.AddAuthorization(auth =>
-        {
-            auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
-                .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme‌​)
-                .RequireAuthenticatedUser()
-                .Build());
-
-            auth.AddPolicy("BearerRole", new AuthorizationPolicyBuilder()
-                .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
-                .RequireAuthenticatedUser()
-                .RequireClaim("Admin")
-                .Build());
-        });
-    }
-
     public static void RegisterHttpClientConfig(this IServiceCollection services)
     {
         #region Versão Depreciada de configuração do HTTPClient
@@ -841,5 +731,24 @@ public static class ContainerService
     {
         //Efetuando esse comando, será possivel utilizar a classe IHttpContextAccessor via Dependency Injection
         services.AddHttpContextAccessor();
+    }
+
+    public static void RegisterOAuth(this IServiceCollection services)
+    {
+        services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = "OAuth";
+            options.DefaultChallengeScheme = "OAuth";
+        })
+        .AddOAuth("OAuth", options =>
+        {
+            options.ClientId = "seu_client_id";
+            options.ClientSecret = "seu_client_secret";
+            options.CallbackPath = "/oauth/callback";
+            options.AuthorizationEndpoint = "URL_do_endpoint_de_autorizacao";
+            options.TokenEndpoint = "URL_do_endpoint_de_token";
+            options.SaveTokens = true;
+            // Configurações adicionais específicas do provedor OAuth
+        });
     }
 }
