@@ -15,13 +15,22 @@ public class MappingProfile : AutoMapper.Profile
 {
     public MappingProfile()
     {
+        #region Mapeamentos do Usuário
+
         CreateMap<UserRequestDTO, User>()
+        .BeforeMap((source, dest) =>
+        {
+            dest.Id = source.GetId();
+            dest.CreateDate = source.GetId() is null ? DateOnlyExtensionMethods.GetDateTimeNowFromBrazil() : null;
+            dest.UpdateDate = source.GetId() is not null ? DateOnlyExtensionMethods.GetDateTimeNowFromBrazil() : null;
+        })
         .ForMember(dest => dest.Id, act => act.MapFrom(src => src.GetId()))
         .ForMember(dest => dest.Status, act => act.MapFrom(src => src.IsActive))
         .ForMember(dest => dest.IsAuthenticated, act => act.MapFrom(src => src.IsAuthenticated))
         .ForMember(dest => dest.LastPassword, act => act.MapFrom(src => src.LastPassword.ApplyTrim()))
         .ForMember(dest => dest.Login, act => act.MapFrom(src => src.Login.ApplyTrim()))
-        .ForMember(dest => dest.Password, act => act.MapFrom(src => src.Password.ApplyTrim()));
+        .ForMember(dest => dest.Password, act => act.MapFrom(src => src.Password.ApplyTrim()))
+        .ForMember(dest => dest.Id, act => act.MapFrom(src => src.GetId()));
 
         CreateMap<User, UserResponseDTO>()
         .ForMember(dest => dest.IsActive, act => act.MapFrom(src => src.Status))
@@ -29,7 +38,10 @@ public class MappingProfile : AutoMapper.Profile
         .ForMember(dest => dest.LastPassword, act => act.MapFrom(src => src.LastPassword.ApplyTrim()))
         .ForMember(dest => dest.Login, act => act.MapFrom(src => src.Login.ApplyTrim()))
         .ForMember(dest => dest.Password, act => act.MapFrom(src => src.Password.ApplyTrim())).ReverseMap();
+        
+        CreateMap<UserResponseDTO, UserExcelDTO>().ReverseMap();
 
+        #endregion
         CreateMap<Log, LogResponseDTO>()
         .ForMember(dest => dest.Class, act => act.MapFrom(src => src.Class.ApplyTrim()))
         .ForMember(dest => dest.Method, act => act.MapFrom(src => src.Method.ApplyTrim()))
@@ -44,6 +56,7 @@ public class MappingProfile : AutoMapper.Profile
         .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
         .ForMember(dest => dest.KeyValues, act => act.MapFrom(src => src.KeyValues))
         .ForMember(dest => dest.NewValues, act => act.MapFrom(src => src.NewValues))
+        .ForMember(dest => dest.OldValues, act => act.Condition(src => !string.IsNullOrEmpty(src.OldValues)))
         .ForMember(dest => dest.OldValues, act => act.MapFrom(src => src.OldValues)).ReverseMap();
 
         //TODO: Ajustar 
@@ -54,8 +67,6 @@ public class MappingProfile : AutoMapper.Profile
         //.ForMember(dest => dest.KeyValues, act => act.MapFrom(src => src.KeyValues))
         //.ForMember(dest => dest.NewValues, act => act.MapFrom(src => src.NewValues))
         //.ForMember(dest => dest.OldValues, act => act.MapFrom(src => src.OldValues)).ReverseMap();
-
-        CreateMap<UserResponseDTO, UserExcelDTO>().ReverseMap();
 
         CreateMap<Region, RegionQueryFilterResponse>().ReverseMap();
         CreateMap<Region, RegionQueryByIdResponse>().ReverseMap();
