@@ -2,7 +2,7 @@
 
 // Exemplo de teste unitario com NUnit (Verificar se a injeção de dependencia funciona ou se precisa do BuilderService)
 [TestFixture]
-public sealed class NUnitControllerTest 
+public sealed class NUnitControllerTest : GenericControllerTest
 {
     private Mock<IDataRepository> _mockDataRepository;
 
@@ -30,7 +30,7 @@ public sealed class NUnitControllerTest
         };
 
         // Act
-        _mockDataRepository.Setup(repo => repo.GetAllData(null, null, 0, int.MaxValue)).ReturnsAsync(List<Data>(dataList, 0, 10));
+        _mockDataRepository.Setup(repo => repo.GetAllData(null, null, 0, int.MaxValue)).ReturnsAsync(dataList);
 
         var mockResult = await _mockDataRepository.Object.GetAllData(null, null, 0, int.MaxValue);
 
