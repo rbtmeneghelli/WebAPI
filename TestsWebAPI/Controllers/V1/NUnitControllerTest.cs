@@ -18,7 +18,7 @@ public sealed class NUnitControllerTest : GenericControllerTest
 
     [TestCase("", "73990324000199")]
     [TestCase("", "73990324000199")]
-    public async Task GetAllData_ShouldReturnPagedListResponse_WhenTakersExist(string name, string cpfCnpj)
+    public async Task GetAllData_ShouldReturnPagedListResponse_WhenDataExist(string name, string cpfCnpj)
     {
         // Arrange
         var dataList = new List<Data>
