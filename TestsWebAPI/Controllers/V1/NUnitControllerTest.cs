@@ -2,10 +2,14 @@
 
 // Exemplo de teste unitario com NUnit (Verificar se a injeção de dependencia funciona ou se precisa do BuilderService)
 [TestFixture]
-public sealed class NUnitControllerTest
+public sealed class NUnitControllerTest 
 {
     private Mock<IDataRepository> _mockDataRepository;
 
+    public NUnitControllerTest(BuilderServiceProvider builderServiceProvider) : base(builderServiceProvider)
+    {        
+    }
+    
     [SetUp]
     public void SetUp()
     {
