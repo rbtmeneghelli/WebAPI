@@ -33,6 +33,10 @@ public class MappingProfile : AutoMapper.Profile
         .ForMember(dest => dest.Id, act => act.MapFrom(src => src.GetId()));
 
         CreateMap<User, UserResponseDTO>()
+        .AfterMap((src, dest) => 
+        {
+            dest.Password = dest.Status ? "**********" : string.Empty;
+        })
         .ForMember(dest => dest.IsActive, act => act.MapFrom(src => src.Status))
         .ForMember(dest => dest.IsAuthenticated, act => act.MapFrom(src => src.IsAuthenticated))
         .ForMember(dest => dest.LastPassword, act => act.MapFrom(src => src.LastPassword.ApplyTrim()))
