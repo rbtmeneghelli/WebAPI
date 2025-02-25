@@ -30,7 +30,7 @@ public class EnvironmentTypeSettingsRepository : IEnvironmentTypeSettingsReposit
 
     public IQueryable<EnvironmentTypeSettings> FindBy(Expression<Func<EnvironmentTypeSettings, bool>> predicate, bool hasTracking = false)
     {
-        return _iEnvironmentTypeSettingsReadRepository.FindBy(predicate, hasTracking);
+        return _iEnvironmentTypeSettingsReadRepository.GetByPredicate(predicate, hasTracking);
     }
 
     public EnvironmentTypeSettings GetById(long id)

@@ -64,7 +64,7 @@ public class AuditService : GenericService, IAuditService
     {
         string sql = @"select count(*) from ControlPanel_Audit " +
         @"select Id = Id, TableName = Table_Name, ActionName = Action_Name from ControlPanel_Audit where (Table_Name = '" + filter.TableName + "')";
-        var reader = await _iAuditReadRepositoryDapper.QueryMultiple(sql);
+        var reader = await _iAuditReadRepositoryDapper.GetMultipleResult(sql);
 
         var queryResult = from x in reader.Result.AsQueryable()
                           orderby x.UpdateDate descending

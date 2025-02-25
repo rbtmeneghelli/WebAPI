@@ -35,7 +35,7 @@ public class MappingProfile : AutoMapper.Profile
         CreateMap<User, UserResponseDTO>()
         .AfterMap((src, dest) => 
         {
-            dest.Password = dest.Status ? "**********" : string.Empty;
+            dest.Password = dest.IsActive ? "**********" : string.Empty;
         })
         .ForMember(dest => dest.IsActive, act => act.MapFrom(src => src.Status))
         .ForMember(dest => dest.IsAuthenticated, act => act.MapFrom(src => src.IsAuthenticated))

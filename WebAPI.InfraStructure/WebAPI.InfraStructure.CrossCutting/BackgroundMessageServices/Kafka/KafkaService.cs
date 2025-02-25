@@ -44,7 +44,7 @@ public sealed class KafkaService<TEntity> : IKafkaService<TEntity> where TEntity
 
             var deliveryReport = await producer.ProduceAsync(topicName, message);
 
-            if (deliveryReport.Status == PersistenceStatus.Persisted)
+            if (deliveryReport is { Status: PersistenceStatus.Persisted })
             {
                 Console.WriteLine($"Mensagem entregue com sucesso: {deliveryReport.TopicPartitionOffset}");
             }

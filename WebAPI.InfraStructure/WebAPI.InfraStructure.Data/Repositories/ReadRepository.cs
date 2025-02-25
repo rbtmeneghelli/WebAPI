@@ -41,7 +41,7 @@ public sealed class ReadRepository<TEntity> : GenericRepository<TEntity>, IReadR
         return DbSet.AsNoTracking().AsSplitQuery().Include(includeData);
     }
 
-    public IQueryable<TEntity> FindBy(Expression<Func<TEntity, bool>> predicate, bool hasTracking = false)
+    public IQueryable<TEntity> GetByPredicate(Expression<Func<TEntity, bool>> predicate, bool hasTracking = false)
     {
         if (hasTracking)
             return DbSet.Where(predicate);
@@ -49,7 +49,7 @@ public sealed class ReadRepository<TEntity> : GenericRepository<TEntity>, IReadR
         return DbSet.AsNoTracking().Where(predicate);
     }
 
-    public IQueryable<TEntity> FindByIgnoreQueryFilter(Expression<Func<TEntity, bool>> predicate, bool hasTracking = false)
+    public IQueryable<TEntity> GetByPredicateIgnoreQueryFilter(Expression<Func<TEntity, bool>> predicate, bool hasTracking = false)
     {
         if (hasTracking)
             return DbSet.IgnoreQueryFilters().Where(predicate);

@@ -31,7 +31,7 @@ public sealed class SqlRepository : ISqlRepository
         }
         catch (Exception ex)
         {
-            SaveLogErrorSql(sql, "Script", "ExecuteDynamicSQL", ex.Message);
+            InsertLogError(sql, "Script", "ExecuteDynamicSQL", ex.Message);
         }
 
         return list;
@@ -42,7 +42,7 @@ public sealed class SqlRepository : ISqlRepository
         _context.Database.SetCommandTimeout(timeout);
     }
 
-    public T RunStoredProcedureWithReturn<T>(string procedureName = "[dbo].[FelizAnoNovo]") where T : class
+    public T ExecuteStoredProcedure<T>(string procedureName = "[dbo].[FelizAnoNovo]") where T : class
     {
         var parameterReturn = new SqlParameter
         {
@@ -60,7 +60,7 @@ public sealed class SqlRepository : ISqlRepository
 
         catch (Exception ex)
         {
-            SaveLogErrorSql(procedureName, "Script", "RunStoredProcedureWithReturn", ex.Message);
+            InsertLogError(procedureName, "Script", "RunStoredProcedureWithReturn", ex.Message);
         }
 
         return null;
@@ -89,7 +89,7 @@ public sealed class SqlRepository : ISqlRepository
         }
         catch (Exception ex)
         {
-            SaveLogErrorSql(sql, "Script", "ExecuteSql", ex.Message);
+            InsertLogError(sql, "Script", "ExecuteSql", ex.Message);
         }
 
         return countRowsAffected > 0 ? true : false;
@@ -104,7 +104,7 @@ public sealed class SqlRepository : ISqlRepository
         }
         catch (Exception ex)
         {
-            SaveLogErrorSql(sql, "Script", "ExecuteProcedureSql", ex.Message);
+            InsertLogError(sql, "Script", "ExecuteProcedureSql", ex.Message);
         }
         return count > 0 ? true : false;
     }
@@ -114,7 +114,7 @@ public sealed class SqlRepository : ISqlRepository
         return _context.Database.GetConnectionString();
     }
 
-    public async Task<bool> RunSqlProcedureAsync(string procName, string paramName, string paramValue)
+    public async Task<bool> ExceuteStoredProcedureAsync(string procName, string paramName, string paramValue)
     {
         SqlConnection sqlConnObj = new SqlConnection(GetConnectionStringFromDatabase());
 
@@ -128,7 +128,7 @@ public sealed class SqlRepository : ISqlRepository
         }
         catch(Exception ex)
         {
-            SaveLogErrorSql(procName, "Script", "ExecuteProcedureSql", ex.Message);
+            InsertLogError(procName, "Script", "ExecuteProcedureSql", ex.Message);
             return false;
         }
         finally
@@ -139,7 +139,7 @@ public sealed class SqlRepository : ISqlRepository
         return true;
     }
 
-    public async Task<bool> RunSqlBackupAsync(string directory)
+    public async Task<bool> ExecuteSqlBackupAsync(string directory)
     {
         string dir = GuardClauses.IsNullOrWhiteSpace(directory) ? Directory.GetCurrentDirectory() : directory;
         SqlConnection sqlConnObj = new SqlConnection(GetConnectionStringFromDatabase());
@@ -158,7 +158,7 @@ public sealed class SqlRepository : ISqlRepository
         }
         catch
         {
-            SaveLogErrorSql("Backup", "Script", "ExecuteBackup", FixConstants.ERROR_IN_BACKUP);
+            InsertLogError("Backup", "Script", "ExecuteBackup", FixConstants.ERROR_IN_BACKUP);
             return false;
         }
         finally
@@ -180,7 +180,7 @@ public sealed class SqlRepository : ISqlRepository
         return dictionary[type];
     }
 
-    private void SaveLogErrorSql(string sql, string entity, string method, string messageError)
+    public void InsertLogError(string sql, string entity, string method, string messageError)
     {
         _context.Database.ExecuteSqlRaw(string.Format(FixConstants.SAVE_LOG, entity, method, messageError, DateOnlyExtensionMethods.GetDateTimeNowFromBrazil().ToString("yyyy-MM-dd"), sql));
     }

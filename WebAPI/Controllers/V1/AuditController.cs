@@ -1,9 +1,4 @@
-﻿using WebAPI.Domain.Constants;
-using WebAPI.Domain.DTO.Others;
-using WebAPI.Domain.Filters.Others;
-using WebAPI.Domain.Interfaces.Repository;
-using WebAPI.Domain.Interfaces.Services;
-using WebAPI.Domain.Interfaces.Services.Tools;
+﻿using WebAPI.Domain.Filters.Others;
 using FixConstants = WebAPI.Domain.Constants.FixConstants;
 
 namespace WebAPI.V1.Controllers;
@@ -38,7 +33,7 @@ public sealed class AuditController : GenericController
         return CustomResponse(ConstantHttpStatusCode.NOT_FOUND_CODE);
     }
 
-    [HttpPost("GetAllPaginate")]
+    [HttpPost("getAllPaginate")]
     public async Task<IActionResult> GetAllPaginate(AuditFilter filter)
     {
         if (ModelStateIsInvalid())

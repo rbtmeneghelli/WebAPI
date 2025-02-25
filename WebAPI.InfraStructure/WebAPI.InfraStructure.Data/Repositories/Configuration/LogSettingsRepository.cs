@@ -25,7 +25,7 @@ public class LogSettingsRepository : ILogSettingsRepository
 
     public IQueryable<LogSettings> FindBy(Expression<Func<LogSettings, bool>> predicate, bool hasTracking = false)
     {
-        return _iLogSettingsReadRepository.FindBy(predicate, hasTracking);
+        return _iLogSettingsReadRepository.GetByPredicate(predicate, hasTracking);
     }
 
     public LogSettings GetById(long id)

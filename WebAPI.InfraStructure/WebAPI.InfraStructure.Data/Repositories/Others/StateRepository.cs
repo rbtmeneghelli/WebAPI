@@ -25,7 +25,7 @@ public class StateRepository : IStatesRepository
 
     public IQueryable<States> FindBy(Expression<Func<States, bool>> predicate, bool hasTracking = false)
     {
-        return _iStateReadRepository.FindBy(predicate, hasTracking);
+        return _iStateReadRepository.GetByPredicate(predicate, hasTracking);
     }
 
     public IQueryable<States> GetAll(bool hasTracking = false)

@@ -25,7 +25,7 @@ public class ExpirationPasswordSettingsRepository : IExpirationPasswordSettingsR
 
     public IQueryable<ExpirationPasswordSettings> FindBy(Expression<Func<ExpirationPasswordSettings, bool>> predicate, bool hasTracking = false)
     {
-        return _iExpirationPasswordSettingsReadRepository.FindBy(predicate, hasTracking);
+        return _iExpirationPasswordSettingsReadRepository.GetByPredicate(predicate, hasTracking);
     }
 
     public ExpirationPasswordSettings GetById(long id)

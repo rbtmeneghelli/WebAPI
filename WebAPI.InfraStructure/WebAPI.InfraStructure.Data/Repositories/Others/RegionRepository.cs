@@ -26,7 +26,7 @@ public class RegionRepository : IRegionRepository
 
     public IQueryable<Region> FindBy(Expression<Func<Region, bool>> predicate, bool hasTracking = false)
     {
-        return _iRegionReadRepository.FindBy(predicate, hasTracking);
+        return _iRegionReadRepository.GetByPredicate(predicate, hasTracking);
     }
 
     public IQueryable<Region> GetAll(bool hasTracking = false)

@@ -1,10 +1,4 @@
-﻿using WebAPI.Domain.Constants;
-using WebAPI.Domain.Cryptography;
-using WebAPI.Domain.Entities.ControlPanel;
-using WebAPI.Domain.Interfaces.Repository;
-using WebAPI.Domain.Interfaces.Services;
-
-namespace WebAPI.V1.Controllers;
+﻿namespace WebAPI.V1.Controllers;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiVersion("1.0")]
@@ -26,7 +20,7 @@ public sealed class AccountController : GenericController
         _iGenericUnitOfWorkService = iGenericUnitOfWorkService;
     }
 
-    [HttpPost("Login")]
+    [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginUser loginUser)
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
@@ -46,7 +40,7 @@ public sealed class AccountController : GenericController
         }
     }
 
-    [HttpPost("ConfirmLogin")]
+    [HttpPost("confirmLogin")]
     public IActionResult ConfirmLogin([FromBody] ConfirmLoginUser confirmLoginUser)
     {
         if (!IsAuthenticated())
@@ -68,7 +62,7 @@ public sealed class AccountController : GenericController
         return CustomResponse();
     }
 
-    [HttpPost("ChangePassword")]
+    [HttpPost("changePassword")]
     public async Task<IActionResult> ChangePassword([FromBody] User user)
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
@@ -80,7 +74,7 @@ public sealed class AccountController : GenericController
         return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
     }
 
-    [HttpGet("ResetPassword/{email}")]
+    [HttpGet("resetPassword/{email}")]
     public async Task<IActionResult> ResetPassword(string email)
     {
         var result = await _iGenericUnitOfWorkService.AccountService.ResetPasswordAsync(email);
@@ -91,9 +85,9 @@ public sealed class AccountController : GenericController
         return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
     }
 
-    [HttpPost("LoginRefresh")]
+    [HttpPost("loginRefresh")]
     [AllowAnonymous]
-    public async Task<IActionResult> LoginWithRefreshToken([FromBody] LoginUser loginUser)
+    public async Task<IActionResult> LoginRefresh([FromBody] LoginUser loginUser)
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
@@ -114,7 +108,7 @@ public sealed class AccountController : GenericController
         }
     }
 
-    [HttpPost("RefreshToken")]
+    [HttpPost("refreshToken")]
     public IActionResult RefreshToken([FromBody] Tokens tokens)
     {
         var principal = _iGeneralService.GetPrincipalFromExpiredToken(tokens.Token);

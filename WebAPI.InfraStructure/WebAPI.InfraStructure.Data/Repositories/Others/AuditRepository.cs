@@ -26,7 +26,7 @@ public class AuditRepository : IAuditRepository
 
     public IQueryable<Audit> FindBy(Expression<Func<Audit, bool>> predicate, bool hasTracking = false)
     {
-        return _iAuditReadRepository.FindBy(predicate, hasTracking);
+        return _iAuditReadRepository.GetByPredicate(predicate, hasTracking);
     }
 
     public bool Exist(Expression<Func<Audit, bool>> predicate)

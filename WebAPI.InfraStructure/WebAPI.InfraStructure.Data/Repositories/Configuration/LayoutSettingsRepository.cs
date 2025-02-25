@@ -25,7 +25,7 @@ public class LayoutSettingsRepository : ILayoutSettingsRepository
 
     public IQueryable<LayoutSettings> FindBy(Expression<Func<LayoutSettings, bool>> predicate, bool hasTracking = false)
     {
-        return _iLayoutSettingsReadRepository.FindBy(predicate, hasTracking);
+        return _iLayoutSettingsReadRepository.GetByPredicate(predicate, hasTracking);
     }
 
     public LayoutSettings GetById(long id)

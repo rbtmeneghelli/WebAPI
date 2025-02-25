@@ -25,7 +25,7 @@ public class AddressRepository : IAddressRepository
 
     public IQueryable<AddressData> FindBy(Expression<Func<AddressData, bool>> predicate, bool hasTracking = false)
     {
-        return _iAddressDataReadRepository.FindBy(predicate, hasTracking);
+        return _iAddressDataReadRepository.GetByPredicate(predicate, hasTracking);
     }
 
     public AddressData GetById(long id)

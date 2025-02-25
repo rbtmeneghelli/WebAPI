@@ -26,7 +26,7 @@ public class AuthenticationSettingsRepository : IAuthenticationSettingsRepositor
 
     public IQueryable<AuthenticationSettings> FindBy(Expression<Func<AuthenticationSettings, bool>> predicate, bool hasTracking = false)
     {
-        return _iAuthenticationSettingsReadRepository.FindBy(predicate, hasTracking);
+        return _iAuthenticationSettingsReadRepository.GetByPredicate(predicate, hasTracking);
     }
 
     public AuthenticationSettings GetById(long id)

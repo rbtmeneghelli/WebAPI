@@ -41,12 +41,12 @@ public class UserRepository : IUserRepository
 
     public IQueryable<User> FindBy(Expression<Func<User, bool>> predicate)
     {
-        return _iUserReadRepository.FindBy(predicate);
+        return _iUserReadRepository.GetByPredicate(predicate);
     }
 
     public IQueryable<User> FindByIgnoreQueryFilter(Expression<Func<User, bool>> predicate)
     {
-        return _iUserReadRepository.FindByIgnoreQueryFilter(predicate);
+        return _iUserReadRepository.GetByPredicateIgnoreQueryFilter(predicate);
     }
 
     public User GetById(long id)

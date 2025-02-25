@@ -13,11 +13,11 @@ namespace WebAPI.Infrastructure.CrossCutting.Middleware.Authentication;
 /// <summary>
 /// Middleware para verificar se o token fornecido no Bearer Token e o mesmo que foi gerado e gravado na tabela UserToken
 /// </summary>
-public sealed class CustomValidationToken
+public sealed class CustomValidationTokenMiddleware
 {
     private readonly RequestDelegate _next;
 
-    public CustomValidationToken(RequestDelegate next)
+    public CustomValidationTokenMiddleware(RequestDelegate next)
     {
         _next = next;
     }

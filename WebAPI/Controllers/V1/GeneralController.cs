@@ -62,7 +62,7 @@ public sealed class GeneralController : GenericController
     [HttpGet("backup/{directory}")]
     public async Task<IActionResult> Backup(string directory)
     {
-        var result = await _iSqlRepository.RunSqlBackupAsync(directory);
+        var result = await _iSqlRepository.ExecuteSqlBackupAsync(directory);
 
         if (result)
             return CustomResponse(ConstantHttpStatusCode.OK_CODE, null, "Backup executado com sucesso");

@@ -25,7 +25,7 @@ public class EmailDisplaySettingsRepository : IEmailDisplaySettingsRepository
 
     public IQueryable<EmailDisplay> FindBy(Expression<Func<EmailDisplay, bool>> predicate, bool hasTracking = false)
     {
-        return _iEmailDisplayReadRepository.FindBy(predicate, hasTracking);
+        return _iEmailDisplayReadRepository.GetByPredicate(predicate, hasTracking);
     }
 
     public EmailDisplay GetById(long id)

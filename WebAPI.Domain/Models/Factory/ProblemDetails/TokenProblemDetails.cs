@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Diagnostics;
+using Microsoft.AspNetCore.Http;
+using WebAPI.Domain.Enums;
 using WebAPI.Domain.Interfaces.Factory;
 
 namespace WebAPI.Domain.Models.Factory.ProblemDetails;
@@ -9,15 +11,24 @@ public sealed class TokenProblemDetails : IProblemDetailsConfigFactory
     {
     }
 
-    public Microsoft.AspNetCore.Mvc.ProblemDetails GetProblemDetails(string exceptionMessage)
+    public ProblemDetailsException GetProblemDetails(Exception exception)
     {
-        Microsoft.AspNetCore.Mvc.ProblemDetails problemDetails = new()
+        StackTrace stackTrace = new StackTrace(exception, true);
+
+        StackFrame frame = stackTrace.GetFrame(stackTrace.FrameCount - 1);
+
+        ProblemDetailsException problemDetailsException = new()
         {
+            Logger = EnumLogger.LogError,
             Status = StatusCodes.Status419AuthenticationTimeout,
             Title = "Token Expired",
-            Detail = exceptionMessage
+            File = frame.GetFileName(),
+            Class = frame.GetMethod().Name,
+            Method = frame.GetMethod().DeclaringType.Name,
+            Line = frame.GetFileLineNumber(),
+            Detail = exception.Message
         };
 
-        return problemDetails;
+        return problemDetailsException;
     }
 }

@@ -31,7 +31,7 @@ public class CityRepository : ICityRepository
 
     public IQueryable<City> FindBy(Expression<Func<City, bool>> predicate, bool hasTracking = false)
     {
-        return _iCityReadRepository.FindBy(predicate, hasTracking);
+        return _iCityReadRepository.GetByPredicate(predicate, hasTracking);
     }
     public City GetById(long id)
     {

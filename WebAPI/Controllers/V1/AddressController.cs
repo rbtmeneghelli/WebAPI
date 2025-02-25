@@ -1,13 +1,4 @@
-﻿using Microsoft.AspNetCore.Cors;
-using WebAPI.Domain.Constants;
-using WebAPI.Domain.Entities.Others;
-using WebAPI.Domain.ExtensionMethods;
-using WebAPI.Domain.Interfaces.Repository;
-using WebAPI.Domain.Interfaces.Services;
-using WebAPI.Domain.Interfaces.Services.Tools;
-using WebAPI.Domain.Validations;
-
-namespace WebAPI.Controllers.V1;
+﻿namespace WebAPI.Controllers.V1;
 
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/[controller]")]
@@ -37,32 +28,32 @@ public class AddressController : GenericController
         _iCityService = iCityService;
     }
 
-    [HttpGet("getCep/{cep}/{refreshCep:bool}")]
-    public async Task<IActionResult> GetCep(string cep, bool refreshCep)
+    [HttpGet("getAddress/{address:string}/{refreshAddress:bool}")]
+    public async Task<IActionResult> GetAddress(string address, bool refreshAddress)
     {
         try
         {
-            Domain.ValueObject.AddressData modelCep = new Domain.ValueObject.AddressData();
-            if (refreshCep && GuardClauses.IsNullOrWhiteSpace(cep) == false)
+            Domain.ValueObject.AddressData modelAddress = new Domain.ValueObject.AddressData();
+            if (refreshAddress && GuardClauses.IsNullOrWhiteSpace(address) == false)
             {
-                modelCep = await _iAddressService.GetAddressByCepAsync(cep);
-                RequestData requestData = await _iDataFromApiService.RequestDataToExternalAPIAsync(string.Format($"{FixConstantsUrl.URL_TO_GET_CEP}{0}", cep));
+                modelAddress = await _iAddressService.GetAddressByCepAsync(address);
+                RequestData requestData = await _iDataFromApiService.RequestDataToExternalAPIAsync(string.Format($"{FixConstantsUrl.URL_TO_GET_CEP}{0}", address));
                 if (requestData.IsSuccess)
                 {
-                    Domain.ValueObject.AddressData modelCepAPI = requestData.Data.DeserializeObject<Domain.ValueObject.AddressData>();
-                    if (GuardClauses.ObjectIsNotNull(modelCepAPI))
+                    Domain.ValueObject.AddressData modelAddressAPI = requestData.Data.DeserializeObject<Domain.ValueObject.AddressData>();
+                    if (GuardClauses.ObjectIsNotNull(modelAddressAPI))
                     {
-                        modelCepAPI.StateId = await _iStatesService.GetStateByInitialsAsync(modelCepAPI.Uf);
-                        await _iAddressService.RefreshAddressAsync(new RefreshCep(cep, modelCep, modelCepAPI));
-                        modelCep = await _iAddressService.GetAddressByCepAsync(cep);
+                        modelAddressAPI.StateId = await _iStatesService.GetStateByInitialsAsync(modelAddressAPI.Uf);
+                        await _iAddressService.RefreshAddressAsync(new RefreshCep(address, modelAddress, modelAddressAPI));
+                        modelAddress = await _iAddressService.GetAddressByCepAsync(address);
                     }
                 }
             }
             else
             {
-                modelCep = await _iAddressService.GetAddressByCepAsync(cep);
+                modelAddress = await _iAddressService.GetAddressByCepAsync(address);
             }
-            return CustomResponse(ConstantHttpStatusCode.OK_CODE, modelCep);
+            return CustomResponse(ConstantHttpStatusCode.OK_CODE, modelAddress);
         }
         catch (Exception)
         {
@@ -72,14 +63,14 @@ public class AddressController : GenericController
     }
 
     [HttpGet("getStates/{refreshStates:bool}")]
-    public async Task<IActionResult> RefreshStates(bool refreshEstados)
+    public async Task<IActionResult> GetStates(bool refreshStates)
     {
         try
         {
             IEnumerable<Region> listRegion = await _iRegionService.GetAllRegionAsync();
             IEnumerable<States> listStates = await _iStatesService.GetAllStateAsync();
 
-            if (refreshEstados)
+            if (refreshStates)
             {
                 if (GuardClauses.ObjectIsNotNull(listStates) && GuardClauses.HaveDataOnList(listStates))
                 {
@@ -105,8 +96,8 @@ public class AddressController : GenericController
         }
     }
 
-    [HttpGet("addCities")]
-    public async Task<IActionResult> GetCities()
+    [HttpGet("insertCities")]
+    public async Task<IActionResult> InsertCities()
     {
         IEnumerable<MesoRegion> mesoRegions = Enumerable.Empty<MesoRegion>();
         List<City> cities = new List<City>();
@@ -159,8 +150,8 @@ public class AddressController : GenericController
         return CustomResponse(ConstantHttpStatusCode.OK_CODE, null, "Cidades foram adicionadas com sucesso");
     }
 
-    [HttpGet("addRegions")]
-    public async Task<IActionResult> AddRegions()
+    [HttpGet("insertRegions")]
+    public async Task<IActionResult> InsertRegions()
     {
         try
         {
@@ -196,8 +187,8 @@ public class AddressController : GenericController
         }
     }
 
-    [HttpGet("addStates")]
-    public async Task<IActionResult> AddStates()
+    [HttpGet("insertStates")]
+    public async Task<IActionResult> InsertStates()
     {
         try
         {

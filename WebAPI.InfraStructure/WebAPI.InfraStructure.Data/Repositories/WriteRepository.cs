@@ -20,7 +20,7 @@ public sealed class WriteRepository<TEntity> : GenericRepository<TEntity>, IWrit
         }
         catch (Exception ex)
         {
-            SaveLogError(GetValuesFromEntity(entity), entity.GetType().Name, "Create", ex.Message);
+            InsertLogError(GetValuesFromEntity(entity), entity.GetType().Name, "Create", ex.Message);
         }
     }
 
@@ -36,7 +36,7 @@ public sealed class WriteRepository<TEntity> : GenericRepository<TEntity>, IWrit
         }
         catch (Exception ex)
         {
-            SaveLogError(GetValuesFromEntity(entities), entities.GetType().Name, "BulkCreate", ex.Message);
+            InsertLogError(GetValuesFromEntity(entities), entities.GetType().Name, "BulkCreate", ex.Message);
         }
     }
 
@@ -49,7 +49,7 @@ public sealed class WriteRepository<TEntity> : GenericRepository<TEntity>, IWrit
         }
         catch (Exception ex)
         {
-            SaveLogError(GetValuesFromEntity(entity), entity.GetType().Name, "Update", ex.Message);
+            InsertLogError(GetValuesFromEntity(entity), entity.GetType().Name, "Update", ex.Message);
         }
     }
 
@@ -62,7 +62,7 @@ public sealed class WriteRepository<TEntity> : GenericRepository<TEntity>, IWrit
         }
         catch (Exception ex)
         {
-            SaveLogError(GetValuesFromEntity(entities), entities.GetType().Name, "UpdateRange", ex.Message);
+            InsertLogError(GetValuesFromEntity(entities), entities.GetType().Name, "UpdateRange", ex.Message);
         }
     }
 
@@ -75,7 +75,7 @@ public sealed class WriteRepository<TEntity> : GenericRepository<TEntity>, IWrit
         }
         catch (Exception ex)
         {
-            SaveLogError(GetValuesFromEntity(entity), entity.GetType().Name, "Remove", ex.Message);
+            InsertLogError(GetValuesFromEntity(entity), entity.GetType().Name, "Remove", ex.Message);
         }
     }
 
@@ -88,7 +88,7 @@ public sealed class WriteRepository<TEntity> : GenericRepository<TEntity>, IWrit
         }
         catch (Exception ex)
         {
-            SaveLogError(GetValuesFromEntity(entities), entities.GetType().Name, "RemoveRange", ex.Message);
+            InsertLogError(GetValuesFromEntity(entities), entities.GetType().Name, "RemoveRange", ex.Message);
         }
     }
 
@@ -110,7 +110,7 @@ public sealed class WriteRepository<TEntity> : GenericRepository<TEntity>, IWrit
                 if (entry.Entity is Audit || entry.State == EntityState.Detached || entry.State == EntityState.Unchanged)
                     continue;
                 string[] values = entry.Entity.GetType().GetProperties().Select(x => x.Name + ": " + x.GetValue(entry.Entity, null)).ToArray();
-                SaveLogError(values, entry.Metadata.GetTableName(), "SaveChanges", ex.Message);
+                InsertLogError(values, entry.Metadata.GetTableName(), "SaveChanges", ex.Message);
             }
             throw new Exception(ex.Message, ex.InnerException);
         }
@@ -135,7 +135,7 @@ public sealed class WriteRepository<TEntity> : GenericRepository<TEntity>, IWrit
             catch (Exception ex)
             {
                 transaction.Rollback();
-                SaveLogError(GetValuesFromEntity(entity), entity.GetType().Name, "AddTransaction", ex.Message);
+                InsertLogError(GetValuesFromEntity(entity), entity.GetType().Name, "AddTransaction", ex.Message);
             }
         }
     }

@@ -5,7 +5,7 @@ namespace WebAPI.Domain.Interfaces.Generic;
 
 public interface IReadRepositoryDapper<TEntity> : IDisposable where TEntity : class
 {
-    Task<IEnumerable<TEntity>> QueryToGetAll(string sqlQuery);
-    Task<TEntity> QueryToGetFirstOrDefault(string sqlQuery);
-    Task<QueryResult<TEntity>> QueryMultiple(string sqlQuery);
+    Task<IEnumerable<TEntity>> GetAll(string sqlQuery);
+    Task<TEntity> GetFirstResult(string sqlQuery);
+    Task<QueryResult<TEntity>> GetMultipleResult(string sqlQuery);
 }

@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using WebAPI.Domain.Models;
 
 namespace WebAPI.Domain.Interfaces.Factory;
 
 public interface IProblemDetailsConfigFactory
 {
-    ProblemDetails GetProblemDetails(string exceptionMessage);
+    ProblemDetailsException GetProblemDetails(Exception exception);
 }

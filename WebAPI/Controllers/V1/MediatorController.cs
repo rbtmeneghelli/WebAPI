@@ -1,10 +1,7 @@
 ﻿using WebAPI.Domain.CQRS.Command;
 using MediatR;
 using FixConstants = WebAPI.Domain.Constants.FixConstants;
-using WebAPI.Domain.Entities.Others;
-using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.CQRS.Queries;
-using WebAPI.Domain.Constants;
 
 namespace WebAPI.V1.Controllers;
 
@@ -27,7 +24,7 @@ public sealed class MediatorController : GenericController
         _mediator = mediator;
     }
 
-    [HttpPost("GetAllPaginate")]
+    [HttpPost("getAllPaginate")]
     public async Task<IActionResult> GetAllPaginate([FromBody] RegionQueryFilterRequest findRegionQueryFilterHandler)
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
@@ -36,7 +33,7 @@ public sealed class MediatorController : GenericController
         return CustomResponse(ConstantHttpStatusCode.OK_CODE, model, FixConstants.SUCCESS_IN_GETALLPAGINATE);
     }
 
-    [HttpPost("GetById")]
+    [HttpPost("getById")]
     public async Task<IActionResult> GetById([FromBody] RegionQueryByIdRequest regionQueryByIdRequest)
     {
         var model = await _mediator.Send(regionQueryByIdRequest);
@@ -45,8 +42,8 @@ public sealed class MediatorController : GenericController
 
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [HttpPost("Add")]
-    public async Task<IActionResult> Add([FromBody] CreateRegionCommandRequest createRegionCommandRequest)
+    [HttpPost("insert")]
+    public async Task<IActionResult> Insert([FromBody] CreateRegionCommandRequest createRegionCommandRequest)
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
@@ -58,7 +55,7 @@ public sealed class MediatorController : GenericController
         return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
     }
 
-    [HttpPut("Update")]
+    [HttpPut("update")]
     public async Task<IActionResult> Update([FromBody] UpdateRegionCommandRequest updateRegionCommandRequest)
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);

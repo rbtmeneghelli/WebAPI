@@ -26,7 +26,7 @@ public class RequiredPasswordSettingsRepository : IRequiredPasswordSettingsRepos
 
     public IQueryable<RequiredPasswordSettings> FindBy(Expression<Func<RequiredPasswordSettings, bool>> predicate, bool hasTracking = false)
     {
-        return _iRequiredPasswordSettingsReadRepository.FindBy(predicate, hasTracking);
+        return _iRequiredPasswordSettingsReadRepository.GetByPredicate(predicate, hasTracking);
     }
 
     public RequiredPasswordSettings GetById(long id)

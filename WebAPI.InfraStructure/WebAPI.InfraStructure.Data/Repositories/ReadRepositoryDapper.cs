@@ -10,7 +10,7 @@ public class ReadRepositoryDapper<TEntity> : GenericRepositoryDapper, IReadRepos
 {
     public ReadRepositoryDapper(EnvironmentVariables environmentVariables) : base(environmentVariables) { }
 
-    public async Task<IEnumerable<TEntity>> QueryToGetAll(string sqlQuery)
+    public async Task<IEnumerable<TEntity>> GetAll(string sqlQuery)
     {
         using (IDbConnection idbConnection = GetDbConnection())
         {
@@ -19,7 +19,7 @@ public class ReadRepositoryDapper<TEntity> : GenericRepositoryDapper, IReadRepos
         }
     }
 
-    public async Task<TEntity> QueryToGetFirstOrDefault(string sqlQuery)
+    public async Task<TEntity> GetFirstResult(string sqlQuery)
     {
         using (IDbConnection idbConnection = GetDbConnection())
         {
@@ -28,7 +28,7 @@ public class ReadRepositoryDapper<TEntity> : GenericRepositoryDapper, IReadRepos
         }
     }
 
-    public async Task<QueryResult<TEntity>> QueryMultiple(string sqlQuery)
+    public async Task<QueryResult<TEntity>> GetMultipleResult(string sqlQuery)
     {
         using (IDbConnection idbConnection = GetDbConnection())
         {

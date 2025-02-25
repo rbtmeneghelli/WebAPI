@@ -91,9 +91,9 @@ public abstract class GenericController : ControllerBase
 
     #endregion
 
-    protected void NotificationError(string mensagem)
+    protected void NotificationError(string message)
     {
-        _iGenericNotifyLogsService.NotificationMessageService.Handle(new Domain.Models.NotificationMessage(mensagem));
+        _iGenericNotifyLogsService.NotificationMessageService.Handle(new Domain.Models.NotificationMessage(message));
     }
 
     private bool OperationIsValid()

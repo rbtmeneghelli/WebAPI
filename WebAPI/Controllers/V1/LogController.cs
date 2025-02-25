@@ -1,8 +1,4 @@
-﻿using WebAPI.Domain.Constants;
-using WebAPI.Domain.Filters.Others;
-using WebAPI.Domain.Interfaces.Repository;
-using WebAPI.Domain.Interfaces.Services;
-
+﻿using WebAPI.Domain.Filters.Others;
 
 namespace WebAPI.V1.Controllers;
 
@@ -35,7 +31,7 @@ public sealed class LogController : GenericController
         return CustomResponse(ConstantHttpStatusCode.NOT_FOUND_CODE);
     }
 
-    [HttpPost("GetAllPaginate")]
+    [HttpPost("getAllPaginate")]
     public async Task<IActionResult> GetAllPaginate(LogFilter filter)
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);

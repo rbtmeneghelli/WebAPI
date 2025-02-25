@@ -27,12 +27,12 @@ public abstract class GenericRepository<TEntity> where TEntity : class
         return entity.GetType().GetProperties().Select(x => x.Name + ": " + x.GetValue(entity, null)).ToArray();
     }
 
-    protected virtual void SaveLogError(string[] values, string entity, string method, string messageError)
+    protected virtual void InsertLogError(string[] values, string entity, string method, string messageError)
     {
         _context.Database.ExecuteSqlRaw(string.Format(FixConstants.SAVE_LOG, entity, method, messageError, DateOnlyExtensionMethods.GetDateTimeNowFromBrazil().ToString("yyyy-MM-dd"), string.Join(",", values)));
     }
 
-    protected virtual void SaveLogErrorSql(string sql, string entity, string method, string messageError)
+    protected virtual void InsertLogError(string sql, string entity, string method, string messageError)
     {
         _context.Database.ExecuteSqlRaw(string.Format(FixConstants.SAVE_LOG, entity, method, messageError, DateOnlyExtensionMethods.GetDateTimeNowFromBrazil().ToString("yyyy-MM-dd"), sql));
     }

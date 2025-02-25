@@ -85,17 +85,12 @@ public sealed class ApiLoggingMiddleware
             apiLogItem.ResponseBody = "(Response logging disabled for /api/login)";
         }
 
-        if (apiLogItem.RequestBody.Length > 100)
+        if (apiLogItem is { RequestBody.Length: > 100 })
         {
             apiLogItem.RequestBody = $"(Truncated to 100 chars) {apiLogItem.RequestBody.ApplySubString(0, 100)}";
         }
 
-        if (apiLogItem.ResponseBody.Length > 100)
-        {
-            apiLogItem.ResponseBody = $"(Truncated to 100 chars) {apiLogItem.ResponseBody.ApplySubString(0, 100)}";
-        }
-
-        if (apiLogItem.QueryString.Length > 100)
+        if (apiLogItem is { QueryString.Length: > 100 })
         {
             apiLogItem.QueryString = $"(Truncated to 100 chars) {apiLogItem.QueryString.ApplySubString(0, 100)}";
         }

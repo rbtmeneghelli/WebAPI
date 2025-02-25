@@ -1,10 +1,16 @@
-﻿namespace TestsWebAPI.Controllers.V1;
+﻿using Moq;
+using NUnit.Framework;
+using WebAPI.Domain.Entities.ControlPanel;
+using WebAPI.Domain.Interfaces.Generic;
+using Assert = NUnit.Framework.Assert;
+
+namespace TestsWebAPI.Controllers.V1;
 
 // Exemplo de teste unitario com NUnit (Verificar se a injeção de dependencia funciona ou se precisa do BuilderService)
 [TestFixture]
 public sealed class NUnitControllerTest : GenericControllerTest
 {
-    private Mock<IDataRepository> _mockDataRepository;
+    private Mock<IReadRepository<Employee>> _mockDataRepository;
 
     public NUnitControllerTest(BuilderServiceProvider builderServiceProvider) : base(builderServiceProvider)
     {        
@@ -13,26 +19,26 @@ public sealed class NUnitControllerTest : GenericControllerTest
     [SetUp]
     public void SetUp()
     {
-        _mockDataRepository = new Mock<IDataRepository>();
+        _mockDataRepository = new Mock<IReadRepository<Employee>>();
     }
 
     [TestCase("", "73990324000199")]
     [TestCase("", "73990324000199")]
-    public async Task GetAllData_ShouldReturnPagedListResponse_WhenDataExist(string name, string cpfCnpj)
+    public void GetAllData_ShouldReturnPagedListResponse_WhenDataExist(string name, string cpfCnpj)
     {
         // Arrange
-        var dataList = new List<Data>
+        var dataList = new List<Employee>
         {
-            new Data { Id = 1, Name = "Data 1",  Enabled = true,  CpfCnpj = "19013280072" },
-            new Data { Id = 2, Name = "Data 2",  Enabled = false, CpfCnpj = "29399711021" },
-            new Data { Id = 3, Name = "Data 3",  Enabled = false, CpfCnpj = "63383005000160" },
-            new Data { Id = 4, Name = "Data 4",  Enabled = false, CpfCnpj = "73990324000198" }
+            new Employee { Id = 1, Name = "Employee 1" },
+            new Employee { Id = 2, Name = "Employee 2" },
+            new Employee { Id = 3, Name = "Employee 3" },
+            new Employee { Id = 4, Name = "Employee 4" }
         };
 
         // Act
-        _mockDataRepository.Setup(repo => repo.GetAllData(null, null, 0, int.MaxValue)).ReturnsAsync(dataList);
+        _mockDataRepository.Setup(repo => repo.GetAll(false)).Returns(dataList.AsQueryable());
 
-        var mockResult = await _mockDataRepository.Object.GetAllData(null, null, 0, int.MaxValue);
+        var mockResult = _mockDataRepository.Object.GetAll(false);
 
         // Assert
         Assert.That(mockResult.Count, Is.EqualTo(4));

@@ -1,36 +1,15 @@
-﻿namespace WebAPI.Domain.ExtensionMethods;
+﻿using Newtonsoft.Json.Linq;
+
+namespace WebAPI.Domain.ExtensionMethods;
 
 public static class DecimalExtensionMethods
 {
-    public static decimal SumDecimalValues(decimal firstValue, decimal secondValue)
-    {
-        return decimal.Add(firstValue, secondValue);
-    }
-
-    public static decimal SubtractDecimalValues(decimal firstValue, decimal secondValue)
-    {
-        return decimal.Subtract(firstValue, secondValue);
-    }
-
-    public static decimal MultiplyDecimalValues(decimal firstValue, decimal secondValue)
-    {
-        return decimal.Multiply(firstValue, secondValue);
-    }
-
-    public static decimal ModDivisionDecimalValues(decimal firstValue, decimal secondValue)
-    {
-        return decimal.Remainder(firstValue, secondValue);
-    }
-
-    public static decimal RoundDecimalValues(decimal firstValue)
-    {
-        return decimal.Round(firstValue, 2);
-    }
-
-    public static decimal DivideDecimalValues(decimal firstValue, decimal secondValue)
-    {
-        return decimal.Divide(firstValue, secondValue);
-    }
+    public static decimal Sum(this decimal input, decimal value) => decimal.Add(input, value);
+    public static decimal Subtract(this decimal input, decimal value) => decimal.Subtract(input, value);
+    public static decimal Multiply(this decimal input, decimal value) => decimal.Multiply(input, value);
+    public static decimal ModDivision(this decimal input, decimal value) => decimal.Remainder(input, value);
+    public static decimal Round(this decimal input, int decimals = 2) => decimal.Round(input, decimals);
+    public static decimal Divide(this decimal input, decimal value) => decimal.Divide(input, value);
 
     public static decimal GetMaxValue(decimal firstValue, decimal secondValue)
     {

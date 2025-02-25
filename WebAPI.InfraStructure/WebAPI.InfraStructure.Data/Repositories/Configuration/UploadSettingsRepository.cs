@@ -25,7 +25,7 @@ public class UploadSettingsRepository : IUploadSettingsRepository
 
     public IQueryable<UploadSettings> FindBy(Expression<Func<UploadSettings, bool>> predicate, bool hasTracking = false)
     {
-        return _iUploadSettingsReadRepository.FindBy(predicate, hasTracking);
+        return _iUploadSettingsReadRepository.GetByPredicate(predicate, hasTracking);
     }
 
     public UploadSettings GetById(long id)
