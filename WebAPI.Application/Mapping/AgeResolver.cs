@@ -1,13 +1,14 @@
 using AutoMapper;
-using System;
+using WebAPI.Domain.DTO.ControlPanel;
+using WebAPI.Domain.Entities.ControlPanel;
 
 public class AgeResolver : IValueResolver<Employee, EmployeeResponseDTO, int>
 {
-  public int Resolve(Employee source, EmployeeDTO destination, int destMember, ResolutionContext context)
+  public int Resolve(Employee source, EmployeeResponseDTO destination, int destMember, ResolutionContext context)
   {
     var today = DateTime.Today;
     int age = today.Year - source.BirthDate.Year;
-    if(source.BirthDate.Year > today.AddYears(-age))
+    if(source.BirthDate.Date > today.AddYears(-age))
       age--;
 
     return age;
