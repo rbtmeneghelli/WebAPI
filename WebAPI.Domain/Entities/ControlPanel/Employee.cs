@@ -8,6 +8,8 @@ public class Employee : GenericEntity
     public string Email { get; set; }
     public string TelPhone { get; set; }
     public string CelPhone { get; set; }
+    public decimal Salary {get; set; }
+    public DateTime BirthDate {get; set; }
     public long IdProfile { get; set; }
     public virtual Profile Profile { get; set; }
     public long IdUser { get; set; }
