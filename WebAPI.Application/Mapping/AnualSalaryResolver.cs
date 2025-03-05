@@ -1,7 +1,7 @@
 using AutoMapper;
 using System;
 
-public class AnualSalaryResolver : IValueResolver<Employee, EmployeeDTO, decimal>
+public class AnualSalaryResolver : IValueResolver<Employee, EmployeeResponseDTO, decimal>
 {
   public decimal Resolve(Employee source, EmployeeDTO destination, decimal destMember, ResolutionContext context)
   {
