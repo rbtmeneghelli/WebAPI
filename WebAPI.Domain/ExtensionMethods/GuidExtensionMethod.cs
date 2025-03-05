@@ -12,4 +12,11 @@ public static class GuidExtensionMethod
 {
     public static string GetGuidDigits(string typeGuid) => Guid.NewGuid().ToString(typeGuid);
     public static Guid GetGuidDigitsByString(this string text) => Guid.Parse(text);
+
+    /// <summary>
+    /// Metodo para geração de UUID mais atualizado que o Guid Padrão
+    /// </summary>
+    /// <param name="timeProvider">Formatação de data e Hora</param>
+    /// <returns></returns>
+    //public static Guid GenerateVersion7Uuid(ITimeProvider timeProvider) => Guid.CreateVersion7(timeProvider.GetUtcNow());
 }

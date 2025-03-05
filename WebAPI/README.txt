@@ -389,7 +389,7 @@ Utilizar senha padrão >> 123Mudar
 -- Configuração para documentação para REST API, a partir do NET 9.0
 >> O swagger não vem mais integrado com o projeto
 >> A biblioteca padrão para documentação de API, a partir do NET 9.0 e a OPENAPI (Biblioteca Microsoft.AspNetCore.OpenApi)
->> Biblioteca SWAGGER e SCALAR são OPENSOURCE
+>> Biblioteca SWAGGER e SCALAR são OPENSOURCE (São bibliotecas para documentação de API)
 >> A propriedade launchBrowser do arquivo launchSettings.json por padrão está igual a FALSE. Ao tornar ela true os endpoints da API serão exibidos numa pagina do browser.
 >> A propriedade launchUrl do arquivo launchSettings.json tem que ser inserida, abaixo do launchBrowser.
 >> A propriedade launchUrl do arquivo launchSettings.json para a biblioteca scalar, configurar desse jeito >> launchUrl: "swagger"
@@ -417,3 +417,6 @@ if (app.Environment.IsDevelopment())
 
 -- Biblioteca Dapper.Contrib => Busca facilitar o uso do Dapper para comandos padrões CRUD
 >> https://macoratti.net/23/07/net_dappercontrib1.htm
+
+-- Bibloteca AutoMapper ou Mapster 
+>> Faz o mapeamento entre objetos, passando suas propriedades de um objeto para outro de forma automatica.
