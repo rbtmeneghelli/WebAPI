@@ -46,6 +46,7 @@ public class MappingProfile : AutoMapper.Profile
         CreateMap<UserResponseDTO, UserExcelDTO>().ReverseMap();
 
         #endregion
+        
         CreateMap<Log, LogResponseDTO>()
         .ForMember(dest => dest.Class, act => act.MapFrom(src => src.Class.ApplyTrim()))
         .ForMember(dest => dest.Method, act => act.MapFrom(src => src.Method.ApplyTrim()))
@@ -224,5 +225,35 @@ public class MappingProfile : AutoMapper.Profile
         .ForMember(dest => dest.MaxImageFileSize, act => act.MapFrom(src => src.MaxImageFileSize))
         .ForMember(dest => dest.IdEnvironmentType, act => act.MapFrom(src => src.IdEnvironment))
         .ForMember(dest => dest.UpdateDate, act => act.MapFrom(src => DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()));
+
+        #region Mapeamentos do Funcionario
+
+        CreateMap<EmployeeRequestDTO, Employee>()
+        .BeforeMap((source, dest) =>
+        {
+            dest.Id = source.GetId();
+            dest.CreateDate = source.GetId() is null ? DateOnlyExtensionMethods.GetDateTimeNowFromBrazil() : null;
+            dest.UpdateDate = source.GetId() is not null ? DateOnlyExtensionMethods.GetDateTimeNowFromBrazil() : null;
+        })
+        .ForMember(dest => dest.Name, act => act.MapFrom(src => src.Name.ApplyTrim()))
+        .ForMember(dest => dest.Email, act => act.MapFrom(src => src.Email.ApplyTrim()))
+        .ForMember(dest => dest.TelPhone, act => act.MapFrom(src => src.TelPhone.ApplyTrim()))
+        .ForMember(dest => dest.CelPhone, act => act.MapFrom(src => src.CelPhone.ApplyTrim()))
+        .ForMember(dest => dest.Salary, act => act.MapFrom(src => src.Salary))
+        .ForMember(dest => dest.BirthDate, act => act.MapFrom(src => src.BirthDate))
+        .ForMember(dest => dest.IdProfile, act => act.MapFrom(src => src.IdProfile))
+        .ForMember(dest => dest.IdUser, act => act.MapFrom(src => src.IdUser));
+        
+        CreateMap<Employee, EmployeeResponseDTO>()
+        .ForMember(dest => dest.Name, act => act.MapFrom(src => src.Name.ApplyTrim()))
+        .ForMember(dest => dest.Email, act => act.MapFrom(src => src.Email.ApplyTrim()))
+        .ForMember(dest => dest.TelPhone, act => act.MapFrom(src => src.TelPhone.ApplyTrim()))
+        .ForMember(dest => dest.CelPhone, act => act.MapFrom(src => src.CelPhone.ApplyTrim()))
+        .ForMember(dest => dest.Salary, act => act.MapFrom(src => src.Salary))
+        .ForMember(dest => dest.SalaryAnual, act => act.MapFrom<AnualSalaryResolver>())
+        .ForMember(dest => dest.BirthDate, act => act.MapFrom(src => src.BirthDate))
+        .ForMember(dest => dest.Age, act => act.MapFrom<AgeResolver>()).ReverseMap();
+
+        #endregion
     }
 }
