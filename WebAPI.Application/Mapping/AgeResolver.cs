@@ -1,7 +1,7 @@
 using AutoMapper;
 using System;
 
-public class AgeResolver : IValueResolver<Employee, EmployeeDTO, int>
+public class AgeResolver : IValueResolver<Employee, EmployeeResponseDTO, int>
 {
   public int Resolve(Employee source, EmployeeDTO destination, int destMember, ResolutionContext context)
   {
