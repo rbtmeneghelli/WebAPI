@@ -255,5 +255,17 @@ public class MappingProfile : AutoMapper.Profile
         .ForMember(dest => dest.Age, act => act.MapFrom<AgeResolver>()).ReverseMap();
 
         #endregion
+
+        #region Mapeamentos do Produto (Quando temos um construtor com parametros imutaveis, podemos trabalhar da forma exemplificada abaixo)
+
+        CreateMap<Product, ProductResponseDTO>()
+        .ConstructUsing(src => new ProductResponseDTO
+        {
+            Id = src.Id,
+            Name = src.Name,
+            Price = src.Price,
+        });
+
+        #endregion
     }
 }
