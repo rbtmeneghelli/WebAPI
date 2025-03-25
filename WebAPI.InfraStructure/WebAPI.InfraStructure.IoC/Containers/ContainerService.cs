@@ -1,5 +1,4 @@
 ﻿using Hangfire;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -12,7 +11,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Diagnostics;
@@ -28,7 +26,6 @@ using WebAPI.Infrastructure.CrossCutting.Middleware.Authentication;
 using WebAPI.InfraStructure.Data.Context;
 using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Application.Generic;
-using WebAPI.Domain.Constants;
 using KissLog;
 using KissLog.Formatters;
 using Serilog.Sinks.MSSqlServer;
@@ -58,17 +55,13 @@ using WebAPI.InfraStructure.Data.Repositories.Configuration;
 using WebAPI.Application.Factory;
 using WebAPI.Domain.Interfaces.Factory;
 using ProblemDetailsFactory = WebAPI.Application.Factory.ProblemDetailsFactory;
-using Microsoft.AspNetCore.Http.Features;
-using WebAPI.Domain.ExtensionMethods;
-using System.Buffers.Text;
-using WebAPI.Domain.Cryptography;
 using WebAPI.Infrastructure.CrossCutting.ActionFilter;
 using WebAPI.Domain.Interfaces.Generic;
 using Microsoft.AspNetCore.ResponseCompression;
 using WebAPI.Infrastructure.CrossCutting.BackgroundMessageServices.RabbitMQ.Consumers;
 using WebAPI.Infrastructure.CrossCutting.BackgroundMessageServices.RabbitMQ;
 using WebAPI.Domain.Interfaces.Services.Charts;
-using WebAPI.Application.Mapping;
+using WbNotes.Application.Interfaces.Shared;
 
 namespace WebAPI.InfraStructure.IoC.Containers;
 
@@ -283,7 +276,8 @@ public static class ContainerService
         .AddTransient<IProblemDetailsFactory, ProblemDetailsFactory>()
         .AddScoped<ISendGridService, SendGridService>()
         .AddScoped<IAzureService, AzureService>()
-        .AddTransient<IMapperService, MapperService>();
+        .AddTransient<IMapperService, MapperService>()
+        .AddTransient<IDataProtectionService, DataProtectionService>();
 
         services.AddScoped<IPBlockActionFilter, IPBlockActionFilter>();
     }
