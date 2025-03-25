@@ -81,7 +81,7 @@ public static class ContainerSwagger
         app.UseSwagger();
         app.UseSwaggerUI(c =>
         {
-            c.SwaggerEndpoint("/swagger/V1/swagger.json", "WbNotes");
+            c.SwaggerEndpoint("/swagger/V1/swagger.json", "WebAPI");
             c.InjectStylesheet("/Arquivos/swagger-dark.css");
         });
     }

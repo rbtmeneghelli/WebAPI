@@ -16,7 +16,6 @@ using System.Data;
 using System.Diagnostics;
 using System.Text;
 using System.Threading.RateLimiting;
-using SqlConnection = Microsoft.Data.SqlClient.SqlConnection;
 using System.Text.Json;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using KissLog.AspNetCore;
@@ -61,7 +60,7 @@ using Microsoft.AspNetCore.ResponseCompression;
 using WebAPI.Infrastructure.CrossCutting.BackgroundMessageServices.RabbitMQ.Consumers;
 using WebAPI.Infrastructure.CrossCutting.BackgroundMessageServices.RabbitMQ;
 using WebAPI.Domain.Interfaces.Services.Charts;
-using WbNotes.Application.Interfaces.Shared;
+using WebAPI.Application.Interfaces.Shared;
 
 namespace WebAPI.InfraStructure.IoC.Containers;
 

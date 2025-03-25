@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.DataProtection;
-using WbNotes.Application.Interfaces.Shared;
+using WebAPI.Application.Interfaces.Shared;
 
 namespace WebAPI.Application.Services.Tools;
 

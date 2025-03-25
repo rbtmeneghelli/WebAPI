@@ -1,4 +1,4 @@
-﻿namespace WbNotes.Application.Interfaces.Shared;
+﻿namespace WebAPI.Application.Interfaces.Shared;
 
 public interface IDataProtectionService
 {
