@@ -420,3 +420,10 @@ if (app.Environment.IsDevelopment())
 
 -- Bibloteca AutoMapper ou Mapster 
 >> Faz o mapeamento entre objetos, passando suas propriedades de um objeto para outro de forma automatica.
+
+-- Biblioteca FluentValidation
+O FluentValidation é uma biblioteca para validação de dados em aplicações .NET. 
+Ele permite que você defina regras de validação de maneira fluida e expressiva em C#, sem precisar escrever verificações manuais dentro dos métodos ou classes.
+>> Aplicar isso no Service
+builder.Services.AddValidatorsFromAssemblyContaining<UsuarioValidator>(); // Registra automaticamente os validadores
+builder.Services.AddValidatorsFromAssembly(Assembly.Load("MeuProjeto.Domain"));
