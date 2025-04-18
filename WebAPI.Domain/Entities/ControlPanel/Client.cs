@@ -1,4 +1,4 @@
-﻿using WebAPI.Domain.Entities.Generic;
+﻿using FastPackForShare.Default;
 
 namespace WebAPI.Domain.Entities.ControlPanel;
 
@@ -18,7 +18,7 @@ namespace WebAPI.Domain.Entities.ControlPanel;
 ///
 /// A partir do NET 8 é possivel utilizar o complexType, Essa abordagem é conhecida como Value Object
 /// </summary>
-public class Client : GenericEntity
+public class Client : BaseEntityModel
 {
     public string ClientName { get; private set; }
     public Address ClientAddress { get; private set; }

@@ -1,23 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using WebAPI.InfraStructure.Data.Generic;
 using WebAPI.Domain.Entities.Others;
+using FastPackForShare.Bases;
 
 namespace WebAPI.InfraStructure.Data.Mapping;
 
-public class CityMapping : GenericMapping<City>
+public class CityMapping : BaseMappingModel<City>
 {
     public override void Configure(EntityTypeBuilder<City> builder)
     {
         _builder = builder;
-        base.ConfigureDefaultColumns();
-        ConfigureTableName("ControlPanel_City");
+        base.ConfigureBase("ControlPanel_City");
         ConfigureColumns();
-    }
-
-    public override void ConfigureTableName(string tableName)
-    {
-        _builder.ToTable(tableName);
     }
 
     private void ConfigureColumns()

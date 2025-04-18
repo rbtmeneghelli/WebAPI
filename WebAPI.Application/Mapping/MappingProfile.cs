@@ -75,6 +75,8 @@ public class MappingProfile : AutoMapper.Profile
 
         CreateMap<Region, RegionQueryFilterResponse>().ReverseMap();
         CreateMap<Region, RegionQueryByIdResponse>().ReverseMap();
+        CreateMap<Region, CreateRegionCommandRequest>().ReverseMap();
+        CreateMap<Region, UpdateRegionCommandRequest>().ReverseMap();
 
         CreateMap<AuthenticationSettingsCreateRequestDTO, AuthenticationSettings>()
         .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))

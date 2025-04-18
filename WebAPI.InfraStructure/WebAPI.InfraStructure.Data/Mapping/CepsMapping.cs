@@ -1,23 +1,17 @@
 ﻿using WebAPI.Domain.ValueObject;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using WebAPI.InfraStructure.Data.Generic;
+using FastPackForShare.Bases;
 
 namespace WebAPI.InfraStructure.Data.Mapping;
 
-public class CepsMapping : GenericMapping<AddressData>
+public class CepsMapping : BaseMappingModel<AddressData>
 {
     public override void Configure(EntityTypeBuilder<AddressData> builder)
     {
         _builder = builder;
-        base.ConfigureDefaultColumns();
-        ConfigureTableName("ControlPanel_Cep");
+        base.ConfigureBase("ControlPanel_Cep");
         ConfigureColumns();
-    }
-
-    public override void ConfigureTableName(string tableName)
-    {
-        _builder.ToTable(tableName);
     }
 
     private void ConfigureColumns()

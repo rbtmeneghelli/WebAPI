@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Domain.Entities.Others;
+using FastPackForShare.Extensions;
 
 namespace WebAPI.InfraStructure.Data.Mapping;
 
@@ -28,7 +29,7 @@ public class NotificationMapping : IEntityTypeConfiguration<Notification>
         _builder.HasKey(x => x.Id);
         _builder.Property(x => x.Id).ValueGeneratedOnAdd().UseIdentityColumn(1, 1).HasColumnName("Id");
         _builder.Property(x => x.Description).IsRequired().HasMaxLength(100).HasColumnName("Description");
-        _builder.Property(x => x.CreatedDate).HasDefaultValue(DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()).HasColumnName("CreatedDate").ValueGeneratedOnAdd();
+        _builder.Property(x => x.CreatedDate).HasDefaultValue(DateOnlyExtension.GetDateTimeNowFromBrazil()).HasColumnName("CreatedDate");
         _builder.Property(x => x.Status).IsRequired().HasDefaultValue(true).HasColumnName("Status").HasColumnType("bit");
     }
 }

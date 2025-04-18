@@ -1,23 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using WebAPI.InfraStructure.Data.Generic;
 using WebAPI.Domain.Entities.Others;
+using FastPackForShare.Bases;
 
 namespace WebAPI.InfraStructure.Data.Mapping;
 
-public class StatesMapping : GenericMapping<States>
+public class StatesMapping : BaseMappingModel<States>
 {
     public override void Configure(EntityTypeBuilder<States> builder)
     {
         _builder = builder;
-        base.ConfigureDefaultColumns();
-        _builder.ToTable("ControlPanel_State");
+        base.ConfigureBase("ControlPanel_State");
         ConfigureColumns();
-    }
-
-    public override void ConfigureTableName(string tableName)
-    {
-        _builder.ToTable(tableName);
     }
 
     private void ConfigureColumns()

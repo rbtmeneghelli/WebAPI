@@ -1,8 +1,8 @@
-﻿using WebAPI.Domain.Entities.Generic;
+﻿using FastPackForShare.Default;
 
 namespace WebAPI.Domain.Entities.ControlPanel;
 
-public class Employee : GenericEntity
+public class Employee : BaseEntityModel
 {
     public string Name { get; set; }
     public string Email { get; set; }
@@ -14,4 +14,14 @@ public class Employee : GenericEntity
     public virtual Profile Profile { get; set; }
     public long IdUser { get; set; }
     public virtual User User { get; set; }
+
+    protected override void CreateEntityIsValid()
+    {
+        throw new NotImplementedException();
+    }
+
+    protected override void UpdateEntityIsValid()
+    {
+        throw new NotImplementedException();
+    }
 }

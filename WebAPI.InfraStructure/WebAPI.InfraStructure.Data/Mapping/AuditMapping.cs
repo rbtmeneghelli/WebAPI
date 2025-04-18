@@ -1,23 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using WebAPI.InfraStructure.Data.Generic;
 using WebAPI.Domain.Entities.Others;
+using FastPackForShare.Bases;
 
 namespace WebAPI.InfraStructure.Data.Mapping;
 
-public class AuditMapping : GenericMapping<Audit>
+public class AuditMapping : BaseMappingModel<Audit>
 {
     public override void Configure(EntityTypeBuilder<Audit> builder)
     {
         _builder = builder;
-        base.ConfigureDefaultColumns();
-        ConfigureTableName("ControlPanel_Audit");
+        base.ConfigureBase("ControlPanel_Audit");
         ConfigureColumns();
-    }
-
-    public override void ConfigureTableName(string tableName)
-    {
-        _builder.ToTable(tableName);
     }
 
     private void ConfigureColumns()

@@ -1,11 +1,11 @@
 ﻿using WebAPI.Domain.CQRS.Command;
-using MediatR;
 using WebAPI.Domain.CQRS.Queries;
 using FastPackForShare.Controllers;
 using FastPackForShare.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using FastPackForShare.Constants;
 using FastPackForShare.Models;
+using FastPackForShare.SimpleMediator;
 
 namespace WebAPI.V1.Controllers;
 
@@ -14,11 +14,11 @@ namespace WebAPI.V1.Controllers;
 [Route("api/v{version:apiVersion}/[controller]")]
 [Authorize("Bearer")]
 
-public sealed class MediatorController : BaseMediatorController
+public sealed class SimpleMediatorController : BaseSimpleMediatorController
 {
     private readonly IMediator _mediator;
 
-    public MediatorController(IMediator mediator, INotificationMessageService notificationMessageService)
+    public SimpleMediatorController(IMediator mediator, INotificationMessageService notificationMessageService)
     : base(mediator, notificationMessageService)
     {
         _mediator = mediator;

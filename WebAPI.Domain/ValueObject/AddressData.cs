@@ -1,10 +1,10 @@
-﻿using WebAPI.Domain.Entities.Generic;
+﻿using FastPackForShare.Default;
+using FastPackForShare.Extensions;
 using WebAPI.Domain.Entities.Others;
-using WebAPI.Domain.ExtensionMethods;
 
 namespace WebAPI.Domain.ValueObject;
 
-public class AddressData : GenericEntity
+public class AddressData : BaseEntityModel
 {
     public string Cep { get; set; }
     public string Street { get; set; }
@@ -26,8 +26,8 @@ public class AddressData : GenericEntity
 
     //Expression Body Constructor
     public AddressData(long id, string cep, AddressData modelCepAPI, long stateId, DateTime? createdTime)
-    => (Id, District, Cep, Complement, Ddd, Gia, UpdateDate, Ibge, Location, Street, Siafi, Uf, StateId, CreateDate)
-    = (id, modelCepAPI.District, cep, modelCepAPI.Complement, modelCepAPI.Ddd, modelCepAPI.Gia, DateOnlyExtensionMethods.GetDateTimeNowFromBrazil(), modelCepAPI.Ibge, modelCepAPI.Location,
+    => (Id, District, Cep, Complement, Ddd, Gia, UpdatedAt, Ibge, Location, Street, Siafi, Uf, StateId, CreatedAt)
+    = (id, modelCepAPI.District, cep, modelCepAPI.Complement, modelCepAPI.Ddd, modelCepAPI.Gia, DateOnlyExtension.GetDateTimeNowFromBrazil(), modelCepAPI.Ibge, modelCepAPI.Location,
        modelCepAPI.Street, modelCepAPI.Siafi, modelCepAPI.Uf, stateId, createdTime);
 
     public AddressData(string cep, AddressData modelCepAPI)
@@ -37,14 +37,24 @@ public class AddressData : GenericEntity
         Complement = modelCepAPI.Complement;
         Ddd = modelCepAPI.Ddd;
         Gia = modelCepAPI.Gia;
-        UpdateDate = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
+        UpdatedAt = DateOnlyExtension.GetDateTimeNowFromBrazil();
         Ibge = modelCepAPI.Ibge;
         Location = modelCepAPI.Location;
         Street = modelCepAPI.Street;
         Siafi = modelCepAPI.Siafi;
         Uf = modelCepAPI.Uf;
-        Status = true;
-        CreateDate = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
+        IsActive = true;
+        CreatedAt = DateOnlyExtension.GetDateTimeNowFromBrazil();
         StateId = modelCepAPI.StateId;
+    }
+
+    protected override void CreateEntityIsValid()
+    {
+        throw new NotImplementedException();
+    }
+
+    protected override void UpdateEntityIsValid()
+    {
+        throw new NotImplementedException();
     }
 }

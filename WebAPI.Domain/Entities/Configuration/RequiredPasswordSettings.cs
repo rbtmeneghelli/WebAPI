@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel;
-using WebAPI.Domain.Entities.Generic;
+using FastPackForShare.Default;
 
 namespace WebAPI.Domain.Entities.Configuration;
 
-public class RequiredPasswordSettings : GenericEntity
+public class RequiredPasswordSettings : BaseEntityModel
 {
     [DisplayName("Mínimo de caracteres")]
     public int MinimalOfChars { get; set; }
@@ -19,4 +19,14 @@ public class RequiredPasswordSettings : GenericEntity
 
     public virtual EnvironmentTypeSettings EnvironmentTypeSettings { get; set; }
     public virtual long? IdEnvironmentType { get; set; }
+
+    protected override void CreateEntityIsValid()
+    {
+        throw new NotImplementedException();
+    }
+
+    protected override void UpdateEntityIsValid()
+    {
+        throw new NotImplementedException();
+    }
 }

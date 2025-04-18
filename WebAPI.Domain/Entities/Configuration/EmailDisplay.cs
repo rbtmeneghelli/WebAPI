@@ -1,11 +1,12 @@
-﻿using MimeKit;
-using WebAPI.Domain.ExtensionMethods;
-using WebAPI.Domain.Entities.Generic;
+﻿using FastPackForShare.Constants;
+using FastPackForShare.Default;
+using FastPackForShare.Extensions;
+using MimeKit;
 using WebAPI.Domain.Constants;
 
 namespace WebAPI.Domain.Entities.Configuration;
 
-public class EmailDisplay : GenericEntity
+public class EmailDisplay : BaseEntityModel
 {
     public string Title { get; set; }
     public string Subject { get; set; }
@@ -43,5 +44,15 @@ public class EmailDisplay : GenericEntity
     {
         return "<center>Olá, {0}</center>" +
         $"<center>Quero reporta-lo que a sua confirmação de senha foi realizada com sucesso no periodo das {DateOnlyExtensionMethods.GetShortDate()} - {DateOnlyExtensionMethods.GetShortTime()}</center>" + "<br> ";
+    }
+
+    protected override void CreateEntityIsValid()
+    {
+        BaseDomainException.When(GuardClauseExtension.IsNullOrWhiteSpace(Title), ConstantValidation.REQUIRED);
+    }
+
+    protected override void UpdateEntityIsValid()
+    {
+        BaseDomainException.When(GuardClauseExtension.IsNullOrWhiteSpace(Title), ConstantValidation.REQUIRED);
     }
 }

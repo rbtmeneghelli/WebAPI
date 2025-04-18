@@ -1,4 +1,8 @@
-﻿namespace WebAPI.V1.Controllers;
+﻿using System.ComponentModel.DataAnnotations;
+using FastPackForShare.Controllers.Generics;
+using FastPackForShare.Interfaces;
+
+namespace WebAPI.V1.Controllers;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiVersion("1.0")]
@@ -7,23 +11,25 @@ public sealed class AccountController : GenericController
 {
     private readonly IGeneralService _iGeneralService;
     private readonly IGenericUnitOfWorkService _iGenericUnitOfWorkService;
+    private readonly IUserLoggedService _userLoggedService;
 
     public AccountController(
         IGeneralService iGeneralService,
         IGenericUnitOfWorkService iGenericUnitOfWorkService,
         IMapper iMapperService,
-        IHttpContextAccessor iHttpContextAccessor,
-        IGenericNotifyLogsService iGenericNotifyLogsService)
-        : base(iHttpContextAccessor, iGenericNotifyLogsService)
+        INotificationMessageService notificationMessageService,
+        IUserLoggedService userLoggedService)
+        : base(notificationMessageService)
     {
         _iGeneralService = iGeneralService;
         _iGenericUnitOfWorkService = iGenericUnitOfWorkService;
+        _userLoggedService = userLoggedService;
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginUser loginUser)
+    public async Task<IActionResult> Login([FromBody, Required] LoginUser loginUser)
     {
-        if (ModelStateIsInvalid()) return CustomResponse(ModelState);
+        if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
 
         var result = await _iGenericUnitOfWorkService.AccountService.CheckUserAuthenticationAsync(loginUser);
 
@@ -41,17 +47,11 @@ public sealed class AccountController : GenericController
     }
 
     [HttpPost("confirmLogin")]
-    public IActionResult ConfirmLogin([FromBody] ConfirmLoginUser confirmLoginUser)
+    public IActionResult ConfirmLogin([FromBody, Required] ConfirmLoginUser confirmLoginUser)
     {
-        if (!IsAuthenticated())
-        {
-            NotificationError("Acesso negado! Metódo permitido apenas para usuário logado");
-            return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
-        }
+        if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
 
-        if (ModelStateIsInvalid()) return CustomResponse(ModelState);
-
-        var result = _iGenericUnitOfWorkService.AccountService.CheckCodeTwoFactory(UserId, UserName, confirmLoginUser.CodeTwoFactory);
+        var result = _iGenericUnitOfWorkService.AccountService.CheckCodeTwoFactory(_userLoggedService.UserId, _userLoggedService.UserName, confirmLoginUser.CodeTwoFactory);
 
         if (!result)
         {
@@ -63,9 +63,9 @@ public sealed class AccountController : GenericController
     }
 
     [HttpPost("changePassword")]
-    public async Task<IActionResult> ChangePassword([FromBody] User user)
+    public async Task<IActionResult> ChangePassword([FromBody, Required] User user)
     {
-        if (ModelStateIsInvalid()) return CustomResponse(ModelState);
+        if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
 
         var result = await _iGenericUnitOfWorkService.AccountService.ChangePasswordAsync(UserId, user);
         if (result)
@@ -74,7 +74,7 @@ public sealed class AccountController : GenericController
         return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
     }
 
-    [HttpGet("resetPassword/{email}")]
+    [HttpGet("resetPassword/{email: string}")]
     public async Task<IActionResult> ResetPassword(string email)
     {
         var result = await _iGenericUnitOfWorkService.AccountService.ResetPasswordAsync(email);
@@ -87,9 +87,9 @@ public sealed class AccountController : GenericController
 
     [HttpPost("loginRefresh")]
     [AllowAnonymous]
-    public async Task<IActionResult> LoginRefresh([FromBody] LoginUser loginUser)
+    public async Task<IActionResult> LoginRefresh([FromBody, Required] LoginUser loginUser)
     {
-        if (ModelStateIsInvalid()) return CustomResponse(ModelState);
+        if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
 
         var result = await _iGenericUnitOfWorkService.AccountService.CheckUserAuthenticationAsync(loginUser);
 

@@ -1,8 +1,8 @@
-﻿using WebAPI.Domain.Entities.Generic;
+﻿using FastPackForShare.Default;
 
 namespace WebAPI.Domain.Entities.Others;
 
-public class City : GenericEntity
+public class City : BaseEntityModel
 {
     public string Name { get; set; }
 
@@ -15,4 +15,14 @@ public class City : GenericEntity
     public static int GetDFCodeFromIBGE() => 5300108;
     public static string GetDFNameFromIBGE() => "DISTRITO FEDERAL";
     public static string GetDFNickNameFromIBGE() => "DF";
+
+    protected override void CreateEntityIsValid()
+    {
+        throw new NotImplementedException();
+    }
+
+    protected override void UpdateEntityIsValid()
+    {
+        throw new NotImplementedException();
+    }
 }

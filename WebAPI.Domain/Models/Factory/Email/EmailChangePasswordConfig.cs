@@ -1,5 +1,5 @@
-﻿using WebAPI.Domain.Enums;
-using WebAPI.Domain.ExtensionMethods;
+﻿using FastPackForShare.Extensions;
+using WebAPI.Domain.Enums;
 using WebAPI.Domain.Interfaces.Factory;
 
 namespace WebAPI.Domain.Models.Factory.Email;

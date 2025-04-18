@@ -1,11 +1,11 @@
 ﻿using System.Diagnostics;
 using System.Text.Json.Serialization;
-using WebAPI.Domain.Entities.Generic;
+using FastPackForShare.Default;
 
 namespace WebAPI.Domain.Entities.Others;
 
 [DebuggerDisplay("IdRegião: {RegionId}, Nome: {Name}, Sigla: {Initials}")]
-public class States : GenericEntity
+public class States : BaseEntityModel
 {
     [JsonPropertyName("Sigla")]
     public string Initials { get; set; }
@@ -16,4 +16,14 @@ public class States : GenericEntity
     public long RegionId { get; set; }
     public virtual IEnumerable<ValueObject.AddressData> Ceps { get; set; }
     public virtual IEnumerable<City> City { get; set; }
+
+    protected override void CreateEntityIsValid()
+    {
+        throw new NotImplementedException();
+    }
+
+    protected override void UpdateEntityIsValid()
+    {
+        throw new NotImplementedException();
+    }
 }

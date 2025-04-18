@@ -1,6 +1,8 @@
-﻿namespace WebAPI.Domain.Entities.Others;
+﻿using FastPackForShare.Bases.Generics;
 
-public class Log
+namespace WebAPI.Domain.Entities.Others;
+
+public class Log : GenericEntityModel
 {
     public long Id { get; set; }
     public string Class { get; set; }

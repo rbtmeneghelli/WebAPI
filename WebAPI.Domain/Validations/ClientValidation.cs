@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 using WebAPI.Domain.Entities.ControlPanel;
-using WebAPI.Domain.ExtensionMethods;
 
 namespace WebAPI.Domain.Validations;
 
-public class ClientValidation : AbstractValidator<Client>
+public class ClientValidation : BaseValidatorModel<>
+    AbstractValidator<Client>
 {
     public ClientValidation()
     {

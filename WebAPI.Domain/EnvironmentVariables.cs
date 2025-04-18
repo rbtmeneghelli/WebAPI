@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using FastPackForShare.Extensions;
+using Microsoft.Extensions.Configuration;
 using WebAPI.Domain.Enums;
-using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Domain.Models;
 using WebAPI.Domain.Models.EnvVarSettings;
 
@@ -72,17 +72,17 @@ public static class EnvironmentVariablesExtension
 
     public static string GetDatabaseFromEnvVar(string varName)
     {
-        return Environment.GetEnvironmentVariable(varName).Replace("\\\\", "\\") ?? StringExtensionMethod.GetEmptyString();
+        return Environment.GetEnvironmentVariable(varName).Replace("\\\\", "\\") ?? string.Empty;
     }
 
     public static string GetEnvironmentVariable(string varName)
     {
-        return Environment.GetEnvironmentVariable(varName) ?? StringExtensionMethod.GetEmptyString();
+        return Environment.GetEnvironmentVariable(varName) ?? string.Empty;
     }
 
     public static TSource GetEnvironmentVariableToObject<TSource>(string varName)
     {
-        var data = Environment.GetEnvironmentVariable(varName) ?? StringExtensionMethod.GetEmptyString();
+        var data = Environment.GetEnvironmentVariable(varName) ?? string.Empty;
         return !string.IsNullOrWhiteSpace(data) ? data.DeserializeObject<TSource>() : default;
     }
 
@@ -94,7 +94,7 @@ public static class EnvironmentVariablesExtension
 
     public static string[] GetEnvironmentVariableToStringArray<TSource>(string varName)
     {
-        var data = Environment.GetEnvironmentVariable(varName) ?? StringExtensionMethod.GetEmptyString();
+        var data = Environment.GetEnvironmentVariable(varName) ?? string.Empty;
         return !string.IsNullOrWhiteSpace(data) ? data.Split(',') : default;
     }
 

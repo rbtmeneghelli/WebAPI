@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+﻿using FastPackForShare.Bases.Generics;
+using FastPackForShare.Extensions;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Text.Json;
-using WebAPI.Domain.ExtensionMethods;
 
 namespace WebAPI.Domain.Entities.Others;
 
-public class AuditEntry
+public class AuditEntry : GenericEntityModel
 {
     // Expression Body Constructor
     public AuditEntry(EntityEntry entry) => Entry = entry;
@@ -25,7 +26,7 @@ public class AuditEntry
         {
             TableName = TableName,
             ActionName = ActionName,
-            CreateDate = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil(),
+            CreatedAt = DateOnlyExtension.GetDateTimeNowFromBrazil(),
             KeyValues = JsonSerializer.Serialize(KeyValues),
             OldValues = OldValues.Count == 0 ? null : JsonSerializer.Serialize(OldValues),
             NewValues = NewValues.Count == 0 ? null : JsonSerializer.Serialize(NewValues),
