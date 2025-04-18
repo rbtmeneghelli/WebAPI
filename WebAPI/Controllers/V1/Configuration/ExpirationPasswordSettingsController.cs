@@ -1,11 +1,7 @@
 ﻿using FastPackForShare.Controllers.Generics;
 using FastPackForShare.Enums;
-using WebAPI.Domain.Constants;
 using WebAPI.Domain.DTO.Configuration;
-using WebAPI.Domain.Enums;
-using WebAPI.Domain.ExtensionMethods;
-using WebAPI.Domain.Interfaces.Repository;
-using WebAPI.Domain.Interfaces.Services.Tools;
+using WebAPI.Domain.DTO.ControlPanel;
 
 namespace WebAPI.Controllers.V1.Configuration;
 
@@ -15,20 +11,20 @@ namespace WebAPI.Controllers.V1.Configuration;
 public sealed class ExpirationPasswordSettingsController : GenericController
 {
     private readonly IGenericConfigurationService _iGenericConfigurationService;
-    private readonly IFileService<ExpirationPasswordSettingsExcelDTO> _iFileService;
+    private readonly IFileWriteService<ExpirationPasswordSettingsExcelDTO> _iFileWriteService;
 
     public ExpirationPasswordSettingsController(
         IGenericConfigurationService iGenericConfigurationService,
-        IFileService<ExpirationPasswordSettingsExcelDTO> iFileService,
-        IHttpContextAccessor iHttpContextAccessor,
-        IGenericNotifyLogsService iGenericNotifyLogsService)
-    : base(iHttpContextAccessor, iGenericNotifyLogsService)
+        IFileWriteService<ExpirationPasswordSettingsExcelDTO> iFileWriteService,
+        INotificationMessageService iNotificationMessageService)
+    : base(iNotificationMessageService)
     {
         _iGenericConfigurationService = iGenericConfigurationService;
-        _iFileService = iFileService;
+        _iFileWriteService = iFileWriteService;
     }
 
     [HttpGet("GetAll")]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<IEnumerable<ExpirationPasswordSettingsResponseDTO>>))]
     public async Task<IActionResult> GetAll()
     {
         var model = await _iGenericConfigurationService.ExpirationPasswordSettingsService.GetAllExpirationPasswordSettingsAsync();
@@ -36,6 +32,8 @@ public sealed class ExpirationPasswordSettingsController : GenericController
     }
 
     [HttpGet("GetByEnvironment")]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<ExpirationPasswordSettingsResponseDTO>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
     public async Task<IActionResult> GetByEnvironment()
     {
         var existExpirationPasswordSettings = await _iGenericConfigurationService.ExpirationPasswordSettingsService.ExistExpirationPasswordSettingsByEnvironmentAsync();
@@ -49,7 +47,9 @@ public sealed class ExpirationPasswordSettingsController : GenericController
     }
 
     [HttpGet("GetById/{id:long}")]
-    public async Task<IActionResult> GetById(long id)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<ExpirationPasswordSettingsResponseDTO>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> GetById([FromRoute, Required, Range(ConstantValue.MIN_ID, ConstantValue.MAX_ID, ErrorMessage = FixConstants.ID)] long id)
     {
         var existExpirationPasswordSettings = await _iGenericConfigurationService.ExpirationPasswordSettingsService.ExistExpirationPasswordSettingsByIdAsync(id);
         if (existExpirationPasswordSettings)
@@ -63,7 +63,7 @@ public sealed class ExpirationPasswordSettingsController : GenericController
 
     [HttpPost("Create")]
     [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
-    public async Task<IActionResult> Create([FromBody] ExpirationPasswordSettingsCreateRequestDTO expirationPasswordSettingsCreateRequestDTO)
+    public async Task<IActionResult> Create([FromBody, Required] ExpirationPasswordSettingsCreateRequestDTO expirationPasswordSettingsCreateRequestDTO)
     {
         if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
 
@@ -78,7 +78,7 @@ public sealed class ExpirationPasswordSettingsController : GenericController
     [HttpPut("Update")]
     [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
     [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
-    public async Task<IActionResult> Update(long id, [FromBody, Required] ExpirationPasswordSettingsUpdateRequestDTO expirationPasswordSettingsUpdateRequestDTO)
+    public async Task<IActionResult> Update([FromRoute, Required, Range(ConstantValue.MIN_ID, ConstantValue.MAX_ID, ErrorMessage = FixConstants.ID)] long id, [FromBody, Required] ExpirationPasswordSettingsUpdateRequestDTO expirationPasswordSettingsUpdateRequestDTO)
     {
         if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
 
@@ -103,7 +103,7 @@ public sealed class ExpirationPasswordSettingsController : GenericController
     [HttpDelete("LogicDelete/{id:long}")]
     [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
     [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
-    public async Task<IActionResult> LogicDelete(long id)
+    public async Task<IActionResult> LogicDelete([FromRoute, Required, Range(ConstantValue.MIN_ID, ConstantValue.MAX_ID, ErrorMessage = FixConstants.ID)] long id)
     {
         if (await _iGenericConfigurationService.ExpirationPasswordSettingsService.ExistExpirationPasswordSettingsByIdAsync(id))
         {
@@ -144,7 +144,7 @@ public sealed class ExpirationPasswordSettingsController : GenericController
         {
             var memoryStreamResult = SharedExtension.GetMemoryStreamType(EnumFile.Excel);
             var excelName = $"ExpirationPasswordSettings_{GuidExtension.GetGuidDigits("N")}.{memoryStreamResult.Extension}";
-            var memoryStreamExcel = await _iFileService.CreateExcelFileEPPLUS(excelData, excelName);
+            var memoryStreamExcel = await _iFileWriteService.CreateExcelFileEPPLUS(excelData, excelName);
             return File(memoryStreamExcel.ToArray(), memoryStreamResult.Type, excelName);
         }
 

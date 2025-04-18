@@ -1,11 +1,7 @@
-﻿using WebAPI.Domain.Constants;
-using WebAPI.Domain.Entities.Configuration;
-using WebAPI.Domain.DTO.Configuration;
-using WebAPI.Domain.Enums;
-using WebAPI.Domain.ExtensionMethods;
-using WebAPI.Domain.Interfaces.Repository;
-using WebAPI.Domain.Interfaces.Services.Tools;
+﻿using WebAPI.Domain.DTO.Configuration;
 using FastPackForShare.Controllers.Generics;
+using WebAPI.Domain.DTO.ControlPanel;
+using FastPackForShare.Enums;
 
 namespace WebAPI.Controllers.V1.Configuration;
 
@@ -15,20 +11,20 @@ namespace WebAPI.Controllers.V1.Configuration;
 public sealed class EmailSettingsController : GenericController
 {
     private readonly IGenericConfigurationService _iGenericConfigurationService;
-    private readonly IFileService<EmailSettingsExcelDTO> _iFileService;
+    private readonly IFileWriteService<EmailSettingsExcelDTO> _iFileWriteService;
 
     public EmailSettingsController(
         IGenericConfigurationService iGenericConfigurationService,
-        IFileService<EmailSettingsExcelDTO> iFileService,
-        IHttpContextAccessor iHttpContextAccessor,
-        IGenericNotifyLogsService iGenericNotifyLogsService)
-    : base(iHttpContextAccessor, iGenericNotifyLogsService)
+        IFileWriteService<EmailSettingsExcelDTO> iFileWriteService,
+        INotificationMessageService iNotificationMessageService)
+    : base(iNotificationMessageService)
     {
         _iGenericConfigurationService = iGenericConfigurationService;
-        _iFileService = iFileService;
+        _iFileWriteService = iFileWriteService;
     }
 
     [HttpGet("GetAll")]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<IEnumerable<EmailSettingsResponseDTO>>))]
     public async Task<IActionResult> GetAll()
     {
         var model = await _iGenericConfigurationService.EmailSettingsService.GetAllEmailSettingsAsync();
@@ -36,6 +32,8 @@ public sealed class EmailSettingsController : GenericController
     }
 
     [HttpGet("GetByEnvironment")]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<EmailSettingsResponseDTO>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
     public async Task<IActionResult> GetByEnvironment()
     {
         var existRequiredPasswordSettings = await _iGenericConfigurationService.EmailSettingsService.ExistEmailSettingsByEnvironmentAsync();
@@ -49,7 +47,9 @@ public sealed class EmailSettingsController : GenericController
     }
 
     [HttpGet("GetById/{id:long}")]
-    public async Task<IActionResult> GetById(long id)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<UserResponseDTO>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> GetById([FromRoute, Required, Range(ConstantValue.MIN_ID, ConstantValue.MAX_ID, ErrorMessage = FixConstants.ID)] long id)
     {
         var existEmailSettings = await _iGenericConfigurationService.EmailSettingsService.ExistEmailSettingsByIdAsync(id);
         if (existEmailSettings)
@@ -78,7 +78,7 @@ public sealed class EmailSettingsController : GenericController
     [HttpPut("Update")]
     [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
     [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
-    public async Task<IActionResult> Update(long id, [FromBody, Required] EmailSettingsUpdateRequestDTO emailSettingsUpdateRequestDTO)
+    public async Task<IActionResult> Update([FromRoute, Required, Range(ConstantValue.MIN_ID, ConstantValue.MAX_ID, ErrorMessage = FixConstants.ID)] long id, [FromBody, Required] EmailSettingsUpdateRequestDTO emailSettingsUpdateRequestDTO)
     {
         if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
 
@@ -142,9 +142,9 @@ public sealed class EmailSettingsController : GenericController
         var excelData = await _iGenericConfigurationService.EmailSettingsService.GetAllEmailSettingsExcelAsync();
         if (excelData?.Count() > 0)
         {
-            var memoryStreamResult = _generalMethod.GetMemoryStreamType(EnumMemoryStreamFile.XLSX);
+            var memoryStreamResult = SharedExtension.GetMemoryStreamType(EnumFile.Excel);
             var excelName = $"EmailSettings_{GuidExtension.GetGuidDigits("N")}.{memoryStreamResult.Extension}";
-            var memoryStreamExcel = await _iFileService.CreateExcelFileEPPLUS(excelData, excelName);
+            var memoryStreamExcel = await _iFileWriteService.CreateExcelFileEPPLUS(excelData, excelName);
             return File(memoryStreamExcel.ToArray(), memoryStreamResult.Type, excelName);
         }
 

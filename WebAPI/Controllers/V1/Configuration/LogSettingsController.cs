@@ -10,20 +10,20 @@ namespace WebAPI.Controllers.V1.Configuration;
 public sealed class LogSettingsController : GenericController
 {
     private readonly IGenericConfigurationService _iGenericConfigurationService;
-    private readonly IFileService<LogSettingsExcelDTO> _iFileService;
+    private readonly IFileWriteService<LogSettingsExcelDTO> _iFileWriteService;
 
     public LogSettingsController(
         IGenericConfigurationService iGenericConfigurationService,
-        IFileService<LogSettingsExcelDTO> iFileService,
-        IHttpContextAccessor iHttpContextAccessor,
-        IGenericNotifyLogsService iGenericNotifyLogsService)
-    : base(iHttpContextAccessor, iGenericNotifyLogsService)
+        IFileWriteService<LogSettingsExcelDTO> iFileWriteService,
+        INotificationMessageService iNotificationMessageService)
+    : base(iNotificationMessageService)
     {
         _iGenericConfigurationService = iGenericConfigurationService;
-        _iFileService = iFileService;
+        _iFileWriteService = iFileWriteService;
     }
 
     [HttpGet("GetAll")]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<IEnumerable<LogSettingsResponseDTO>>))]
     public async Task<IActionResult> GetAll()
     {
         var model = await _iGenericConfigurationService.LogSettingsService.GetAllLogSettingsAsync();
@@ -31,6 +31,8 @@ public sealed class LogSettingsController : GenericController
     }
 
     [HttpGet("GetByEnvironment")]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<LogSettingsResponseDTO>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
     public async Task<IActionResult> GetByEnvironment()
     {
         var existLogSettings = await _iGenericConfigurationService.LogSettingsService.ExistLogSettingsByEnvironmentAsync();
@@ -44,7 +46,9 @@ public sealed class LogSettingsController : GenericController
     }
 
     [HttpGet("GetById/{id:long}")]
-    public async Task<IActionResult> GetById(long id)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<LogSettingsResponseDTO>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> GetById([FromRoute, Required, Range(ConstantValue.MIN_ID, ConstantValue.MAX_ID, ErrorMessage = FixConstants.ID)] long id)
     {
         var existLogSettings = await _iGenericConfigurationService.LogSettingsService.ExistLogSettingsByIdAsync(id);
         if (existLogSettings)
@@ -73,7 +77,7 @@ public sealed class LogSettingsController : GenericController
     [HttpPut("Update")]
     [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
     [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
-    public async Task<IActionResult> Update(long id, [FromBody, Required] LogSettingsUpdateRequestDTO logSettingsUpdateRequestDTO)
+    public async Task<IActionResult> Update([FromRoute, Required, Range(ConstantValue.MIN_ID, ConstantValue.MAX_ID, ErrorMessage = FixConstants.ID)] long id, [FromBody, Required] LogSettingsUpdateRequestDTO logSettingsUpdateRequestDTO)
     {
         if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
 
@@ -98,7 +102,7 @@ public sealed class LogSettingsController : GenericController
     [HttpDelete("LogicDelete/{id:long}")]
     [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
     [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
-    public async Task<IActionResult> LogicDelete(long id)
+    public async Task<IActionResult> LogicDelete([FromRoute, Required, Range(ConstantValue.MIN_ID, ConstantValue.MAX_ID, ErrorMessage = FixConstants.ID)] long id)
     {
         if (await _iGenericConfigurationService.LogSettingsService.ExistLogSettingsByIdAsync(id))
         {
@@ -114,7 +118,7 @@ public sealed class LogSettingsController : GenericController
 
     [HttpPost("Reactive")]
     [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
-    public async Task<IActionResult> Reactive(LogSettingsReactiveRequestDTO logSettingsReactiveRequestDTO)
+    public async Task<IActionResult> Reactive([FromBody, Required] LogSettingsReactiveRequestDTO logSettingsReactiveRequestDTO)
     {
         if (await _iGenericConfigurationService.LogSettingsService.ExistLogSettingsByIdAsync(logSettingsReactiveRequestDTO.Id.GetValueOrDefault()))
         {
@@ -139,7 +143,7 @@ public sealed class LogSettingsController : GenericController
         {
             var memoryStreamResult = SharedExtension.GetMemoryStreamType(EnumFile.Excel);
             var excelName = $"LogSettings_{GuidExtension.GetGuidDigits("N")}.{memoryStreamResult.Extension}";
-            var memoryStreamExcel = await _iFileService.CreateExcelFileEPPLUS(excelData, excelName);
+            var memoryStreamExcel = await _iFileWriteService.CreateExcelFileEPPLUS(excelData, excelName);
             return File(memoryStreamExcel.ToArray(), memoryStreamResult.Type, excelName);
         }
 

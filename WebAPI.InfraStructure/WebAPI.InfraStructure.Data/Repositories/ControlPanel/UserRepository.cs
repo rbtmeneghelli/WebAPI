@@ -1,10 +1,9 @@
-﻿using WebAPI.Domain.ExtensionMethods;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using WebAPI.Application.Generic;
 using WebAPI.Domain.Entities.ControlPanel;
 using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.Interfaces.Generic;
+using FastPackForShare.Extensions;
 
 namespace WebAPI.InfraStructure.Data.Repositories.ControlPanel;
 

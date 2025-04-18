@@ -1,6 +1,8 @@
-﻿namespace WebAPI.Domain.DTO.Configuration;
+﻿using FastPackForShare.Bases;
 
-public record ExpirationPasswordSettingsExcelDTO : GenericDTOModel
+namespace WebAPI.Domain.DTO.Configuration;
+
+public record ExpirationPasswordSettingsExcelDTO : BaseReportModel
 {
     [DisplayName("EnvironmentDescription")]
     public string EnvironmentDescription { get; set; }

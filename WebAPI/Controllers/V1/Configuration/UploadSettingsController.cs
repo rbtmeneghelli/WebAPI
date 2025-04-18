@@ -1,8 +1,5 @@
 ﻿using FastPackForShare.Controllers.Generics;
-using WebAPI.Domain.Constants;
 using WebAPI.Domain.DTO.Configuration;
-using WebAPI.Domain.Interfaces.Repository;
-using WebAPI.Domain.Interfaces.Services.Tools;
 
 namespace WebAPI.Controllers.V1.Configuration;
 
@@ -24,6 +21,8 @@ public sealed class UploadSettingsController : GenericController
     }
 
     [HttpGet("GetByEnvironment")]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<UploadSettingsResponseDTO>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
     public async Task<IActionResult> GetByEnvironment()
     {
         var existUploadSettings = await _iGenericConfigurationService.UploadSettingsService.ExistUploadSettingsByEnvironmentAsync();
@@ -37,7 +36,9 @@ public sealed class UploadSettingsController : GenericController
     }
 
     [HttpGet("GetById/{id:long}")]
-    public async Task<IActionResult> GetById(long id)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<UploadSettingsResponseDTO>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> GetById([FromRoute, Required, Range(ConstantValue.MIN_ID, ConstantValue.MAX_ID, ErrorMessage = FixConstants.ID)] long id)
     {
         var existUploadSettings = await _iGenericConfigurationService.UploadSettingsService.ExistUploadSettingsByIdAsync(id);
         if (existUploadSettings)
@@ -66,7 +67,7 @@ public sealed class UploadSettingsController : GenericController
     [HttpPut("Update")]
     [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
     [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
-    public async Task<IActionResult> Update(long id, [FromForm, Required] UploadSettingsUpdateRequestDTO uploadSettingsUpdateRequestDTO)
+    public async Task<IActionResult> Update([FromRoute, Required, Range(ConstantValue.MIN_ID, ConstantValue.MAX_ID, ErrorMessage = FixConstants.ID)] long id, [FromForm, Required] UploadSettingsUpdateRequestDTO uploadSettingsUpdateRequestDTO)
     {
         if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
 
@@ -91,7 +92,7 @@ public sealed class UploadSettingsController : GenericController
     [HttpDelete("LogicDelete/{id:long}")]
     [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
     [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
-    public async Task<IActionResult> LogicDelete(int id)
+    public async Task<IActionResult> LogicDelete([FromRoute, Required, Range(ConstantValue.MIN_ID, ConstantValue.MAX_ID, ErrorMessage = FixConstants.ID)] long id)
     {
         if (await _iGenericConfigurationService.UploadSettingsService.ExistUploadSettingsByIdAsync(id))
         {

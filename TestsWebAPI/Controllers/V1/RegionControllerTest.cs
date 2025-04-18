@@ -4,6 +4,7 @@ using Region = WebAPI.Domain.Entities.Others.Region;
 using WebAPI.Domain.Interfaces.Services.Tools;
 using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.Interfaces.Services;
+using FastPackForShare.Interfaces;
 
 namespace TestsWebAPI.Controllers.V1;
 
@@ -12,12 +13,13 @@ public sealed class RegionControllerTest : GenericControllerTest
     private readonly Mock<IRegionRepository> _mockRepository;
     private readonly Mock<INotificationMessageService> _iNotificationMessageService;
     private readonly IRegionService _iRegionService;
+    private readonly Mock<IMapperService> _iMapperService;
 
     public RegionControllerTest(BuilderServiceProvider builderServiceProvider) : base(builderServiceProvider)
     {
         _iNotificationMessageService = new Mock<INotificationMessageService>();
         _mockRepository = new Mock<IRegionRepository>();
-        _iRegionService = new RegionService(_mockRepository.Object, _iNotificationMessageService.Object);
+        _iRegionService = new RegionService(_mockRepository.Object, _iMapperService.Object, _iNotificationMessageService.Object);
     }
 
     public static IEnumerable<object[]> GetRegions()
@@ -171,7 +173,7 @@ public sealed class RegionControllerTest : GenericControllerTest
     public async Task UpdateStatusRegionbyId(long regionID, bool regionStatus)
     {
         // Arrange
-        _mockRepository.Setup(r => r.GetById(It.IsAny<long>())).Returns(new Region { Id = regionID, Status = regionStatus }).Verifiable();
+        _mockRepository.Setup(r => r.GetById(It.IsAny<long>())).Returns(new Region { Id = regionID, IsActive = regionStatus }).Verifiable();
         _mockRepository.Setup(r => r.Update(It.IsAny<Region>())).Verifiable();
 
         // Act

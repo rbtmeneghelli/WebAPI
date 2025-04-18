@@ -1,7 +1,6 @@
 ﻿using FastPackForShare.Controllers.Generics;
 using FastPackForShare.Enums;
 using WebAPI.Domain.DTO.Configuration;
-using WebAPI.Domain.DTO.ControlPanel;
 
 namespace WebAPI.Controllers.V1.Configuration;
 

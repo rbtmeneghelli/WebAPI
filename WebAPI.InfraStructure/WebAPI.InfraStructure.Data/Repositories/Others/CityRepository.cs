@@ -1,10 +1,10 @@
 ﻿using WebAPI.InfraStructure.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Domain.Entities.Others;
 using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.Interfaces.Generic;
+using FastPackForShare.Extensions;
 
 namespace WebAPI.InfraStructure.Data.Repositories.Others;
 
@@ -72,8 +72,8 @@ public class CityRepository : ICityRepository
                 .SetProperty(p => p.Name, city.Name)
                 .SetProperty(p => p.IBGE, long.Parse(stIBGE))
                 .SetProperty(p => p.StateId, city.StateId)
-                .SetProperty(p => p.Status, true)
-                .SetProperty(p => p.UpdateDate, DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()));
+                .SetProperty(p => p.IsActive, true)
+                .SetProperty(p => p.UpdatedAt, DateOnlyExtension.GetDateTimeNowFromBrazil()));
     }
 
     public void Dispose()

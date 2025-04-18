@@ -1,11 +1,6 @@
-﻿using WebAPI.Domain.Constants;
-using WebAPI.Domain.Entities.Configuration;
-using WebAPI.Domain.DTO.Configuration;
-using WebAPI.Domain.Enums;
-using WebAPI.Domain.ExtensionMethods;
-using WebAPI.Domain.Interfaces.Repository;
-using WebAPI.Domain.Interfaces.Services.Tools;
+﻿using WebAPI.Domain.DTO.Configuration;
 using FastPackForShare.Controllers.Generics;
+using FastPackForShare.Enums;
 
 namespace WebAPI.Controllers.V1.Configuration;
 
@@ -15,20 +10,21 @@ namespace WebAPI.Controllers.V1.Configuration;
 public sealed class LayoutSettingsController : GenericController
 {
     private readonly IGenericConfigurationService _iGenericConfigurationService;
-    private readonly IFileService<LayoutSettingsExcelDTO> _iFileService;
+    private readonly IFileWriteService<LayoutSettingsExcelDTO> _iFileWriteService;
 
     public LayoutSettingsController(
         IGenericConfigurationService iGenericConfigurationService,
-        IFileService<LayoutSettingsExcelDTO> iFileService,
+        IFileWriteService<LayoutSettingsExcelDTO> iFileWriteService,
         IHttpContextAccessor iHttpContextAccessor,
-        IGenericNotifyLogsService iGenericNotifyLogsService)
-    : base(iHttpContextAccessor, iGenericNotifyLogsService)
+        INotificationMessageService iNotificationMessageService)
+    : base(iNotificationMessageService)
     {
         _iGenericConfigurationService = iGenericConfigurationService;
-        _iFileService = iFileService;
+        _iFileWriteService = iFileWriteService;
     }
 
     [HttpGet("GetAll")]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<IEnumerable<LayoutSettingsResponseDTO>>))]
     public async Task<IActionResult> GetAll()
     {
         var model = await _iGenericConfigurationService.LayoutSettingsService.GetAllLayoutSettingsAsync();
@@ -36,6 +32,8 @@ public sealed class LayoutSettingsController : GenericController
     }
 
     [HttpGet("GetByEnvironment")]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<LayoutSettingsResponseDTO>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
     public async Task<IActionResult> GetByEnvironment()
     {
         var existLayoutSettings = await _iGenericConfigurationService.LayoutSettingsService.ExistLayoutSettingsByEnvironmentAsync();
@@ -49,7 +47,9 @@ public sealed class LayoutSettingsController : GenericController
     }
 
     [HttpGet("GetById/{id:long}")]
-    public async Task<IActionResult> GetById(long id)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<LayoutSettingsResponseDTO>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> GetById([FromRoute, Required, Range(ConstantValue.MIN_ID, ConstantValue.MAX_ID, ErrorMessage = FixConstants.ID)] long id)
     {
         var existLayoutSettings = await _iGenericConfigurationService.LayoutSettingsService.ExistLayoutSettingsByIdAsync(id);
         if (existLayoutSettings)
@@ -65,7 +65,7 @@ public sealed class LayoutSettingsController : GenericController
     [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
     public async Task<IActionResult> Create([FromBody, Required] LayoutSettingsCreateRequestDTO layoutSettingsCreateRequestDTO)
     {
-        if (ModelStateIsInvalid()) return CustomResponse(ModelState);
+        if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
 
         var result = await _iGenericConfigurationService.LayoutSettingsService.CreateLayoutSettingsAsync(layoutSettingsCreateRequestDTO);
 
@@ -78,9 +78,9 @@ public sealed class LayoutSettingsController : GenericController
     [HttpPut("Update")]
     [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
     [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
-    public async Task<IActionResult> Update(long id, [FromBody, Required] LayoutSettingsUpdateRequestDTO layoutSettingsUpdateRequestDTO)
+    public async Task<IActionResult> Update([FromRoute, Required, Range(ConstantValue.MIN_ID, ConstantValue.MAX_ID, ErrorMessage = FixConstants.ID)] long id, [FromBody, Required] LayoutSettingsUpdateRequestDTO layoutSettingsUpdateRequestDTO)
     {
-        if (ModelStateIsInvalid()) return CustomResponse(ModelState);
+        if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
 
         if (id != layoutSettingsUpdateRequestDTO.Id)
         {
@@ -103,7 +103,7 @@ public sealed class LayoutSettingsController : GenericController
     [HttpDelete("LogicDelete/{id:long}")]
     [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
     [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
-    public async Task<IActionResult> LogicDelete(int id)
+    public async Task<IActionResult> LogicDelete([FromRoute, Required, Range(ConstantValue.MIN_ID, ConstantValue.MAX_ID, ErrorMessage = FixConstants.ID)] long id)
     {
         if (await _iGenericConfigurationService.LayoutSettingsService.ExistLayoutSettingsByIdAsync(id))
         {
@@ -137,14 +137,14 @@ public sealed class LayoutSettingsController : GenericController
     [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
     public async Task<IActionResult> ExportData()
     {
-        if (ModelStateIsInvalid()) return CustomResponse(ModelState);
+        if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
 
         var excelData = await _iGenericConfigurationService.LayoutSettingsService.GetAllLayoutSettingsExcelAsync();
         if (excelData?.Count() > 0)
         {
-            var memoryStreamResult = _generalMethod.GetMemoryStreamType(EnumMemoryStreamFile.XLSX);
-            var excelName = $"LayoutSettings_{GuidExtensionMethod.GetGuidDigits("N")}.{memoryStreamResult.Extension}";
-            var memoryStreamExcel = await _iFileService.CreateExcelFileEPPLUS(excelData, excelName);
+            var memoryStreamResult = SharedExtension.GetMemoryStreamType(EnumFile.Excel);
+            var excelName = $"LayoutSettings_{GuidExtension.GetGuidDigits("N")}.{memoryStreamResult.Extension}";
+            var memoryStreamExcel = await _iFileWriteService.CreateExcelFileEPPLUS(excelData, excelName);
             return File(memoryStreamExcel.ToArray(), memoryStreamResult.Type, excelName);
         }
 
