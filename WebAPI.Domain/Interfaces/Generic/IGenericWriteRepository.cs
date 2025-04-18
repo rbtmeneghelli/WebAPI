@@ -2,7 +2,7 @@
 
 namespace WebAPI.Domain.Interfaces.Generic;
 
-public interface IWriteRepository<TEntity> : IDisposable where TEntity : class
+public interface IGenericWriteRepository<TEntity> : IDisposable where TEntity : GenericEntityModel
 {
     void Create(TEntity entity);
     void BulkCreate(IEnumerable<TEntity> entities);
@@ -10,7 +10,6 @@ public interface IWriteRepository<TEntity> : IDisposable where TEntity : class
     void UpdateRange(IEnumerable<TEntity> entities);
     void Remove(TEntity entity);
     void RemoveRange(IEnumerable<TEntity> entities);
-    long SaveChanges();
     void ExecuteDelete(Expression<Func<TEntity, bool>> predicate);
     /// <summary>
     /// EF Core -  Múltiplos Requests p/ um DataBase em uma Transação

@@ -13,17 +13,15 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using WebAPI.Domain.Models;
 using System.Text.Json;
 using Microsoft.AspNetCore.Http.Features;
-using WebAPI.Domain.ExtensionMethods;
 using System.Buffers.Text;
-using WebAPI.Domain.Cryptography;
 using WebAPI.Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Http;
 using FastPackForShare.Extensions;
 using FastPackForShare.Cryptography;
 using FastPackForShare.Constants;
+using FastPackForShare.Models;
 
 namespace WebAPI.InfraStructure.IoC.Containers;
 
@@ -158,7 +156,7 @@ public static class ContainerSwagger
 
     public static IServiceCollection RegisterJwtTokenConfig(this IServiceCollection services)
     {
-        var tokenSettings = JsonSerializer.Deserialize<TokenSettings>(Environment.GetEnvironmentVariable("WebAPI_Token"));
+        var tokenSettings = JsonSerializer.Deserialize<JwtConfigModel>(Environment.GetEnvironmentVariable("WebAPI_Token"));
 
         services.AddAuthentication
               (x =>
@@ -193,7 +191,7 @@ public static class ContainerSwagger
 
     public static void RegisterJwtTokenEncryptConfig(this IServiceCollection services, IConfiguration configuration)
     {
-        var tokenSettings = JsonSerializer.Deserialize<TokenSettings>(Environment.GetEnvironmentVariable("WebAPI_Token"));
+        var tokenSettings = JsonSerializer.Deserialize<JwtConfigModel>(Environment.GetEnvironmentVariable("WebAPI_Token"));
 
         services.AddAuthentication
               (x =>
@@ -231,7 +229,7 @@ public static class ContainerSwagger
                           {
                               var iGeneralService = context.HttpContext.RequestServices.GetRequiredService<IGeneralService>();
                               var environmentVariables = context.HttpContext.RequestServices.GetRequiredService<EnvironmentVariables>();
-                              var tokenAuthAPI = StringExtensionMethod.ReplaceStringText(tokenHeader.ToString(), "Bearer ", "");
+                              var tokenAuthAPI = StringExtension.ApplyReplaceToAll(tokenHeader.ToString(), "Bearer ", "");
 
                               if (GuardClauseExtension.IsNullOrWhiteSpace(tokenAuthAPI))
                               {
@@ -242,7 +240,7 @@ public static class ContainerSwagger
                               {
                                   try
                                   {
-                                      string tokenDecrypt = CryptographyHashTokenManager.DecryptToken(tokenAuthAPI, environmentVariables.TokenSettings.Key);
+                                      string tokenDecrypt = CryptographyHashTokenManager.DecryptToken(tokenAuthAPI, environmentVariables.JwtConfigSettings.Key);
                                       if (iGeneralService.ValidateToken(tokenDecrypt))
                                           context.Token = tokenDecrypt;
                                   }
@@ -362,7 +360,7 @@ public class SwaggerDefaultValues : IOperationFilter
         operation.Responses.Add(ConstantHttpStatusCode.INTERNAL_ERROR_CODE.ToString(), new OpenApiResponse { Description = ConstantMessageResponse.INTERNAL_ERROR_CODE });
         operation.Deprecated = context.ApiDescription.IsDeprecated() ? true : OpenApiOperation.DeprecatedDefault;
 
-        if (GuardClauses.ObjectIsNull(operation.Parameters))
+        if (GuardClauseExtension.IsNull(operation.Parameters))
         {
             return;
         }
@@ -377,17 +375,17 @@ public class SwaggerDefaultValues : IOperationFilter
 
             operation.Deprecated = context.ApiDescription.IsDeprecated() ? true : OpenApiOperation.DeprecatedDefault;
 
-            if (GuardClauses.ObjectIsNull(parameter.Description))
+            if (GuardClauseExtension.IsNull(parameter.Description))
             {
                 parameter.Description = description.ModelMetadata?.Description;
             }
 
-            if (GuardClauses.ObjectIsNull(routeInfo))
+            if (GuardClauseExtension.IsNull(routeInfo))
             {
                 continue;
             }
 
-            if (parameter.In != ParameterLocation.Path && GuardClauses.ObjectIsNull(parameter.Schema.Default))
+            if (parameter.In != ParameterLocation.Path && GuardClauseExtension.IsNull(parameter.Schema.Default))
             {
                 parameter.Schema.Default = new OpenApiString(routeInfo.DefaultValue.ToString());
             }

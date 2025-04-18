@@ -20,17 +20,17 @@ public sealed class AddressService : BaseHandlerService, IAddressService
         _iMapperService = iMapperService;
     }
 
-    private async Task<IQueryable<Domain.ValueObject.AddressData>> GetAllWithFilterAsync(CepFilter filter)
+    private async Task<IQueryable<Domain.ValueObject.AddressData>> GetAllWithFilterAsync(AddressFilter filter)
     {
         return await Task.FromResult(_iAddressRepository.GetAll().Where(GetPredicateAsync(filter)).AsQueryable());
     }
 
-    private async Task<int> GetCountAsync(CepFilter filter)
+    private async Task<int> GetCountAsync(AddressFilter filter)
     {
         return await _iAddressRepository.GetAll().CountAsync(GetPredicateAsync(filter));
     }
 
-    private Expression<Func<Domain.ValueObject.AddressData, bool>> GetPredicateAsync(CepFilter filter)
+    private Expression<Func<Domain.ValueObject.AddressData, bool>> GetPredicateAsync(AddressFilter filter)
     {
         return p =>
                (GuardClauseExtension.IsNullOrWhiteSpace(filter.ZipPostalCode) || p.Cep.StartsWith(filter.ZipPostalCode.ApplyTrim()));
@@ -75,7 +75,7 @@ public sealed class AddressService : BaseHandlerService, IAddressService
         return await _iAddressRepository.FindBy(x => EF.Functions.Like(x.Cep, $"%{parameter}%")).ToListAsync();
     }
 
-    public async Task<BasePagedResultModel<AddressDataDTO>> GetAllAddressWithPaginateAsync(CepFilter filter)
+    public async Task<BasePagedResultModel<AddressDataDTO>> GetAllAddressWithPaginateAsync(AddressFilter filter)
     {
         var query = await GetAllWithFilterAsync(filter);
         var queryCount = await GetCountAsync(filter);

@@ -7,12 +7,12 @@ namespace WebAPI.InfraStructure.Data.Repositories.Others;
 
 public class StateRepository : IStatesRepository
 {
-    private readonly IReadRepository<States> _iStateReadRepository;
-    private readonly IWriteRepository<States> _iStateWriteRepository;
+    private readonly IGenericReadRepository<States> _iStateReadRepository;
+    private readonly IGenericWriteRepository<States> _iStateWriteRepository;
 
     public StateRepository(
-        IReadRepository<States> iStateReadRepository,
-        IWriteRepository<States> iStateWriteRepository)
+        IGenericReadRepository<States> iStateReadRepository,
+        IGenericWriteRepository<States> iStateWriteRepository)
     {
         _iStateReadRepository = iStateReadRepository;
         _iStateWriteRepository = iStateWriteRepository;

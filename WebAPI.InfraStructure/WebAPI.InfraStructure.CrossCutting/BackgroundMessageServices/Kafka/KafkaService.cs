@@ -1,6 +1,6 @@
 ﻿using Confluent.Kafka;
+using FastPackForShare.Extensions;
 using WebAPI.Domain;
-using WebAPI.Domain.ExtensionMethods;
 
 namespace WebAPI.Infrastructure.CrossCutting.BackgroundMessageServices.Kafka;
 

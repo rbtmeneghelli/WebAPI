@@ -1,13 +1,14 @@
 ﻿using Dapper.Contrib.Extensions;
+using FastPackForShare.Bases.Generics;
 using System.Data;
 using WebAPI.Domain;
 using WebAPI.Domain.Interfaces.Generic;
 
 namespace WebAPI.InfraStructure.Data.Repositories;
 
-public class WriteRepositoryDapperContrib<TEntity> : GenericRepositoryDapper, IWriteRepositoryDapperContrib<TEntity> where TEntity : class
+public class GenericWriteDapperContribRepository<TEntity> : GenericDapperRepository, IGenericWriteDapperContribRepository<TEntity> where TEntity : GenericEntityModel
 {
-    public WriteRepositoryDapperContrib(EnvironmentVariables environmentVariables) : base(environmentVariables) { }
+    public GenericWriteDapperContribRepository(EnvironmentVariables environmentVariables) : base(environmentVariables) { }
 
     public async Task<int> Insert(TEntity entity)
     {

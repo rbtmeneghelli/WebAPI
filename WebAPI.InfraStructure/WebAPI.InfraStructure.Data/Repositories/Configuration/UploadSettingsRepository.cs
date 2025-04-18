@@ -7,12 +7,12 @@ namespace WebAPI.InfraStructure.Data.Repositories.Configuration;
 
 public class UploadSettingsRepository : IUploadSettingsRepository
 {
-    private readonly IReadRepository<UploadSettings> _iUploadSettingsReadRepository;
-    private readonly IWriteRepository<UploadSettings> _iUploadSettingsWriteRepository;
+    private readonly IGenericReadRepository<UploadSettings> _iUploadSettingsReadRepository;
+    private readonly IGenericWriteRepository<UploadSettings> _iUploadSettingsWriteRepository;
 
     public UploadSettingsRepository(
-        IReadRepository<UploadSettings> iUploadSettingsReadRepository,
-        IWriteRepository<UploadSettings> iUploadSettingsWriteRepository)
+        IGenericReadRepository<UploadSettings> iUploadSettingsReadRepository,
+        IGenericWriteRepository<UploadSettings> iUploadSettingsWriteRepository)
     {
         _iUploadSettingsReadRepository = iUploadSettingsReadRepository;
         _iUploadSettingsWriteRepository = iUploadSettingsWriteRepository;

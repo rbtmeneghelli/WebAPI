@@ -10,16 +10,16 @@ namespace WebAPI.InfraStructure.Data.Repositories.ControlPanel;
 
 public class UserRepository : IUserRepository
 {
-    private readonly IReadRepository<User> _iUserReadRepository;
-    private readonly IWriteRepository<User> _iUserWriteRepository;
-    private readonly IReadRepository<Employee> _iEmployeeReadRepository;
-    private readonly IReadRepository<Profile> _iProfileReadRepository;
+    private readonly IGenericReadRepository<User> _iUserReadRepository;
+    private readonly IGenericWriteRepository<User> _iUserWriteRepository;
+    private readonly IGenericReadRepository<Employee> _iEmployeeReadRepository;
+    private readonly IGenericReadRepository<Profile> _iProfileReadRepository;
 
     public UserRepository(
-        IReadRepository<User> iUserReadRepository,
-        IWriteRepository<User> iUserWriteRepository,
-        IReadRepository<Employee> iEmployeeReadRepository,
-        IReadRepository<Profile> iProfileReadRepository)
+        IGenericReadRepository<User> iUserReadRepository,
+        IGenericWriteRepository<User> iUserWriteRepository,
+        IGenericReadRepository<Employee> iEmployeeReadRepository,
+        IGenericReadRepository<Profile> iProfileReadRepository)
     {
         _iUserReadRepository = iUserReadRepository;
         _iUserWriteRepository = iUserWriteRepository;

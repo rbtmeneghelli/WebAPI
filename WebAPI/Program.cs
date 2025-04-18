@@ -52,7 +52,7 @@ public class Program
     public static void Main(string[] args)
     {
         #if DEBUG
-            CreateHostBuilder(args).UseSerilog().Build().Run();
+            CreateHostBuilder(args).Build().Run();
         #else
             CreateHostBuilder(args).Build().Run();
         #endif

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FastPackForShare.Bases.Generics;
+using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Linq.Expressions;
 using WebAPI.Domain.Interfaces.Generic;
@@ -6,9 +7,16 @@ using WebAPI.InfraStructure.Data.Context;
 
 namespace WebAPI.InfraStructure.Data.Repositories;
 
-public sealed class ReadRepository<TEntity> : GenericRepository<TEntity>, IReadRepository<TEntity> where TEntity : class
+public sealed class GenericReadRepository<TEntity> : IGenericReadRepository<TEntity> where TEntity : GenericEntityModel
 {
-    public ReadRepository(WebAPIContext context) : base(context) { }
+    private readonly WebAPIContext _context;
+    private readonly DbSet<TEntity> DbSet;
+
+    public GenericReadRepository(WebAPIContext context)
+    {
+        _context = context;
+        DbSet = _context.Set<TEntity>();
+    }
 
     public IQueryable<TEntity> GetAll(bool hasTracking = false)
     {
@@ -17,6 +25,25 @@ public sealed class ReadRepository<TEntity> : GenericRepository<TEntity>, IReadR
 
         return DbSet.AsNoTracking();
     }
+
+    public TEntity GetById(long id)
+    {
+        var result = DbSet.Find(id);
+        _context.Entry(result).State = EntityState.Detached;
+        return result;
+    }
+
+    public IQueryable<TEntity> GetAllBy(Expression<Func<TEntity, bool>> predicate, bool isTracking = false)
+    {
+        if (isTracking)
+        {
+            return DbSet.Where(predicate);
+        }
+
+        return DbSet.AsNoTracking().Where(predicate);
+    }
+
+    public bool Exist(Expression<Func<TEntity, bool>> predicate) => DbSet.AsNoTracking().Any(predicate);
 
     public IQueryable<TEntity> GetAllIgnoreQueryFilter(bool hasTracking = false)
     {
@@ -57,17 +84,14 @@ public sealed class ReadRepository<TEntity> : GenericRepository<TEntity>, IReadR
         return DbSet.AsNoTracking().IgnoreQueryFilters().Where(predicate);
     }
 
-    public TEntity GetById(long id)
-    {
-        var result = DbSet.Find(id);
-        _context.Entry(result).State = EntityState.Detached;
-        return result;
-    }
-
     public long GetCount(Expression<Func<TEntity, bool>> predicate)
     {
         return DbSet.AsNoTracking().LongCount(predicate);
     }
 
-    public bool Exist(Expression<Func<TEntity, bool>> predicate) => DbSet.AsNoTracking().Any(predicate);
+    public void Dispose()
+    {
+        _context?.Dispose();
+        GC.SuppressFinalize(this);
+    }
 }

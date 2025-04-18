@@ -7,12 +7,12 @@ namespace WebAPI.InfraStructure.Data.Repositories.Others;
 
 public class AddressRepository : IAddressRepository
 {
-    private readonly IReadRepository<AddressData> _iAddressDataReadRepository;
-    private readonly IWriteRepository<AddressData> _iAddressDataWriteRepository;
+    private readonly IGenericReadRepository<AddressData> _iAddressDataReadRepository;
+    private readonly IGenericWriteRepository<AddressData> _iAddressDataWriteRepository;
 
     public AddressRepository(
-        IReadRepository<AddressData> iAddressDataReadRepository,
-        IWriteRepository<AddressData> iAddressDataWriteRepository)
+        IGenericReadRepository<AddressData> iAddressDataReadRepository,
+        IGenericWriteRepository<AddressData> iAddressDataWriteRepository)
     {
         _iAddressDataReadRepository = iAddressDataReadRepository;
         _iAddressDataWriteRepository = iAddressDataWriteRepository;

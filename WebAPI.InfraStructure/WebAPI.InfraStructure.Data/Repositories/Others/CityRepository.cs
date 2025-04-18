@@ -11,12 +11,12 @@ namespace WebAPI.InfraStructure.Data.Repositories.Others;
 public class CityRepository : ICityRepository
 {
     private readonly WebAPIContext _context;
-    private readonly IReadRepository<City> _iCityReadRepository;
-    private readonly IWriteRepository<City> _iCityWriteRepository;
+    private readonly IGenericReadRepository<City> _iCityReadRepository;
+    private readonly IGenericWriteRepository<City> _iCityWriteRepository;
 
     public CityRepository(
-        IReadRepository<City> iCityReadRepository,
-        IWriteRepository<City> iCityWriteRepository,
+        IGenericReadRepository<City> iCityReadRepository,
+        IGenericWriteRepository<City> iCityWriteRepository,
         WebAPIContext context)
     {
         _iCityReadRepository = iCityReadRepository;

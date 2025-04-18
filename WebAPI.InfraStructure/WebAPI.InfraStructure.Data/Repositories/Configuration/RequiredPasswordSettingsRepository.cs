@@ -7,12 +7,12 @@ namespace WebAPI.InfraStructure.Data.Repositories.Configuration;
 
 public class RequiredPasswordSettingsRepository : IRequiredPasswordSettingsRepository
 {
-    private readonly IReadRepository<RequiredPasswordSettings> _iRequiredPasswordSettingsReadRepository;
-    private readonly IWriteRepository<RequiredPasswordSettings> _iRequiredPasswordSettingsWriteRepository;
+    private readonly IGenericReadRepository<RequiredPasswordSettings> _iRequiredPasswordSettingsReadRepository;
+    private readonly IGenericWriteRepository<RequiredPasswordSettings> _iRequiredPasswordSettingsWriteRepository;
 
     public RequiredPasswordSettingsRepository(
-        IReadRepository<RequiredPasswordSettings> iRequiredPasswordSettingsReadRepository,
-        IWriteRepository<RequiredPasswordSettings> iRequiredPasswordSettingsWriteRepository
+        IGenericReadRepository<RequiredPasswordSettings> iRequiredPasswordSettingsReadRepository,
+        IGenericWriteRepository<RequiredPasswordSettings> iRequiredPasswordSettingsWriteRepository
     )
     {
         _iRequiredPasswordSettingsReadRepository = iRequiredPasswordSettingsReadRepository;

@@ -7,12 +7,12 @@ namespace WebAPI.InfraStructure.Data.Repositories.Configuration;
 
 public class LayoutSettingsRepository : ILayoutSettingsRepository
 {
-    private readonly IReadRepository<LayoutSettings> _iLayoutSettingsReadRepository;
-    private readonly IWriteRepository<LayoutSettings> _iLayoutSettingsWriteRepository;
+    private readonly IGenericReadRepository<LayoutSettings> _iLayoutSettingsReadRepository;
+    private readonly IGenericWriteRepository<LayoutSettings> _iLayoutSettingsWriteRepository;
 
     public LayoutSettingsRepository(
-        IReadRepository<LayoutSettings> iLayoutSettingsReadRepository,
-        IWriteRepository<LayoutSettings> iLayoutSettingsWriteRepository)
+        IGenericReadRepository<LayoutSettings> iLayoutSettingsReadRepository,
+        IGenericWriteRepository<LayoutSettings> iLayoutSettingsWriteRepository)
     {
         _iLayoutSettingsReadRepository = iLayoutSettingsReadRepository;
         _iLayoutSettingsWriteRepository = iLayoutSettingsWriteRepository;

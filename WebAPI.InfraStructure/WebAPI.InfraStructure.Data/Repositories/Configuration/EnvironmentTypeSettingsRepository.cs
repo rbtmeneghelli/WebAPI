@@ -7,12 +7,12 @@ namespace WebAPI.InfraStructure.Data.Repositories.Configuration;
 
 public class EnvironmentTypeSettingsRepository : IEnvironmentTypeSettingsRepository
 {
-    private readonly IReadRepository<EnvironmentTypeSettings> _iEnvironmentTypeSettingsReadRepository;
-    private readonly IWriteRepository<EnvironmentTypeSettings> _iEnvironmentTypeSettingsWriteRepository;
+    private readonly IGenericReadRepository<EnvironmentTypeSettings> _iEnvironmentTypeSettingsReadRepository;
+    private readonly IGenericWriteRepository<EnvironmentTypeSettings> _iEnvironmentTypeSettingsWriteRepository;
 
     public EnvironmentTypeSettingsRepository(
-        IReadRepository<EnvironmentTypeSettings> iEnvironmentTypeSettingsReadRepository,
-        IWriteRepository<EnvironmentTypeSettings> iEnvironmentTypeSettingsWriteRepository)
+        IGenericReadRepository<EnvironmentTypeSettings> iEnvironmentTypeSettingsReadRepository,
+        IGenericWriteRepository<EnvironmentTypeSettings> iEnvironmentTypeSettingsWriteRepository)
     {
         _iEnvironmentTypeSettingsReadRepository = iEnvironmentTypeSettingsReadRepository;
         _iEnvironmentTypeSettingsWriteRepository = iEnvironmentTypeSettingsWriteRepository;

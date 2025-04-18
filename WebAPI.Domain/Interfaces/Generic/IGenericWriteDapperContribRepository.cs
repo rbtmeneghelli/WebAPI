@@ -1,6 +1,6 @@
 ﻿namespace WebAPI.Domain.Interfaces.Generic;
 
-public interface IWriteRepositoryDapperContrib<TEntity> : IDisposable where TEntity : class
+public interface IGenericWriteDapperContribRepository<TEntity> : IDisposable where TEntity : class
 {
     Task<int> Insert(TEntity entity);
     Task InsertMultiple(IEnumerable<TEntity> entity);

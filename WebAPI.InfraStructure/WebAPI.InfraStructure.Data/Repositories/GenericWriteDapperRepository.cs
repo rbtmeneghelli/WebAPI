@@ -5,9 +5,9 @@ using WebAPI.Domain;
 
 namespace WebAPI.InfraStructure.Data.Repositories;
 
-public class WriteRepositoryDapper : GenericRepositoryDapper, IWriteRepositoryDapper
+public class GenericWriteDapperRepository : GenericDapperRepository, IGenericWriteDapperRepository
 {
-    public WriteRepositoryDapper(EnvironmentVariables environmentVariables) : base(environmentVariables) { }
+    public GenericWriteDapperRepository(EnvironmentVariables environmentVariables) : base(environmentVariables) { }
 
     public async Task ExecuteQuery(string sqlQuery)
     {

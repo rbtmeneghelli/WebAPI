@@ -1,8 +1,8 @@
-﻿using WebAPI.Domain.ExtensionMethods;
-using RabbitMQ.Client;
+﻿using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using WebAPI.Domain;
 using System.Text;
+using FastPackForShare.Extensions;
 
 namespace WebAPI.Infrastructure.CrossCutting.BackgroundMessageServices.RabbitMQ;
 

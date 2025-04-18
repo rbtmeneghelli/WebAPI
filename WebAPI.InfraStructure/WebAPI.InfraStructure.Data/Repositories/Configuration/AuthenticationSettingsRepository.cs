@@ -7,12 +7,12 @@ namespace WebAPI.InfraStructure.Data.Repositories.Configuration;
 
 public class AuthenticationSettingsRepository : IAuthenticationSettingsRepository
 {
-    private readonly IReadRepository<AuthenticationSettings> _iAuthenticationSettingsReadRepository;
-    private readonly IWriteRepository<AuthenticationSettings> _iAuthenticationSettingsWriteRepository;
+    private readonly IGenericReadRepository<AuthenticationSettings> _iAuthenticationSettingsReadRepository;
+    private readonly IGenericWriteRepository<AuthenticationSettings> _iAuthenticationSettingsWriteRepository;
 
     public AuthenticationSettingsRepository(
-        IReadRepository<AuthenticationSettings> iAuthenticationSettingsReadRepository,
-         IWriteRepository<AuthenticationSettings> iAuthenticationSettingsWriteRepository
+        IGenericReadRepository<AuthenticationSettings> iAuthenticationSettingsReadRepository,
+         IGenericWriteRepository<AuthenticationSettings> iAuthenticationSettingsWriteRepository
         )
     {
         _iAuthenticationSettingsReadRepository = iAuthenticationSettingsReadRepository;

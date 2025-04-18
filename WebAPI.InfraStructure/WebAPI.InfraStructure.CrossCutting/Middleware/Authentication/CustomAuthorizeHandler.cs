@@ -1,5 +1,4 @@
 ﻿using WebAPI.Domain.Enums;
-using WebAPI.Domain.ExtensionMethods;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -10,6 +9,8 @@ using System.Net;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 using WebAPI.Domain.Interfaces.Services;
+using FastPackForShare.Models;
+using FastPackForShare.Extensions;
 
 namespace WebAPI.Infrastructure.CrossCutting.Middleware.Authentication;
 
@@ -56,15 +57,8 @@ public class CustomAuthorizeHandler : AuthenticationHandler<CustomMyAuthenticati
 
     private AuthenticationTicket GetAuthenticationTicket()
     {
-        var credentials = _accountService.GetUserCredentialsByIdAsync(GetUserIdByToken()).GetAwaiter().GetResult();
-        List<Claim> Userclaims = new List<Claim>();
-
-        foreach (var claim in credentials.Roles)
-        {
-            Userclaims.Add(new Claim(claim, "read,post,read"));
-        }
-
-        var identity = new ClaimsIdentity(Userclaims, CustomMyAuthenticationSchemeOptions.SchemeName);
+        AuthenticationModel authenticationModel = _accountService.GetUserAuthenticationByIdAsync(GetUserIdByToken()).GetAwaiter().GetResult();
+        var identity = new ClaimsIdentity(authenticationModel.Roles, CustomMyAuthenticationSchemeOptions.SchemeName);
         var principal = new ClaimsPrincipal(identity);
         var ticket = new AuthenticationTicket(principal, Scheme.Name);
         return ticket;

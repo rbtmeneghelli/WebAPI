@@ -14,14 +14,14 @@ namespace WebAPI.Application.Services;
 public sealed class AuditService : BaseHandlerService, IAuditService
 {
     private readonly IAuditRepository _iAuditRepository;
-    private readonly IReadRepositoryDapper<Audit> _iAuditReadRepositoryDapper;
-    private readonly IWriteRepositoryDapper _iAuditWriteRepositoryDapper;
+    private readonly IGenericReadDapperRepository<Audit> _iAuditReadRepositoryDapper;
+    private readonly IGenericWriteDapperRepository _iAuditWriteRepositoryDapper;
     private readonly IMapperService _iMapperService;
 
     public AuditService(
         IAuditRepository iAuditRepository,
-        IReadRepositoryDapper<Audit> iAuditReadRepositoryDapper,
-        IWriteRepositoryDapper iAuditWriteRepositoryDapper,
+        IGenericReadDapperRepository<Audit> iAuditReadRepositoryDapper,
+        IGenericWriteDapperRepository iAuditWriteRepositoryDapper,
         INotificationMessageService iNotificationMessageService,
         IMapperService iMapperService) : base(iNotificationMessageService)
     {

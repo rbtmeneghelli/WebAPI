@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using FastPackForShare.Extensions;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using WebAPI.Domain.ExtensionMethods;
 
 namespace WebAPI.Infrastructure.CrossCutting.HostedService;
 
@@ -27,13 +27,13 @@ public class TimerHostedService : IHostedService
     public Task StopAsync(CancellationToken cancellationToken)
     {
         _logger.LogInformation("...Process Stopping...");
-        _logger.LogInformation($"{DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()}");
+        _logger.LogInformation($"{DateOnlyExtension.GetDateTimeNowFromBrazil()}");
         return Task.CompletedTask;
     }
 
     private void ExecuteProcess(object state)
     {
         _logger.LogInformation("...Process Executing...");
-        _logger.LogInformation($"{DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()}");
+        _logger.LogInformation($"{DateOnlyExtension.GetDateTimeNowFromBrazil()}");
     }
 }

@@ -7,9 +7,9 @@ namespace WebAPI.InfraStructure.Data.Repositories.Others;
 
 public class AuditRepository : IAuditRepository
 {
-    private readonly IReadRepository<Audit> _iAuditReadRepository;
+    private readonly IGenericReadRepository<Audit> _iAuditReadRepository;
 
-    public AuditRepository(IReadRepository<Audit> iAuditReadRepository)
+    public AuditRepository(IGenericReadRepository<Audit> iAuditReadRepository)
     {
         _iAuditReadRepository = iAuditReadRepository;
     }

@@ -7,12 +7,12 @@ namespace WebAPI.InfraStructure.Data.Repositories.Configuration;
 
 public class EmailSettingsRepository : IEmailSettingsRepository
 {
-    private readonly IReadRepository<EmailSettings> _iEmailSettingsReadRepository;
-    private readonly IWriteRepository<EmailSettings> _iEmailSettingsWriteRepository;
+    private readonly IGenericReadRepository<EmailSettings> _iEmailSettingsReadRepository;
+    private readonly IGenericWriteRepository<EmailSettings> _iEmailSettingsWriteRepository;
 
     public EmailSettingsRepository(
-        IReadRepository<EmailSettings> iEmailSettingsReadRepository,
-        IWriteRepository<EmailSettings> iEmailSettingsWriteRepository)
+        IGenericReadRepository<EmailSettings> iEmailSettingsReadRepository,
+        IGenericWriteRepository<EmailSettings> iEmailSettingsWriteRepository)
     {
         _iEmailSettingsReadRepository = iEmailSettingsReadRepository;
         _iEmailSettingsWriteRepository = iEmailSettingsWriteRepository;

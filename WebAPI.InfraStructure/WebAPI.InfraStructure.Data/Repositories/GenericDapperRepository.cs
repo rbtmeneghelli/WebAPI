@@ -3,11 +3,11 @@ using WebAPI.Domain;
 
 namespace WebAPI.InfraStructure.Data.Repositories;
 
-public abstract class GenericRepositoryDapper
+public abstract class GenericDapperRepository
 {
     protected EnvironmentVariables _environmentVariables;
 
-    public GenericRepositoryDapper(EnvironmentVariables environmentVariables)
+    public GenericDapperRepository(EnvironmentVariables environmentVariables)
     {
         _environmentVariables = environmentVariables;
     }

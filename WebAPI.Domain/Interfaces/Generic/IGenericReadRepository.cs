@@ -2,7 +2,7 @@
 
 namespace WebAPI.Domain.Interfaces.Generic;
 
-public interface IReadRepository<TEntity> : IDisposable where TEntity : class
+public interface IGenericReadRepository<TEntity> : IDisposable where TEntity : class
 {
     IQueryable<TEntity> GetAll(bool hasTracking = false);
     IQueryable<TEntity> GetAllIgnoreQueryFilter(bool hasTracking = false);
@@ -12,4 +12,5 @@ public interface IReadRepository<TEntity> : IDisposable where TEntity : class
     TEntity GetById(long id);
     long GetCount(Expression<Func<TEntity, bool>> predicate);
     bool Exist(Expression<Func<TEntity, bool>> predicate);
+    IQueryable<TEntity> GetAllBy(Expression<Func<TEntity, bool>> predicate, bool isTracking = false);
 }

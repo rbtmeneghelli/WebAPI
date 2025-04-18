@@ -7,12 +7,12 @@ namespace WebAPI.InfraStructure.Data.Repositories.Configuration;
 
 public class ExpirationPasswordSettingsRepository : IExpirationPasswordSettingsRepository
 {
-    private readonly IReadRepository<ExpirationPasswordSettings> _iExpirationPasswordSettingsReadRepository;
-    private readonly IWriteRepository<ExpirationPasswordSettings> _iExpirationPasswordSettingsWriteRepository;
+    private readonly IGenericReadRepository<ExpirationPasswordSettings> _iExpirationPasswordSettingsReadRepository;
+    private readonly IGenericWriteRepository<ExpirationPasswordSettings> _iExpirationPasswordSettingsWriteRepository;
 
     public ExpirationPasswordSettingsRepository(
-        IReadRepository<ExpirationPasswordSettings> iExpirationPasswordSettingsReadRepository,
-        IWriteRepository<ExpirationPasswordSettings> iExpirationPasswordSettingsWriteRepository)
+        IGenericReadRepository<ExpirationPasswordSettings> iExpirationPasswordSettingsReadRepository,
+        IGenericWriteRepository<ExpirationPasswordSettings> iExpirationPasswordSettingsWriteRepository)
     {
         _iExpirationPasswordSettingsReadRepository = iExpirationPasswordSettingsReadRepository;
         _iExpirationPasswordSettingsWriteRepository = iExpirationPasswordSettingsWriteRepository;

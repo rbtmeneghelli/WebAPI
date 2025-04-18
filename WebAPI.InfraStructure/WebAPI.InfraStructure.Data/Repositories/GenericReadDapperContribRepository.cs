@@ -1,13 +1,14 @@
 ﻿using Dapper.Contrib.Extensions;
+using FastPackForShare.Bases.Generics;
 using System.Data;
 using WebAPI.Domain;
 using WebAPI.Domain.Interfaces.Generic;
 
 namespace WebAPI.InfraStructure.Data.Repositories;
 
-public class ReadRepositoryDapperContrib<TEntity> : GenericRepositoryDapper, IReadRepositoryDapperContrib<TEntity> where TEntity : class
+public class GenericReadDapperContribRepository<TEntity> : GenericDapperRepository, IGenericReadDapperContribRepository<TEntity> where TEntity : GenericEntityModel
 {
-    public ReadRepositoryDapperContrib(EnvironmentVariables environmentVariables) : base(environmentVariables) { }
+    public GenericReadDapperContribRepository(EnvironmentVariables environmentVariables) : base(environmentVariables) { }
 
     public async Task<TEntity> GetById(int id)
     {
@@ -27,5 +28,4 @@ public class ReadRepositoryDapperContrib<TEntity> : GenericRepositoryDapper, IRe
         }
     }
 }
-
 

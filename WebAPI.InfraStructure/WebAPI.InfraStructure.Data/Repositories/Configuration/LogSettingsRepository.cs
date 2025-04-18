@@ -7,12 +7,12 @@ namespace WebAPI.InfraStructure.Data.Repositories.Configuration;
 
 public class LogSettingsRepository : ILogSettingsRepository
 {
-    private readonly IReadRepository<LogSettings> _iLogSettingsReadRepository;
-    private readonly IWriteRepository<LogSettings> _iLogSettingsWriteRepository;
+    private readonly IGenericReadRepository<LogSettings> _iLogSettingsReadRepository;
+    private readonly IGenericWriteRepository<LogSettings> _iLogSettingsWriteRepository;
 
     public LogSettingsRepository(
-        IReadRepository<LogSettings> iLogSettingsReadRepository,
-        IWriteRepository<LogSettings> iLogSettingsWriteRepository)
+        IGenericReadRepository<LogSettings> iLogSettingsReadRepository,
+        IGenericWriteRepository<LogSettings> iLogSettingsWriteRepository)
     {
         _iLogSettingsReadRepository = iLogSettingsReadRepository;
         _iLogSettingsWriteRepository = iLogSettingsWriteRepository;

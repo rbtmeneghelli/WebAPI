@@ -1,15 +1,15 @@
 ﻿using Dapper;
-using WebAPI.Domain.Models;
 using System.Data;
 using WebAPI.Domain.Interfaces.Generic;
 using WebAPI.Domain;
 using FastPackForShare.Models;
+using FastPackForShare.Bases.Generics;
 
 namespace WebAPI.InfraStructure.Data.Repositories;
 
-public class ReadRepositoryDapper<TEntity> : GenericRepositoryDapper, IReadRepositoryDapper<TEntity> where TEntity : class
+public class GenericReadDapperRepository<TEntity> : GenericDapperRepository, IGenericReadDapperRepository<TEntity> where TEntity : GenericEntityModel
 {
-    public ReadRepositoryDapper(EnvironmentVariables environmentVariables) : base(environmentVariables) { }
+    public GenericReadDapperRepository(EnvironmentVariables environmentVariables) : base(environmentVariables) { }
 
     public async Task<IEnumerable<TEntity>> GetAll(string sqlQuery)
     {

@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using FastPackForShare.Constants;
+using FastPackForShare.Extensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text;
 using System.Text.Json;
-using WebAPI.Domain;
 using WebAPI.Domain.Constants;
 using WebAPI.Domain.Interfaces.Services;
 
@@ -62,21 +63,21 @@ public sealed class CustomValidationTokenMiddleware
                             else
                             {
                                 context.Response.StatusCode = ConstantHttpStatusCode.UNAUTHORIZED_CODE;
-                                await context.Response.WriteAsync(JsonSerializer.Serialize(new { mensagem = FixConstants.ERROR_TOKEN_INVALID, sucesso = false }, GeneralMethod.GetConfigJson()));
+                                await context.Response.WriteAsync(JsonSerializer.Serialize(new { mensagem = FixConstants.ERROR_TOKEN_INVALID, sucesso = false }));
                                 return;
                             }
                         }
                         else
                         {
                             context.Response.StatusCode = ConstantHttpStatusCode.UNAUTHORIZED_CODE;
-                            await context.Response.WriteAsync(JsonSerializer.Serialize(new { mensagem = FixConstants.ERROR_TOKEN_INVALID, sucesso = false }, GeneralMethod.GetConfigJson()));
+                            await context.Response.WriteAsync(JsonSerializer.Serialize(new { mensagem = FixConstants.ERROR_TOKEN_INVALID, sucesso = false }));
                             return;
                         }
                     }
                     else
                     {
                         context.Response.StatusCode = ConstantHttpStatusCode.UNAUTHORIZED_CODE;
-                        await context.Response.WriteAsync(JsonSerializer.Serialize(new { mensagem = FixConstants.ERROR_TOKEN_INVALID, sucesso = false }, GeneralMethod.GetConfigJson()));
+                        await context.Response.WriteAsync(JsonSerializer.Serialize(new { mensagem = FixConstants.ERROR_TOKEN_INVALID, sucesso = false }));
                         return;
                     }
                 }
@@ -84,7 +85,7 @@ public sealed class CustomValidationTokenMiddleware
             catch (Exception ex)
             {
                 context.Response.StatusCode = ConstantHttpStatusCode.INTERNAL_ERROR_CODE;
-                await context.Response.WriteAsync(JsonSerializer.Serialize(new { mensagem = ex.Message, sucesso = false }, GeneralMethod.GetConfigJson()));
+                await context.Response.WriteAsync(JsonSerializer.Serialize(new { mensagem = ex.Message, sucesso = false }));
                 return;
             }
         }

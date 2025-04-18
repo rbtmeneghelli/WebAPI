@@ -1,6 +1,6 @@
 ﻿using FastPackForShare.Extensions;
+using FastPackForShare.Models;
 using Microsoft.Extensions.Configuration;
-using WebAPI.Domain.Enums;
 using WebAPI.Domain.Models;
 
 namespace WebAPI.Domain;
@@ -8,26 +8,26 @@ namespace WebAPI.Domain;
 public class EnvironmentVariables
 {
     public ConectionStringSettings ConnectionStringSettings { get; set; }
-    public RabbitMQSettings RabbitMQSettings { get; set; }
-    public KafkaSettings KafkaSettings { get; set; }
+    public RabbitMQModel RabbitMQSettings { get; set; }
+    public KafkaModel KafkaSettings { get; set; }
     public ServiceBusSettings ServiceBusSettings { get; set; }
-    public SendGridSettings SendGridSettings { get; set; }
+    public SendGridModel SendGridSettings { get; set; }
     public EnumEnvironment Environment { get; set; }
     public string AzureFileShareAccountName { get; set; } = "Azure-FileShare-AccountName";
     public string AzureFileShareKeyValue { get; set; } = "Azure-FileShare-KeyValue";
     public string AzureKeyVaultUrl { get; set; } = "Azure-KeyVault-Url";
     public string AzureConnectionStringStorage { get; set; } = "CONNECTION_STRING_STORAGE";
-    public TwilioSettings TwilioSettings { get; set; }
-    public TokenSettings TokenSettings { get; set; }
+    public TwilioModel TwilioSettings { get; set; }
+    public JwtConfigModel JwtConfigSettings { get; set; }
 
     public EnvironmentVariables()
     {
         ConnectionStringSettings = new ConectionStringSettings();
-        RabbitMQSettings = new RabbitMQSettings();
-        KafkaSettings = new KafkaSettings();
+        RabbitMQSettings = new RabbitMQModel();
+        KafkaSettings = new KafkaModel();
         ServiceBusSettings = new ServiceBusSettings();
-        SendGridSettings = new SendGridSettings();
-        TokenSettings = new();
+        SendGridSettings = new SendGridModel();
+        JwtConfigSettings = new();
     }
 
     public static bool LoadEnvironmentVariables(IConfiguration configuration)

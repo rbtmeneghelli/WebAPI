@@ -7,12 +7,12 @@ namespace WebAPI.InfraStructure.Data.Repositories.Others;
 
 public class RegionRepository : IRegionRepository
 {
-    private readonly IReadRepository<Region> _iRegionReadRepository;
-    private readonly IWriteRepository<Region> _iRegionWriteRepository;
+    private readonly IGenericReadRepository<Region> _iRegionReadRepository;
+    private readonly IGenericWriteRepository<Region> _iRegionWriteRepository;
 
     public RegionRepository(
-        IReadRepository<Region> iRegionReadRepository,
-        IWriteRepository<Region> iRegionWriteRepository
+        IGenericReadRepository<Region> iRegionReadRepository,
+        IGenericWriteRepository<Region> iRegionWriteRepository
     )
     {
         _iRegionReadRepository = iRegionReadRepository;

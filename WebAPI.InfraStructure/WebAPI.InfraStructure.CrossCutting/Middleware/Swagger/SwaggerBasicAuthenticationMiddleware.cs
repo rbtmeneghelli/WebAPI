@@ -2,7 +2,7 @@
 using System.Net;
 using System.Text;
 using Microsoft.AspNetCore.Http;
-using WebAPI.Domain;
+using FastPackForShare.Extensions;
 
 namespace WebAPI.Infrastructure.CrossCutting.Middleware.Swagger;
 
@@ -33,7 +33,7 @@ public sealed class SwaggerBasicAuthenticationMiddleware
                 var password = credentials[1];
 
                 //valida as credenciais
-                if (GuardClauses.IsEqualString(username, "teste") && GuardClauses.IsEqualString(password,"qualquercoisa#123"))
+                if (GuardClauseExtension.IsEqualString(username, "teste") && GuardClauseExtension.IsEqualString(password,"qualquercoisa#123"))
                 {
                     await next.Invoke(context).ConfigureAwait(false);
                     return;

@@ -2,7 +2,6 @@
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
-using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Domain.Models;
 
 namespace WebAPI.Infrastructure.CrossCutting.BackgroundMessageServices.RabbitMQ.Consumers;
@@ -63,7 +62,7 @@ public sealed class QueueExcelFileConsumer
         #endregion
 
         var consumer = new AsyncEventingBasicConsumer(channel);
-        string messages = StringExtensionMethod.GetEmptyString();
+        string messages = string.Empty;
 
         consumer.Received += async (model, ea) =>
         {

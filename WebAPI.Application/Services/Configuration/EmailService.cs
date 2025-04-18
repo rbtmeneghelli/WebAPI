@@ -10,8 +10,8 @@ namespace WebAPI.Application.Services.Configuration;
 
 public sealed class EmailService : BaseHandlerService, IEmailService
 {
-    private readonly IReadRepository<EmailSettings> _iEmailTypeRepository;
-    private readonly IReadRepository<EmailDisplay> _iEmailDisplayRepository;
+    private readonly IGenericReadRepository<EmailSettings> _iEmailTypeRepository;
+    private readonly IGenericReadRepository<EmailDisplay> _iEmailDisplayRepository;
     private readonly IEmailFactory _iEmailFactory;
     private EnvironmentVariables _environmentVariables;
     private EmailSettings _emailSettings;
@@ -19,8 +19,8 @@ public sealed class EmailService : BaseHandlerService, IEmailService
     public EmailService(
         EnvironmentVariables environmentVariables,
         INotificationMessageService notificationMessageService,
-        IReadRepository<EmailSettings> iEmailTypeRepository,
-        IReadRepository<EmailDisplay> iEmailDisplayRepository,
+        IGenericReadRepository<EmailSettings> iEmailTypeRepository,
+        IGenericReadRepository<EmailDisplay> iEmailDisplayRepository,
         IEmailFactory iEmailFactory
         ) : base(notificationMessageService)
     {

@@ -11,5 +11,5 @@ public interface IAddressService
     Task<Domain.ValueObject.AddressData> GetAddressByCepAsync(string cep);
     Task<bool> UpdateAddressStatusByIdAsync(long id);
     Task<IEnumerable<Domain.ValueObject.AddressData>> GetAllAddressWithLikeAsync(string paremeter);
-    Task<BasePagedResultModel<AddressDataDTO>> GetAllAddressWithPaginateAsync(CepFilter filter);
+    Task<BasePagedResultModel<AddressDataDTO>> GetAllAddressWithPaginateAsync(AddressFilter filter);
 }

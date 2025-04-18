@@ -7,9 +7,9 @@ namespace WebAPI.InfraStructure.Data.Repositories.Others;
 
 public class LogRepository : ILogRepository
 {
-    private readonly IReadRepository<Log> _iLogReadRepository;
+    private readonly IGenericReadRepository<Log> _iLogReadRepository;
 
-    public LogRepository(IReadRepository<Log> iLogReadRepository)
+    public LogRepository(IGenericReadRepository<Log> iLogReadRepository)
     {
         _iLogReadRepository = iLogReadRepository;
     }

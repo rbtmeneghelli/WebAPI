@@ -1,12 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FastPackForShare.Bases.Generics;
+using FastPackForShare.Extensions;
+using Microsoft.EntityFrameworkCore;
 using System.Data;
 using WebAPI.Domain.Constants;
-using WebAPI.Domain.ExtensionMethods;
 using WebAPI.InfraStructure.Data.Context;
 
 namespace WebAPI.InfraStructure.Data.Repositories;
 
-public abstract class GenericRepository<TEntity> where TEntity : class
+public abstract class GenericRepository<TEntity> where TEntity : GenericEntityModel
 {
     protected readonly WebAPIContext _context;
     protected readonly DbSet<TEntity> DbSet;
@@ -29,12 +30,12 @@ public abstract class GenericRepository<TEntity> where TEntity : class
 
     protected virtual void InsertLogError(string[] values, string entity, string method, string messageError)
     {
-        _context.Database.ExecuteSqlRaw(string.Format(FixConstants.SAVE_LOG, entity, method, messageError, DateOnlyExtensionMethods.GetDateTimeNowFromBrazil().ToString("yyyy-MM-dd"), string.Join(",", values)));
+        _context.Database.ExecuteSqlRaw(string.Format(FixConstants.SAVE_LOG, entity, method, messageError, DateOnlyExtension.GetDateTimeNowFromBrazil().ToString("yyyy-MM-dd"), string.Join(",", values)));
     }
 
     protected virtual void InsertLogError(string sql, string entity, string method, string messageError)
     {
-        _context.Database.ExecuteSqlRaw(string.Format(FixConstants.SAVE_LOG, entity, method, messageError, DateOnlyExtensionMethods.GetDateTimeNowFromBrazil().ToString("yyyy-MM-dd"), sql));
+        _context.Database.ExecuteSqlRaw(string.Format(FixConstants.SAVE_LOG, entity, method, messageError, DateOnlyExtension.GetDateTimeNowFromBrazil().ToString("yyyy-MM-dd"), sql));
     }
 
     public void Dispose()

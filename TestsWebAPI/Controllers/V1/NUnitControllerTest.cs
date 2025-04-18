@@ -10,7 +10,7 @@ namespace TestsWebAPI.Controllers.V1;
 [TestFixture]
 public sealed class NUnitControllerTest : GenericControllerTest
 {
-    private Mock<IReadRepository<Employee>> _mockDataRepository;
+    private Mock<IGenericReadRepository<Employee>> _mockDataRepository;
 
     public NUnitControllerTest(BuilderServiceProvider builderServiceProvider) : base(builderServiceProvider)
     {        
@@ -19,7 +19,7 @@ public sealed class NUnitControllerTest : GenericControllerTest
     [SetUp]
     public void SetUp()
     {
-        _mockDataRepository = new Mock<IReadRepository<Employee>>();
+        _mockDataRepository = new Mock<IGenericReadRepository<Employee>>();
     }
 
     [TestCase("", "73990324000199")]

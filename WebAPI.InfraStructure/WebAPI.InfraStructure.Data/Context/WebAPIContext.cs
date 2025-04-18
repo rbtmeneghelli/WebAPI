@@ -1,6 +1,4 @@
-﻿using WebAPI.Domain;
-using WebAPI.Domain.Enums;
-using WebAPI.Domain.ExtensionMethods;
+﻿using WebAPI.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Domain.Entities.ControlPanel;
 using WebAPI.InfraStructure.Data.Mapping.Configuration;
@@ -103,14 +101,14 @@ public partial class WebAPIContext : DbContext
         {
             if (entry.State == EntityState.Added)
             {
-                entry.Property("CreatedDate").CurrentValue = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
+                entry.Property("CreatedDate").CurrentValue = DateOnlyExtension.GetDateTimeNowFromBrazil();
                 entry.Property("UpdateDate").IsModified = false;
             }
 
             if (entry.State == EntityState.Modified)
             {
                 entry.Property("UpdateDate").IsModified = false;
-                entry.Property("UpdateDate").CurrentValue = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
+                entry.Property("UpdateDate").CurrentValue = DateOnlyExtension.GetDateTimeNowFromBrazil();
             }
         }
 
@@ -182,7 +180,7 @@ public partial class WebAPIContext : DbContext
 
     private Task OnAfterSaveChanges(List<AuditEntry> auditEntries)
     {
-        if (GuardClauses.ObjectIsNull(auditEntries) || auditEntries.Count == 0)
+        if (GuardClauseExtension.IsNull(auditEntries) || auditEntries.Count == 0)
             return Task.CompletedTask;
 
         foreach (var auditEntry in auditEntries)

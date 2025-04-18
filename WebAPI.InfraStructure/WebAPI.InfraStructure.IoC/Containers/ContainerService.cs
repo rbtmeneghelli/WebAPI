@@ -20,7 +20,6 @@ using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Application.Generic;
 using KissLog;
 using KissLog.Formatters;
-using WebAPI.Domain.Models.EnvVarSettings;
 using WebAPI.Domain.Enums;
 using WebAPI.Infrastructure.CrossCutting.BackgroundServices;
 using WebAPI.Infrastructure.CrossCutting.Middleware.HealthCheck;
@@ -41,13 +40,13 @@ using WebAPI.InfraStructure.Data.Repositories.Configuration;
 using WebAPI.Application.Factory;
 using WebAPI.Domain.Interfaces.Factory;
 using ProblemDetailsFactory = WebAPI.Application.Factory.ProblemDetailsFactory;
-using WebAPI.Infrastructure.CrossCutting.ActionFilter;
 using WebAPI.Domain.Interfaces.Generic;
 using Microsoft.AspNetCore.ResponseCompression;
 using WebAPI.Infrastructure.CrossCutting.BackgroundMessageServices.RabbitMQ.Consumers;
 using WebAPI.Infrastructure.CrossCutting.BackgroundMessageServices.RabbitMQ;
 using WebAPI.Domain.Interfaces.Services.Charts;
 using FastPackForShare.Extensions;
+using FastPackForShare.Models;
 
 namespace WebAPI.InfraStructure.IoC.Containers;
 
@@ -149,10 +148,10 @@ public static class ContainerService
         #region Generics
 
         services
-        .AddScoped(typeof(IReadRepository<>), typeof(ReadRepository<>))
-        .AddScoped(typeof(IWriteRepository<>), typeof(WriteRepository<>))
-        .AddScoped(typeof(IReadRepositoryDapper<>), typeof(ReadRepositoryDapper<>))
-        .AddScoped<IWriteRepositoryDapper,WriteRepositoryDapper>()
+        .AddScoped(typeof(IGenericReadRepository<>), typeof(GenericReadRepository<>))
+        .AddScoped(typeof(IGenericWriteRepository<>), typeof(GenericWriteRepository<>))
+        .AddScoped(typeof(IGenericReadDapperRepository<>), typeof(GenericReadDapperRepository<>))
+        .AddScoped<IGenericWriteDapperRepository,GenericWriteDapperRepository>()
         .AddTransient(typeof(IRabbitMQService<>), typeof(RabbitMQService<>));
 
         #endregion
@@ -220,13 +219,12 @@ public static class ContainerService
         .AddScoped<IGraphicGoogleChartService, GraphicGoogleChartService>()
         .AddScoped<IFirebaseService, FirebaseService>()
         .AddTransient<IProblemDetailsFactory, ProblemDetailsFactory>()
-        .AddScoped<ISendGridService, SendGridService>()
-        .AddScoped<IPBlockActionFilter, IPBlockActionFilter>();
+        .AddScoped<ISendGridService, SendGridService>();
     }
 
     public static void RegisterConfigs(this IServiceCollection services, IConfiguration configuration)
     {
-        var cacheConfiguration = new CacheSettings();
+        var cacheConfiguration = new MemoryCacheModel();
         configuration.Bind("CacheSettings", cacheConfiguration);
         services.AddSingleton(cacheConfiguration);
 
@@ -324,14 +322,14 @@ public static class ContainerService
             opt.ConnectionStringSettings.DefaultConnectionToDocker = data["WebAPI_Docker"];
             if (data["WebAPI_RabbitMQ"] != null)
             {
-                opt.RabbitMQSettings = JsonSerializer.Deserialize<RabbitMQSettings>(data["WebAPI_RabbitMQ"]);
+                opt.RabbitMQSettings = JsonSerializer.Deserialize<RabbitMQModel>(data["WebAPI_RabbitMQ"]);
             }
-            opt.KafkaSettings = JsonSerializer.Deserialize<KafkaSettings>(data["WebAPI_Kafka"]);
+            opt.KafkaSettings = JsonSerializer.Deserialize<KafkaModel>(data["WebAPI_Kafka"]);
             opt.ServiceBusSettings = JsonSerializer.Deserialize<ServiceBusSettings>(data["WebAPI_ServiceBus"]);
-            opt.SendGridSettings = JsonSerializer.Deserialize<SendGridSettings>(data["WebAPI_SendGrid"]);
+            opt.SendGridSettings = JsonSerializer.Deserialize<SendGridModel>(data["WebAPI_SendGrid"]);
             Enum.TryParse(data["WebAPI_Environment"], out EnumEnvironment environment);
             opt.Environment = environment;
-            opt.TokenSettings = JsonSerializer.Deserialize<TokenSettings>(data["WebAPI_Token"]);
+            opt.JwtConfigSettings = JsonSerializer.Deserialize<JwtConfigModel>(data["WebAPI_Token"]);
             #endregion
         };
 
@@ -362,7 +360,7 @@ public static class ContainerService
         var TAG_NAME = "PROD";
 
         var connectionStringSQLServerLog = EnvironmentVariablesExtension.GetDatabaseFromEnvVar(configuration.GetConnectionString("DefaultConnectionLogs"));
-        var connectionServiceRabbitMQ = JsonSerializer.Deserialize<RabbitMQSettings>(EnvironmentVariablesExtension.GetEnvironmentVariable("WebAPI_RabbitMQ"));
+        var connectionServiceRabbitMQ = JsonSerializer.Deserialize<RabbitMQModel>(EnvironmentVariablesExtension.GetEnvironmentVariable("WebAPI_RabbitMQ"));
 
         services
        .AddHealthChecks()

@@ -9,9 +9,9 @@ using WebAPI.InfraStructure.IoC.Containers;
 using WebAPI.InfraStructure.Data.Context;
 using KissLog.AspNetCore;
 using WebAPI.Domain;
-using WebAPI.Domain.Models.EnvVarSettings;
 using KissLog;
 using KissLog.CloudListeners.RequestLogsListener;
+using FastPackForShare.Models;
 
 namespace WebAPI.InfraStructure.IoC.Containers;
 
@@ -33,7 +33,7 @@ public static class ContainerApp
 
     private static void ConfigureKissLog(IConfiguration configuration)
     {
-        var configKissLog = EnvironmentVariablesExtension.GetEnvironmentVariableToObject<KissLogSettings>(configuration, "WebAPI_Settings:kissLogSettings");
+        var configKissLog = EnvironmentVariablesExtension.GetEnvironmentVariableToObject<KissLogModel>(configuration, "WebAPI_Settings:kissLogSettings");
 
         var configs = configKissLog.OrganizationId;
         KissLogConfiguration.Listeners
