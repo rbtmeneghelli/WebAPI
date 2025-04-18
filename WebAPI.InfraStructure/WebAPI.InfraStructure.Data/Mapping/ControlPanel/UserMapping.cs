@@ -1,16 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using WebAPI.InfraStructure.Data.Generic;
 using WebAPI.Domain.Entities.ControlPanel;
+using FastPackForShare.Bases;
 
 namespace WebAPI.InfraStructure.Data.Mapping.ControlPanel;
 
-public class UserMapping : GenericMapping<User>
+public class UserMapping : BaseMappingModel<User>
 {
     public override void Configure(EntityTypeBuilder<User> builder)
     {
         _builder = builder;
-        base.ConfigureDefaultColumns();
+        base.ConfigureBase("ControlPanel_User");
         //Exemplo de criação de tabela Temporal (Historico) que trabalha como uma trilha de auditoria
         _builder.ToTable("ControlPanel_User", e => e.IsTemporal(t =>
         {
@@ -21,11 +21,6 @@ public class UserMapping : GenericMapping<User>
         ConfigureColumns();
         ConfigureForeignKeys();
         ConfigureIndexes();
-    }
-
-    public override void ConfigureTableName(string tableName)
-    {
-        _builder.ToTable(tableName);
     }
 
     private void ConfigureForeignKeys()

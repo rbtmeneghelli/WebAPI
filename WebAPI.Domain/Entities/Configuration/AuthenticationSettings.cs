@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel;
-using WebAPI.Domain.Entities.Generic;
+using FastPackForShare.Default;
 
 namespace WebAPI.Domain.Entities.Configuration;
 
-public class AuthenticationSettings : GenericEntity
+public class AuthenticationSettings : BaseEntityModel
 {
     [DisplayName("Número de tentativas antes do bloqueio do usuário")]
     public int NumberOfTryToBlockUser { get; set; }
@@ -16,4 +16,14 @@ public class AuthenticationSettings : GenericEntity
 
     public virtual EnvironmentTypeSettings EnvironmentTypeSettings { get; set; }
     public virtual long? IdEnvironmentType { get; set; }
+
+    protected override void CreateEntityIsValid()
+    {
+        throw new NotImplementedException();
+    }
+
+    protected override void UpdateEntityIsValid()
+    {
+        throw new NotImplementedException();
+    }
 }

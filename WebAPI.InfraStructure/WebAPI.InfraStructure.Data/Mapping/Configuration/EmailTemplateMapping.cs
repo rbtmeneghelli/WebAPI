@@ -1,24 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using WebAPI.InfraStructure.Data.Generic;
 using WebAPI.Domain.Entities.Configuration;
+using FastPackForShare.Bases;
 
 namespace WebAPI.InfraStructure.Data.Mapping.Configuration;
 
-public class EmailTemplateMapping : GenericMapping<EmailTemplate>
+public class EmailTemplateMapping : BaseMappingModel<EmailTemplate>
 {
     public override void Configure(EntityTypeBuilder<EmailTemplate> builder)
     {
         _builder = builder;
-        base.ConfigureDefaultColumns();
-        _builder.ToTable("Configuration_EmailTemplateSettings");
+        base.ConfigureBase("Configuration_EmailTemplateSettings");
         ConfigureColumns();
         ConfigureRelationShip();
-    }
-
-    public override void ConfigureTableName(string tableName)
-    {
-        _builder.ToTable(tableName);
     }
 
     private void ConfigureColumns()

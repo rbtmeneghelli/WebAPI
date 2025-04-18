@@ -1,9 +1,8 @@
-﻿using WebAPI.Domain.Filters.Generic;
+﻿using FastPackForShare.Default;
 
-namespace WebAPI.Domain.Filters.Others
+namespace WebAPI.Domain.Filters.Others;
+
+public sealed record RegionFilter : BaseFilterModel
 {
-    public class RegionFilter : GenericFilter
-    {
-        public string Name { get; set; }
-    }
+    public string Name { get; set; }
 }

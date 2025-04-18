@@ -1,12 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
-using WebAPI.Domain.Entities.Generic;
+using FastPackForShare.Default;
 
 namespace WebAPI.Domain.Entities.ControlPanel;
 
-//Exemplo de DataAnnotation de aplicação de FluentAPI, sem necessidade de especificar no onModelCreating
-//[EntityTypeConfiguration(typeof(UserMapping))]
-public class User : GenericEntity
+public class User : BaseEntityModel
 {
     public string Login { get; set; }
     [JsonIgnore]
@@ -20,4 +18,14 @@ public class User : GenericEntity
     public string NewPassword { get; set; }
     public bool HasTwoFactoryValidation { get; set; }
     public override string ToString() => $"Login: {Login}";
+
+    protected override void CreateEntityIsValid()
+    {
+        throw new NotImplementedException();
+    }
+
+    protected override void UpdateEntityIsValid()
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -1,23 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using WebAPI.InfraStructure.Data.Generic;
 using WebAPI.Domain.Entities.ControlPanel;
+using FastPackForShare.Bases;
 
 namespace WebAPI.InfraStructure.Data.Mapping.ControlPanel;
 
-public class AreaMapping : GenericMapping<Area>
+public class AreaMapping : BaseMappingModel<Area>
 {
     public override void Configure(EntityTypeBuilder<Area> builder)
     {
         _builder = builder;
-        base.ConfigureDefaultColumns();
-        ConfigureTableName("ControlPanel_Area");
+        base.ConfigureBase("ControlPanel_Area");
         ConfigureColumns();
-    }
-
-    public override void ConfigureTableName(string tableName)
-    {
-        _builder.ToTable(tableName);
     }
 
     private void ConfigureColumns()

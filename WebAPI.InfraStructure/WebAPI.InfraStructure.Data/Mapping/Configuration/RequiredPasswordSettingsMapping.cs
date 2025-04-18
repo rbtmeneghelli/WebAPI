@@ -1,23 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Domain.Entities.Configuration;
-using WebAPI.InfraStructure.Data.Generic;
+using FastPackForShare.Bases;
 
 namespace WebAPI.InfraStructure.Data.Mapping.Configuration;
 
-public class RequiredPasswordSettingsMapping : GenericMapping<RequiredPasswordSettings>
+public class RequiredPasswordSettingsMapping : BaseMappingModel<RequiredPasswordSettings>
 {
     public override void Configure(EntityTypeBuilder<RequiredPasswordSettings> builder)
     {
         _builder = builder;
-        base.ConfigureDefaultColumns();
-        ConfigureTableName("Configuration_RequiredPasswordSettings");
+        base.ConfigureBase("Configuration_RequiredPasswordSettings");
         ConfigureColumns();
-    }
-
-    public override void ConfigureTableName(string tableName)
-    {
-        _builder.ToTable(tableName);
+        ConfigureRelationShip();
     }
 
     private void ConfigureColumns()

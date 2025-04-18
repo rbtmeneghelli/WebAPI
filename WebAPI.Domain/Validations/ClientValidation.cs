@@ -1,10 +1,10 @@
-﻿using FluentValidation;
-using WebAPI.Domain.Entities.ControlPanel;
+﻿using FastPackForShare.Bases;
+using FluentValidation;
+using WebAPI.Domain.DTO.ControlPanel;
 
 namespace WebAPI.Domain.Validations;
 
-public class ClientValidation : BaseValidatorModel<>
-    AbstractValidator<Client>
+public record ClientValidation : BaseValidatorModel<ClientRequestDTO>
 {
     public ClientValidation()
     {

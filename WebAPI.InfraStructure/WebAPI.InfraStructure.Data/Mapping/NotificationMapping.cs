@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
-using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Domain.Entities.Others;
 using FastPackForShare.Extensions;
 

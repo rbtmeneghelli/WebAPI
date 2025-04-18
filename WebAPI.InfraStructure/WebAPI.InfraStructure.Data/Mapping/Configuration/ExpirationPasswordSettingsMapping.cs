@@ -1,24 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Domain.Entities.Configuration;
-using WebAPI.InfraStructure.Data.Generic;
+using FastPackForShare.Bases;
 
 namespace WebAPI.InfraStructure.Data.Mapping.Configuration;
 
-public class ExpirationPasswordSettingsMapping : GenericMapping<ExpirationPasswordSettings>
+public class ExpirationPasswordSettingsMapping : BaseMappingModel<ExpirationPasswordSettings>
 {
     public override void Configure(EntityTypeBuilder<ExpirationPasswordSettings> builder)
     {
         _builder = builder;
-        base.ConfigureDefaultColumns();
-        ConfigureTableName("Configuration_ExpirationPasswordSettings");
+        base.ConfigureBase("Configuration_ExpirationPasswordSettings");
         ConfigureColumns();
         ConfigureRelationShip();
-    }
-
-    public override void ConfigureTableName(string tableName)
-    {
-        _builder.ToTable(tableName);
     }
 
     private void ConfigureColumns()

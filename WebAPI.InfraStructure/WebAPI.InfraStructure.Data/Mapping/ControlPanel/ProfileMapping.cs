@@ -2,22 +2,17 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WebAPI.InfraStructure.Data.Generic;
 using WebAPI.Domain.Entities.ControlPanel;
+using FastPackForShare.Bases;
 
 namespace WebAPI.InfraStructure.Data.Mapping.ControlPanel;
 
-public class ProfileMapping : GenericMapping<Profile>
+public class ProfileMapping : BaseMappingModel<Profile>
 {
     public override void Configure(EntityTypeBuilder<Profile> builder)
     {
         _builder = builder;
-        base.ConfigureDefaultColumns();
-        _builder.ToTable("ControlPanel_Profile");
+        base.ConfigureBase("ControlPanel_Profile");
         ConfigureColumns();
-    }
-
-    public override void ConfigureTableName(string tableName)
-    {
-        _builder.ToTable(tableName);
     }
 
     private void ConfigureColumns()

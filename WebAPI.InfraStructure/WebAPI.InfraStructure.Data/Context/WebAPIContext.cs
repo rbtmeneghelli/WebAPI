@@ -7,6 +7,7 @@ using WebAPI.InfraStructure.Data.Mapping.Configuration;
 using WebAPI.InfraStructure.Data.Mapping.ControlPanel;
 using WebAPI.Domain.Entities.Others;
 using WebAPI.InfraStructure.Data.Mapping;
+using FastPackForShare.Extensions;
 
 namespace WebAPI.InfraStructure.Data.Context;
 
@@ -68,7 +69,7 @@ public partial class WebAPIContext : DbContext
         modelBuilder.ApplyConfiguration(new CityMapping());
 
         /* Código responsavel por impedir que os dados chaves de ADM sejam apresentados nas queries */
-        modelBuilder.ApplyQueryFilterToTable<Area>(p => p.Id > 1);
+        modelBuilder.ApplyGlobalFilters<Area>(p => p.Id > 1);
 
         foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys())) 
         relationship.DeleteBehavior = DeleteBehavior.ClientSetNull;

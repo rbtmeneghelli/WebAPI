@@ -1,24 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using WebAPI.InfraStructure.Data.Generic;
 using WebAPI.Domain.Entities.Configuration;
+using FastPackForShare.Bases;
 
 namespace WebAPI.InfraStructure.Data.Mapping.Configuration;
 
-public class EnvironmentTypeSettingsMapping : GenericMapping<EnvironmentTypeSettings>
+public class EnvironmentTypeSettingsMapping : BaseMappingModel<EnvironmentTypeSettings>
 {
     public override void Configure(EntityTypeBuilder<EnvironmentTypeSettings> builder)
     {
         _builder = builder;
-        base.ConfigureDefaultColumns();
-        ConfigureTableName("Configuration_EnvironmentTypeSettings");
+        base.ConfigureBase("Configuration_EnvironmentTypeSettings");
         ConfigureColumns();
         ConfigureRelationShip();
-    }
-
-    public override void ConfigureTableName(string tableName)
-    {
-        _builder.ToTable(tableName);
     }
 
     private void ConfigureColumns()

@@ -1,11 +1,10 @@
-﻿using WebAPI.Domain.Cryptography;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MimeKit;
-using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Domain.Entities.ControlPanel;
 using WebAPI.Domain.Enums;
 using WebAPI.Domain.Entities.Configuration;
 using WebAPI.Domain.Entities.Others;
+using FastPackForShare.Extensions;
 
 namespace WebAPI.InfraStructure.Data.Context;
 
@@ -84,7 +83,7 @@ public static class SeedContext
     private static void SeedEmailTemplate(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<EmailTemplate>().HasData(
-           new EmailTemplate() { Id = 1, Description = "WebAPI", CreateDate = _currentDate, Status = STATUS_TRUE }
+           new EmailTemplate() { Id = 1, Description = "WebAPI", CreatedAt = _currentDate, IsActive = STATUS_TRUE }
         );
     }
 
@@ -95,7 +94,7 @@ public static class SeedContext
            new EmailDisplay() { Id = (int)EnumEmail.ChangePassword, Subject = "{0} - Solicitação de troca de senha", Title = "Email de troca de senha", Body = EmailDisplay.GetBodyTextTradePsw(), EmailTemplateId = 1, MessagePriority = MessagePriority.Normal, CreateDate = _currentDate, Status = STATUS_TRUE, HasAttachment = STATUS_FALSE },
            new EmailDisplay() { Id = (int)EnumEmail.ResetPassword, Subject = "{0} - Esqueci a senha", Title = "Email de reset de senha", Body = EmailDisplay.GetBodyTextForgetPsw(), EmailTemplateId = 1, MessagePriority = MessagePriority.Normal, CreateDate = _currentDate, Status = STATUS_TRUE, HasAttachment = STATUS_FALSE },
            new EmailDisplay() { Id = (int)EnumEmail.ConfirmPassword, Subject = "{0} - Confirmação de senha", Title = "Email de confirmação de senha", Body = EmailDisplay.GetBodyTextConfirmPsw(), EmailTemplateId = 1, MessagePriority = MessagePriority.Normal, CreateDate = _currentDate, Status = STATUS_TRUE, HasAttachment = STATUS_FALSE },
-           new EmailDisplay() { Id = (int)EnumEmail.Report, Subject = "{0} - Relatório", Title = "Email de relatório", Body = StringExtensionMethod.GetEmptyString(), EmailTemplateId = 1, MessagePriority = MessagePriority.Normal, CreateDate = _currentDate, Status = STATUS_TRUE, HasAttachment = STATUS_FALSE }
+           new EmailDisplay() { Id = (int)EnumEmail.Report, Subject = "{0} - Relatório", Title = "Email de relatório", Body = string.Empty, EmailTemplateId = 1, MessagePriority = MessagePriority.Normal, CreateDate = _currentDate, Status = STATUS_TRUE, HasAttachment = STATUS_FALSE }
         );
     }
 
@@ -344,7 +343,7 @@ public static class SeedContext
 
     public static void ExecuteSeedControlPanel(this ModelBuilder modelBuilder)
     {
-        _currentDate = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
+        _currentDate = DateOnlyExtension.GetDateTimeNowFromBrazil();
         SeedArea(modelBuilder);
         SeedOperation(modelBuilder);
         SeedProfile(modelBuilder);
@@ -355,7 +354,7 @@ public static class SeedContext
 
     public static void ExecuteSeedConfiguration(this ModelBuilder modelBuilder)
     {
-        _currentDate = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
+        _currentDate = DateOnlyExtension.GetDateTimeNowFromBrazil();
         SeedEnvironmentType(modelBuilder);
         SeedEmailSettings(modelBuilder);
         SeedEmailTemplate(modelBuilder);

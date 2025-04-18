@@ -1,30 +1,25 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Domain.Entities.Configuration;
-using WebAPI.InfraStructure.Data.Generic;
+using FastPackForShare.Bases;
 
 namespace WebAPI.InfraStructure.Data.Mapping.Configuration;
 
-public class LayoutSettingsMapping : GenericMapping<LayoutSettings>
+public class LayoutSettingsMapping : BaseMappingModel<LayoutSettings>
 {
     public override void Configure(EntityTypeBuilder<LayoutSettings> builder)
     {
         _builder = builder;
-        base.ConfigureDefaultColumns();
-        ConfigureTableName("Configuration_LayoutSettings");
+        base.ConfigureBase("Configuration_LayoutSettings");
         ConfigureColumns();
         ConfigureRelationShip();
-    }
 
-    public override void ConfigureTableName(string tableName)
-    {
-        _builder.ToTable(tableName, e => e.IsTemporal(t =>
+        _builder.ToTable("Configuration_LayoutSettings", e => e.IsTemporal(t =>
         {
             t.HasPeriodStart("InicioValidade");
             t.HasPeriodEnd("TerminoValidade");
             t.UseHistoryTable("Configuration_LayoutSettingsHistory");
         }));
-
     }
 
     private void ConfigureColumns()

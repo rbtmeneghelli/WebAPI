@@ -1,8 +1,8 @@
-﻿using WebAPI.Domain.Filters.Generic;
+﻿using FastPackForShare.Default;
 
 namespace WebAPI.Domain.Filters.Others;
 
-public class StateFilter : GenericFilter
+public sealed record StateFilter : BaseFilterModel
 {
-    public string Nome { get; set; }
+    public string Name { get; set; }
 }

@@ -1,8 +1,8 @@
-﻿using WebAPI.Domain.Filters.Generic;
+﻿using FastPackForShare.Default;
 
 namespace WebAPI.Domain.Filters.Others;
 
-public class CepFilter : GenericFilter
+public sealed record CepFilter : BaseFilterModel
 {
-    public string Cep { get; set; }
+    public string ZipPostalCode { get; set; }
 }

@@ -1,23 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using WebAPI.InfraStructure.Data.Generic;
 using WebAPI.Domain.Entities.ControlPanel;
+using FastPackForShare.Bases;
 
 namespace WebAPI.InfraStructure.Data.Mapping.ControlPanel;
 
-public class EmployeeMapping : GenericMapping<Employee>
+public class EmployeeMapping : BaseMappingModel<Employee>
 {
     public override void Configure(EntityTypeBuilder<Employee> builder)
     {
         _builder = builder;
-        base.ConfigureDefaultColumns();
-        _builder.ToTable("ControlPanel_Employee");
+        base.ConfigureBase("ControlPanel_Employee");
         ConfigureColumns();
-    }
-
-    public override void ConfigureTableName(string tableName)
-    {
-        _builder.ToTable(tableName);
     }
 
     private void ConfigureColumns()

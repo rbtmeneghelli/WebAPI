@@ -1,25 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using WebAPI.InfraStructure.Data.Generic;
-using WebAPI.Domain.Entities.ControlPanel;
+using FastPackForShare.Bases;
 
 namespace WebAPI.Domain.Entities.ControlPanel;
 
-public class ClientMapping : GenericMapping<Client>
+public class ClientMapping : BaseMappingModel<Client>
 {
     public override void Configure(EntityTypeBuilder<Client> builder)
     {
         _builder = builder;
-        base.ConfigureDefaultColumns();
-
+        base.ConfigureBase("ControlPanel_Client");
         ConfigureColumns();
-        ConfigureTableName("ControlPanel_Client");
         ConfigureForeignKeys();
-    }
-
-    public override void ConfigureTableName(string tableName)
-    {
-        _builder.ToTable(tableName);
     }
 
     private void ConfigureForeignKeys()

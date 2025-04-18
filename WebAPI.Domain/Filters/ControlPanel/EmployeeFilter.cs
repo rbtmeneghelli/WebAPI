@@ -1,8 +1,8 @@
-﻿using WebAPI.Domain.Filters.Generic;
+﻿using FastPackForShare.Default;
 
 namespace WebAPI.Domain.Filters.ControlPanel;
 
-public class EmployeeFilter : GenericFilter
+public sealed record EmployeeFilter : BaseFilterModel
 {
     public string Name { get; set; }
     public string Email { get; set; }

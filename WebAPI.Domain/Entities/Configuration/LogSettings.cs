@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel;
-using WebAPI.Domain.Entities.Generic;
+using FastPackForShare.Default;
 
 namespace WebAPI.Domain.Entities.Configuration;
 
-public class LogSettings : GenericEntity
+public class LogSettings : BaseEntityModel
 {
     [DisplayName("Salvar log ao logar no sistema")]
     public bool SaveLogTurnOnSystem { get; set; }
@@ -25,4 +25,14 @@ public class LogSettings : GenericEntity
 
     public virtual EnvironmentTypeSettings EnvironmentTypeSettings { get; set; }
     public virtual long? IdEnvironmentType { get; set; }
+
+    protected override void CreateEntityIsValid()
+    {
+        throw new NotImplementedException();
+    }
+
+    protected override void UpdateEntityIsValid()
+    {
+        throw new NotImplementedException();
+    }
 }

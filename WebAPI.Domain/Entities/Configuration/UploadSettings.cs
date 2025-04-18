@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel;
-using WebAPI.Domain.Entities.Generic;
+using FastPackForShare.Default;
 
 namespace WebAPI.Domain.Entities.Configuration;
 
-public class UploadSettings : GenericEntity
+public class UploadSettings : BaseEntityModel
 {
     [DisplayName("LogoWeb")]
     public byte[] LogoWeb { get; set; }
@@ -31,4 +31,14 @@ public class UploadSettings : GenericEntity
 
     public virtual EnvironmentTypeSettings EnvironmentTypeSettings { get; set; }
     public virtual long? IdEnvironmentType { get; set; }
+
+    protected override void CreateEntityIsValid()
+    {
+        throw new NotImplementedException();
+    }
+
+    protected override void UpdateEntityIsValid()
+    {
+        throw new NotImplementedException();
+    }
 }

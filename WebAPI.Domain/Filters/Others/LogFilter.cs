@@ -1,8 +1,8 @@
-﻿using WebAPI.Domain.Filters.Generic;
+﻿using FastPackForShare.Default;
 
 namespace WebAPI.Domain.Filters.Others;
 
-public class LogFilter : GenericFilter
+public sealed record LogFilter : BaseFilterModel
 {
     public string Class { get; set; }
     public string Method { get; set; }

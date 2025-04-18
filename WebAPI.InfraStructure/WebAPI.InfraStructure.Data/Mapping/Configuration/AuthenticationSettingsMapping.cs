@@ -1,24 +1,19 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FastPackForShare.Bases;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WebAPI.Domain.Entities.Configuration;
-using WebAPI.InfraStructure.Data.Generic;
+
 
 namespace WebAPI.InfraStructure.Data.Mapping.Configuration;
 
-public class AuthenticationSettingsMapping : GenericMapping<AuthenticationSettings>
+public class AuthenticationSettingsMapping : BaseMappingModel<AuthenticationSettings>
 {
     public override void Configure(EntityTypeBuilder<AuthenticationSettings> builder)
     {
         _builder = builder;
-        base.ConfigureDefaultColumns();
-        ConfigureTableName("Configuration_AuthenticationSettings");
+        base.ConfigureBase("Configuration_AuthenticationSettings");
         ConfigureColumns();
         ConfigureRelationShip();
-    }
-
-    public override void ConfigureTableName(string tableName)
-    {
-        _builder.ToTable(tableName);
     }
 
     private void ConfigureColumns()

@@ -32,7 +32,7 @@ public class AddressService : GenericService, IAddressService
     private Expression<Func<Domain.ValueObject.AddressData, bool>> GetPredicateAsync(CepFilter filter)
     {
         return p =>
-               (GuardClauses.IsNullOrWhiteSpace(filter.Cep) || p.Cep.StartsWith(filter.Cep.ApplyTrim()));
+               (GuardClauses.IsNullOrWhiteSpace(filter.ZipPostalCode) || p.Cep.StartsWith(filter.ZipPostalCode.ApplyTrim()));
     }
 
     public async Task RefreshAddressAsync(RefreshCep refreshCep)

@@ -153,6 +153,6 @@ public class StatesService : GenericService, IStatesService
     private Expression<Func<States, bool>> GetPredicate(StateFilter filter)
     {
         return p =>
-               (GuardClauses.IsNullOrWhiteSpace(filter.Nome) || p.Name.StartsWith(filter.Nome.ApplyTrim()));
+               (GuardClauses.IsNullOrWhiteSpace(filter.Name) || p.Name.StartsWith(filter.Name.ApplyTrim()));
     }
 }

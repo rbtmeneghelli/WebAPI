@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using WebAPI.Domain.DTO.Generic;
+using FastPackForShare.Default;
 
 namespace WebAPI.Domain.DTO.ControlPanel;
 
-public record EmployeeResponseDTO : GenericDTO
+public record EmployeeResponseDTO : BaseDTOModel
 {
     [DisplayName("Name")]
     public string Name { get; set; }

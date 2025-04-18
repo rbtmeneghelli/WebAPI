@@ -1,8 +1,8 @@
-﻿using WebAPI.Domain.Filters.Generic;
+﻿using FastPackForShare.Default;
 
 namespace WebAPI.Domain.Filters.Others;
 
-public class CityFilter : GenericFilter
+public sealed record CityFilter : BaseFilterModel
 {
     public long? Id { get; set; }
 

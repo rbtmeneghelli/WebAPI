@@ -1,8 +1,9 @@
-﻿using WebAPI.Domain.Entities.Generic;
+﻿using FastPackForShare.Default;
+using WebAPI.Domain.Entities.Generic;
 
 namespace WebAPI.Domain.Entities.Configuration;
 
-public class EmailSettings : GenericEntity
+public class EmailSettings : BaseEntityModel
 {
     public string Host { get; set; }
     public string SmtpConfig { get; set; }

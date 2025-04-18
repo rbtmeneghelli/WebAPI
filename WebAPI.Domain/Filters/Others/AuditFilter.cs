@@ -1,8 +1,9 @@
-﻿using WebAPI.Domain.Filters.Generic;
+﻿using FastPackForShare.Default;
+using WebAPI.Domain.Filters.Generic;
 
 namespace WebAPI.Domain.Filters.Others;
 
-public class AuditFilter : GenericFilter
+public sealed record AuditFilter : BaseFilterModel
 {
     public string TableName { get; set; }
 }

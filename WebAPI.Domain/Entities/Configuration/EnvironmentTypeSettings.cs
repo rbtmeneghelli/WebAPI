@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel;
-using WebAPI.Domain.Entities.Generic;
+using FastPackForShare.Default;
 
 namespace WebAPI.Domain.Entities.Configuration;
 
-public class EnvironmentTypeSettings : GenericEntity
+public class EnvironmentTypeSettings : BaseEntityModel
 {
     [DisplayName("Nome do ambiente")]
     public string Description { get; set; }
@@ -18,4 +18,14 @@ public class EnvironmentTypeSettings : GenericEntity
     public virtual LayoutSettings LayoutSettings { get; set; }
     public virtual LogSettings LogSettings { get; set; }
     public virtual UploadSettings UploadSettings { get; set; }
+
+    protected override void CreateEntityIsValid()
+    {
+        throw new NotImplementedException();
+    }
+
+    protected override void UpdateEntityIsValid()
+    {
+        throw new NotImplementedException();
+    }
 }

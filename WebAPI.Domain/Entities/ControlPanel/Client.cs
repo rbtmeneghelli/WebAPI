@@ -31,6 +31,16 @@ public class Client : BaseEntityModel
         ClientAddress = clientAddress;
         ClientDocument = clientDocument;
     }
+
+    protected override void CreateEntityIsValid()
+    {
+        throw new NotImplementedException();
+    }
+
+    protected override void UpdateEntityIsValid()
+    {
+        throw new NotImplementedException();
+    }
 }
 
 //[Owned]

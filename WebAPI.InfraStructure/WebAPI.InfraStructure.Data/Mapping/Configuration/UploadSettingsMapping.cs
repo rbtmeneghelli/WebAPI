@@ -1,24 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Domain.Entities.Configuration;
-using WebAPI.InfraStructure.Data.Generic;
+using FastPackForShare.Bases;
 
 namespace WebAPI.InfraStructure.Data.Mapping.Configuration;
 
-public class UploadSettingsMapping : GenericMapping<UploadSettings>
+public class UploadSettingsMapping : BaseMappingModel<UploadSettings>
 {
     public override void Configure(EntityTypeBuilder<UploadSettings> builder)
     {
         _builder = builder;
-        base.ConfigureDefaultColumns();
-        ConfigureTableName("Configuration_UploadSettings");
+        base.ConfigureBase("Configuration_UploadSettings");
         ConfigureColumns();
         ConfigureRelationShip();
-    }
-
-    public override void ConfigureTableName(string tableName)
-    {
-        _builder.ToTable(tableName);
     }
 
     private void ConfigureColumns()
