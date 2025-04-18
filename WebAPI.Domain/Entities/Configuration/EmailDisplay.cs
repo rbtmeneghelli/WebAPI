@@ -43,7 +43,7 @@ public class EmailDisplay : BaseEntityModel
     public static string GetBodyTextConfirmPsw()
     {
         return "<center>Olá, {0}</center>" +
-        $"<center>Quero reporta-lo que a sua confirmação de senha foi realizada com sucesso no periodo das {DateOnlyExtensionMethods.GetShortDate()} - {DateOnlyExtensionMethods.GetShortTime()}</center>" + "<br> ";
+        $"<center>Quero reporta-lo que a sua confirmação de senha foi realizada com sucesso no periodo das {DateOnlyExtension.GetShortDate()} - {DateOnlyExtension.GetShortTime()}</center>" + "<br> ";
     }
 
     protected override void CreateEntityIsValid()

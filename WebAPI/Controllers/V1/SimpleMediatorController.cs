@@ -16,40 +16,45 @@ namespace WebAPI.V1.Controllers;
 
 public sealed class SimpleMediatorController : BaseSimpleMediatorController
 {
-    private readonly IMediator _mediator;
-
     public SimpleMediatorController(IMediator mediator, INotificationMessageService notificationMessageService)
     : base(mediator, notificationMessageService)
     {
-        _mediator = mediator;
     }
 
+    #region QUERIES
+
     [HttpPost("getAllPaginate")]
-    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<IEnumerable<RegionQueryFilterResponse>>))]
-    public async Task<IActionResult> GetAllPaginate([FromBody, Required] RegionQueryFilterRequest findRegionQueryFilterHandler) =>
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<IEnumerable<SimpleRegionQueryFilterResponse>>))]
+    public async Task<IActionResult> GetAllPaginate([FromBody, Required] SimpleRegionQueryFilterRequest simpleRegionQueryFilterRequest) =>
     ModelStateIsInvalid() ?
     CustomResponseModel(ModelState) :
-    CustomResponse(await _mediator.Send(findRegionQueryFilterHandler));
+    CustomResponse(await _iMediator.Send(simpleRegionQueryFilterRequest));
 
     [HttpPost("getById")]
-    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<IEnumerable<RegionQueryFilterResponse>>))]
-    public async Task<IActionResult> GetById([FromBody, Required] RegionQueryByIdRequest regionQueryByIdRequest) =>
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<SimpleRegionQueryByIdResponse>))]
+    public async Task<IActionResult> GetById([FromBody, Required] SimpleRegionQueryByIdRequest simpleRegionQueryByIdRequest) =>
     ModelStateIsInvalid() ?
     CustomResponseModel(ModelState) :
-    CustomResponse(await _mediator.Send(regionQueryByIdRequest));
+    CustomResponse(await _iMediator.Send(simpleRegionQueryByIdRequest));
+
+    #endregion
+
+    #region COMMANDS
 
     [HttpPost("insert")]
     [ProducesResponseType(ConstantHttpStatusCode.CREATE_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
-    public async Task<IActionResult> Insert([FromBody, Required] CreateRegionCommandRequest createRegionCommandRequest) =>
+    public async Task<IActionResult> Insert([FromBody, Required] SimpleCreateRegionCommandRequest simpleCreateRegionCommandRequest) =>
     ModelStateIsInvalid() ?
     CustomResponseModel(ModelState) :
-    CustomResponse(await _mediator.Send(createRegionCommandRequest));
+    CustomResponse(await _iMediator.Send(simpleCreateRegionCommandRequest));
 
     [HttpPut("update")]
     [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
     [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
-    public async Task<IActionResult> Update([FromBody, Required] UpdateRegionCommandRequest updateRegionCommandRequest) =>
+    public async Task<IActionResult> Update([FromBody, Required] SimpleUpdateRegionCommandRequest simpleUpdateRegionCommandRequest) =>
     ModelStateIsInvalid() ?
     CustomResponseModel(ModelState) :
-    CustomResponse(await _mediator.Send(updateRegionCommandRequest));
+    CustomResponse(await _iMediator.Send(simpleUpdateRegionCommandRequest));
+
+    #endregion
 }

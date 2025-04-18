@@ -1,8 +1,8 @@
-﻿using WebAPI.Domain.DTO.Generic;
+﻿using FastPackForShare.Default;
 
 namespace WebAPI.Domain.DTO.Others;
 
-public record AuditResponseDTO : GenericDTO
+public record AuditResponseDTO : BaseDTOModel
 {
     public string TableName { get; set; }
     public string ActionName { get; set; }
@@ -13,7 +13,7 @@ public record AuditResponseDTO : GenericDTO
     public override string ToString() => $"Tabela: {TableName}";
 }
 
-public record AuditRequestDTO : GenericDTO
+public record AuditRequestDTO : BaseDTOModel
 {
     public string TableName { get; set; }
     public string ActionName { get; set; }

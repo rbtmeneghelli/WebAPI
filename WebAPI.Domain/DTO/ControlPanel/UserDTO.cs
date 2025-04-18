@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using WebAPI.Domain.DTO.Generic;
+using FastPackForShare.Bases.Generics;
+using FastPackForShare.Default;
 
 namespace WebAPI.Domain.DTO.ControlPanel;
 
-public record UserResponseDTO : GenericDTO
+public record UserResponseDTO : BaseDTOModel
 {
     [DisplayName("Login")]
     public string Login { get; set; }
@@ -28,7 +29,7 @@ public record UserResponseDTO : GenericDTO
     public override string ToString() => $"Login: {Login}";
 }
 
-public record UserRequestDTO : GenericDTO
+public record UserRequestDTO : BaseDTOModel
 {
     [Required(ErrorMessage = "O campo Login é obrigatório")]
     public string Login { get; set; }
@@ -44,7 +45,7 @@ public record UserRequestDTO : GenericDTO
     public override string ToString() => $"Login: {Login}";
 }
 
-public record UserExcelDTO
+public record UserExcelDTO : GenericDTOModel
 {
     [DisplayName("Login")]
     public string Login { get; set; }

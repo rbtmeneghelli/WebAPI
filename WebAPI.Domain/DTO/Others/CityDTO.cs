@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel;
-using WebAPI.Domain.DTO.Generic;
+using FastPackForShare.Default;
 
 namespace WebAPI.Domain.DTO.Others;
 
-public record CityResponseDTO : GenericDTO
+public record CityResponseDTO : BaseDTOModel
 {
     [DisplayName("Código IBGE")]
     public long? IBGE { get; set; }
@@ -22,7 +22,7 @@ public record CityResponseDTO : GenericDTO
     public override string ToString() => $"Municipio: {Name}";
 }
 
-public record CityRequestDTO : GenericDTO
+public record CityRequestDTO : BaseDTOModel
 {
     public long? IBGE { get; set; }
 

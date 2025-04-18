@@ -1,15 +1,16 @@
-﻿using WebAPI.Application.Factory;
-using WebAPI.Application.Generic;
-using WebAPI.Domain.Constants;
+﻿using WebAPI.Domain.Constants;
 using WebAPI.Domain.DTO.Others;
 using WebAPI.Domain.Entities.Others;
-using WebAPI.Domain.Interfaces.Services.Tools;
 using WebAPI.Domain.Interfaces.Services;
 using WebAPI.Domain.Interfaces.Repository;
+using FastPackForShare.Services.Bases;
+using FastPackForShare.Interfaces;
+using FastPackForShare.Default;
+using FastPackForShare.Extensions;
 
 namespace WebAPI.Application.Services;
 
-public class CityService : GenericService, ICityService
+public sealed class CityService : BaseHandlerService, ICityService
 {
     private readonly ICityRepository _iCityRepository;
 
@@ -24,30 +25,18 @@ public class CityService : GenericService, ICityService
         return (from x in list select x.IdState.Value).Distinct();
     }
 
-    public async Task<PagedResult<CityResponseDTO>> GetAllCityFromUfAsync(int idState = 25, int? page = 1, int? limit = int.MaxValue)
+    public async Task<BasePagedResultModel<CityResponseDTO>> GetAllCityFromUfAsync(int idState = 25, int? page = 1, int? limit = int.MaxValue)
     {
-        try
-        {
-            var queryResult = (from x in _iCityRepository.GetAll().AsQueryable().AsNoTracking()
-                               where x.StateId == idState
-                               orderby x.Name ascending
-                               select new CityResponseDTO()
-                               {
-                                   Id = x.Id,
-                                   Name = x.Name
-                               });
+        var queryResult = (from x in _iCityRepository.GetAll().AsQueryable()
+                           where x.StateId == idState
+                           orderby x.Name ascending
+                           select new CityResponseDTO()
+                           {
+                               Id = x.Id,
+                               Name = x.Name
+                           });
 
-            return PagedFactory.GetPaged(queryResult, PagedFactory.GetDefaultPageIndex(page), PagedFactory.GetDefaultPageSize(limit));
-        }
-        catch
-        {
-            Notify(FixConstants.ERROR_IN_GETALL);
-            return PagedFactory.GetPaged(Enumerable.Empty<CityResponseDTO>().AsQueryable(), PagedFactory.GetDefaultPageIndex(page), PagedFactory.GetDefaultPageSize(limit));
-        }
-        finally
-        {
-            await Task.CompletedTask;
-        }
+        return BasePagedResultService.GetPaged(queryResult, BasePagedResultService.GetDefaultPageIndex(page), BasePagedResultService.GetDefaultPageSize(limit));
     }
 
     public async Task<IEnumerable<CityResponseDTO>> GetAllCityEntityAsync()
@@ -60,7 +49,7 @@ public class CityService : GenericService, ICityService
                           Name = p.Name,
                           IBGE = p.IBGE,
                           StateDesc = p.States.Initials,
-                          IsActiveDesc = p.GetStatusDescription(),
+                          IsActiveDesc = p.IsActive.GetDescriptionByBoolean(),
                           IdState = p.StateId
                       }).ToListAsync();
     }
@@ -75,7 +64,7 @@ public class CityService : GenericService, ICityService
                           Name = p.Name,
                           IBGE = p.IBGE,
                           StateDesc = p.States.Initials,
-                          IsActiveDesc = p.GetStatusDescription(),
+                          IsActiveDesc = p.IsActive.GetDescriptionByBoolean(),
                           IdState = p.StateId
                       }).FirstOrDefaultAsync();
     }
@@ -90,7 +79,7 @@ public class CityService : GenericService, ICityService
     {
         City city = _iCityRepository.GetById(id);
 
-        if (GuardClauses.ObjectIsNotNull(city))
+        if (GuardClauseExtension.IsNotNull(city))
             _iCityRepository.Remove(city);
 
         return Task.CompletedTask;
@@ -100,7 +89,7 @@ public class CityService : GenericService, ICityService
     {
         City entityBase = _iCityRepository.FindBy(a => a.Id == city.Id).FirstOrDefault();
 
-        if (GuardClauses.ObjectIsNotNull(entityBase))
+        if (GuardClauseExtension.IsNotNull(entityBase))
         {
             entityBase.Name = city.Name;
             entityBase.IBGE = city.IBGE;
@@ -115,33 +104,25 @@ public class CityService : GenericService, ICityService
     public async Task<bool> AddOrUpdateCityAsync(IEnumerable<City> cities)
     {
         City entityBase = new City();
-        try
-        {
-            List<City> citiesFromDatabase = await _iCityRepository.GetAll(true).ToListAsync();
+        List<City> citiesFromDatabase = await _iCityRepository.GetAll(true).ToListAsync();
 
-            foreach (City city in cities)
+        foreach (City city in cities)
+        {
+            if (citiesFromDatabase.Exists(x => x.IBGE == city.IBGE && x.StateId == city.StateId) == false)
             {
-                if (citiesFromDatabase.Exists(x => x.IBGE == city.IBGE && x.StateId == city.StateId) == false)
-                {
-                    entityBase = new City();
-                    entityBase.Name = city.Name;
-                    entityBase.IBGE = city.IBGE.HasValue ? city.IBGE.Value : long.Parse("00000000");
-                    entityBase.StateId = city.StateId;
-                    _iCityRepository.Add(entityBase);
-                }
-                else
-                {
-                    _iCityRepository.ExecuteUpdate(city);
-                }
+                entityBase = new City();
+                entityBase.Name = city.Name;
+                entityBase.IBGE = city.IBGE.HasValue ? city.IBGE.Value : long.Parse("00000000");
+                entityBase.StateId = city.StateId;
+                _iCityRepository.Add(entityBase);
             }
+            else
+            {
+                _iCityRepository.ExecuteUpdate(city);
+            }
+        }
 
-            return true;
-        }
-        catch
-        {
-            Notify(FixConstants.ERROR_IN_ADDCITY);
-            return false;
-        }
+        return true;
     }
 
     public async Task<bool> ExistCityByCityIdStateAsync(string city, long idState)

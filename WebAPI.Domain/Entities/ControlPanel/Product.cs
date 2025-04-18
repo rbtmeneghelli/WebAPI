@@ -1,16 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WebAPI.Domain.Entities.Generic;
+﻿using FastPackForShare.Default;
 
-namespace WebAPI.Domain.Entities.ControlPanel
+namespace WebAPI.Domain.Entities.ControlPanel;
+
+public class Product : BaseEntityModel
 {
-    public class Product : GenericEntity
+    public string Name { get; set; }
+    public string Type { get; set; }
+    public decimal Price { get; set; }
+
+    protected override void CreateEntityIsValid()
     {
-        public string Name { get; set; }
-        public string Type { get; set; }
-        public decimal Price { get; set; }
+        throw new NotImplementedException();
+    }
+
+    protected override void UpdateEntityIsValid()
+    {
+        throw new NotImplementedException();
     }
 }

@@ -1,20 +1,21 @@
 ﻿using Dapper;
-using WebAPI.Application.Factory;
 using WebAPI.Application.Generic;
 using WebAPI.Domain.Constants;
 using WebAPI.Domain.Entities.Others;
 using WebAPI.Domain.DTO.Others;
-using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Domain.Filters.Others;
 using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.Interfaces.Services;
-using WebAPI.Domain.Interfaces.Services.Tools;
 using WebAPI.Domain.Interfaces.Generic;
+using FastPackForShare.Services.Bases;
+using FastPackForShare.Interfaces;
+using FastPackForShare.Extensions;
+using FastPackForShare.Default;
 
 
 namespace WebAPI.Application.Services;
 
-public class AuditService : GenericService, IAuditService
+public sealed class AuditService : BaseHandlerService, IAuditService
 {
     private readonly IAuditRepository _iAuditRepository;
     private readonly IReadRepositoryDapper<Audit> _iAuditReadRepositoryDapper;
@@ -22,7 +23,7 @@ public class AuditService : GenericService, IAuditService
     private readonly IMapperService _iMapperService;
 
     public AuditService(
-        IAuditRepository iAuditRepository, 
+        IAuditRepository iAuditRepository,
         IReadRepositoryDapper<Audit> iAuditReadRepositoryDapper,
         IWriteRepositoryDapper iAuditWriteRepositoryDapper,
         INotificationMessageService iNotificationMessageService,
@@ -46,7 +47,7 @@ public class AuditService : GenericService, IAuditService
 
     private Expression<Func<Audit, bool>> GetPredicate(AuditFilter filter)
     {
-        return p => GuardClauses.IsNullOrWhiteSpace(filter.TableName) || p.TableName.StartsWith(filter.TableName.ApplyTrim());
+        return p => GuardClauseExtension.IsNullOrWhiteSpace(filter.TableName) || p.TableName.StartsWith(filter.TableName.ApplyTrim());
     }
 
     public async Task<AuditResponseDTO> GetAuditByIdAsync(long id)
@@ -60,83 +61,57 @@ public class AuditService : GenericService, IAuditService
         return await _iAuditRepository.FindBy(x => EF.Functions.Like(x.TableName, $"%{parameter}%")).ToListAsync();
     }
 
-    public async Task<PagedResult<AuditResponseDTO>> GetAllDapperAsync(AuditFilter filter)
+    public async Task<BasePagedResultModel<AuditResponseDTO>> GetAllDapperAsync(AuditFilter filter)
     {
         string sql = @"select count(*) from ControlPanel_Audit " +
         @"select Id = Id, TableName = Table_Name, ActionName = Action_Name from ControlPanel_Audit where (Table_Name = '" + filter.TableName + "')";
         var reader = await _iAuditReadRepositoryDapper.GetMultipleResult(sql);
 
         var queryResult = from x in reader.Result.AsQueryable()
-                          orderby x.UpdateDate descending
+                          orderby x.UpdatedAt descending
                           select new AuditResponseDTO()
                           {
                               Id = x.Id,
                               TableName = x.TableName,
                               ActionName = x.ActionName,
-                              UpdateTime = x.UpdateDate,
+                              UpdateTime = x.UpdatedAt,
                               KeyValues = x.KeyValues,
                               OldValues = x.OldValues,
                               NewValues = x.NewValues
                           };
 
-        return PagedFactory.GetPaged(queryResult, PagedFactory.GetDefaultPageIndex(filter.PageIndex), PagedFactory.GetDefaultPageSize(filter.PageSize));
+        return BasePagedResultService.GetPaged(queryResult, BasePagedResultService.GetDefaultPageIndex(filter.PageIndex), BasePagedResultService.GetDefaultPageSize(filter.PageSize));
     }
 
-    public async Task<PagedResult<AuditResponseDTO>> GetAllAuditPaginateAsync(AuditFilter filter)
+    public async Task<BasePagedResultModel<AuditResponseDTO>> GetAllAuditPaginateAsync(AuditFilter filter)
     {
-        try
-        {
-            var query = await GetAllWithFilterAsync(filter);
-            var queryCount = await GetCountAsync(filter);
+        var query = await GetAllWithFilterAsync(filter);
+        var queryCount = await GetCountAsync(filter);
 
-            var queryResult = from x in query.AsQueryable()
-                              orderby x.UpdateDate descending
-                              select new AuditResponseDTO()
-                              {
-                                  Id = x.Id,
-                                  TableName = x.TableName,
-                                  ActionName = x.ActionName,
-                                  UpdateTime = x.UpdateDate,
-                                  KeyValues = x.KeyValues,
-                                  OldValues = x.OldValues,
-                                  NewValues = x.NewValues
-                              };
+        var queryResult = from x in query.AsQueryable()
+                          orderby x.UpdatedAt descending
+                          select new AuditResponseDTO()
+                          {
+                              Id = x.Id,
+                              TableName = x.TableName,
+                              ActionName = x.ActionName,
+                              UpdateTime = x.UpdatedAt,
+                              KeyValues = x.KeyValues,
+                              OldValues = x.OldValues,
+                              NewValues = x.NewValues
+                          };
 
-            return PagedFactory.GetPaged(queryResult, PagedFactory.GetDefaultPageIndex(filter.PageIndex), PagedFactory.GetDefaultPageSize(filter.PageSize));
-        }
-        catch
-        {
-            Notify(FixConstants.ERROR_IN_GETALL);
-            return PagedFactory.GetPaged(Enumerable.Empty<AuditResponseDTO>().AsQueryable(), PagedFactory.GetDefaultPageIndex(filter.PageIndex), PagedFactory.GetDefaultPageSize(filter.PageSize));
-        }
+        return BasePagedResultService.GetPaged(queryResult, BasePagedResultService.GetDefaultPageIndex(filter.PageIndex), BasePagedResultService.GetDefaultPageSize(filter.PageSize));
     }
 
     public async Task<bool> ExistAuditByIdAsync(long id)
     {
-        try
-        {
-            var result = _iAuditRepository.Exist(x => x.Id == id);
+        var result = _iAuditRepository.Exist(x => x.Id == id);
 
-            if (result == false)
-                Notify(FixConstants.ERROR_IN_GETID);
-
-            return result;
-        }
-        catch
-        {
+        if (result == false)
             Notify(FixConstants.ERROR_IN_GETID);
-            return false;
-        }
-        finally
-        {
-            await Task.CompletedTask;
-        }
-    }
 
-    public async Task CreateAuditBySQLScript(Audit audit)
-    {
-        var scriptSQL = SqlExtensionMethod.CreateSQLInsertScript(audit, typeof(Audit));
-        await _iAuditWriteRepositoryDapper.ExecuteQuery(scriptSQL);
+        return result;
     }
 
     /// <summary>
@@ -156,7 +131,7 @@ public class AuditService : GenericService, IAuditService
         parameters.Add("@KeyValues", audit.KeyValues, dbType: DbType.DateTime, direction: ParameterDirection.Input, size: 10000);
         parameters.Add("@OldValues", audit.OldValues, dbType: DbType.String, direction: ParameterDirection.Input, size: 10000);
         parameters.Add("@NewValues", audit.NewValues, dbType: DbType.String, direction: ParameterDirection.Input, size: 10000);
-        parameters.Add("@CreateDate", DateOnlyExtensionMethods.GetDateTimeNowFromBrazil(), dbType: DbType.DateTime2, direction: ParameterDirection.Input);
+        parameters.Add("@CreateDate", DateOnlyExtension.GetDateTimeNowFromBrazil(), dbType: DbType.DateTime2, direction: ParameterDirection.Input);
         parameters.Add("@Status", true, dbType: DbType.Boolean, direction: ParameterDirection.Input);
 
         await _iAuditWriteRepositoryDapper.ExecuteQueryParams(scriptSQL, parameters);
@@ -180,7 +155,7 @@ public class AuditService : GenericService, IAuditService
         parameters.Add("@KeyValues", audit.KeyValues, dbType: DbType.DateTime, direction: ParameterDirection.Input, size: 10000);
         parameters.Add("@OldValues", audit.OldValues, dbType: DbType.String, direction: ParameterDirection.Input, size: 10000);
         parameters.Add("@NewValues", audit.NewValues, dbType: DbType.String, direction: ParameterDirection.Input, size: 10000);
-        parameters.Add("@UpdateDate", DateOnlyExtensionMethods.GetDateTimeNowFromBrazil(), dbType: DbType.DateTime2, direction: ParameterDirection.Input);
+        parameters.Add("@UpdateDate", DateOnlyExtension.GetDateTimeNowFromBrazil(), dbType: DbType.DateTime2, direction: ParameterDirection.Input);
         parameters.Add("@Id", audit.Id);
 
         await _iAuditWriteRepositoryDapper.ExecuteQueryParams(scriptSQL, parameters);
@@ -198,7 +173,7 @@ public class AuditService : GenericService, IAuditService
                                     WHERE Id = @Id";
 
             parameters.Add("@Status", false, dbType: DbType.Boolean, direction: ParameterDirection.Input);
-            parameters.Add("@UpdateDate", DateOnlyExtensionMethods.GetDateTimeNowFromBrazil(), dbType: DbType.DateTime2, direction: ParameterDirection.Input);
+            parameters.Add("@UpdateDate", DateOnlyExtension.GetDateTimeNowFromBrazil(), dbType: DbType.DateTime2, direction: ParameterDirection.Input);
             parameters.Add("@Id", audit.Id);
 
             await _iAuditWriteRepositoryDapper.ExecuteQueryParams(scriptSQLUpdate, parameters);
@@ -223,7 +198,7 @@ public class AuditService : GenericService, IAuditService
                                     WHERE Id = @Id";
 
         parameters.Add("@Status", true, dbType: DbType.Boolean, direction: ParameterDirection.Input);
-        parameters.Add("@UpdateDate", DateOnlyExtensionMethods.GetDateTimeNowFromBrazil(), dbType: DbType.DateTime2, direction: ParameterDirection.Input);
+        parameters.Add("@UpdateDate", DateOnlyExtension.GetDateTimeNowFromBrazil(), dbType: DbType.DateTime2, direction: ParameterDirection.Input);
         parameters.Add("@Id", audit.Id);
 
         await _iAuditWriteRepositoryDapper.ExecuteQueryParams(scriptSQLUpdate, parameters);

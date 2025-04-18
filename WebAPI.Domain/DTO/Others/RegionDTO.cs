@@ -1,6 +1,8 @@
-﻿namespace WebAPI.Domain.DTO.Others;
+﻿using FastPackForShare.Bases.Generics;
 
-public class RegionResponseDTO
+namespace WebAPI.Domain.DTO.Others;
+
+public sealed record RegionResponseDTO : GenericDTOModel
 {
     public string Name { get; set; }
     public string Initials { get; set; }

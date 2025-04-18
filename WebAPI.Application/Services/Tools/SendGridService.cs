@@ -1,17 +1,21 @@
-﻿using SendGrid;
+﻿using FastPackForShare.Interfaces;
+using FastPackForShare.Services.Bases;
+using SendGrid;
 using SendGrid.Helpers.Mail;
-using WebAPI.Application.Generic;
 using WebAPI.Domain.Interfaces.Factory;
 using WebAPI.Domain.Interfaces.Services.Tools;
 
 namespace WebAPI.Application.Services.Tools;
 
-public class SendGridService : GenericService, ISendGridService
+public sealed class SendGridService : BaseHandlerService, ISendGridService
 {
     private EnvironmentVariables _environmentVariables { get; }
     private readonly IEmailFactory _iEmailFactory;
 
-    public SendGridService(EnvironmentVariables environmentVariables, IEmailFactory iEmailFactory, INotificationMessageService iNotificationMessageService) : base(iNotificationMessageService)
+    public SendGridService(
+        EnvironmentVariables environmentVariables, 
+        IEmailFactory iEmailFactory, 
+        INotificationMessageService iNotificationMessageService) : base(iNotificationMessageService)
     {
         _iEmailFactory = iEmailFactory;
         _environmentVariables = environmentVariables;

@@ -1,7 +1,8 @@
 ﻿using System.Linq.Expressions;
+using FastPackForShare.Default;
+using WebAPI.Domain.DTO.Others;
 using WebAPI.Domain.Entities.Others;
 using WebAPI.Domain.Filters.Others;
-using WebAPI.Domain.Models;
 
 namespace WebAPI.Domain.Interfaces.Services;
 
@@ -17,7 +18,7 @@ public interface IRegionService
 
     Task<IEnumerable<Region>> GetAllRegionWithLikeAsync(string parameter);
 
-    Task<PagedResult<Region>> GetAllRegionWithPaginateAsync(RegionFilter filter);
+    Task<BasePagedResultModel<RegionResponseDTO>> GetAllRegionWithPaginateAsync(RegionFilter filter);
     bool ExistRegionById(long regionId);
     long GetRegionCount(Expression<Func<Region, bool>> predicate);
     bool ExistRegion();

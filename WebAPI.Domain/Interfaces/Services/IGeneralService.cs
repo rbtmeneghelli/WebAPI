@@ -1,13 +1,14 @@
 ﻿using System.Security.Claims;
-using WebAPI.Domain.Enums;
+using FastPackForShare.Enums;
+using FastPackForShare.Models;
 using WebAPI.Domain.Models;
 
 namespace WebAPI.Domain.Interfaces.Services;
 
 public interface IGeneralService
 {
-    string CreateJwtToken(Credentials credentials);
-    Task<MemoryStream> Export2ZipAsync(string directory, EnumMemoryStreamFile typeFile = EnumMemoryStreamFile.PDF);
+    string CreateJwtToken(AuthenticationModel authenticationModel);
+    Task<MemoryStream> Export2ZipAsync(string directory, EnumFile typeFile = EnumFile.Pdf);
     Task<bool> SendPushNotificationAsync(PushNotification notification, string tokenUser);
     string GenerateToken(IEnumerable<Claim> claims);
     string GenerateRefreshToken();

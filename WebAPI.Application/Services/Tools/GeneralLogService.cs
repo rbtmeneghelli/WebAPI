@@ -1,13 +1,13 @@
-﻿using KissLog;
+﻿using FastPackForShare.Extensions;
+using KissLog;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
-using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Domain.Interfaces.Services.Tools;
 
 namespace WebAPI.Application.Services.Tools;
 
-public class GeneralLogService : IGeneralLogService
+public sealed class GeneralLogService : IGeneralLogService
 {
     private readonly IKLogger _iKLogger;
     private readonly ILogger<string> _iLogger;
@@ -74,7 +74,7 @@ public class GeneralLogService : IGeneralLogService
             methodName,
             messageError,
             obj,
-            DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()
+            DateOnlyExtension.GetDateTimeNowFromBrazil()
         );
     }
 }

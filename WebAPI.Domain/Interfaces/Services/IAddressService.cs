@@ -1,4 +1,5 @@
-﻿using WebAPI.Domain.Filters.Others;
+﻿using FastPackForShare.Default;
+using WebAPI.Domain.Filters.Others;
 using WebAPI.Domain.Models;
 
 namespace WebAPI.Domain.Interfaces.Services;
@@ -9,5 +10,5 @@ public interface IAddressService
     Task<Domain.ValueObject.AddressData> GetAddressByCepAsync(string cep);
     Task<bool> UpdateAddressStatusByIdAsync(long id);
     Task<IEnumerable<Domain.ValueObject.AddressData>> GetAllAddressWithLikeAsync(string paremeter);
-    Task<PagedResult<Domain.ValueObject.AddressData>> GetAllAddressWithPaginateAsync(CepFilter filter);
+    Task<BasePagedResultModel<Domain.ValueObject.AddressData>> GetAllAddressWithPaginateAsync(CepFilter filter);
 }

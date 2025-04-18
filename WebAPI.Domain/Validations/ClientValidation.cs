@@ -1,10 +1,11 @@
 ﻿using FastPackForShare.Bases;
+using FastPackForShare.Extensions;
 using FluentValidation;
 using WebAPI.Domain.DTO.ControlPanel;
 
 namespace WebAPI.Domain.Validations;
 
-public record ClientValidation : BaseValidatorModel<ClientRequestDTO>
+public class ClientValidation : BaseValidatorModel<ClientRequestDTO>
 {
     public ClientValidation()
     {
@@ -25,9 +26,9 @@ public record ClientValidation : BaseValidatorModel<ClientRequestDTO>
             RuleFor(x => x.ClientDocument.BirthDate)
             .NotEmpty()
             .WithMessage("O '{PropertyName}' não pode ficar em branco.")
-            .LessThan(DateOnlyExtensionMethods.GetDateTimeNowFromBrazil())
+            .LessThan(DateOnlyExtension.GetDateTimeNowFromBrazil())
             .WithMessage("A data de nascimento não pode ser futura!")
-            .Must(DateOnlyExtensionMethods.IsAdultPerson)
+            .Must(DateOnlyExtension.IsAdultPerson)
             .WithMessage("A data de nascimento é de uma pessoa menor de 18 anos! para prosseguir insira uma data de nascimento de 18 anos ou mais.");
 
             RuleFor(x => x.ClientDocument.Age)

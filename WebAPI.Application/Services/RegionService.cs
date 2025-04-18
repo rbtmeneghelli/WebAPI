@@ -1,23 +1,25 @@
-﻿using WebAPI.Application.Factory;
-using WebAPI.Application.Generic;
-using WebAPI.Domain.Constants;
+﻿using FastPackForShare.Default;
+using FastPackForShare.Extensions;
+using FastPackForShare.Interfaces;
+using FastPackForShare.Services.Bases;
+using WebAPI.Domain.DTO.Others;
 using WebAPI.Domain.Entities.Others;
-using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Domain.Filters.Others;
 using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.Interfaces.Services;
-using WebAPI.Domain.Interfaces.Services.Tools;
 using Region = WebAPI.Domain.Entities.Others.Region;
 
 namespace WebAPI.Application.Services;
 
-public class RegionService : GenericService, IRegionService
+public sealed class RegionService : BaseHandlerService, IRegionService
 {
     private readonly IRegionRepository _iRegionRepository;
+    private readonly IMapperService _iMapperService;
 
-    public RegionService(IRegionRepository iRegionRepository, INotificationMessageService iNotificationMessageService) : base(iNotificationMessageService)
+    public RegionService(IRegionRepository iRegionRepository, IMapperService iMapperService, INotificationMessageService iNotificationMessageService) : base(iNotificationMessageService)
     {
         _iRegionRepository = iRegionRepository;
+        _iMapperService = iMapperService;
     }
 
     private async Task<IQueryable<Region>> GetAllWithFilterAsync(RegionFilter filter)
@@ -28,7 +30,7 @@ public class RegionService : GenericService, IRegionService
     private Expression<Func<Region, bool>> GetPredicate(RegionFilter filter)
     {
         return p =>
-               (GuardClauses.IsNullOrWhiteSpace(filter.Name) || p.Name.StartsWith(filter.Name.ApplyTrim()));
+               (GuardClauseExtension.IsNullOrWhiteSpace(filter.Name) || p.Name.StartsWith(filter.Name.ApplyTrim()));
     }
 
     public async Task<IEnumerable<Region>> GetAllRegionAsync()
@@ -45,7 +47,7 @@ public class RegionService : GenericService, IRegionService
 
     public bool ExistRegion()
     {
-        return _iRegionRepository.Exist(param => param.Status == true);
+        return _iRegionRepository.Exist(param => param.IsActive == true);
     }
 
     public Task CreateRegionsAsync(IEnumerable<Region> list)
@@ -56,87 +58,69 @@ public class RegionService : GenericService, IRegionService
 
     public async Task RefreshRegionAsync(IEnumerable<States> listStatesAPI)
     {
-        try
+        IEnumerable<Region> regions = await _iRegionRepository.GetAll().ToListAsync();
+        IEnumerable<Region> tmpRegion = listStatesAPI.Select(x => new Region()
         {
-            IEnumerable<Region> regions = await _iRegionRepository.GetAll().ToListAsync();
-            IEnumerable<Region> tmpRegion = listStatesAPI.Select(x => new Region()
+            Name = x.Region.Name,
+            Initials = x.Region.Initials,
+            IsActive = true
+        });
+
+        IEnumerable<Region> listaRegiaoAPI = tmpRegion.GroupBy(x => new { x.Name, x.Initials }).Select(g => g.First());
+
+        foreach (var item in listaRegiaoAPI)
+        {
+
+            Region region = regions.FirstOrDefault(x => x.Initials == item.Initials && x.IsActive == true);
+            if (GuardClauseExtension.IsNotNull(region))
             {
-                Name = x.Region.Name,
-                Initials = x.Region.Initials,
-                Status = true
-            });
-
-            IEnumerable<Region> listaRegiaoAPI = tmpRegion.GroupBy(x => new { x.Name, x.Initials }).Select(g => g.First());
-
-            foreach (var item in listaRegiaoAPI)
-            {
-
-                Region region = regions.FirstOrDefault(x => x.Initials == item.Initials && x.Status == true);
-                if (GuardClauses.ObjectIsNotNull(region))
-                {
-                    region.UpdateDate = region.GetNewUpdateDate();
-                    region.Name = item.Name;
-                    region.Initials = item.Initials;
-                    _iRegionRepository.Update(region);
-                }
-                else
-                {
-                    _iRegionRepository.Add(item);
-                }
+                region.UpdatedAt = DateOnlyExtension.GetDateTimeNowFromBrazil();
+                region.Name = item.Name;
+                region.Initials = item.Initials;
+                _iRegionRepository.Update(region);
             }
-        }
-        catch
-        {
-            Notify(FixConstants.ERROR_IN_REFRESHREGION);
+            else
+            {
+                _iRegionRepository.Add(item);
+            }
         }
     }
 
     public async Task<bool> UpdateRegionStatusByIdAsync(long id)
     {
-        try
+
+        Region record = await Task.FromResult(_iRegionRepository.GetById(id));
+
+        if (GuardClauseExtension.IsNotNull(record))
         {
-            Region record = await Task.FromResult(_iRegionRepository.GetById(id));
-            if (GuardClauses.ObjectIsNotNull(record))
-            {
-                record.Status = record.Status == true ? false : true;
-                _iRegionRepository.Update(record);
-                return true;
-            }
-            return false;
+            record.IsActive = record.IsActive == true ? false : true;
+            _iRegionRepository.Update(record);
+            return true;
         }
-        catch
-        {
-            Notify(FixConstants.ERROR_IN_UPDATESTATUS);
-            return false;
-        }
+
+        return false;
     }
 
     public async Task<IEnumerable<Region>> GetAllRegionWithLikeAsync(string parameter) => await _iRegionRepository.FindBy(x => EF.Functions.Like(x.Name, $"%{parameter}%")).ToListAsync();
 
-    public async Task<PagedResult<Region>> GetAllRegionWithPaginateAsync(RegionFilter filter)
+    public async Task<BasePagedResultModel<RegionResponseDTO>> GetAllRegionWithPaginateAsync(RegionFilter filter)
     {
-        try
-        {
-            var query = await GetAllWithFilterAsync(filter);
-            var queryCount = GetRegionCount(GetPredicate(filter));
+        var query = await GetAllWithFilterAsync(filter);
+        var queryCount = GetRegionCount(GetPredicate(filter));
 
-            var queryResult = from x in query.AsQueryable()
-                              orderby x.Name ascending
-                              select new Region
-                              {
-                                  Id = x.Id,
-                                  Name = x.Name,
-                                  Initials = x.Initials,
-                                  Status = x.Status
-                              };
+        var queryResult = from x in query.AsQueryable()
+                          orderby x.Name ascending
+                          select new Region
+                          {
+                              Id = x.Id,
+                              Name = x.Name,
+                              Initials = x.Initials,
+                              IsActive = x.IsActive
+                          };
 
-            return PagedFactory.GetPaged(queryResult, PagedFactory.GetDefaultPageIndex(filter.PageIndex), PagedFactory.GetDefaultPageSize(filter.PageSize));
-        }
-        catch (Exception ex)
-        {
-            Notify(FixConstants.ERROR_IN_GETALL);
-            return PagedFactory.GetPaged(Enumerable.Empty<Region>().AsQueryable(), PagedFactory.GetDefaultPageIndex(filter.PageIndex), PagedFactory.GetDefaultPageSize(filter.PageSize));
-        }
+        var data = _iMapperService.ApplyMapToEntity<IEnumerable<Region>, IEnumerable<RegionResponseDTO>>(queryResult);
+
+        return BasePagedResultService.GetPaged(data.AsQueryable(), BasePagedResultService.GetDefaultPageIndex(filter.PageIndex), BasePagedResultService.GetDefaultPageSize(filter.PageSize));
     }
 
     public long GetRegionCount(Expression<Func<Region, bool>> predicate)
@@ -146,54 +130,19 @@ public class RegionService : GenericService, IRegionService
 
     public async Task<Region> CreateRegion(Region region)
     {
-        try
-        {
-            _iRegionRepository.Add(region);
-        }
-        catch (Exception ex)
-        {
-            Notify(FixConstants.ERROR_IN_ADD);
-        }
-        finally
-        {
-            await Task.CompletedTask;
-        }
-
+        _iRegionRepository.Add(region);
         return region;
     }
 
     public async Task<Region> UpdateRegion(Region region)
     {
-        try
-        {
-            _iRegionRepository.Update(region);
-        }
-        catch (Exception ex)
-        {
-            Notify(FixConstants.ERROR_IN_ADD);
-        }
-        finally
-        {
-            await Task.CompletedTask;
-        }
-
+        _iRegionRepository.Update(region);
         return region;
     }
 
     public async Task DeleteRegion(Region region)
     {
-        try
-        {
-            _iRegionRepository.Remove(region);
-        }
-        catch (Exception ex)
-        {
-            Notify(FixConstants.ERROR_IN_ADD);
-        }
-        finally
-        {
-            await Task.CompletedTask;
-        }
+        _iRegionRepository.Remove(region);
     }
 
     public async Task<IQueryable<Region>> GetQueryAbleRegionAsync()
@@ -205,15 +154,7 @@ public class RegionService : GenericService, IRegionService
 
     public Region GetRegionById(long id)
     {
-        try
-        {
-            var region = _iRegionRepository.GetById(id);
-            return region;
-        }
-        catch
-        {
-            Notify(FixConstants.ERROR_IN_GETID);
-            return default;
-        }
+        var region = _iRegionRepository.GetById(id);
+        return region;
     }
 }

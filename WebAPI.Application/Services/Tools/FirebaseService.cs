@@ -1,12 +1,13 @@
 ﻿using System.Text.Json;
-using WebAPI.Application.Generic;
+using FastPackForShare.Extensions;
+using FastPackForShare.Interfaces;
+using FastPackForShare.Services.Bases;
 using WebAPI.Domain.Constants;
-using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Domain.Interfaces.Services.Tools;
 
 namespace WebAPI.Application.Services.Tools;
 
-public class FirebaseService : GenericService, IFirebaseService
+public sealed class FirebaseService : BaseHandlerService, IFirebaseService
 {
     private readonly IHttpClientFactory _iHttpClientFactory;
 
@@ -15,17 +16,12 @@ public class FirebaseService : GenericService, IFirebaseService
         _iHttpClientFactory = iHttpClientFactory;
     }
 
-    public void Dispose()
-    {
-        GC.SuppressFinalize(this);
-    }
-
     public async Task SendPushNotification_V1(string tokenUser, FirebaseNotificationDetails firebaseNotificationDetails)
     {
         //Build Header
         string apiKey = "XPTO_KEY";
         string postDataContentType = "application/json";
-        var currentDate = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil().ToLongDateString();
+        var currentDate = DateOnlyExtension.GetDateTimeNowFromBrazil().ToLongDateString();
 
         //Build Notification and Token
         var postData = JsonSerializer.Serialize(new
@@ -107,5 +103,10 @@ public class FirebaseService : GenericService, IFirebaseService
         {
             Notify($"{FixConstants.EXCEPTION_REQUEST_API} {FixConstantsUrl.URL_TO_GET_FIREBASE} \n ");
         }
+    }
+
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
     }
 }

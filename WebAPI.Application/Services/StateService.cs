@@ -1,8 +1,9 @@
-﻿using WebAPI.Application.Factory;
-using WebAPI.Application.Generic;
-using WebAPI.Domain.Constants;
+﻿using FastPackForShare.Default;
+using FastPackForShare.Extensions;
+using FastPackForShare.Interfaces;
+using FastPackForShare.Services.Bases;
+using WebAPI.Domain.DTO.Others;
 using WebAPI.Domain.Entities.Others;
-using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Domain.Filters.Others;
 using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.Interfaces.Services;
@@ -10,19 +11,22 @@ using WebAPI.Domain.Interfaces.Services.Tools;
 
 namespace WebAPI.Application.Services;
 
-public class StatesService : GenericService, IStatesService
+public sealed class StatesService : BaseHandlerService, IStatesService
 {
     private readonly IStatesRepository _iStatesRepository;
     private readonly ICityService _iCityService;
+    private readonly IMapperService _iMapperService;
 
     public StatesService(
         IStatesRepository iStatesRepository,
         ICityService iCityService,
-        INotificationMessageService iNotificationMessageService) 
+        IMapperService iMapperService,
+        INotificationMessageService iNotificationMessageService)
         : base(iNotificationMessageService)
     {
         _iStatesRepository = iStatesRepository;
         _iCityService = iCityService;
+        _iMapperService = iMapperService;
     }
 
     public Task CreateStatesAsync(IEnumerable<States> list)
@@ -34,7 +38,7 @@ public class StatesService : GenericService, IStatesService
     public async Task<long> GetStateByInitialsAsync(string initials)
     {
         var state = await _iStatesRepository.GetAll().FirstOrDefaultAsync(x => x.Initials == initials);
-        return GuardClauses.ObjectIsNotNull(state) ? state.Id.Value : 0;
+        return GuardClauseExtension.IsNotNull(state) ? state.Id.Value : 0;
     }
 
     public async Task<List<States>> GetAllStateAsync()
@@ -44,85 +48,62 @@ public class StatesService : GenericService, IStatesService
 
     public async Task RefreshStatesAsync(RefreshStates refreshStates)
     {
-        try
+        foreach (var item in refreshStates.ListStateAPI)
         {
-            foreach (var item in refreshStates.ListStateAPI)
+            States state = refreshStates.ListState.FirstOrDefault(x => x.Initials == item.Initials && x.IsActive == true);
+            if (GuardClauseExtension.IsNotNull(state))
             {
-                States state = refreshStates.ListState.FirstOrDefault(x => x.Initials == item.Initials && x.Status == true);
-                if (GuardClauses.ObjectIsNotNull(state))
-                {
-                    state.UpdateDate = state.GetNewUpdateDate();
-                    state.Name = item.Name;
-                    state.Initials = item.Initials;
-                    _iStatesRepository.Update(state);
-                }
-                else
-                {
-                    state = new States();
-                    state.Status = true;
-                    state.Name = item.Name;
-                    state.Initials = item.Initials;
-                    state.RegionId = refreshStates.ListRegion.FirstOrDefault(x => x.Initials == item.Region.Initials).Id ?? 0;
-                    _iStatesRepository.Add(state);
-                }
+                state.UpdatedAt = DateOnlyExtension.GetDateTimeNowFromBrazil();
+                state.Name = item.Name;
+                state.Initials = item.Initials;
+                _iStatesRepository.Update(state);
             }
-        }
-        catch
-        {
-            Notify(FixConstants.ERROR_IN_REFRESHSTATE);
-        }
-        finally
-        {
-            await Task.CompletedTask;
+            else
+            {
+                state = new States();
+                state.IsActive = true;
+                state.Name = item.Name;
+                state.Initials = item.Initials;
+                state.RegionId = refreshStates.ListRegion.FirstOrDefault(x => x.Initials == item.Region.Initials).Id ?? 0;
+                _iStatesRepository.Add(state);
+            }
         }
     }
 
     public async Task<bool> UpdateStateStatusByIdAsync(long id)
     {
-        try
+        States record = await Task.FromResult(_iStatesRepository.GetById(id));
+
+        if (GuardClauseExtension.IsNotNull(record))
         {
-            States record = await Task.FromResult(_iStatesRepository.GetById(id));
-            if (GuardClauses.ObjectIsNotNull(record))
-            {
-                record.Status = record.Status == true ? false : true;
-                _iStatesRepository.Update(record);
-                return true;
-            }
-            return false;
+            record.IsActive = record.IsActive == true ? false : true;
+            _iStatesRepository.Update(record);
+            return true;
         }
-        catch
-        {
-            Notify(FixConstants.ERROR_IN_UPDATESTATUS);
-            return false;
-        }
+
+        return false;
     }
 
     public async Task<IEnumerable<States>> GetAllStateWithLikeAsync(string stateName) => await _iStatesRepository.FindBy(x => EF.Functions.Like(x.Name, $"%{stateName}%")).ToListAsync();
 
-    public async Task<PagedResult<States>> GetAllStateWithPaginateAsync(StateFilter filter)
+    public async Task<BasePagedResultModel<StatesResponseDTO>> GetAllStateWithPaginateAsync(StateFilter filter)
     {
-        try
-        {
-            var query = await GetAllWithFilterAsync(filter);
-            var queryCount = await GetCountAsync(filter);
+        var query = await GetAllWithFilterAsync(filter);
+        var queryCount = await GetCountAsync(filter);
 
-            var queryResult = from x in query.AsQueryable()
-                              orderby x.Name ascending
-                              select new States
-                              {
-                                  Id = x.Id,
-                                  Name = x.Name,
-                                  Initials = x.Initials,
-                                  Status = x.Status
-                              };
+        var queryResult = from x in query.AsQueryable()
+                          orderby x.Name ascending
+                          select new States
+                          {
+                              Id = x.Id,
+                              Name = x.Name,
+                              Initials = x.Initials,
+                              IsActive = x.IsActive
+                          };
 
-            return PagedFactory.GetPaged(queryResult, PagedFactory.GetDefaultPageIndex(filter.PageIndex), PagedFactory.GetDefaultPageSize(filter.PageSize));
-        }
-        catch
-        {
-            Notify(FixConstants.ERROR_IN_GETALL);
-            return PagedFactory.GetPaged(Enumerable.Empty<States>().AsQueryable(), PagedFactory.GetDefaultPageIndex(filter.PageIndex), PagedFactory.GetDefaultPageSize(filter.PageSize));
-        }
+        var data = _iMapperService.ApplyMapToEntity<IEnumerable<States>, IEnumerable<StatesResponseDTO>>(queryResult);
+
+        return BasePagedResultService.GetPaged(data.AsQueryable(), BasePagedResultService.GetDefaultPageIndex(filter.PageIndex), BasePagedResultService.GetDefaultPageSize(filter.PageSize));
     }
 
     public async Task<List<States>> GetListStateWithoutCities()
@@ -153,6 +134,6 @@ public class StatesService : GenericService, IStatesService
     private Expression<Func<States, bool>> GetPredicate(StateFilter filter)
     {
         return p =>
-               (GuardClauses.IsNullOrWhiteSpace(filter.Name) || p.Name.StartsWith(filter.Name.ApplyTrim()));
+               (GuardClauseExtension.IsNullOrWhiteSpace(filter.Name) || p.Name.StartsWith(filter.Name.ApplyTrim()));
     }
 }

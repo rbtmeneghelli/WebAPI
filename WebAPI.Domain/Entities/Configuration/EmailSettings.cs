@@ -1,5 +1,4 @@
 ﻿using FastPackForShare.Default;
-using WebAPI.Domain.Entities.Generic;
 
 namespace WebAPI.Domain.Entities.Configuration;
 
@@ -14,4 +13,14 @@ public class EmailSettings : BaseEntityModel
 
     public virtual EnvironmentTypeSettings EnvironmentTypeSettings { get; set; }
     public virtual long? IdEnvironmentType { get; set; }
+
+    protected override void CreateEntityIsValid()
+    {
+        throw new NotImplementedException();
+    }
+
+    protected override void UpdateEntityIsValid()
+    {
+        throw new NotImplementedException();
+    }
 }

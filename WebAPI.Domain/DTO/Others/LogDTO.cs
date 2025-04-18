@@ -1,8 +1,8 @@
-﻿using WebAPI.Domain.DTO.Generic;
+﻿using FastPackForShare.Default;
 
 namespace WebAPI.Domain.DTO.Others;
 
-public record LogResponseDTO : GenericDTO
+public record LogResponseDTO : BaseDTOModel
 {
     public string Class { get; set; }
     public string Method { get; set; }
@@ -12,7 +12,7 @@ public record LogResponseDTO : GenericDTO
     public override string ToString() => $"Classe: {Class}";
 }
 
-public record LogRequestDTO : GenericDTO
+public record LogRequestDTO : BaseDTOModel
 {
     public string Class { get; set; }
     public string Method { get; set; }

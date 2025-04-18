@@ -5,8 +5,9 @@ using FastPackForShare;
 
 namespace WebAPI.Domain.CQRS.Queries;
 
-public class RegionQueryFilterRequest : RegionFilter, IRequest<CustomResponseModel>
+public class RegionQueryFilterRequest : IRequest<CustomResponseModel>
 {
+    public RegionFilter Filter { get; set; }
 }
 
 

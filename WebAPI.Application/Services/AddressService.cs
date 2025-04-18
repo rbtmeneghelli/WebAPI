@@ -1,16 +1,13 @@
-﻿using WebAPI.Application.Factory;
-using WebAPI.Application.Generic;
+﻿using FastPackForShare.Default;
 using WebAPI.Domain.Constants;
-using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Domain.Filters.Others;
 using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.Interfaces.Services;
-using WebAPI.Domain.Interfaces.Services.Tools;
 using WebAPI.Domain.ValueObject;
 
 namespace WebAPI.Application.Services;
 
-public class AddressService : GenericService, IAddressService
+public sealed class AddressService : BaseHandlerService, IAddressService
 {
     private readonly IAddressRepository _iAddressRepository;
 
@@ -32,32 +29,21 @@ public class AddressService : GenericService, IAddressService
     private Expression<Func<Domain.ValueObject.AddressData, bool>> GetPredicateAsync(CepFilter filter)
     {
         return p =>
-               (GuardClauses.IsNullOrWhiteSpace(filter.ZipPostalCode) || p.Cep.StartsWith(filter.ZipPostalCode.ApplyTrim()));
+               (GuardClauseExtension.IsNullOrWhiteSpace(filter.ZipPostalCode) || p.Cep.StartsWith(filter.ZipPostalCode.ApplyTrim()));
     }
 
     public async Task RefreshAddressAsync(RefreshCep refreshCep)
     {
-        try
+        if (GuardClauseExtension.IsNotNull(refreshCep.ModelCep))
         {
-            if (GuardClauses.ObjectIsNotNull(refreshCep.ModelCep))
-            {
 
-                refreshCep.ModelCep = new Domain.ValueObject.AddressData(refreshCep.ModelCep.Id.Value, refreshCep.Cep, refreshCep.ModelCepAPI, refreshCep.ModelCep.StateId, refreshCep.ModelCep.CreateDate);
-                _iAddressRepository.Update(refreshCep.ModelCep);
-            }
-            else
-            {
-                refreshCep.ModelCep = new Domain.ValueObject.AddressData(refreshCep.Cep, refreshCep.ModelCepAPI);
-                _iAddressRepository.Add(refreshCep.ModelCep);
-            }
+            refreshCep.ModelCep = new Domain.ValueObject.AddressData(refreshCep.ModelCep.Id.Value, refreshCep.Cep, refreshCep.ModelCepAPI, refreshCep.ModelCep.StateId, refreshCep.ModelCep.CreateDate);
+            _iAddressRepository.Update(refreshCep.ModelCep);
         }
-        catch
+        else
         {
-            Notify(FixConstants.ERROR_IN_REFRESHCEP);
-        }
-        finally
-        {
-            await Task.CompletedTask;
+            refreshCep.ModelCep = new Domain.ValueObject.AddressData(refreshCep.Cep, refreshCep.ModelCepAPI);
+            _iAddressRepository.Add(refreshCep.ModelCep);
         }
     }
 
@@ -68,22 +54,16 @@ public class AddressService : GenericService, IAddressService
 
     public async Task<bool> UpdateAddressStatusByIdAsync(long id)
     {
-        try
+        Domain.ValueObject.AddressData record = await Task.FromResult(_iAddressRepository.GetById(id));
+
+        if (GuardClauseExtension.IsNotNull(record))
         {
-            Domain.ValueObject.AddressData record = await Task.FromResult(_iAddressRepository.GetById(id));
-            if (GuardClauses.ObjectIsNotNull(record))
-            {
-                record.Status = record.Status == true ? false : true;
-                _iAddressRepository.Update(record);
-                return true;
-            }
-            return false;
+            record.IsActive = record.IsActive == true ? false : true;
+            _iAddressRepository.Update(record);
+            return true;
         }
-        catch
-        {
-            Notify(FixConstants.ERROR_IN_UPDATESTATUS);
-            return false;
-        }
+
+        return false;
     }
 
     public async Task<IEnumerable<AddressData>> GetAllAddressWithLikeAsync(string parameter)
@@ -91,37 +71,29 @@ public class AddressService : GenericService, IAddressService
         return await _iAddressRepository.FindBy(x => EF.Functions.Like(x.Cep, $"%{parameter}%")).ToListAsync();
     }
 
-    public async Task<PagedResult<AddressData>> GetAllAddressWithPaginateAsync(CepFilter filter)
+    public async Task<BasePagedResultModel<AddressData>> GetAllAddressWithPaginateAsync(CepFilter filter)
     {
-        try
-        {
-            var query = await GetAllWithFilterAsync(filter);
-            var queryCount = await GetCountAsync(filter);
+        var query = await GetAllWithFilterAsync(filter);
+        var queryCount = await GetCountAsync(filter);
 
-            var queryResult = from x in query.AsQueryable()
-                              orderby x.Street ascending
-                              select new Domain.ValueObject.AddressData
-                              {
-                                  Id = x.Id,
-                                  Cep = x.Cep,
-                                  Street = x.Street,
-                                  District = x.District,
-                                  Complement = x.Complement,
-                                  Ddd = x.Ddd,
-                                  Uf = x.Uf,
-                                  Gia = x.Gia,
-                                  Ibge = x.Ibge,
-                                  Location = x.Location,
-                                  Siafi = x.Siafi,
-                                  Status = x.Status
-                              };
+        var queryResult = from x in query.AsQueryable()
+                          orderby x.Street ascending
+                          select new Domain.ValueObject.AddressData
+                          {
+                              Id = x.Id,
+                              Cep = x.Cep,
+                              Street = x.Street,
+                              District = x.District,
+                              Complement = x.Complement,
+                              Ddd = x.Ddd,
+                              Uf = x.Uf,
+                              Gia = x.Gia,
+                              Ibge = x.Ibge,
+                              Location = x.Location,
+                              Siafi = x.Siafi,
+                              IsActive = x.IsActive
+                          };
 
-            return PagedFactory.GetPaged(queryResult, PagedFactory.GetDefaultPageIndex(filter.PageIndex), PagedFactory.GetDefaultPageSize(filter.PageSize));
-        }
-        catch (Exception ex)
-        {
-            Notify(FixConstants.ERROR_IN_GETALL);
-            return PagedFactory.GetPaged(Enumerable.Empty<AddressData>().AsQueryable(), PagedFactory.GetDefaultPageIndex(filter.PageIndex), PagedFactory.GetDefaultPageSize(filter.PageSize));
-        }
+        return BasePagedResultService.GetPaged(queryResult, BasePagedResultService.GetDefaultPageIndex(filter.PageIndex), BasePagedResultService.GetDefaultPageSize(filter.PageSize));
     }
 }

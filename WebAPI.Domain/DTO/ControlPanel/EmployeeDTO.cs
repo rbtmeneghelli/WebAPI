@@ -26,7 +26,7 @@ public record EmployeeResponseDTO : BaseDTOModel
     public override string ToString() => $"Name: {Name}";
 }
 
-public record EmployeeRequestDTO : GenericDTO
+public record EmployeeRequestDTO : BaseDTOModel
 {
     [Required(ErrorMessage = "O campo Name é obrigatório")]
     public string Name { get; set; }

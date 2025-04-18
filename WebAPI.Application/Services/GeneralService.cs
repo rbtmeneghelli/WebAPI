@@ -8,22 +8,26 @@ using WebAPI.Domain.Interfaces.Services.Tools;
 using WebAPI.Domain.Interfaces.Services;
 using WebAPI.Domain.Cryptography;
 using System.Text;
+using FastPackForShare.Services.Bases;
+using FastPackForShare.Interfaces;
+using FastPackForShare.Models;
+using FastPackForShare.Cryptography;
+using FastPackForShare.Extensions;
+using FastPackForShare.Enums;
 
 namespace WebAPI.Application.Services;
 
-public class GeneralService : GenericService, IGeneralService
+public sealed class GeneralService : BaseHandlerService, IGeneralService
 {
     private List<RefreshTokens> _refreshTokens = new List<RefreshTokens>();
-    private readonly GeneralMethod _generalMethod;
     private EnvironmentVariables _environmentVariables { get; }
 
     public GeneralService(EnvironmentVariables environmentVariables, INotificationMessageService iNotificationMessageService) : base(iNotificationMessageService)
     {
         _environmentVariables = environmentVariables;
-        _generalMethod = GeneralMethod.GetLoadExtensionMethods();
     }
 
-    public string CreateJwtToken(Credentials credentials)
+    public string CreateJwtToken(AuthenticationModel credentials)
     {
         JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(_environmentVariables.TokenSettings.Key);
@@ -33,10 +37,9 @@ public class GeneralService : GenericService, IGeneralService
             Audience = _environmentVariables.TokenSettings.Audience,
             Subject = new ClaimsIdentity(new Claim[]
             {
-                    //new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim("Id",credentials.Id.ToString()),
                     new Claim(ClaimTypes.Name, credentials.Login.ToString()),
-                    new Claim(ClaimTypes.Role, string.Join(",",credentials.Roles)), // são as permissões do usuario, onde podemos restringir os endpoints a partir da tag >>  No Authorize(Roles = "ROLE_AUDIT") por exemplo
+                    new Claim(ClaimTypes.Role, string.Join(",",credentials.Roles)),
                     new Claim("DateAccess", credentials.AccessDate.ToShortDateString()),
                     new Claim("TimeAccess", credentials.AccessDate.ToString("HH:mm:ss"))
             }),
@@ -45,14 +48,14 @@ public class GeneralService : GenericService, IGeneralService
         };
         var token = tokenHandler.CreateToken(tokenDescriptor);
         var tokenAuth = tokenHandler.WriteToken(token);
-        tokenAuth = CryptographyTokenService.EncryptToken(tokenAuth, _environmentVariables.TokenSettings.Key);
+        tokenAuth = CryptographyHashTokenManager.EncryptToken(tokenAuth, _environmentVariables.TokenSettings.Key);
         return tokenAuth;
     }
 
-    public async Task<MemoryStream> Export2ZipAsync(string directory, EnumMemoryStreamFile typeFile = EnumMemoryStreamFile.PDF)
+    public async Task<MemoryStream> Export2ZipAsync(string directory, EnumFile typeFile = EnumFile.Pdf)
     {
         List<string> archives = new List<string>();
-        var memoryStreamResult = _generalMethod.GetMemoryStreamType(typeFile);
+        var memoryStreamResult = SharedExtension.GetMemoryStreamType(typeFile);
         int count = 0;
 
         foreach (string arquivo in Directory.GetFiles(directory, $"*.{memoryStreamResult.Type}"))
@@ -90,39 +93,30 @@ public class GeneralService : GenericService, IGeneralService
 
         Byte[] byteArray = Encoding.UTF8.GetBytes(postData.ToString());
 
-        try
-        {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(FixConstantsUrl.URL_TO_GET_FIREBASE);
-            request.Method = "post";
-            request.KeepAlive = false;
-            request.ContentType = "application/json";
-            request.Headers.Add($"Authorization: key={FixConstants.SERVER_API_KEY}");
-            request.Headers.Add($"Sender: id={FixConstants.SENDER_ID}");
-            request.ContentLength = byteArray.Length;
+        HttpWebRequest request = (HttpWebRequest)WebRequest.Create(FixConstantsUrl.URL_TO_GET_FIREBASE);
+        request.Method = "post";
+        request.KeepAlive = false;
+        request.ContentType = "application/json";
+        request.Headers.Add($"Authorization: key={FixConstants.SERVER_API_KEY}");
+        request.Headers.Add($"Sender: id={FixConstants.SENDER_ID}");
+        request.ContentLength = byteArray.Length;
 
-            Stream dataStream = request.GetRequestStream();
-            dataStream.Write(byteArray, 0, byteArray.Length);
-            dataStream.Close();
+        Stream dataStream = request.GetRequestStream();
+        dataStream.Write(byteArray, 0, byteArray.Length);
+        dataStream.Close();
 
-            WebResponse response = request.GetResponse();
-            HttpStatusCode responseCode = ((HttpWebResponse)response).StatusCode;
+        WebResponse response = request.GetResponse();
+        HttpStatusCode responseCode = ((HttpWebResponse)response).StatusCode;
 
-            if (!responseCode.Equals(HttpStatusCode.OK))
-                return false;
-
-            StreamReader reader = new StreamReader(response.GetResponseStream());
-            string responseLine = reader.ReadToEnd();
-            reader.Close();
-
-            await Task.CompletedTask;
-            return true;
-
-        }
-        catch (Exception ex)
-        {
-            Notify(ex.Message);
+        if (!responseCode.Equals(HttpStatusCode.OK))
             return false;
-        }
+
+        StreamReader reader = new StreamReader(response.GetResponseStream());
+        string responseLine = reader.ReadToEnd();
+        reader.Close();
+
+        await Task.CompletedTask;
+        return true;
     }
 
     public string GenerateToken(IEnumerable<Claim> claims)
@@ -197,7 +191,7 @@ public class GeneralService : GenericService, IGeneralService
         StringBuilder builder = new StringBuilder();
         //obtem o nome do tipo
         builder.AppendLine("Log do " + tipo.Name);
-        builder.AppendLine("Data: " + DateOnlyExtensionMethods.GetDateTimeNowFromBrazil());
+        builder.AppendLine("Data: " + DateOnlyExtension.GetDateTimeNowFromBrazil());
 
         //Vamos obter agora todas as propriedades do tipo
         //Usamos o método GetProperties para obter
@@ -227,7 +221,7 @@ public class GeneralService : GenericService, IGeneralService
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_environmentVariables.TokenSettings.Key))
         };
 
-        if (GuardClauses.IsNullOrWhiteSpace(jwtToken))
+        if (GuardClauseExtension.IsNullOrWhiteSpace(jwtToken))
             return false;
 
         var tokenData = handler.ValidateToken(jwtToken, validations, out var tokenSecure).Identity as ClaimsIdentity;
@@ -240,16 +234,6 @@ public class GeneralService : GenericService, IGeneralService
         var handler = new JwtSecurityTokenHandler();
         var jwtToken = handler.ReadJwtToken(token);
         var claims = jwtToken.Claims.ToList();
-
-        //DadosParametrosTokenDTO dadosAutenticacaoTokenDTO = new();
-        //dadosAutenticacaoTokenDTO.Id = claims[0]?.Value;
-        //dadosAutenticacaoTokenDTO.UserNum = MetodosGeral.ObterValorCampoInteiro(claims[1]?.Value);
-        //dadosAutenticacaoTokenDTO.Nome = claims[2]?.Value;
-        //dadosAutenticacaoTokenDTO.PermissoesDetalhada = claims[3]?.Value;
-        //dadosAutenticacaoTokenDTO.Servidor = MetodosGeral.ObterValorCampoInteiro(claims[4]?.Value);
-        //dadosAutenticacaoTokenDTO.PermissaoDownloadDeSIDs = MetodosGeral.ObterValorCampoBooleano(claims[5]?.Value);
-        //dadosAutenticacaoTokenDTO.DownloadLP = MetodosGeral.ObterValorCampoBooleano(claims[6]?.Value);
-        //dadosAutenticacaoTokenDTO.DataValidade = MetodosGeral.ObterValorCampoDataHora(claims[7]?.Value);
 
         return default;
     }

@@ -1,17 +1,18 @@
-﻿using WebAPI.Domain.Cryptography;
-using WebAPI.Domain.ExtensionMethods;
-using Microsoft.Extensions.Hosting;
-using WebAPI.Application.Generic;
+﻿using Microsoft.Extensions.Hosting;
 using WebAPI.Domain.Entities.ControlPanel;
 using WebAPI.Domain.Constants;
-using WebAPI.Domain.Interfaces.Services.Tools;
 using WebAPI.Domain.Interfaces.Services.Configuration;
 using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.Interfaces.Services;
+using FastPackForShare.Services.Bases;
+using FastPackForShare.Interfaces;
+using FastPackForShare.Extensions;
+using FastPackForShare.Cryptography;
+using FastPackForShare.Models;
 
 namespace WebAPI.Application.Services;
 
-public class AccountService : GenericService, IAccountService
+public sealed class AccountService : BaseHandlerService, IAccountService
 {
     private readonly IUserRepository _iUserRepository;
     private readonly IEmailService _iEmailService;
@@ -26,68 +27,44 @@ public class AccountService : GenericService, IAccountService
 
     public async Task<bool> CheckUserAuthenticationAsync(LoginUser loginUser)
     {
-        try
-        {
+        User user = await _iUserRepository.FindBy(x => x.Login == loginUser.Login.ApplyTrim() && x.IsActive == true).FirstOrDefaultAsync();
 
-            User user = await _iUserRepository.FindBy(x => x.Login == loginUser.Login.ApplyTrim() && x.Status == true).FirstOrDefaultAsync();
-            if (GuardClauses.ObjectIsNotNull(user))
-            {
-                if (HashingManager.GetLoadHashingManager().Verify(loginUser.Password, user.Password))
-                    return true;
-
-                Notify("Autenticação invalida. Tente novamente!");
-            }
-            else
-            {
-                Notify("Autenticação invalida. Tente novamente!");
-            }
-
-            return false;
-        }
-        catch
+        if (GuardClauseExtension.IsNotNull(user))
         {
-            Notify("Erro na validação");
-            return false;
+            if (new HashingManager().Verify(loginUser.Password, user.Password))
+                return true;
+
+            Notify("Autenticação invalida. Tente novamente!");
         }
-        finally
+        else
         {
-            await Task.CompletedTask;
+            Notify("Autenticação invalida. Tente novamente!");
         }
+
+        return false;
     }
 
-    public async Task<Credentials> GetUserCredentialsAsync(string login)
+    public async Task<AuthenticationModel> GetUserAuthenticationAsync(string login)
     {
-        try
-        {
-            Credentials credentials = new Credentials();
-            User user = await _iUserRepository.GetUserCredentialsByLogin(login);
+        AuthenticationModel authenticationModel = new AuthenticationModel();
+        User user = await _iUserRepository.GetUserCredentialsByLogin(login);
 
-            if (GuardClauses.ObjectIsNotNull(user))
-            {
-                credentials.Id = user.Id;
-                credentials.Login = user.Login;
-                credentials.Perfil = user.Employee.Profile.Description;
-                credentials.Roles = Enumerable.Empty<string>().ToList();
-                credentials.AccessDate = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil();
-                credentials.CodeTwoFactoryCode = user.HasTwoFactoryValidation
-                                                 ? GenerateCodeTwoFactory(user.Id.Value, user.Login)
-                                                 : StringExtensionMethod.GetEmptyString();
-
-                IEnumerable<string> userRoles = user.Employee.Profile.ProfileOperations.Where(x => x.IsEnable).Select(x => x.RoleTag);
-                credentials.Roles.AddRange(userRoles);
-            }
-
-            return credentials;
-        }
-        catch
+        if (GuardClauseExtension.IsNotNull(user))
         {
-            Notify(FixConstants.ERROR_IN_LOGIN);
-            return default;
+            authenticationModel.Id = user.Id;
+            authenticationModel.Login = user.Login;
+            authenticationModel.Profile = user.Employee.Profile.Description;
+            authenticationModel.Roles = Enumerable.Empty<Claim>().ToList();
+            authenticationModel.AccessDate = DateOnlyExtension.GetDateTimeNowFromBrazil().ToShortDateString();
+            authenticationModel.CodeTwoFactoryCode = user.HasTwoFactoryValidation
+                                             ? GenerateCodeTwoFactory(user.Id.Value, user.Login)
+                                             : string.Empty;
+
+            IEnumerable<string> userRoles = user.Employee.Profile.ProfileOperations.Where(x => x.IsEnable).Select(x => x.RoleTag);
+            authenticationModel.Roles.Add(new Claim(ClaimTypes.Role, string.Join(",", userRoles)));
         }
-        finally
-        {
-            await Task.CompletedTask;
-        }
+
+        return authenticationModel;
     }
 
     public async Task<bool> ChangePasswordAsync(long id, User user)
@@ -95,14 +72,14 @@ public class AccountService : GenericService, IAccountService
         try
         {
             User dbUser = _iUserRepository.GetById(id);
-            if (GuardClauses.ObjectIsNotNull(dbUser))
+            if (GuardClauseExtension.IsNotNull(dbUser))
             {
-                if (HashingManager.GetLoadHashingManager().Verify(user.Password, dbUser.Password) && dbUser.Login == user.Login.ApplyTrim())
+                if (new HashingManager().Verify(user.Password, dbUser.Password) && dbUser.Login == user.Login.ApplyTrim())
                 {
                     dbUser.LastPassword = dbUser.Password;
-                    dbUser.Password = HashingManager.GetLoadHashingManager().HashToString(user.Password);
+                    dbUser.Password = new HashingManager().HashToString(user.Password);
                     dbUser.IsAuthenticated = true;
-                    dbUser.UpdateDate = dbUser.GetNewUpdateDate();
+                    dbUser.UpdatedAt = DateOnlyExtension.GetDateTimeNowFromBrazil();
                     _iUserRepository.Update(dbUser);
                     await Task.CompletedTask;
                     return true;
@@ -158,7 +135,7 @@ public class AccountService : GenericService, IAccountService
         }
     }
 
-    public async Task<Credentials> GetUserCredentialsByIdAsync(long id)
+    public async Task<Credentials> GetUserAuthenticationByIdAsync(long id)
     {
         try
         {

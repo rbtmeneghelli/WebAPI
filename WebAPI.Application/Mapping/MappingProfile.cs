@@ -20,9 +20,8 @@ public class MappingProfile : AutoMapper.Profile
         CreateMap<UserRequestDTO, User>()
         .BeforeMap((source, dest) =>
         {
-            dest.Id = source.GetId();
-            dest.CreateDate = source.GetId() is null ? DateOnlyExtensionMethods.GetDateTimeNowFromBrazil() : null;
-            dest.UpdateDate = source.GetId() is not null ? DateOnlyExtensionMethods.GetDateTimeNowFromBrazil() : null;
+            dest.CreatedAt = source.Id is null ? DateOnlyExtension.GetDateTimeNowFromBrazil() : null;
+            dest.UpdatedAt = source.Id is not null ? DateOnlyExtension.GetDateTimeNowFromBrazil() : null;
         })
         .ForMember(dest => dest.Id, act => act.MapFrom(src => src.GetId()))
         .ForMember(dest => dest.Status, act => act.MapFrom(src => src.IsActive))

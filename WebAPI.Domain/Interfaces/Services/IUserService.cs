@@ -1,18 +1,17 @@
-﻿
-using WebAPI.Domain.Entities.ControlPanel;
-using WebAPI.Domain.DTO.ControlPanel;
+﻿using WebAPI.Domain.DTO.ControlPanel;
 using WebAPI.Domain.Filters.ControlPanel;
-using WebAPI.Domain.Models;
+using FastPackForShare.Default;
+using FastPackForShare.Models;
 
 namespace WebAPI.Domain.Interfaces.Services;
 
 public interface IUserService
 {
     Task<IEnumerable<UserResponseDTO>> GetAllUserAsync();
-    Task<PagedResult<UserResponseDTO>> GetAllUserPaginateAsync(UserFilter filter);
+    Task<BasePagedResultModel<UserResponseDTO>> GetAllUserPaginateAsync(UserFilter filter);
     Task<UserResponseDTO> GetUserByIdAsync(long id);
     Task<UserResponseDTO> GetUserByLoginAsync(string login);
-    Task<IEnumerable<DropDownList>> GetUsersAsync();
+    Task<IEnumerable<DropDownListModel>> GetUsersAsync();
     Task<bool> CreateUserAsync(UserRequestDTO userRequestDTO);
     Task<bool> UpdateUserAsync(long id, UserRequestDTO userRequestDTO);
     Task<bool> DeleteUserPhysicalAsync(long id);

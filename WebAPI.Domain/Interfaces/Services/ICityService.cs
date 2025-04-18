@@ -1,12 +1,12 @@
 ﻿using WebAPI.Domain.Entities.Others;
 using WebAPI.Domain.DTO.Others;
-using WebAPI.Domain.Models;
+using FastPackForShare.Default;
 
 namespace WebAPI.Domain.Interfaces.Services;
 
 public interface ICityService
 {
-    Task<PagedResult<CityResponseDTO>> GetAllCityFromUfAsync(int idState = 25, int? page = 1, int? limit = int.MaxValue);
+    Task<BasePagedResultModel<CityResponseDTO>> GetAllCityFromUfAsync(int idState = 25, int? page = 1, int? limit = int.MaxValue);
     Task<IEnumerable<CityResponseDTO>> GetAllCityEntityAsync();
     Task<CityResponseDTO> GetCityByIdAsync(int id);
     Task CreateCityAsync(City city);

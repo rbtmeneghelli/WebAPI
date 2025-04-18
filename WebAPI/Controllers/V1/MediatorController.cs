@@ -1,5 +1,4 @@
 ﻿using WebAPI.Domain.CQRS.Command;
-using MediatR;
 using WebAPI.Domain.CQRS.Queries;
 using FastPackForShare.Controllers;
 using FastPackForShare.Interfaces;
@@ -16,34 +15,37 @@ namespace WebAPI.V1.Controllers;
 
 public sealed class MediatorController : BaseMediatorController
 {
-    private readonly IMediator _mediator;
-
     public MediatorController(IMediator mediator, INotificationMessageService notificationMessageService)
     : base(mediator, notificationMessageService)
     {
-        _mediator = mediator;
     }
+
+    #region QUERIES
 
     [HttpPost("getAllPaginate")]
     [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<IEnumerable<RegionQueryFilterResponse>>))]
     public async Task<IActionResult> GetAllPaginate([FromBody, Required] RegionQueryFilterRequest findRegionQueryFilterHandler) =>
     ModelStateIsInvalid() ?
     CustomResponseModel(ModelState) :
-    CustomResponse(await _mediator.Send(findRegionQueryFilterHandler));
+    CustomResponse(await _iMediator.Send(findRegionQueryFilterHandler));
 
     [HttpPost("getById")]
-    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<IEnumerable<RegionQueryFilterResponse>>))]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<RegionQueryByIdResponse>))]
     public async Task<IActionResult> GetById([FromBody, Required] RegionQueryByIdRequest regionQueryByIdRequest) =>
     ModelStateIsInvalid() ?
     CustomResponseModel(ModelState) :
-    CustomResponse(await _mediator.Send(regionQueryByIdRequest));
+    CustomResponse(await _iMediator.Send(regionQueryByIdRequest));
+
+    #endregion
+
+    #region COMMANDS
 
     [HttpPost("insert")]
     [ProducesResponseType(ConstantHttpStatusCode.CREATE_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
     public async Task<IActionResult> Insert([FromBody, Required] CreateRegionCommandRequest createRegionCommandRequest) =>
     ModelStateIsInvalid() ?
     CustomResponseModel(ModelState) :
-    CustomResponse(await _mediator.Send(createRegionCommandRequest));
+    CustomResponse(await _iMediator.Send(createRegionCommandRequest));
 
     [HttpPut("update")]
     [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
@@ -51,5 +53,7 @@ public sealed class MediatorController : BaseMediatorController
     public async Task<IActionResult> Update([FromBody, Required] UpdateRegionCommandRequest updateRegionCommandRequest) =>
     ModelStateIsInvalid() ?
     CustomResponseModel(ModelState) :
-    CustomResponse(await _mediator.Send(updateRegionCommandRequest));
+    CustomResponse(await _iMediator.Send(updateRegionCommandRequest));
+
+    #endregion
 }

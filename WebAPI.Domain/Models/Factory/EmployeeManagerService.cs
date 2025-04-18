@@ -10,6 +10,6 @@ public class EmployeeManagerService : IEmployeeService
     public override Expression<Func<Employee, bool>> GetPredicate(EmployeeFilter filter)
     {
         return p => p.IdProfile == 1 && 
-                    p.Status == true;
+                    p.IsActive == true;
     }
 }

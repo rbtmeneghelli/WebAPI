@@ -1,17 +1,17 @@
-﻿using WebAPI.Application.Factory;
-using WebAPI.Application.Generic;
-using WebAPI.Domain.Constants;
+﻿using WebAPI.Domain.Constants;
 using WebAPI.Domain.Entities.Others;
 using WebAPI.Domain.DTO.Others;
-using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Domain.Filters.Others;
 using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.Interfaces.Services;
-using WebAPI.Domain.Interfaces.Services.Tools;
+using FastPackForShare.Services.Bases;
+using FastPackForShare.Interfaces;
+using FastPackForShare.Extensions;
+using FastPackForShare.Default;
 
 namespace WebAPI.Application.Services;
 
-public class LogService : GenericService, ILogService
+public sealed class LogService : BaseHandlerService, ILogService
 {
     private readonly ILogRepository _iLogRepository;
     private readonly IMapperService _iMapperService;
@@ -35,7 +35,7 @@ public class LogService : GenericService, ILogService
     private Expression<Func<Log, bool>> GetPredicateAsync(LogFilter filter)
     {
         return p =>
-        (GuardClauses.IsNullOrWhiteSpace(filter.Class) || p.Class.StartsWith(filter.Class.ApplyTrim()));
+        (GuardClauseExtension.IsNullOrWhiteSpace(filter.Class) || p.Class.StartsWith(filter.Class.ApplyTrim()));
     }
 
     public async Task<LogResponseDTO> GetLogByIdAsync(long id)
@@ -46,53 +46,33 @@ public class LogService : GenericService, ILogService
 
     public async Task<IEnumerable<Log>> GetAllLogWithLikeAsync(string parameter) => await _iLogRepository.FindBy(x => EF.Functions.Like(x.Class, $"%{parameter}%")).ToListAsync();
 
-    public async Task<PagedResult<LogResponseDTO>> GetAllLogPaginateAsync(LogFilter filter)
+    public async Task<BasePagedResultModel<LogResponseDTO>> GetAllLogPaginateAsync(LogFilter filter)
     {
-        try
-        {
-            var query = await GetAllWithFilterAsync(filter);
-            var queryCount = await GetCountAsync(filter);
+        var query = await GetAllWithFilterAsync(filter);
+        var queryCount = await GetCountAsync(filter);
 
-            var queryResult = from x in query.AsQueryable()
-                              orderby x.UpdateTime descending
-                              select new LogResponseDTO()
-                              {
-                                  Id = x.Id,
-                                  Class = x.Class,
-                                  Method = x.Method,
-                                  Object = x.Object,
-                                  MessageError = x.MessageError,
-                                  UpdateTime = x.UpdateTime
-                              };
+        var queryResult = from x in query.AsQueryable()
+                          orderby x.UpdateTime descending
+                          select new LogResponseDTO()
+                          {
+                              Id = x.Id,
+                              Class = x.Class,
+                              Method = x.Method,
+                              Object = x.Object,
+                              MessageError = x.MessageError,
+                              UpdateTime = x.UpdateTime
+                          };
 
-            return PagedFactory.GetPaged(queryResult, PagedFactory.GetDefaultPageIndex(filter.PageIndex), PagedFactory.GetDefaultPageSize(filter.PageSize));
-        }
-        catch
-        {
-            Notify(FixConstants.ERROR_IN_GETALL);
-            return PagedFactory.GetPaged(Enumerable.Empty<LogResponseDTO>().AsQueryable(), PagedFactory.GetDefaultPageIndex(filter.PageIndex), PagedFactory.GetDefaultPageSize(filter.PageSize));
-        }
+        return BasePagedResultService.GetPaged(queryResult, BasePagedResultService.GetDefaultPageIndex(filter.PageIndex), BasePagedResultService.GetDefaultPageSize(filter.PageSize));
     }
 
     public async Task<bool> ExistLogByIdAsync(long id)
     {
-        try
-        {
-            var result = _iLogRepository.Exist(x => x.Id == id);
+        var result = _iLogRepository.Exist(x => x.Id == id);
 
-            if (result == false)
-                Notify(FixConstants.ERROR_IN_GETID);
-
-            return result;
-        }
-        catch
-        {
+        if (result == false)
             Notify(FixConstants.ERROR_IN_GETID);
-            return false;
-        }
-        finally
-        {
-            await Task.CompletedTask;
-        }
+
+        return result;
     }
 }

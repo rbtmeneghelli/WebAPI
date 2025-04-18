@@ -5,6 +5,7 @@ using WebAPI.Domain.Enums;
 using WebAPI.Domain.Entities.Configuration;
 using WebAPI.Domain.Entities.Others;
 using FastPackForShare.Extensions;
+using WebAPI.Domain.Models.Factory.Email;
 
 namespace WebAPI.InfraStructure.Data.Context;
 
@@ -90,22 +91,22 @@ public static class SeedContext
     private static void SeedEmailDisplay(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<EmailDisplay>().HasData(
-           new EmailDisplay() { Id = (int)EnumEmail.Welcome, Subject = "Bem vindo ao sistema {0}", Title = "Email de boas vindas", Body = EmailDisplay.GetBodyTextWelcome(), EmailTemplateId = 1, MessagePriority = MessagePriority.Normal, CreateDate = _currentDate, Status = STATUS_TRUE, HasAttachment = STATUS_FALSE },
+           new EmailDisplay() { Id = (int)EnumEmail.Welcome, Subject = "Bem vindo ao sistema {0}", Title = "Email de boas vindas", Body = new EmailWelcomeConfig().GetBodyText(), EmailTemplateId = 1, MessagePriority = MessagePriority.Normal, CreateDate = _currentDate, Status = STATUS_TRUE, HasAttachment = STATUS_FALSE },
            new EmailDisplay() { Id = (int)EnumEmail.ChangePassword, Subject = "{0} - Solicitação de troca de senha", Title = "Email de troca de senha", Body = EmailDisplay.GetBodyTextTradePsw(), EmailTemplateId = 1, MessagePriority = MessagePriority.Normal, CreateDate = _currentDate, Status = STATUS_TRUE, HasAttachment = STATUS_FALSE },
            new EmailDisplay() { Id = (int)EnumEmail.ResetPassword, Subject = "{0} - Esqueci a senha", Title = "Email de reset de senha", Body = EmailDisplay.GetBodyTextForgetPsw(), EmailTemplateId = 1, MessagePriority = MessagePriority.Normal, CreateDate = _currentDate, Status = STATUS_TRUE, HasAttachment = STATUS_FALSE },
            new EmailDisplay() { Id = (int)EnumEmail.ConfirmPassword, Subject = "{0} - Confirmação de senha", Title = "Email de confirmação de senha", Body = EmailDisplay.GetBodyTextConfirmPsw(), EmailTemplateId = 1, MessagePriority = MessagePriority.Normal, CreateDate = _currentDate, Status = STATUS_TRUE, HasAttachment = STATUS_FALSE },
-           new EmailDisplay() { Id = (int)EnumEmail.Report, Subject = "{0} - Relatório", Title = "Email de relatório", Body = string.Empty, EmailTemplateId = 1, MessagePriority = MessagePriority.Normal, CreateDate = _currentDate, Status = STATUS_TRUE, HasAttachment = STATUS_FALSE }
+           new EmailDisplay() { Id = (int)EnumEmail.Report, Subject = "{0} - Relatório", Title = "Email de relatório", Body = string.Empty, EmailTemplateId = 1, MessagePriority = MessagePriority.Normal, CreateDate = _currentDate, IsActive = STATUS_TRUE, HasAttachment = STATUS_FALSE }
         );
     }
 
     private static void SeedLayoutSettings(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<LayoutSettings>().HasData(
-           new LayoutSettings() { Id = (int)EnumEnvironment.PRD, CreateDate = _currentDate, DocumentFileContentToUpload = ".pdf,.doc,.docx", ImageFileContentToUpload = ".jpg,.jpeg,.png", MaxDocumentFileSize = 20, MaxImageFileSize = 20, Status = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.PRD },
-           new LayoutSettings() { Id = (int)EnumEnvironment.PRE_PROD, CreateDate = _currentDate, DocumentFileContentToUpload = ".pdf,.doc,.docx", ImageFileContentToUpload = ".jpg,.jpeg,.png", MaxDocumentFileSize = 20, MaxImageFileSize = 20, Status = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.PRE_PROD },
-           new LayoutSettings() { Id = (int)EnumEnvironment.HML, CreateDate = _currentDate, DocumentFileContentToUpload = ".pdf,.doc,.docx,.txt", ImageFileContentToUpload = ".jpg,.jpeg,.png", MaxDocumentFileSize = 20, MaxImageFileSize = 20, Status = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.HML },
-           new LayoutSettings() { Id = (int)EnumEnvironment.QA, CreateDate = _currentDate, DocumentFileContentToUpload = ".pdf,.doc,.docx,.txt", ImageFileContentToUpload = ".jpg,.jpeg,.png", MaxDocumentFileSize = 20, MaxImageFileSize = 20, Status = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.QA },
-           new LayoutSettings() { Id = (int)EnumEnvironment.DEV, CreateDate = _currentDate, DocumentFileContentToUpload = ".pdf,.doc,.docx,.txt", ImageFileContentToUpload = ".jpg,.jpeg,.png", MaxDocumentFileSize = 20, MaxImageFileSize = 20, Status = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.DEV }
+           new LayoutSettings() { Id = (int)EnumEnvironment.PRD, CreateDate = _currentDate, DocumentFileContentToUpload = ".pdf,.doc,.docx", ImageFileContentToUpload = ".jpg,.jpeg,.png", MaxDocumentFileSize = 20, MaxImageFileSize = 20, IsActive = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.PRD },
+           new LayoutSettings() { Id = (int)EnumEnvironment.PRE_PROD, CreateDate = _currentDate, DocumentFileContentToUpload = ".pdf,.doc,.docx", ImageFileContentToUpload = ".jpg,.jpeg,.png", MaxDocumentFileSize = 20, MaxImageFileSize = 20, IsActive = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.PRE_PROD },
+           new LayoutSettings() { Id = (int)EnumEnvironment.HML, CreateDate = _currentDate, DocumentFileContentToUpload = ".pdf,.doc,.docx,.txt", ImageFileContentToUpload = ".jpg,.jpeg,.png", MaxDocumentFileSize = 20, MaxImageFileSize = 20, IsActive = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.HML },
+           new LayoutSettings() { Id = (int)EnumEnvironment.QA, CreateDate = _currentDate, DocumentFileContentToUpload = ".pdf,.doc,.docx,.txt", ImageFileContentToUpload = ".jpg,.jpeg,.png", MaxDocumentFileSize = 20, MaxImageFileSize = 20, IsActive = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.QA },
+           new LayoutSettings() { Id = (int)EnumEnvironment.DEV, CreateDate = _currentDate, DocumentFileContentToUpload = ".pdf,.doc,.docx,.txt", ImageFileContentToUpload = ".jpg,.jpeg,.png", MaxDocumentFileSize = 20, MaxImageFileSize = 20, IsActive = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.DEV }
         );
     }
 

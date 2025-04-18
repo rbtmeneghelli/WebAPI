@@ -10,7 +10,7 @@ using WebAPI.Domain.Filters.ControlPanel;
 
 namespace WebAPI.Application.Services.Configuration;
 
-public class AuthenticationSettingsService : GenericService, IAuthenticationSettingsService
+public class AuthenticationSettingsService : BaseHandlerService, IAuthenticationSettingsService
 {
     private readonly IAuthenticationSettingsRepository _iAuthenticationSettingsRepository;
     private readonly IMapperService _iMapperService;
