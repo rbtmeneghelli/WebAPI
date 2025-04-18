@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using FastPackForShare.Controllers.Generics;
-using FastPackForShare.Interfaces;
 
 namespace WebAPI.V1.Controllers;
 
@@ -11,22 +10,23 @@ public sealed class AccountController : GenericController
 {
     private readonly IGeneralService _iGeneralService;
     private readonly IGenericUnitOfWorkService _iGenericUnitOfWorkService;
-    private readonly IUserLoggedService _userLoggedService;
+    private readonly IUserLoggedService _iUserLoggedService;
 
     public AccountController(
         IGeneralService iGeneralService,
         IGenericUnitOfWorkService iGenericUnitOfWorkService,
         IMapper iMapperService,
         INotificationMessageService notificationMessageService,
-        IUserLoggedService userLoggedService)
+        IUserLoggedService iUserLoggedService)
         : base(notificationMessageService)
     {
         _iGeneralService = iGeneralService;
         _iGenericUnitOfWorkService = iGenericUnitOfWorkService;
-        _userLoggedService = userLoggedService;
+        _iUserLoggedService = iUserLoggedService;
     }
 
     [HttpPost("login")]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
     public async Task<IActionResult> Login([FromBody, Required] LoginUser loginUser)
     {
         if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
@@ -35,7 +35,7 @@ public sealed class AccountController : GenericController
 
         if (result)
         {
-            Credentials credentials = await _iGenericUnitOfWorkService.AccountService.GetUserCredentialsAsync(loginUser.Login);
+            AuthenticationModel credentials = await _iGenericUnitOfWorkService.AccountService.GetUserAuthenticationAsync(loginUser.Login);
             var userToken = _iGeneralService.CreateJwtToken(credentials);
             return CustomResponse(ConstantHttpStatusCode.OK_CODE, userToken);
         }
@@ -47,11 +47,18 @@ public sealed class AccountController : GenericController
     }
 
     [HttpPost("confirmLogin")]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
     public IActionResult ConfirmLogin([FromBody, Required] ConfirmLoginUser confirmLoginUser)
     {
+        //if (!_iUserLoggedService.UserAuthenticated)
+        //{
+        //    NotificationError("Acesso negado! Metódo permitido apenas para usuário logado");
+        //    return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
+        //}
+
         if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
 
-        var result = _iGenericUnitOfWorkService.AccountService.CheckCodeTwoFactory(_userLoggedService.UserId, _userLoggedService.UserName, confirmLoginUser.CodeTwoFactory);
+        var result = _iGenericUnitOfWorkService.AccountService.CheckCodeTwoFactory(_iUserLoggedService.UserId, _iUserLoggedService.UserName, confirmLoginUser.CodeTwoFactory);
 
         if (!result)
         {
@@ -67,7 +74,7 @@ public sealed class AccountController : GenericController
     {
         if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
 
-        var result = await _iGenericUnitOfWorkService.AccountService.ChangePasswordAsync(UserId, user);
+        var result = await _iGenericUnitOfWorkService.AccountService.ChangePasswordAsync(_iUserLoggedService.UserId, user);
         if (result)
             return CustomResponse(ConstantHttpStatusCode.OK_CODE, null, FixConstants.SUCCESS_IN_CHANGEPASSWORD);
 
@@ -75,7 +82,9 @@ public sealed class AccountController : GenericController
     }
 
     [HttpGet("resetPassword/{email: string}")]
-    public async Task<IActionResult> ResetPassword(string email)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> ResetPassword([FromRoute, Required] string email)
     {
         var result = await _iGenericUnitOfWorkService.AccountService.ResetPasswordAsync(email);
 
@@ -86,7 +95,7 @@ public sealed class AccountController : GenericController
     }
 
     [HttpPost("loginRefresh")]
-    [AllowAnonymous]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
     public async Task<IActionResult> LoginRefresh([FromBody, Required] LoginUser loginUser)
     {
         if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
@@ -95,10 +104,10 @@ public sealed class AccountController : GenericController
 
         if (result)
         {
-            Credentials credentials = await _iGenericUnitOfWorkService.AccountService.GetUserCredentialsAsync(loginUser.Login);
-            string dataToken = _iGeneralService.CreateJwtToken(credentials);
+            AuthenticationModel authenticationModel = await _iGenericUnitOfWorkService.AccountService.GetUserAuthenticationAsync(loginUser.Login);
+            string dataToken = _iGeneralService.CreateJwtToken(authenticationModel);
             var dataRefreshToken = _iGeneralService.GenerateRefreshToken();
-            _iGeneralService.SaveRefreshToken(credentials.Login, dataRefreshToken);
+            _iGeneralService.SaveRefreshToken(authenticationModel.Login, dataRefreshToken);
             return CustomResponse(ConstantHttpStatusCode.OK_CODE, new { token = dataToken, refreshToken = dataRefreshToken });
         }
         else
@@ -109,7 +118,8 @@ public sealed class AccountController : GenericController
     }
 
     [HttpPost("refreshToken")]
-    public IActionResult RefreshToken([FromBody] Tokens tokens)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public IActionResult RefreshToken([FromBody, Required] Tokens tokens)
     {
         var principal = _iGeneralService.GetPrincipalFromExpiredToken(tokens.Token);
         var savedRefreshToken = _iGeneralService.GetRefreshToken(principal.Identity.Name);

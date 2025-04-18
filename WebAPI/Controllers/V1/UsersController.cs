@@ -1,12 +1,8 @@
-﻿using WebAPI.Domain.Constants;
-using WebAPI.Domain.Entities.ControlPanel;
-using WebAPI.Domain.DTO.ControlPanel;
-using WebAPI.Domain.Enums;
-using WebAPI.Domain.ExtensionMethods;
+﻿using WebAPI.Domain.DTO.ControlPanel;
 using WebAPI.Domain.Filters.ControlPanel;
-using WebAPI.Domain.Interfaces.Repository;
-using WebAPI.Domain.Interfaces.Services;
-using WebAPI.Domain.Interfaces.Services.Tools;
+using FastPackForShare.Controllers.Generics;
+using FastPackForShare.Enums;
+using FastPackForShare.Default;
 
 namespace WebAPI.V1.Controllers;
 
@@ -18,23 +14,21 @@ namespace WebAPI.V1.Controllers;
 public sealed class UsersController : GenericController
 {
     private readonly IUserService _iUserService;
-    private readonly IFileService<UserExcelDTO> _iFileService;
-    private readonly GeneralMethod _generalMethod;
+    private readonly IFileWriteService<UserExcelDTO> _iFileWriteService;
 
     public UsersController(
         IUserService iUserService,
-        IFileService<UserExcelDTO> iFileService,
-        IHttpContextAccessor iHttpContextAccessor,
-        IGenericNotifyLogsService iGenericNotifyLogsService)
-        : base(iHttpContextAccessor, iGenericNotifyLogsService)
+        IFileWriteService<UserExcelDTO> iFileWriteService,
+        INotificationMessageService iNotificationMessageService)
+        : base(iNotificationMessageService)
 
     {
         _iUserService = iUserService;
-        _iFileService = iFileService;
-        _generalMethod = GeneralMethod.GetLoadExtensionMethods();
+        _iFileWriteService = iFileWriteService;
     }
 
     [HttpGet("GetAll")]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<IEnumerable<UserResponseDTO>>))]
     public async Task<IActionResult> GetAll()
     {
         var model = await _iUserService.GetAllUserAsync();
@@ -42,15 +36,18 @@ public sealed class UsersController : GenericController
     }
 
     [HttpPost("GetAllPaginate")]
-    public async Task<IActionResult> GetAllPaginate([FromBody] UserFilter userFilter)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<BasePagedResultModel<UserResponseDTO>>))]
+    public async Task<IActionResult> GetAllPaginate([FromBody, Required] UserFilter userFilter)
     {
-        if (ModelStateIsInvalid()) return CustomResponse(ModelState);
+        if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
         var model = await _iUserService.GetAllUserPaginateAsync(userFilter);
         return CustomResponse(ConstantHttpStatusCode.OK_CODE, model, FixConstants.SUCCESS_IN_GETALLPAGINATE);
     }
 
     [HttpGet("GetById/{id:long}")]
-    public async Task<IActionResult> GetById(long id)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<UserResponseDTO>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> GetById([FromRoute, Required, Range(ConstantValue.MIN_ID, ConstantValue.MAX_ID, ErrorMessage = FixConstants.ID)] long id)
     {
         if (await _iUserService.ExistUserByIdAsync(id))
         {
@@ -61,8 +58,10 @@ public sealed class UsersController : GenericController
         return CustomResponse(ConstantHttpStatusCode.NOT_FOUND_CODE);
     }
 
-    [HttpGet("GetByLogin/{login}")]
-    public async Task<IActionResult> GetByLogin(string login)
+    [HttpGet("GetByLogin/{login: string}")]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<UserResponseDTO>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> GetByLogin([FromRoute, Required]  string login)
     {
         if (await _iUserService.ExistUserByLoginAsync(login))
         {
@@ -74,24 +73,18 @@ public sealed class UsersController : GenericController
     }
 
     [HttpGet("GetUsers")]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<IEnumerable<DropDownListModel>>))]
     public async Task<IActionResult> GetUsers()
     {
         return CustomResponse(ConstantHttpStatusCode.OK_CODE, await _iUserService.GetUsersAsync(), FixConstants.SUCCESS_IN_DDL);
     }
 
-    /// <summary>
-    /// Realiza o processo de inserção do usuário
-    /// </summary>
-    /// <param name="userSendDto"></param>
-    /// <returns></returns>
-    /// <response code = "201">Sucesso</response>
-    /// <response code = "500">Erro interno no servidor</response>
-    [ProducesResponseType(StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+
     [HttpPost("Create")]
-    public async Task<IActionResult> Create([FromBody] UserRequestDTO userRequestDTO)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> Create([FromBody, Required] UserRequestDTO userRequestDTO)
     {
-        if (ModelStateIsInvalid()) return CustomResponse(ModelState);
+        if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
 
         var result = await _iUserService.CreateUserAsync(userRequestDTO);
 
@@ -102,9 +95,11 @@ public sealed class UsersController : GenericController
     }
 
     [HttpPut("Update")]
-    public async Task<IActionResult> Update(long id, [FromBody] UserRequestDTO userRequestDTO)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> Update([FromRoute, Required, Range(ConstantValue.MIN_ID, ConstantValue.MAX_ID, ErrorMessage = FixConstants.ID)] long id, [FromBody, Required] UserRequestDTO userRequestDTO)
     {
-        if (ModelStateIsInvalid()) return CustomResponse(ModelState);
+        if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
 
         if (id != userRequestDTO.Id)
         {
@@ -125,7 +120,9 @@ public sealed class UsersController : GenericController
     }
 
     [HttpDelete("LogicDelete/{id:long}")]
-    public async Task<IActionResult> LogicDelete(long id)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> LogicDelete([FromRoute, Required, Range(ConstantValue.MIN_ID, ConstantValue.MAX_ID, ErrorMessage = FixConstants.ID)] long id)
     {
         if (await _iUserService.ExistUserByIdAsync(id))
         {
@@ -145,7 +142,9 @@ public sealed class UsersController : GenericController
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpDelete("PhysicalDelete/{id:long}")]
-    public async Task<IActionResult> PhysicalDelete(long id)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> PhysicalDelete([FromRoute, Required, Range(ConstantValue.MIN_ID, ConstantValue.MAX_ID, ErrorMessage = FixConstants.ID)] long id)
     {
         var existId = await _iUserService.ExistUserByIdAsync(id);
         var canDelete = await _iUserService.CanDeleteUserByIdAsync(id);
@@ -165,14 +164,15 @@ public sealed class UsersController : GenericController
     }
 
     [HttpPost("ExportData")]
-    public async Task<IActionResult> ExportData([FromBody] UserFilter filter)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> ExportData([FromBody, Required] UserFilter filter)
     {
-        if (ModelStateIsInvalid()) return CustomResponse(ModelState);
+        if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
 
         var excelData = await _iUserService.ExportData(filter);
-        var memoryStreamResult = _generalMethod.GetMemoryStreamType(EnumMemoryStreamFile.XLSX);
-        var excelName = $"Users._{GuidExtensionMethod.GetGuidDigits("N")}.{memoryStreamResult.Extension}";
-        var memoryStreamExcel = await _iFileService.CreateExcelFileEPPLUS(excelData, excelName);
+        var memoryStreamResult = SharedExtension.GetMemoryStreamType(EnumFile.Excel);
+        var excelName = $"Users._{GuidExtension.GetGuidDigits("N")}.{memoryStreamResult.Extension}";
+        var memoryStreamExcel = await _iFileWriteService.CreateExcelFileEPPLUS(excelData, excelName);
         return File(memoryStreamExcel.ToArray(), memoryStreamResult.Type, excelName);
     }
 }

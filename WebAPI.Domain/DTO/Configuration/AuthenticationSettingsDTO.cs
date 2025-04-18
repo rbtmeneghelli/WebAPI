@@ -1,6 +1,8 @@
-﻿namespace WebAPI.Domain.DTO.Configuration;
+﻿using FastPackForShare.Bases;
 
-public record AuthenticationSettingsExcelDTO : GenericDTOModel
+namespace WebAPI.Domain.DTO.Configuration;
+
+public record AuthenticationSettingsExcelDTO : BaseReportModel
 {
     [DisplayName("EnvironmentDescription")]
     public string EnvironmentDescription { get; set; }

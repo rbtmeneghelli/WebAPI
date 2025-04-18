@@ -62,4 +62,6 @@ public static class FixConstants
     public const string MESSAGE_ERROR_APP_EX = "Atenção! Ocorreu um erro ao processar os dados. Tente novamente!";
     public const string MESSAGE_ERROR_UNAUTH_EX = "Atenção! Usuário não possui privilegios de permissão para prosseguir com a requisição solicitada!";
     public const string MESSAGE_ERROR_FORB_EX = "Sua sessão expirou, faça login novamente!";
+
+    public const string ID = "O Id não pode ser negativo";
 }

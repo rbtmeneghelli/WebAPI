@@ -1,10 +1,6 @@
 ﻿using WebAPI.Domain.CQRS.Command;
 using WebAPI.Domain.CQRS.Queries;
 using FastPackForShare.Controllers;
-using FastPackForShare.Interfaces;
-using System.ComponentModel.DataAnnotations;
-using FastPackForShare.Constants;
-using FastPackForShare.Models;
 using FastPackForShare.SimpleMediator;
 
 namespace WebAPI.V1.Controllers;

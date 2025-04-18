@@ -1,10 +1,6 @@
-﻿using WebAPI.Domain.Constants;
-using WebAPI.Domain.Entities.Configuration;
-using WebAPI.Domain.DTO.Configuration;
-using WebAPI.Domain.Enums;
-using WebAPI.Domain.ExtensionMethods;
-using WebAPI.Domain.Interfaces.Repository;
-using WebAPI.Domain.Interfaces.Services.Tools;
+﻿using WebAPI.Domain.DTO.Configuration;
+using FastPackForShare.Controllers.Generics;
+using FastPackForShare.Enums;
 
 namespace WebAPI.Controllers.V1.Configuration;
 
@@ -14,7 +10,6 @@ namespace WebAPI.Controllers.V1.Configuration;
 public sealed class LogSettingsController : GenericController
 {
     private readonly IGenericConfigurationService _iGenericConfigurationService;
-    private readonly GeneralMethod _generalMethod;
     private readonly IFileService<LogSettingsExcelDTO> _iFileService;
 
     public LogSettingsController(
@@ -25,7 +20,6 @@ public sealed class LogSettingsController : GenericController
     : base(iHttpContextAccessor, iGenericNotifyLogsService)
     {
         _iGenericConfigurationService = iGenericConfigurationService;
-        _generalMethod = GeneralMethod.GetLoadExtensionMethods();
         _iFileService = iFileService;
     }
 
@@ -63,9 +57,10 @@ public sealed class LogSettingsController : GenericController
     }
 
     [HttpPost("Create")]
-    public async Task<IActionResult> Create([FromBody] LogSettingsCreateRequestDTO logSettingsCreateRequestDTO)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> Create([FromBody, Required] LogSettingsCreateRequestDTO logSettingsCreateRequestDTO)
     {
-        if (ModelStateIsInvalid()) return CustomResponse(ModelState);
+        if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
 
         var result = await _iGenericConfigurationService.LogSettingsService.CreateLogSettingsAsync(logSettingsCreateRequestDTO);
 
@@ -76,9 +71,11 @@ public sealed class LogSettingsController : GenericController
     }
 
     [HttpPut("Update")]
-    public async Task<IActionResult> Update(long id, [FromBody] LogSettingsUpdateRequestDTO logSettingsUpdateRequestDTO)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> Update(long id, [FromBody, Required] LogSettingsUpdateRequestDTO logSettingsUpdateRequestDTO)
     {
-        if (ModelStateIsInvalid()) return CustomResponse(ModelState);
+        if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
 
         if (id != logSettingsUpdateRequestDTO.Id)
         {
@@ -99,6 +96,8 @@ public sealed class LogSettingsController : GenericController
     }
 
     [HttpDelete("LogicDelete/{id:long}")]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
     public async Task<IActionResult> LogicDelete(long id)
     {
         if (await _iGenericConfigurationService.LogSettingsService.ExistLogSettingsByIdAsync(id))
@@ -114,6 +113,7 @@ public sealed class LogSettingsController : GenericController
     }
 
     [HttpPost("Reactive")]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
     public async Task<IActionResult> Reactive(LogSettingsReactiveRequestDTO logSettingsReactiveRequestDTO)
     {
         if (await _iGenericConfigurationService.LogSettingsService.ExistLogSettingsByIdAsync(logSettingsReactiveRequestDTO.Id.GetValueOrDefault()))
@@ -129,15 +129,16 @@ public sealed class LogSettingsController : GenericController
     }
 
     [HttpPost("ExportData")]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
     public async Task<IActionResult> ExportData()
     {
-        if (ModelStateIsInvalid()) return CustomResponse(ModelState);
+        if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
 
         var excelData = await _iGenericConfigurationService.LogSettingsService.GetAllLogSettingsExcelAsync();
         if (excelData?.Count() > 0)
         {
-            var memoryStreamResult = _generalMethod.GetMemoryStreamType(EnumMemoryStreamFile.XLSX);
-            var excelName = $"LogSettings_{GuidExtensionMethod.GetGuidDigits("N")}.{memoryStreamResult.Extension}";
+            var memoryStreamResult = SharedExtension.GetMemoryStreamType(EnumFile.Excel);
+            var excelName = $"LogSettings_{GuidExtension.GetGuidDigits("N")}.{memoryStreamResult.Extension}";
             var memoryStreamExcel = await _iFileService.CreateExcelFileEPPLUS(excelData, excelName);
             return File(memoryStreamExcel.ToArray(), memoryStreamResult.Type, excelName);
         }

@@ -1,10 +1,6 @@
-﻿using WebAPI.Domain.Constants;
-using WebAPI.Domain.Entities.Configuration;
-using WebAPI.Domain.DTO.Configuration;
-using WebAPI.Domain.Enums;
-using WebAPI.Domain.ExtensionMethods;
-using WebAPI.Domain.Interfaces.Repository;
-using WebAPI.Domain.Interfaces.Services.Tools;
+﻿using WebAPI.Domain.DTO.Configuration;
+using FastPackForShare.Controllers.Generics;
+using FastPackForShare.Enums;
 
 namespace WebAPI.Controllers.V1.Configuration;
 
@@ -14,22 +10,21 @@ namespace WebAPI.Controllers.V1.Configuration;
 public sealed class EmailDisplaySettingsController : GenericController
 {
     private readonly IGenericConfigurationService _iGenericConfigurationService;
-    private readonly GeneralMethod _generalMethod;
-    private readonly IFileService<EmailDisplaySettingsExcelDTO> _iFileService;
+    private readonly IFileWriteService<EmailDisplaySettingsExcelDTO> _iFileWriteService;
 
     public EmailDisplaySettingsController(
         IGenericConfigurationService iGenericConfigurationService,
-        IFileService<EmailDisplaySettingsExcelDTO> iFileService,
+        IFileWriteService<EmailDisplaySettingsExcelDTO> iFileWriteService,
         IHttpContextAccessor iHttpContextAccessor,
-        IGenericNotifyLogsService iGenericNotifyLogsService)
-    : base(iHttpContextAccessor, iGenericNotifyLogsService)
+        INotificationMessageService iNotificationMessageService)
+    : base(iNotificationMessageService)
     {
         _iGenericConfigurationService = iGenericConfigurationService;
-        _generalMethod = GeneralMethod.GetLoadExtensionMethods();
-        _iFileService = iFileService;
+        _iFileWriteService = iFileWriteService;
     }
 
     [HttpGet("GetAll")]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<IEnumerable<EmailDisplaySettingsResponseDTO>>))]
     public async Task<IActionResult> GetAll()
     {
         var model = await _iGenericConfigurationService.EmailDisplaySettingsService.GetAllEmailDisplaySettingsAsync();
@@ -37,7 +32,9 @@ public sealed class EmailDisplaySettingsController : GenericController
     }
 
     [HttpGet("GetById/{id:long}")]
-    public async Task<IActionResult> GetById(long id)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<EmailDisplaySettingsResponseDTO>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> GetById([FromRoute, Required, Range(ConstantValue.MIN_ID, ConstantValue.MAX_ID, ErrorMessage = FixConstants.ID)] long id)
     {
         var existEmailDisplaySettings = await _iGenericConfigurationService.EmailDisplaySettingsService.ExistEmailDisplaySettingsByIdAsync(id);
         if (existEmailDisplaySettings)
@@ -50,9 +47,10 @@ public sealed class EmailDisplaySettingsController : GenericController
     }
 
     [HttpPost("Create")]
-    public async Task<IActionResult> Create([FromBody] EmailDisplaySettingsCreateRequestDTO emailDisplaySettingsCreateRequestDTO)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> Create([FromBody, Required] EmailDisplaySettingsCreateRequestDTO emailDisplaySettingsCreateRequestDTO)
     {
-        if (ModelStateIsInvalid()) return CustomResponse(ModelState);
+        if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
 
         var result = await _iGenericConfigurationService.EmailDisplaySettingsService.CreateEmailDisplaySettingsAsync(emailDisplaySettingsCreateRequestDTO);
 
@@ -63,9 +61,11 @@ public sealed class EmailDisplaySettingsController : GenericController
     }
 
     [HttpPut("Update")]
-    public async Task<IActionResult> Update(long id, [FromBody] EmailDisplaySettingsUpdateRequestDTO emailDisplaySettingsUpdateRequestDTO)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> Update([FromRoute, Required, Range(ConstantValue.MIN_ID, ConstantValue.MAX_ID, ErrorMessage = FixConstants.ID)] long id, [FromBody, Required] EmailDisplaySettingsUpdateRequestDTO emailDisplaySettingsUpdateRequestDTO)
     {
-        if (ModelStateIsInvalid()) return CustomResponse(ModelState);
+        if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
 
         if (id != emailDisplaySettingsUpdateRequestDTO.Id)
         {
@@ -86,7 +86,9 @@ public sealed class EmailDisplaySettingsController : GenericController
     }
 
     [HttpDelete("LogicDelete/{id:long}")]
-    public async Task<IActionResult> LogicDelete(long id)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> LogicDelete([FromRoute, Required, Range(ConstantValue.MIN_ID, ConstantValue.MAX_ID, ErrorMessage = FixConstants.ID)] long id)
     {
         if (await _iGenericConfigurationService.EmailDisplaySettingsService.ExistEmailDisplaySettingsByIdAsync(id))
         {
@@ -101,7 +103,8 @@ public sealed class EmailDisplaySettingsController : GenericController
     }
 
     [HttpPost("Reactive")]
-    public async Task<IActionResult> Reactive(EmailSettingsReactiveRequestDTO emailSettingsReactiveRequestDTO)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> Reactive([FromBody, Required] EmailSettingsReactiveRequestDTO emailSettingsReactiveRequestDTO)
     {
         if (await _iGenericConfigurationService.EmailDisplaySettingsService.ExistEmailDisplaySettingsByIdAsync(emailSettingsReactiveRequestDTO.Id.GetValueOrDefault()))
         {
@@ -116,16 +119,17 @@ public sealed class EmailDisplaySettingsController : GenericController
     }
 
     [HttpPost("ExportData")]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
     public async Task<IActionResult> ExportData()
     {
-        if (ModelStateIsInvalid()) return CustomResponse(ModelState);
+        if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
 
         var excelData = await _iGenericConfigurationService.EmailDisplaySettingsService.GetAllEmailDisplaySettingsExcelAsync();
         if (excelData?.Count() > 0)
         {
-            var memoryStreamResult = _generalMethod.GetMemoryStreamType(EnumMemoryStreamFile.XLSX);
-            var excelName = $"EmailDisplaySettings_{GuidExtensionMethod.GetGuidDigits("N")}.{memoryStreamResult.Extension}";
-            var memoryStreamExcel = await _iFileService.CreateExcelFileEPPLUS(excelData, excelName);
+            var memoryStreamResult = SharedExtension.GetMemoryStreamType(EnumFile.Excel);
+            var excelName = $"EmailDisplaySettings_{GuidExtension.GetGuidDigits("N")}.{memoryStreamResult.Extension}";
+            var memoryStreamExcel = await _iFileWriteService.CreateExcelFileEPPLUS(excelData, excelName);
             return File(memoryStreamExcel.ToArray(), memoryStreamResult.Type, excelName);
         }
 

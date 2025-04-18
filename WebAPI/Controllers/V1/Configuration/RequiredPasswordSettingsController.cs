@@ -1,10 +1,6 @@
-﻿using WebAPI.Domain.Constants;
-using WebAPI.Domain.Entities.Configuration;
-using WebAPI.Domain.DTO.Configuration;
-using WebAPI.Domain.Enums;
-using WebAPI.Domain.ExtensionMethods;
-using WebAPI.Domain.Interfaces.Repository;
-using WebAPI.Domain.Interfaces.Services.Tools;
+﻿using WebAPI.Domain.DTO.Configuration;
+using FastPackForShare.Controllers.Generics;
+using FastPackForShare.Enums;
 
 namespace WebAPI.Controllers.V1.Configuration;
 
@@ -14,7 +10,6 @@ namespace WebAPI.Controllers.V1.Configuration;
 public sealed class RequiredPasswordSettingsController : GenericController
 {
     private readonly IGenericConfigurationService _iGenericConfigurationService;
-    private readonly GeneralMethod _generalMethod;
     private readonly IFileService<RequiredPasswordSettingsExcelDTO> _iFileService;
 
     public RequiredPasswordSettingsController(
@@ -25,7 +20,6 @@ public sealed class RequiredPasswordSettingsController : GenericController
     : base(iHttpContextAccessor, iGenericNotifyLogsService)
     {
         _iGenericConfigurationService = iGenericConfigurationService;
-        _generalMethod = GeneralMethod.GetLoadExtensionMethods();
         _iFileService = iFileService;
     }
 
@@ -63,9 +57,10 @@ public sealed class RequiredPasswordSettingsController : GenericController
     }
 
     [HttpPost("Create")]
-    public async Task<IActionResult> Create([FromBody] RequiredPasswordSettingsCreateRequestDTO requiredPasswordSettingsCreateRequestDTO)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> Create([FromBody, Required] RequiredPasswordSettingsCreateRequestDTO requiredPasswordSettingsCreateRequestDTO)
     {
-        if (ModelStateIsInvalid()) return CustomResponse(ModelState);
+        if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
 
         var result = await _iGenericConfigurationService.RequiredPasswordSettingsService.CreateRequiredPasswordSettingsAsync(requiredPasswordSettingsCreateRequestDTO);
 
@@ -76,9 +71,11 @@ public sealed class RequiredPasswordSettingsController : GenericController
     }
 
     [HttpPut("Update")]
-    public async Task<IActionResult> Update(long id, [FromBody] RequiredPasswordSettingsUpdateRequestDTO requiredPasswordSettingsUpdateRequestDTO)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> Update(long id, [FromBody, Required] RequiredPasswordSettingsUpdateRequestDTO requiredPasswordSettingsUpdateRequestDTO)
     {
-        if (ModelStateIsInvalid()) return CustomResponse(ModelState);
+        if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
 
         if (id != requiredPasswordSettingsUpdateRequestDTO.Id)
         {
@@ -99,6 +96,8 @@ public sealed class RequiredPasswordSettingsController : GenericController
     }
 
     [HttpDelete("LogicDelete/{id:long}")]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
     public async Task<IActionResult> LogicDelete(int id)
     {
         if (await _iGenericConfigurationService.RequiredPasswordSettingsService.ExistRequiredPasswordSettingsByIdAsync(id))
@@ -114,7 +113,8 @@ public sealed class RequiredPasswordSettingsController : GenericController
     }
 
     [HttpPost("Reactive")]
-    public async Task<IActionResult> Reactive(RequiredPasswordSettingsReactiveRequestDTO requiredPasswordSettingsReactiveRequestDTO)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> Reactive([FromBody, Required] RequiredPasswordSettingsReactiveRequestDTO requiredPasswordSettingsReactiveRequestDTO)
     {
         if (await _iGenericConfigurationService.RequiredPasswordSettingsService.ExistRequiredPasswordSettingsByIdAsync(requiredPasswordSettingsReactiveRequestDTO.Id.GetValueOrDefault()))
         {
@@ -129,15 +129,16 @@ public sealed class RequiredPasswordSettingsController : GenericController
     }
 
     [HttpPost("ExportData")]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
     public async Task<IActionResult> ExportData()
     {
-        if (ModelStateIsInvalid()) return CustomResponse(ModelState);
+        if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
 
         var excelData = await _iGenericConfigurationService.RequiredPasswordSettingsService.GetAllRequiredPasswordSettingsExcelAsync();
         if (excelData?.Count() > 0)
         {
-            var memoryStreamResult = _generalMethod.GetMemoryStreamType(EnumMemoryStreamFile.XLSX);
-            var excelName = $"RequiredPasswordSettings_{GuidExtensionMethod.GetGuidDigits("N")}.{memoryStreamResult.Extension}";
+            var memoryStreamResult = SharedExtension.GetMemoryStreamType(EnumFile.Excel);
+            var excelName = $"RequiredPasswordSettings_{GuidExtension.GetGuidDigits("N")}.{memoryStreamResult.Extension}";
             var memoryStreamExcel = await _iFileService.CreateExcelFileEPPLUS(excelData, excelName);
             return File(memoryStreamExcel.ToArray(), memoryStreamResult.Type, excelName);
         }

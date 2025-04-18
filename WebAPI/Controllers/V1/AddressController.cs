@@ -1,15 +1,11 @@
-﻿using FastPackForShare.Constants;
-using FastPackForShare.Controllers.Generics;
-using FastPackForShare.Extensions;
-using FastPackForShare.Interfaces;
-using FastPackForShare.Models;
+﻿using FastPackForShare.Controllers.Generics;
 
 namespace WebAPI.Controllers.V1;
 
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/[controller]")]
 [Authorize(AuthenticationSchemes = "Bearer")]
-public class AddressController : GenericController
+public sealed class AddressController : GenericController
 {
     private readonly IAddressService _iAddressService;
     private readonly IStatesService _iStatesService;
@@ -34,7 +30,8 @@ public class AddressController : GenericController
     }
 
     [HttpGet("getAddress/{address:string}/{refreshAddress:bool}")]
-    public async Task<IActionResult> GetAddress(string address, bool refreshAddress)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<Domain.ValueObject.AddressData>))]
+    public async Task<IActionResult> GetAddress([FromRoute, Required] string address, [FromRoute, Required] bool refreshAddress)
     {
         Domain.ValueObject.AddressData modelAddress = new Domain.ValueObject.AddressData();
 
@@ -62,7 +59,8 @@ public class AddressController : GenericController
     }
 
     [HttpGet("getStates/{refreshStates:bool}")]
-    public async Task<IActionResult> GetStates(bool refreshStates)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<IEnumerable<States>>))]
+    public async Task<IActionResult> GetStates([FromRoute, Required] bool refreshStates)
     {
         IEnumerable<Region> listRegion = await _iRegionService.GetAllRegionAsync();
         IEnumerable<States> listStates = await _iStatesService.GetAllStateAsync();
@@ -88,6 +86,7 @@ public class AddressController : GenericController
     }
 
     [HttpGet("insertCities")]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
     public async Task<IActionResult> InsertCities()
     {
         IEnumerable<MesoRegion> mesoRegions = Enumerable.Empty<MesoRegion>();
@@ -134,6 +133,7 @@ public class AddressController : GenericController
     }
 
     [HttpGet("insertRegions")]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<IEnumerable<Region>>))]
     public async Task<IActionResult> InsertRegions()
     {
         List<Region> list = new List<Region>();
@@ -164,6 +164,7 @@ public class AddressController : GenericController
     }
 
     [HttpGet("insertStates")]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<IEnumerable<States>>))]
     public async Task<IActionResult> InsertStates()
     {
         IEnumerable<Region> listRegion = await _iRegionService.GetAllRegionAsync();
@@ -194,7 +195,8 @@ public class AddressController : GenericController
 
     [EnableCors("APICORS")]
     [HttpPost("validateRegionData")]
-    public async Task<IActionResult> ValidateRegionData(Region region)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> ValidateRegionData([FromBody, Required] Region region)
     {
         var regionValidator = new RegionValidation();
         var validationResult = regionValidator.Validate(region);

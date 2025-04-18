@@ -1,8 +1,9 @@
-﻿using MimeKit;
+﻿using FastPackForShare.Bases;
+using MimeKit;
 
 namespace WebAPI.Domain.DTO.Configuration;
 
-public record EmailDisplaySettingsExcelDTO : GenericDTOModel
+public record EmailDisplaySettingsExcelDTO : BaseReportModel
 {
     [DisplayName("Title")]
     public string Title { get; set; }

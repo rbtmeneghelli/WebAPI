@@ -1,4 +1,7 @@
-﻿using WebAPI.Domain.Filters.Others;
+﻿using FastPackForShare.Controllers.Generics;
+using FastPackForShare.Default;
+using WebAPI.Domain.DTO.Others;
+using WebAPI.Domain.Filters.Others;
 using FixConstants = WebAPI.Domain.Constants.FixConstants;
 
 namespace WebAPI.V1.Controllers;
@@ -12,17 +15,17 @@ public sealed class AuditController : GenericController
 
     public AuditController(
         IAuditService iAuditService,
-        IMapper iMapperService, 
-        IHttpContextAccessor iHttpContextAccessor, 
-        INotificationMessageService noticationMessageService, 
-        IGenericNotifyLogsService iGenericNotifyLogsService) 
-        : base(iHttpContextAccessor, iGenericNotifyLogsService)
+        IMapper iMapperService,  
+        INotificationMessageService iNoticationMessageService) 
+        : base(iNoticationMessageService)
     {
         _iAuditService = iAuditService;
     }
 
     [HttpGet("getById/{id:long}")]
-    public async Task<IActionResult> GetById(long id)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<AuditResponseDTO>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> GetById([FromRoute, Required, Range(ConstantValue.MIN_ID, ConstantValue.MAX_ID, ErrorMessage = FixConstants.ID)] long id)
     {
         if (await _iAuditService.ExistAuditByIdAsync(id))
         {
@@ -34,10 +37,11 @@ public sealed class AuditController : GenericController
     }
 
     [HttpPost("getAllPaginate")]
-    public async Task<IActionResult> GetAllPaginate(AuditFilter filter)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<BasePagedResultModel<AuditResponseDTO>>))]
+    public async Task<IActionResult> GetAllPaginate([FromBody, Required] AuditFilter filter)
     {
         if (ModelStateIsInvalid())
-            return CustomResponse(ModelState);
+            return CustomResponseModel(ModelState);
 
         var model = await _iAuditService.GetAllAuditPaginateAsync(filter);
 

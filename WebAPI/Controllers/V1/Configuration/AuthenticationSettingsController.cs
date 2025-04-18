@@ -1,6 +1,7 @@
 ﻿using FastPackForShare.Controllers.Generics;
+using FastPackForShare.Enums;
 using WebAPI.Domain.DTO.Configuration;
-using WebAPI.Domain.Enums;
+using WebAPI.Domain.DTO.ControlPanel;
 
 namespace WebAPI.Controllers.V1.Configuration;
 
@@ -10,22 +11,20 @@ namespace WebAPI.Controllers.V1.Configuration;
 public sealed class AuthenticationSettingsController : GenericController
 {
     private readonly IGenericConfigurationService _iGenericConfigurationService;
-    private readonly GeneralMethod _generalMethod;
-    private readonly IFileService<AuthenticationSettingsExcelDTO> _iFileService;
+    private readonly IFileWriteService<AuthenticationSettingsExcelDTO> _iFileWriteService;
 
     public AuthenticationSettingsController(
         IGenericConfigurationService iGenericConfigurationService,
-        IFileService<AuthenticationSettingsExcelDTO> iFileService,
-        IHttpContextAccessor iHttpContextAccessor,
-        IGenericNotifyLogsService iGenericNotifyLogsService)
-    : base(iHttpContextAccessor, iGenericNotifyLogsService)
+        IFileWriteService<AuthenticationSettingsExcelDTO> iFileWriteService,
+        INotificationMessageService iNotificationMessageService)
+    : base(iNotificationMessageService)
     {
         _iGenericConfigurationService = iGenericConfigurationService;
-        _generalMethod = GeneralMethod.GetLoadExtensionMethods();
-        _iFileService = iFileService;
+        _iFileWriteService = iFileWriteService;
     }
 
     [HttpGet("GetAll")]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<IEnumerable<AuthenticationSettingsResponseDTO>>))]
     public async Task<IActionResult> GetAll()
     {
         var model = await _iGenericConfigurationService.AuthenticationSettingsService.GetAllAuthenticationSettingsAsync();
@@ -33,6 +32,7 @@ public sealed class AuthenticationSettingsController : GenericController
     }
 
     [HttpGet("GetByEnvironment")]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<AuthenticationSettingsResponseDTO>))]
     public async Task<IActionResult> GetByEnvironment()
     {
         var existAuthenticationSettings = await _iGenericConfigurationService.AuthenticationSettingsService.ExistAuthenticationSettingsByEnvironmentAsync();
@@ -46,7 +46,9 @@ public sealed class AuthenticationSettingsController : GenericController
     }
 
     [HttpGet("GetById/{id:long}")]
-    public async Task<IActionResult> GetById(long id)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<AuthenticationSettingsResponseDTO>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> GetById([FromRoute, Required, Range(ConstantValue.MIN_ID, ConstantValue.MAX_ID, ErrorMessage = FixConstants.ID)] long id)
     {
         var existAuthenticationSettings = await _iGenericConfigurationService.AuthenticationSettingsService.ExistAuthenticationSettingsByIdAsync(id);
         if (existAuthenticationSettings)
@@ -59,9 +61,10 @@ public sealed class AuthenticationSettingsController : GenericController
     }
 
     [HttpPost("Create")]
-    public async Task<IActionResult> Create([FromBody] AuthenticationSettingsCreateRequestDTO authenticationSettingsCreateRequestDTO)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> Create([FromBody, Required] AuthenticationSettingsCreateRequestDTO authenticationSettingsCreateRequestDTO)
     {
-        if (ModelStateIsInvalid()) return CustomResponse(ModelState);
+        if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
 
         var result = await _iGenericConfigurationService.AuthenticationSettingsService.CreateAuthenticationSettingsAsync(authenticationSettingsCreateRequestDTO);
 
@@ -72,9 +75,11 @@ public sealed class AuthenticationSettingsController : GenericController
     }
 
     [HttpPut("Update")]
-    public async Task<IActionResult> Update(long id, [FromBody] AuthenticationSettingsUpdateRequestDTO authenticationSettingsUpdateRequestDTO)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> Update([FromRoute, Required, Range(ConstantValue.MIN_ID, ConstantValue.MAX_ID, ErrorMessage = FixConstants.ID)] long id, [FromBody, Required] AuthenticationSettingsUpdateRequestDTO authenticationSettingsUpdateRequestDTO)
     {
-        if (ModelStateIsInvalid()) return CustomResponse(ModelState);
+        if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
 
         if (id != authenticationSettingsUpdateRequestDTO.Id)
         {
@@ -95,7 +100,9 @@ public sealed class AuthenticationSettingsController : GenericController
     }
 
     [HttpDelete("LogicDelete/{id:long}")]
-    public async Task<IActionResult> LogicDelete(long id)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> LogicDelete([FromRoute, Required, Range(ConstantValue.MIN_ID, ConstantValue.MAX_ID, ErrorMessage = FixConstants.ID)] long id)
     {
         if (await _iGenericConfigurationService.AuthenticationSettingsService.ExistAuthenticationSettingsByIdAsync(id))
         {
@@ -110,7 +117,8 @@ public sealed class AuthenticationSettingsController : GenericController
     }
 
     [HttpPost("Reactive")]
-    public async Task<IActionResult> Reactive(AuthenticationSettingsReactiveRequestDTO authenticationSettingsReactiveRequestDTO)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> Reactive([FromBody, Required] AuthenticationSettingsReactiveRequestDTO authenticationSettingsReactiveRequestDTO)
     {
         if (await _iGenericConfigurationService.AuthenticationSettingsService.ExistAuthenticationSettingsByIdAsync(authenticationSettingsReactiveRequestDTO.Id.GetValueOrDefault()))
         {
@@ -125,16 +133,17 @@ public sealed class AuthenticationSettingsController : GenericController
     }
 
     [HttpPost("ExportData")]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
     public async Task<IActionResult> ExportData()
     {
-        if (ModelStateIsInvalid()) return CustomResponse(ModelState);
+        if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
 
         var excelData = await _iGenericConfigurationService.AuthenticationSettingsService.GetAllAuthenticationSettingsExcelAsync();
         if (excelData?.Count() > 0)
         {
-            var memoryStreamResult = _generalMethod.GetMemoryStreamType(EnumMemoryStreamFile.XLSX);
-            var excelName = $"AuthenticationSettings_{GuidExtensionMethod.GetGuidDigits("N")}.{memoryStreamResult.Extension}";
-            var memoryStreamExcel = await _iFileService.CreateExcelFileEPPLUS(excelData, excelName);
+            var memoryStreamResult = SharedExtension.GetMemoryStreamType(EnumFile.Excel);
+            var excelName = $"AuthenticationSettings_{GuidExtension.GetGuidDigits("N")}.{memoryStreamResult.Extension}";
+            var memoryStreamExcel = await _iFileWriteService.CreateExcelFileEPPLUS(excelData, excelName);
             return File(memoryStreamExcel.ToArray(), memoryStreamResult.Type, excelName);
         }
 

@@ -11,3 +11,8 @@ global using WebAPI.Domain.Interfaces.Repository;
 global using WebAPI.Domain.Interfaces.Services;
 global using WebAPI.Domain.Validations;
 global using WebAPI.Domain.Entities.ControlPanel;
+global using FastPackForShare.Constants;
+global using FastPackForShare.Interfaces;
+global using FastPackForShare.Models;
+global using System.ComponentModel.DataAnnotations;
+global using FastPackForShare.Extensions;

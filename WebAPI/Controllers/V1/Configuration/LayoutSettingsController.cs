@@ -5,6 +5,7 @@ using WebAPI.Domain.Enums;
 using WebAPI.Domain.ExtensionMethods;
 using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.Interfaces.Services.Tools;
+using FastPackForShare.Controllers.Generics;
 
 namespace WebAPI.Controllers.V1.Configuration;
 
@@ -14,7 +15,6 @@ namespace WebAPI.Controllers.V1.Configuration;
 public sealed class LayoutSettingsController : GenericController
 {
     private readonly IGenericConfigurationService _iGenericConfigurationService;
-    private readonly GeneralMethod _generalMethod;
     private readonly IFileService<LayoutSettingsExcelDTO> _iFileService;
 
     public LayoutSettingsController(
@@ -25,7 +25,6 @@ public sealed class LayoutSettingsController : GenericController
     : base(iHttpContextAccessor, iGenericNotifyLogsService)
     {
         _iGenericConfigurationService = iGenericConfigurationService;
-        _generalMethod = GeneralMethod.GetLoadExtensionMethods();
         _iFileService = iFileService;
     }
 
@@ -63,7 +62,8 @@ public sealed class LayoutSettingsController : GenericController
     }
 
     [HttpPost("Create")]
-    public async Task<IActionResult> Create([FromBody] LayoutSettingsCreateRequestDTO layoutSettingsCreateRequestDTO)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> Create([FromBody, Required] LayoutSettingsCreateRequestDTO layoutSettingsCreateRequestDTO)
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
@@ -76,7 +76,9 @@ public sealed class LayoutSettingsController : GenericController
     }
 
     [HttpPut("Update")]
-    public async Task<IActionResult> Update(long id, [FromBody] LayoutSettingsUpdateRequestDTO layoutSettingsUpdateRequestDTO)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> Update(long id, [FromBody, Required] LayoutSettingsUpdateRequestDTO layoutSettingsUpdateRequestDTO)
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);
 
@@ -99,6 +101,8 @@ public sealed class LayoutSettingsController : GenericController
     }
 
     [HttpDelete("LogicDelete/{id:long}")]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
     public async Task<IActionResult> LogicDelete(int id)
     {
         if (await _iGenericConfigurationService.LayoutSettingsService.ExistLayoutSettingsByIdAsync(id))
@@ -114,7 +118,8 @@ public sealed class LayoutSettingsController : GenericController
     }
 
     [HttpPost("Reactive")]
-    public async Task<IActionResult> Reactive(LayoutSettingsReactiveRequestDTO layoutSettingsReactiveRequestDTO)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> Reactive([FromBody, Required] LayoutSettingsReactiveRequestDTO layoutSettingsReactiveRequestDTO)
     {
         if (await _iGenericConfigurationService.LayoutSettingsService.ExistLayoutSettingsByIdAsync(layoutSettingsReactiveRequestDTO.Id.GetValueOrDefault()))
         {
@@ -129,6 +134,7 @@ public sealed class LayoutSettingsController : GenericController
     }
 
     [HttpPost("ExportData")]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
     public async Task<IActionResult> ExportData()
     {
         if (ModelStateIsInvalid()) return CustomResponse(ModelState);

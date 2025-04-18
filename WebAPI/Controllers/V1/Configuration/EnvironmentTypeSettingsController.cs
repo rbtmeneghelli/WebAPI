@@ -1,4 +1,5 @@
-﻿using WebAPI.Domain.Constants;
+﻿using FastPackForShare.Controllers.Generics;
+using WebAPI.Domain.Constants;
 using WebAPI.Domain.DTO.Configuration;
 using WebAPI.Domain.Enums;
 using WebAPI.Domain.ExtensionMethods;
@@ -13,7 +14,6 @@ namespace WebAPI.Controllers.V1.Configuration;
 public sealed class EnvironmentTypeSettingsController : GenericController
 {
     private readonly IGenericConfigurationService _iGenericConfigurationService;
-    private readonly GeneralMethod _generalMethod;
     private readonly IFileService<EnvironmentTypeSettingsExcelDTO> _iFileService;
 
     public EnvironmentTypeSettingsController(
@@ -24,7 +24,6 @@ public sealed class EnvironmentTypeSettingsController : GenericController
     : base(iHttpContextAccessor, iGenericNotifyLogsService)
     {
         _iGenericConfigurationService = iGenericConfigurationService;
-        _generalMethod = GeneralMethod.GetLoadExtensionMethods();
         _iFileService = iFileService;
     }
 
@@ -49,9 +48,10 @@ public sealed class EnvironmentTypeSettingsController : GenericController
     }
 
     [HttpPost("Create")]
-    public async Task<IActionResult> Create([FromBody] EnvironmentTypeSettingsCreateRequestDTO environmentTypeSettingsCreateRequestDTO)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> Create([FromBody, Required] EnvironmentTypeSettingsCreateRequestDTO environmentTypeSettingsCreateRequestDTO)
     {
-        if (ModelStateIsInvalid()) return CustomResponse(ModelState);
+        if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
 
         var result = await _iGenericConfigurationService.EnvironmentTypeSettingsService.CreateEnvironmentTypeSettingsAsync(environmentTypeSettingsCreateRequestDTO);
 
@@ -62,9 +62,11 @@ public sealed class EnvironmentTypeSettingsController : GenericController
     }
 
     [HttpPut("Update")]
-    public async Task<IActionResult> Update(long id, [FromBody] EnvironmentTypeSettingsUpdateRequestDTO environmentTypeSettingsUpdateRequestDTO)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> Update(long id, [FromBody, Required] EnvironmentTypeSettingsUpdateRequestDTO environmentTypeSettingsUpdateRequestDTO)
     {
-        if (ModelStateIsInvalid()) return CustomResponse(ModelState);
+        if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
 
         if (id != environmentTypeSettingsUpdateRequestDTO.Id)
         {
@@ -85,6 +87,8 @@ public sealed class EnvironmentTypeSettingsController : GenericController
     }
 
     [HttpDelete("LogicDelete/{id:long}")]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
     public async Task<IActionResult> LogicDelete(long id)
     {
         if (await _iGenericConfigurationService.EnvironmentTypeSettingsService.ExistEnvironmentTypeSettingsByIdAsync(id))
@@ -100,7 +104,8 @@ public sealed class EnvironmentTypeSettingsController : GenericController
     }
 
     [HttpPost("Reactive")]
-    public async Task<IActionResult> Reactive(EnvironmentTypeSettingsReactiveRequestDTO environmentTypeSettingsReactiveRequestDTO)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> Reactive([FromBody, Required] EnvironmentTypeSettingsReactiveRequestDTO environmentTypeSettingsReactiveRequestDTO)
     {
         if (await _iGenericConfigurationService.EnvironmentTypeSettingsService.ExistEnvironmentTypeSettingsByIdAsync(environmentTypeSettingsReactiveRequestDTO.Id.GetValueOrDefault()))
         {
@@ -115,15 +120,16 @@ public sealed class EnvironmentTypeSettingsController : GenericController
     }
 
     [HttpPost("ExportData")]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
     public async Task<IActionResult> ExportData()
     {
-        if (ModelStateIsInvalid()) return CustomResponse(ModelState);
+        if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
 
         var excelData = await _iGenericConfigurationService.EnvironmentTypeSettingsService.GetAllEnvironmentTypeSettingsExcelAsync();
         if (excelData?.Count() > 0)
         {
             var memoryStreamResult = _generalMethod.GetMemoryStreamType(EnumMemoryStreamFile.XLSX);
-            var excelName = $"EnvironmentTypeSettings_{GuidExtensionMethod.GetGuidDigits("N")}.{memoryStreamResult.Extension}";
+            var excelName = $"EnvironmentTypeSettings_{GuidExtension.GetGuidDigits("N")}.{memoryStreamResult.Extension}";
             var memoryStreamExcel = await _iFileService.CreateExcelFileEPPLUS(excelData, excelName);
             return File(memoryStreamExcel.ToArray(), memoryStreamResult.Type, excelName);
         }

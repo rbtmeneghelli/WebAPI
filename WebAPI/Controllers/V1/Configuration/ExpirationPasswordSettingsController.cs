@@ -1,4 +1,6 @@
-﻿using WebAPI.Domain.Constants;
+﻿using FastPackForShare.Controllers.Generics;
+using FastPackForShare.Enums;
+using WebAPI.Domain.Constants;
 using WebAPI.Domain.DTO.Configuration;
 using WebAPI.Domain.Enums;
 using WebAPI.Domain.ExtensionMethods;
@@ -13,7 +15,6 @@ namespace WebAPI.Controllers.V1.Configuration;
 public sealed class ExpirationPasswordSettingsController : GenericController
 {
     private readonly IGenericConfigurationService _iGenericConfigurationService;
-    private readonly GeneralMethod _generalMethod;
     private readonly IFileService<ExpirationPasswordSettingsExcelDTO> _iFileService;
 
     public ExpirationPasswordSettingsController(
@@ -24,7 +25,6 @@ public sealed class ExpirationPasswordSettingsController : GenericController
     : base(iHttpContextAccessor, iGenericNotifyLogsService)
     {
         _iGenericConfigurationService = iGenericConfigurationService;
-        _generalMethod = GeneralMethod.GetLoadExtensionMethods();
         _iFileService = iFileService;
     }
 
@@ -62,9 +62,10 @@ public sealed class ExpirationPasswordSettingsController : GenericController
     }
 
     [HttpPost("Create")]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
     public async Task<IActionResult> Create([FromBody] ExpirationPasswordSettingsCreateRequestDTO expirationPasswordSettingsCreateRequestDTO)
     {
-        if (ModelStateIsInvalid()) return CustomResponse(ModelState);
+        if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
 
         var result = await _iGenericConfigurationService.ExpirationPasswordSettingsService.CreateExpirationPasswordSettingsAsync(expirationPasswordSettingsCreateRequestDTO);
 
@@ -75,9 +76,11 @@ public sealed class ExpirationPasswordSettingsController : GenericController
     }
 
     [HttpPut("Update")]
-    public async Task<IActionResult> Update(long id, [FromBody] ExpirationPasswordSettingsUpdateRequestDTO expirationPasswordSettingsUpdateRequestDTO)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> Update(long id, [FromBody, Required] ExpirationPasswordSettingsUpdateRequestDTO expirationPasswordSettingsUpdateRequestDTO)
     {
-        if (ModelStateIsInvalid()) return CustomResponse(ModelState);
+        if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
 
         if (id != expirationPasswordSettingsUpdateRequestDTO.Id)
         {
@@ -98,6 +101,8 @@ public sealed class ExpirationPasswordSettingsController : GenericController
     }
 
     [HttpDelete("LogicDelete/{id:long}")]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
     public async Task<IActionResult> LogicDelete(long id)
     {
         if (await _iGenericConfigurationService.ExpirationPasswordSettingsService.ExistExpirationPasswordSettingsByIdAsync(id))
@@ -113,7 +118,8 @@ public sealed class ExpirationPasswordSettingsController : GenericController
     }
 
     [HttpPost("Reactive")]
-    public async Task<IActionResult> Reactive(ExpirationPasswordSettingsReactiveRequestDTO expirationPasswordSettingsReactiveRequestDTO)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> Reactive([FromBody, Required] ExpirationPasswordSettingsReactiveRequestDTO expirationPasswordSettingsReactiveRequestDTO)
     {
         if (await _iGenericConfigurationService.ExpirationPasswordSettingsService.ExistExpirationPasswordSettingsByIdAsync(expirationPasswordSettingsReactiveRequestDTO.Id.GetValueOrDefault()))
         {
@@ -128,15 +134,16 @@ public sealed class ExpirationPasswordSettingsController : GenericController
     }
 
     [HttpPost("ExportData")]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
     public async Task<IActionResult> ExportData()
     {
-        if (ModelStateIsInvalid()) return CustomResponse(ModelState);
+        if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
 
         var excelData = await _iGenericConfigurationService.ExpirationPasswordSettingsService.GetAllExpirationPasswordSettingsExcelAsync();
         if (excelData?.Count() > 0)
         {
-            var memoryStreamResult = _generalMethod.GetMemoryStreamType(EnumMemoryStreamFile.XLSX);
-            var excelName = $"ExpirationPasswordSettings_{GuidExtensionMethod.GetGuidDigits("N")}.{memoryStreamResult.Extension}";
+            var memoryStreamResult = SharedExtension.GetMemoryStreamType(EnumFile.Excel);
+            var excelName = $"ExpirationPasswordSettings_{GuidExtension.GetGuidDigits("N")}.{memoryStreamResult.Extension}";
             var memoryStreamExcel = await _iFileService.CreateExcelFileEPPLUS(excelData, excelName);
             return File(memoryStreamExcel.ToArray(), memoryStreamResult.Type, excelName);
         }

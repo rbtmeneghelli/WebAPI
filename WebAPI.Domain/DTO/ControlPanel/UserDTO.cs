@@ -1,4 +1,5 @@
-﻿using FastPackForShare.Default;
+﻿using FastPackForShare.Bases;
+using FastPackForShare.Default;
 
 namespace WebAPI.Domain.DTO.ControlPanel;
 
@@ -42,7 +43,7 @@ public record UserRequestDTO : BaseDTOModel
     public override string ToString() => $"Login: {Login}";
 }
 
-public record UserExcelDTO : GenericDTOModel
+public record UserExcelDTO : BaseReportModel
 {
     [DisplayName("Login")]
     public string Login { get; set; }

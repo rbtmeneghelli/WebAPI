@@ -191,7 +191,7 @@ public class MappingProfile : AutoMapper.Profile
         .ForMember(dest => dest.SmtpConfig, act => act.MapFrom(src => src.SmtpConfig))
         .ForMember(dest => dest.PrimaryPort, act => act.MapFrom(src => src.PrimaryPort))
         .ForMember(dest => dest.Email, act => act.MapFrom(src => src.Email))
-        .ForMember(dest => dest.Password, act => act.MapFrom(src => CryptographyAesService.ApplyEncrypt(src.Password)))
+        .ForMember(dest => dest.Password, act => act.MapFrom(src => CryptographyAesManager.ApplyEncrypt(src.Password)))
         .ForMember(dest => dest.EnableSsl, act => act.MapFrom(src => src.EnableSsl))
         .ForMember(dest => dest.IdEnvironmentType, act => act.MapFrom(src => src.IdEnvironment))
         .ForMember(dest => dest.CreatedAt, act => act.MapFrom(src => DateOnlyExtension.GetDateTimeNowFromBrazil()))
@@ -203,7 +203,7 @@ public class MappingProfile : AutoMapper.Profile
         .ForMember(dest => dest.SmtpConfig, act => act.MapFrom(src => src.SmtpConfig))
         .ForMember(dest => dest.PrimaryPort, act => act.MapFrom(src => src.PrimaryPort))
         .ForMember(dest => dest.Email, act => act.MapFrom(src => src.Email))
-        .ForMember(dest => dest.Password, act => act.MapFrom(src => CryptographyAesService.ApplyEncrypt(src.Password)))
+        .ForMember(dest => dest.Password, act => act.MapFrom(src => CryptographyAesManager.ApplyEncrypt(src.Password)))
         .ForMember(dest => dest.EnableSsl, act => act.MapFrom(src => src.EnableSsl))
         .ForMember(dest => dest.IdEnvironmentType, act => act.MapFrom(src => src.IdEnvironment))
         .ForMember(dest => dest.UpdatedAt, act => act.MapFrom(src => DateOnlyExtension.GetDateTimeNowFromBrazil()));

@@ -1,4 +1,7 @@
-﻿using WebAPI.Domain.Filters.Others;
+﻿using FastPackForShare.Controllers.Generics;
+using FastPackForShare.Default;
+using WebAPI.Domain.DTO.Others;
+using WebAPI.Domain.Filters.Others;
 
 namespace WebAPI.V1.Controllers;
 
@@ -12,15 +15,16 @@ public sealed class LogController : GenericController
 
     public LogController(
         ILogService iLogService,
-        IHttpContextAccessor iHttpContextAccessor,
-        IGenericNotifyLogsService iGenericNotifyLogsService)
-        : base(iHttpContextAccessor, iGenericNotifyLogsService)
+        INotificationMessageService iNotificationMessageService)
+        : base(iNotificationMessageService)
     {
         _iLogService = iLogService;
     }
 
     [HttpGet("getById/{id:long}")]
-    public async Task<IActionResult> GetById(long id)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<LogResponseDTO>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> GetById([FromRoute, Required, Range(ConstantValue.MIN_ID, ConstantValue.MAX_ID, ErrorMessage = FixConstants.ID)] long id)
     {
         if (await _iLogService.ExistLogByIdAsync(id))
         {
@@ -32,9 +36,10 @@ public sealed class LogController : GenericController
     }
 
     [HttpPost("getAllPaginate")]
-    public async Task<IActionResult> GetAllPaginate(LogFilter filter)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<BasePagedResultModel<LogResponseDTO>>))]
+    public async Task<IActionResult> GetAllPaginate([FromBody, Required] LogFilter filter)
     {
-        if (ModelStateIsInvalid()) return CustomResponse(ModelState);
+        if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
 
         var model = await _iLogService.GetAllLogPaginateAsync(filter);
 

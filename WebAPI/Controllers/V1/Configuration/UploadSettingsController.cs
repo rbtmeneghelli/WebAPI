@@ -1,4 +1,5 @@
-﻿using WebAPI.Domain.Constants;
+﻿using FastPackForShare.Controllers.Generics;
+using WebAPI.Domain.Constants;
 using WebAPI.Domain.DTO.Configuration;
 using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.Interfaces.Services.Tools;
@@ -11,18 +12,15 @@ namespace WebAPI.Controllers.V1.Configuration;
 public sealed class UploadSettingsController : GenericController
 {
     private readonly IGenericConfigurationService _iGenericConfigurationService;
-    private readonly GeneralMethod _generalMethod;
-    private readonly IMemoryCacheService _iMemoryCacheService;
+    private readonly IMemoryCacheService<UploadSettingsResponseDTO> _iMemoryCacheService;
     public UploadSettingsController(
         IGenericConfigurationService iGenericConfigurationService,
-        IMemoryCacheService iMemoryCacheService,
-        IHttpContextAccessor iHttpContextAccessor,
-        IGenericNotifyLogsService iGenericNotifyLogsService)
-    : base(iHttpContextAccessor, iGenericNotifyLogsService)
+        IMemoryCacheService<UploadSettingsResponseDTO> iMemoryCacheService,
+        INotificationMessageService iNotificationMessageService)
+    : base(iNotificationMessageService)
     {
         _iGenericConfigurationService = iGenericConfigurationService;
         _iMemoryCacheService = iMemoryCacheService;
-        _generalMethod = GeneralMethod.GetLoadExtensionMethods();
     }
 
     [HttpGet("GetByEnvironment")]
@@ -52,9 +50,10 @@ public sealed class UploadSettingsController : GenericController
     }
 
     [HttpPost("Create")]
-    public async Task<IActionResult> Create([FromForm] UploadSettingsCreateRequestDTO uploadSettingsCreateRequestDTO)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> Create([FromForm, Required] UploadSettingsCreateRequestDTO uploadSettingsCreateRequestDTO)
     {
-        if (ModelStateIsInvalid()) return CustomResponse(ModelState);
+        if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
 
         var result = await _iGenericConfigurationService.UploadSettingsService.CreateUploadSettingsAsync(uploadSettingsCreateRequestDTO);
 
@@ -65,9 +64,11 @@ public sealed class UploadSettingsController : GenericController
     }
 
     [HttpPut("Update")]
-    public async Task<IActionResult> Update(long id, [FromForm] UploadSettingsUpdateRequestDTO uploadSettingsUpdateRequestDTO)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> Update(long id, [FromForm, Required] UploadSettingsUpdateRequestDTO uploadSettingsUpdateRequestDTO)
     {
-        if (ModelStateIsInvalid()) return CustomResponse(ModelState);
+        if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
 
         if (id != uploadSettingsUpdateRequestDTO.Id)
         {
@@ -88,6 +89,8 @@ public sealed class UploadSettingsController : GenericController
     }
 
     [HttpDelete("LogicDelete/{id:long}")]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
     public async Task<IActionResult> LogicDelete(int id)
     {
         if (await _iGenericConfigurationService.UploadSettingsService.ExistUploadSettingsByIdAsync(id))
@@ -103,7 +106,8 @@ public sealed class UploadSettingsController : GenericController
     }
 
     [HttpPost("Reactive")]
-    public async Task<IActionResult> Reactive(RequiredPasswordSettingsReactiveRequestDTO requiredPasswordSettingsReactiveRequestDTO)
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    public async Task<IActionResult> Reactive([FromBody, Required] RequiredPasswordSettingsReactiveRequestDTO requiredPasswordSettingsReactiveRequestDTO)
     {
         if (await _iGenericConfigurationService.UploadSettingsService.ExistUploadSettingsByIdAsync(requiredPasswordSettingsReactiveRequestDTO.Id.GetValueOrDefault()))
         {
@@ -119,9 +123,10 @@ public sealed class UploadSettingsController : GenericController
 
 
     [HttpGet("load")]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<UploadSettingsResponseDTO>))]
     public async Task<IActionResult> Load()
     {
-        if (!_iMemoryCacheService.TryGet<UploadSettingsResponseDTO>("FilesData", out var cached))
+        if (!_iMemoryCacheService.TryGet("FilesData", out var cached))
         {
             var files = await _iGenericConfigurationService.UploadSettingsService.GetUploadSettingsByEnvironmentAsync();
             _iMemoryCacheService.Set("FilesData", files);
@@ -129,7 +134,7 @@ public sealed class UploadSettingsController : GenericController
         }
         else
         {
-            var files = _iMemoryCacheService.Get<UploadSettingsResponseDTO>("FilesData");
+            var files = _iMemoryCacheService.Get("FilesData");
             return CustomResponse(ConstantHttpStatusCode.OK_CODE, files);
         }
     }
