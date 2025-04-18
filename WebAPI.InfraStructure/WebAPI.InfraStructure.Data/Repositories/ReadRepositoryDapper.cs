@@ -3,6 +3,7 @@ using WebAPI.Domain.Models;
 using System.Data;
 using WebAPI.Domain.Interfaces.Generic;
 using WebAPI.Domain;
+using FastPackForShare.Models;
 
 namespace WebAPI.InfraStructure.Data.Repositories;
 
@@ -28,12 +29,12 @@ public class ReadRepositoryDapper<TEntity> : GenericRepositoryDapper, IReadRepos
         }
     }
 
-    public async Task<QueryResult<TEntity>> GetMultipleResult(string sqlQuery)
+    public async Task<QueryResultModel<TEntity>> GetMultipleResult(string sqlQuery)
     {
         using (IDbConnection idbConnection = GetDbConnection())
         {
             var reader = await idbConnection.QueryMultipleAsync(sql: sqlQuery);
-            return new QueryResult<TEntity>
+            return new QueryResultModel<TEntity>
             {
                 Count = reader.Read<int>().FirstOrDefault(),
                 Result = reader.Read<TEntity>()

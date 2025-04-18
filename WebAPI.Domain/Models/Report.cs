@@ -1,6 +1,6 @@
 ﻿namespace WebAPI.Domain.Models;
 
-public class Report
+public record Report
 {
     public int Modelo { get; set; }
     public int Formulario { get; set; }

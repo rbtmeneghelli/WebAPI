@@ -1,6 +1,4 @@
-﻿using WebAPI.Domain.Enums;
-
-namespace WebAPI.Domain.Models;
+﻿namespace WebAPI.Domain.Models;
 
 public class ProblemDetailsException : Microsoft.AspNetCore.Mvc.ProblemDetails
 {

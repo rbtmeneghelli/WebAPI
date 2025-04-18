@@ -1,6 +1,6 @@
 ﻿namespace WebAPI.Domain.Entities.Others;
 
-public class Notification
+public class Notification : GenericEntityModel
 {
     public long? Id { get; set; }
     public string Description { get; set; }

@@ -1,5 +1,4 @@
-﻿using FastPackForShare;
-using FastPackForShare.SimpleMediator.Contracts;
+﻿using FastPackForShare.SimpleMediator.Contracts;
 using WebAPI.Domain.Entities.Others;
 using WebAPI.Domain.Filters.Others;
 

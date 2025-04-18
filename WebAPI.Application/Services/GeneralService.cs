@@ -1,18 +1,7 @@
-﻿using WebAPI.Domain.ExtensionMethods;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-using WebAPI.Application.Generic;
 using WebAPI.Domain.Constants;
-using WebAPI.Domain.Interfaces.Services.Tools;
 using WebAPI.Domain.Interfaces.Services;
-using WebAPI.Domain.Cryptography;
-using System.Text;
-using FastPackForShare.Services.Bases;
-using FastPackForShare.Interfaces;
-using FastPackForShare.Models;
-using FastPackForShare.Cryptography;
-using FastPackForShare.Extensions;
 using FastPackForShare.Enums;
 
 namespace WebAPI.Application.Services;

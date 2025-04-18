@@ -1,5 +1,4 @@
-﻿using FastPackForShare.Bases.Generics;
-using FastPackForShare.Extensions;
+﻿using FastPackForShare.Extensions;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Text.Json;
 

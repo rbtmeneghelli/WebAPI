@@ -2,7 +2,7 @@
 
 namespace WebAPI.Domain.Filters.Others;
 
-public sealed record AuditFilter : BaseFilterModel
+public record AuditFilter : BaseFilterModel
 {
     public string TableName { get; set; }
 }

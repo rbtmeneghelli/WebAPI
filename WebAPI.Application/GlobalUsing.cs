@@ -11,3 +11,7 @@ global using WebAPI.Domain.Models;
 global using FastPackForShare.Extensions;
 global using FastPackForShare.Interfaces;
 global using FastPackForShare.Services.Bases;
+global using FastPackForShare.Default;
+global using Microsoft.EntityFrameworkCore;
+global using FastPackForShare.Models;
+global using FastPackForShare.Cryptography;

@@ -4,11 +4,6 @@ using WebAPI.Domain.Constants;
 using WebAPI.Domain.Interfaces.Services.Configuration;
 using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.Interfaces.Services;
-using FastPackForShare.Services.Bases;
-using FastPackForShare.Interfaces;
-using FastPackForShare.Extensions;
-using FastPackForShare.Cryptography;
-using FastPackForShare.Models;
 
 namespace WebAPI.Application.Services;
 
@@ -18,7 +13,11 @@ public sealed class AccountService : BaseHandlerService, IAccountService
     private readonly IEmailService _iEmailService;
     private readonly IHostEnvironment _hostingEnvironment;
 
-    public AccountService(IUserRepository iUserRepository, IEmailService iEmailService, INotificationMessageService iNotificationMessageService, IHostEnvironment hostingEnvironment) : base(iNotificationMessageService)
+    public AccountService(
+        IUserRepository iUserRepository, 
+        IEmailService iEmailService, 
+        INotificationMessageService iNotificationMessageService, 
+        IHostEnvironment hostingEnvironment) : base(iNotificationMessageService)
     {
         _iUserRepository = iUserRepository;
         _iEmailService = iEmailService;
@@ -55,7 +54,7 @@ public sealed class AccountService : BaseHandlerService, IAccountService
             authenticationModel.Login = user.Login;
             authenticationModel.Profile = user.Employee.Profile.Description;
             authenticationModel.Roles = Enumerable.Empty<Claim>().ToList();
-            authenticationModel.AccessDate = DateOnlyExtension.GetDateTimeNowFromBrazil().ToShortDateString();
+            authenticationModel.AccessDate = DateOnlyExtension.GetDateTimeNowFromBrazil();
             authenticationModel.CodeTwoFactoryCode = user.HasTwoFactoryValidation
                                              ? GenerateCodeTwoFactory(user.Id.Value, user.Login)
                                              : string.Empty;
@@ -69,100 +68,67 @@ public sealed class AccountService : BaseHandlerService, IAccountService
 
     public async Task<bool> ChangePasswordAsync(long id, User user)
     {
-        try
-        {
-            User dbUser = _iUserRepository.GetById(id);
-            if (GuardClauseExtension.IsNotNull(dbUser))
-            {
-                if (new HashingManager().Verify(user.Password, dbUser.Password) && dbUser.Login == user.Login.ApplyTrim())
-                {
-                    dbUser.LastPassword = dbUser.Password;
-                    dbUser.Password = new HashingManager().HashToString(user.Password);
-                    dbUser.IsAuthenticated = true;
-                    dbUser.UpdatedAt = DateOnlyExtension.GetDateTimeNowFromBrazil();
-                    _iUserRepository.Update(dbUser);
-                    await Task.CompletedTask;
-                    return true;
-                }
-            }
+        User dbUser = _iUserRepository.GetById(id);
 
-            Notify(FixConstants.ERROR_IN_CHANGEPASSWORD);
-            return false;
-        }
-        catch
+        if (GuardClauseExtension.IsNotNull(dbUser))
         {
-            Notify(FixConstants.ERROR_IN_CHANGEPASSWORD);
-            return false;
+            if (new HashingManager().Verify(user.Password, dbUser.Password) && dbUser.Login == user.Login.ApplyTrim())
+            {
+                dbUser.LastPassword = dbUser.Password;
+                dbUser.Password = new HashingManager().HashToString(user.Password);
+                dbUser.IsAuthenticated = true;
+                dbUser.UpdatedAt = DateOnlyExtension.GetDateTimeNowFromBrazil();
+                _iUserRepository.Update(dbUser);
+                await Task.CompletedTask;
+                return true;
+            }
         }
-        finally
-        {
-            await Task.CompletedTask;
-        }
+
+        Notify(FixConstants.ERROR_IN_CHANGEPASSWORD);
+        return false;
     }
 
     public async Task<bool> ResetPasswordAsync(string login)
     {
-        try
+        if (GuardClauseExtension.IsNullOrWhiteSpace(login) == false)
         {
-            if (GuardClauses.IsNullOrWhiteSpace(login) == false)
-            {
-                User user = await _iUserRepository.FindBy(x => x.Login == login.ApplyTrim()).FirstOrDefaultAsync();
-                if (GuardClauses.ObjectIsNotNull(user))
-                {
-                    user.LastPassword = user.Password;
-                    user.Password = HashingManager.GetLoadHashingManager().HashToString(FixConstants.DEFAULT_PASSWORD);
-                    user.IsAuthenticated = false;
-                    user.Status = true;
-                    user.UpdateDate = user.GetNewUpdateDate();
-                    _iEmailService.CustomSendEmailAsync(EnumEmail.ResetPassword, "Dev", _hostingEnvironment.ContentRootPath).Wait();
-                    _iUserRepository.Update(user);
-                    return true;
-                }
+            User user = await _iUserRepository.FindBy(x => x.Login == login.ApplyTrim()).FirstOrDefaultAsync();
 
-                Notify(FixConstants.ERROR_IN_RESETPASSWORD);
+            if (GuardClauseExtension.IsNotNull(user))
+            {
+                user.LastPassword = user.Password;
+                user.Password = new HashingManager().HashToString(FixConstants.DEFAULT_PASSWORD);
+                user.IsAuthenticated = false;
+                user.IsActive = true;
+                user.UpdatedAt = DateOnlyExtension.GetDateTimeNowFromBrazil();
+                _iEmailService.CustomSendEmailAsync(EnumEmail.ResetPassword, "Dev", _hostingEnvironment.ContentRootPath).Wait();
+                _iUserRepository.Update(user);
+                return true;
             }
+
             Notify(FixConstants.ERROR_IN_RESETPASSWORD);
-            return false;
         }
-        catch
-        {
-            Notify(FixConstants.ERROR_IN_RESETPASSWORD);
-            return false;
-        }
-        finally
-        {
-            await Task.CompletedTask;
-        }
+
+        Notify(FixConstants.ERROR_IN_RESETPASSWORD);
+        return false;
     }
 
-    public async Task<Credentials> GetUserAuthenticationByIdAsync(long id)
+    public async Task<AuthenticationModel> GetUserAuthenticationByIdAsync(long id)
     {
-        try
-        {
-            Credentials credentials = new Credentials();
-            User user = await _iUserRepository.GetUserCredentialsById(id);
+        AuthenticationModel authenticationModel = new AuthenticationModel();
+        User user = await _iUserRepository.GetUserCredentialsById(id);
 
-            if (GuardClauses.ObjectIsNotNull(user))
-            {
-                credentials.Id = user.Id;
-                credentials.Login = user.Login;
-                credentials.Perfil = user.Employee.Profile.Description;
-                credentials.Roles = Enumerable.Empty<string>().ToList();
-                IEnumerable<string> userRoles = user.Employee.Profile.ProfileOperations.Where(x => x.IsEnable).Select(x => x.RoleTag);
-                credentials.Roles.AddRange(userRoles);
-            }
+        if (GuardClauseExtension.IsNotNull(user))
+        {
+            authenticationModel.Id = user.Id;
+            authenticationModel.Login = user.Login;
+            authenticationModel.Profile = user.Employee.Profile.Description;
+            authenticationModel.Roles = Enumerable.Empty<Claim>().ToList();
+            IEnumerable<string> userRoles = user.Employee.Profile.ProfileOperations.Where(x => x.IsEnable).Select(x => x.RoleTag);
+            authenticationModel.Roles.Add(new Claim(ClaimTypes.Role, string.Join(",", userRoles)));
+        }
 
-            return credentials;
-        }
-        catch
-        {
-            Notify(FixConstants.ERROR_IN_LOGIN);
-            return default;
-        }
-        finally
-        {
-            await Task.CompletedTask;
-        }
+        return authenticationModel;
     }
 
     #region Metodos para validação de acesso em duas etapas
@@ -179,10 +145,10 @@ public sealed class AccountService : BaseHandlerService, IAccountService
     public bool CheckCodeTwoFactory(long userId, string username, string inputCodeTwoFactory)
     {
         long expirationTime = TimeSpan.FromMinutes(10).Ticks;
-        long ticksNow = DateOnlyExtensionMethods.GetDateTimeNowFromBrazil().Ticks;
+        long ticksNow = DateOnlyExtension.GetDateTimeNowFromBrazil().Ticks;
         string expectedCode = GenerateCodeTwoFactory(userId, username);
         bool codesMatch = (inputCodeTwoFactory == expectedCode);
-        bool withinExpiration = (DateOnlyExtensionMethods.GetDateTimeNowFromBrazil().Ticks - ticksNow) <= expirationTime;
+        bool withinExpiration = (DateOnlyExtension.GetDateTimeNowFromBrazil().Ticks - ticksNow) <= expirationTime;
         return codesMatch && withinExpiration; // Se for true o codigo da validação de duas etapas está OK
     }
 

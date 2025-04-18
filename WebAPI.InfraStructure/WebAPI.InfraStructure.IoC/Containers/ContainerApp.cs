@@ -54,7 +54,7 @@ public static class ContainerApp
         app.UseHealthChecksUI(options => { options.UIPath = "/dashboard"; });
     }
 
-    public static void UseCompressaoDados(this IApplicationBuilder app)
+    public static void UseCompressData(this IApplicationBuilder app)
     {
         app.UseResponseCompression();
 
@@ -77,7 +77,6 @@ public static class ContainerApp
         }
         else
         {
-            app.UseExceptionHandler("/errors");
             app.UseHsts();
         }
 
@@ -85,11 +84,10 @@ public static class ContainerApp
         app.UseHttpsRedirection();
         app.UseStaticFiles();
         app.UseRouting();
-        app.UseCors("EnableCORS");
+        app.UseCors("APICORS");
         app.UseAuthentication();
         app.UseAuthorization();
         app.UseKissLogConfig(configuration);
-        //app.UseRateLimiter(); // Para Utilizar o Ratelimit de Requisição
 
         app.UseExceptionHandler();
 
@@ -113,11 +111,6 @@ public static class ContainerApp
         //        }
         //    }
         //});
-
-        //app.MapHangfireDashboard();
-        //app.UseMiddleware<ApiLoggingMiddleware>(); // Caso for usar Middleware no net core 2.2, basta descomentar essa linha
-        //app.UseMiddleware<RequestResponseLoggingMiddleware>(); // Caso for usar Middleware no net core 3.0, basta descomentar essa linha
-        //app.UseMiddleware<HttpLoggingMiddleware>(); // Caso for usar Middleware no net core 5.0, basta descomentar essa linha
     }
 }
 

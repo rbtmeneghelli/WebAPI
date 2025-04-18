@@ -1,5 +1,4 @@
-﻿using WebAPI.Domain;
-using WebAPI.Domain.ExtensionMethods;
+﻿using FastPackForShare.Extensions;
 
 namespace WebAPI.DesignPatterns.Ioc_Abstract;
 
@@ -16,7 +15,7 @@ public abstract class BaseJobService<T> where T : class
 
     protected virtual string RemoveSpaces(string name)
     {
-        return GuardClauses.IsNullOrWhiteSpace(name) ? StringExtensionMethod.GetEmptyString() : name;
+        return GuardClauseExtension.IsNullOrWhiteSpace(name) ? string.Empty : name;
     }
 
     protected virtual int GenerateId()

@@ -1,11 +1,8 @@
 ﻿using MimeKit;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
 namespace WebAPI.Domain.DTO.Configuration;
 
-public record EmailDisplaySettingsExcelDTO
+public record EmailDisplaySettingsExcelDTO : GenericDTOModel
 {
     [DisplayName("Title")]
     public string Title { get; set; }
@@ -29,7 +26,7 @@ public record EmailDisplaySettingsExcelDTO
     public string StatusDescription { get; set; }
 }
 
-public record EmailDisplaySettingsResponseDTO
+public record EmailDisplaySettingsResponseDTO : GenericDTOModel
 {
     [Display(Name = "Id", Description = "Id do registro")]
     public long Id { get; set; }
@@ -56,7 +53,7 @@ public record EmailDisplaySettingsResponseDTO
     public string StatusDescription { get; set; }
 }
 
-public record EmailDisplaySettingsCreateRequestDTO
+public record EmailDisplaySettingsCreateRequestDTO : GenericDTOModel
 {
     [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
     [Display(Name = "Id", Description = "Id do registro")]
@@ -90,7 +87,7 @@ public record EmailDisplaySettingsCreateRequestDTO
     public long IdEmailTemplate { get; set; }
 }
 
-public record EmailDisplaySettingsUpdateRequestDTO
+public record EmailDisplaySettingsUpdateRequestDTO : GenericDTOModel
 {
     [Required]
     [Display(Name = "Id", Description = "Id do registro")]
@@ -124,7 +121,7 @@ public record EmailDisplaySettingsUpdateRequestDTO
     public long IdEmailTemplate { get; set; }
 }
 
-public record EmailDisplaySettingsReactiveRequestDTO
+public record EmailDisplaySettingsReactiveRequestDTO : GenericDTOModel
 {
     [Required]
     [Display(Name = "Id", Description = "Id do registro")]

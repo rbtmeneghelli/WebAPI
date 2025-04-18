@@ -1,6 +1,5 @@
 ﻿using WebAPI.Domain.CQRS.Command;
 using MediatR;
-using WebAPI.Domain.Interfaces.Services.Tools;
 using WebAPI.Domain.Entities.Others;
 using FastPackForShare;
 using WebAPI.Domain.Interfaces.Services;

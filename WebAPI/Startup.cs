@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using WebAPI.InfraStructure.IoC.Containers;
 using WebAPI.InfraStructure.Data.Context;
 using WebAPI.Infrastructure.CrossCutting.Middleware.ExceptionHandler;
+using FastPackForShare.Containers;
 
 public class WebAPIContextFactory : IDesignTimeDbContextFactory<WebAPIContext>
 {
@@ -52,20 +53,22 @@ public class Startup
         // Add functionality to inject IOptions<T> (Fazer o IOptions<T> na controller)
         // services.AddOptions();
 
-        ContainerService.RegisterDbConnection(services, _configuration);
+        ContainerFastPackForShareServices.RegisterDbConnection<WebAPIContext>(EnvironmentVariablesExtension.GetDatabaseFromEnvVar(_configuration.GetConnectionString("DefaultConnection")));
+        ContainerFastPackForShareServices.RegisterServices(services);
+        ContainerFastPackForShareServices.RegisterCors(services, EnvironmentVariablesExtension.GetEnvironmentVariableToStringArray<string[]>(_configuration, "WebAPI_Settings:corsSettings"));
+        ContainerFastPackForShareServices.RegisterHttpClient(services);
+        ContainerFastPackForShareServices.RegisterHttpContextAccessor(services);
+        ContainerFastPackForShareServices.RegisterProblemDetails(services);
+        ContainerFastPackForShareServices.RegisterMemoryCache(services);
+        ContainerFastPackForShareServices.RegisterMediator(services, "WebAPI.Application");
+        ContainerFastPackForShareServices.RegisterSimpleMediator(services, "WebAPI.Application");
+        ContainerFastPackForShareServices.RegisterAutoMapper(services, AppDomain.CurrentDomain.GetAssemblies());
+        ContainerFastPackForShareServices.RegisterPolicy(services);
+
         ContainerService.RegisterServices(services);
-        ContainerService.RegisterMapperConfig(services);
         ContainerService.RegisterConfigs(services, _configuration);
-        ContainerService.RegisterPolicy(services);
-        ContainerService.RegisterCorsConfigRestriction(services, _configuration);
         ContainerSwagger.RegisterJwtTokenEncryptConfig(services, _configuration);
-        ContainerService.RegisterHttpClientConfig(services);
-        services.AddHttpContextAccessor();
-        ContainerService.RegisterSeriLog(services, _configuration);
-        ContainerService.RegisterKissLog(services);
         ContainerSwagger.RegisterSwaggerConfig(services);
-        ContainerService.RegisterMediator(services);
-        services.AddMemoryCache();
         services.AddControllers();
         services.AddApiVersioning(options =>
         {
@@ -86,7 +89,6 @@ public class Startup
         services.RegisterEnvironmentVariables(_configuration);
 
         services.AddExceptionHandler<GlobalExceptionHandler>();
-        services.AddProblemDetails();
         ContainerService.RegisterHealthCheck(services, _configuration);
         ContainerService.RegisterHealthCheckDashboard(services);
         ContainerService.RegisterSignalR(services);

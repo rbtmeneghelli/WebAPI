@@ -1,13 +1,13 @@
 ﻿using WebAPI.Domain.CQRS.Command;
 using WebAPI.Domain.CQRS.Queries;
-using WebAPI.Domain.Cryptography;
 using WebAPI.Domain.Entities.Configuration;
 using WebAPI.Domain.Entities.ControlPanel;
 using WebAPI.Domain.Entities.Others;
 using WebAPI.Domain.DTO.Configuration;
 using WebAPI.Domain.DTO.ControlPanel;
 using WebAPI.Domain.DTO.Others;
-using WebAPI.Domain.ExtensionMethods;
+using WebAPI.Domain.Models;
+using WebAPI.Domain.ValueObject;
 
 namespace WebAPI.Application.Mapping;
 
@@ -23,20 +23,20 @@ public class MappingProfile : AutoMapper.Profile
             dest.CreatedAt = source.Id is null ? DateOnlyExtension.GetDateTimeNowFromBrazil() : null;
             dest.UpdatedAt = source.Id is not null ? DateOnlyExtension.GetDateTimeNowFromBrazil() : null;
         })
-        .ForMember(dest => dest.Id, act => act.MapFrom(src => src.GetId()))
-        .ForMember(dest => dest.Status, act => act.MapFrom(src => src.IsActive))
+        .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
+        .ForMember(dest => dest.IsActive, act => act.MapFrom(src => src.IsActive))
         .ForMember(dest => dest.IsAuthenticated, act => act.MapFrom(src => src.IsAuthenticated))
         .ForMember(dest => dest.LastPassword, act => act.MapFrom(src => src.LastPassword.ApplyTrim()))
         .ForMember(dest => dest.Login, act => act.MapFrom(src => src.Login.ApplyTrim()))
         .ForMember(dest => dest.Password, act => act.MapFrom(src => src.Password.ApplyTrim()))
-        .ForMember(dest => dest.Id, act => act.MapFrom(src => src.GetId()));
+        .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id));
 
         CreateMap<User, UserResponseDTO>()
         .AfterMap((src, dest) => 
         {
-            dest.Password = dest.IsActive ? "**********" : string.Empty;
+            dest.Password = dest.IsActive.HasValue ? "**********" : string.Empty;
         })
-        .ForMember(dest => dest.IsActive, act => act.MapFrom(src => src.Status))
+        .ForMember(dest => dest.IsActive, act => act.MapFrom(src => src.IsActive))
         .ForMember(dest => dest.IsAuthenticated, act => act.MapFrom(src => src.IsAuthenticated))
         .ForMember(dest => dest.LastPassword, act => act.MapFrom(src => src.LastPassword.ApplyTrim()))
         .ForMember(dest => dest.Login, act => act.MapFrom(src => src.Login.ApplyTrim()))
@@ -83,8 +83,8 @@ public class MappingProfile : AutoMapper.Profile
         .ForMember(dest => dest.BlockUserTime, act => act.MapFrom(src => src.BlockUserTime))
         .ForMember(dest => dest.ApplyTwoFactoryValidation, act => act.MapFrom(src => src.ApplyTwoFactoryValidation))
         .ForMember(dest => dest.IdEnvironmentType, act => act.MapFrom(src => src.IdEnvironment))
-        .ForMember(dest => dest.CreateDate, act => act.MapFrom(src => DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()))
-        .ForMember(dest => dest.Status, act => act.MapFrom(src => true));
+        .ForMember(dest => dest.CreatedAt, act => act.MapFrom(src => DateOnlyExtension.GetDateTimeNowFromBrazil()))
+        .ForMember(dest => dest.IsActive, act => act.MapFrom(src => true));
 
         CreateMap<AuthenticationSettingsUpdateRequestDTO, AuthenticationSettings>()
         .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
@@ -92,22 +92,22 @@ public class MappingProfile : AutoMapper.Profile
         .ForMember(dest => dest.BlockUserTime, act => act.MapFrom(src => src.BlockUserTime))
         .ForMember(dest => dest.ApplyTwoFactoryValidation, act => act.MapFrom(src => src.ApplyTwoFactoryValidation))
         .ForMember(dest => dest.IdEnvironmentType, act => act.MapFrom(src => src.IdEnvironment))
-        .ForMember(dest => dest.UpdateDate, act => act.MapFrom(src => DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()));
+        .ForMember(dest => dest.UpdatedAt, act => act.MapFrom(src => DateOnlyExtension.GetDateTimeNowFromBrazil()));
 
         CreateMap<ExpirationPasswordSettingsCreateRequestDTO, ExpirationPasswordSettings>()
         .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
         .ForMember(dest => dest.QtyDaysPasswordExpire, act => act.MapFrom(src => src.QtyDaysPasswordExpire))
         .ForMember(dest => dest.NotifyExpirationDays, act => act.MapFrom(src => src.NotifyExpirationDays))
         .ForMember(dest => dest.IdEnvironmentType, act => act.MapFrom(src => src.IdEnvironment))
-        .ForMember(dest => dest.CreateDate, act => act.MapFrom(src => DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()))
-        .ForMember(dest => dest.Status, act => act.MapFrom(src => true));
+        .ForMember(dest => dest.CreatedAt, act => act.MapFrom(src => DateOnlyExtension.GetDateTimeNowFromBrazil()))
+        .ForMember(dest => dest.IsActive, act => act.MapFrom(src => true));
 
         CreateMap<ExpirationPasswordSettingsUpdateRequestDTO, ExpirationPasswordSettings>()
         .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
         .ForMember(dest => dest.QtyDaysPasswordExpire, act => act.MapFrom(src => src.QtyDaysPasswordExpire))
         .ForMember(dest => dest.NotifyExpirationDays, act => act.MapFrom(src => src.NotifyExpirationDays))
         .ForMember(dest => dest.IdEnvironmentType, act => act.MapFrom(src => src.IdEnvironment))
-        .ForMember(dest => dest.UpdateDate, act => act.MapFrom(src => DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()));
+        .ForMember(dest => dest.UpdatedAt, act => act.MapFrom(src => DateOnlyExtension.GetDateTimeNowFromBrazil()));
 
         CreateMap<RequiredPasswordSettingsCreateRequestDTO, RequiredPasswordSettings>()
         .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
@@ -116,8 +116,8 @@ public class MappingProfile : AutoMapper.Profile
         .ForMember(dest => dest.MustHaveSpecialChars, act => act.MapFrom(src => src.MustHaveSpecialChars))
         .ForMember(dest => dest.MustHaveUpperCaseLetter, act => act.MapFrom(src => src.MustHaveUpperCaseLetter))
         .ForMember(dest => dest.IdEnvironmentType, act => act.MapFrom(src => src.IdEnvironment))
-        .ForMember(dest => dest.CreateDate, act => act.MapFrom(src => DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()))
-        .ForMember(dest => dest.Status, act => act.MapFrom(src => true));
+        .ForMember(dest => dest.CreatedAt, act => act.MapFrom(src => DateOnlyExtension.GetDateTimeNowFromBrazil()))
+        .ForMember(dest => dest.IsActive, act => act.MapFrom(src => true));
 
         CreateMap<RequiredPasswordSettingsUpdateRequestDTO, RequiredPasswordSettings>()
         .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
@@ -126,7 +126,7 @@ public class MappingProfile : AutoMapper.Profile
         .ForMember(dest => dest.MustHaveSpecialChars, act => act.MapFrom(src => src.MustHaveSpecialChars))
         .ForMember(dest => dest.MustHaveUpperCaseLetter, act => act.MapFrom(src => src.MustHaveUpperCaseLetter))
         .ForMember(dest => dest.IdEnvironmentType, act => act.MapFrom(src => src.IdEnvironment))
-        .ForMember(dest => dest.UpdateDate, act => act.MapFrom(src => DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()));
+        .ForMember(dest => dest.UpdatedAt, act => act.MapFrom(src => DateOnlyExtension.GetDateTimeNowFromBrazil()));
 
         CreateMap<LogSettingsCreateRequestDTO, LogSettings>()
         .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
@@ -137,8 +137,8 @@ public class MappingProfile : AutoMapper.Profile
         .ForMember(dest => dest.SaveLogTurnOffSystem, act => act.MapFrom(src => src.SaveLogTurnOffSystem))
         .ForMember(dest => dest.SaveLogTurnOnSystem, act => act.MapFrom(src => src.SaveLogTurnOnSystem))
         .ForMember(dest => dest.IdEnvironmentType, act => act.MapFrom(src => src.IdEnvironment))
-        .ForMember(dest => dest.CreateDate, act => act.MapFrom(src => DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()))
-        .ForMember(dest => dest.Status, act => act.MapFrom(src => true));
+        .ForMember(dest => dest.CreatedAt, act => act.MapFrom(src => DateOnlyExtension.GetDateTimeNowFromBrazil()))
+        .ForMember(dest => dest.IsActive, act => act.MapFrom(src => true));
 
         CreateMap<LogSettingsUpdateRequestDTO, LogSettings>()
         .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
@@ -149,20 +149,20 @@ public class MappingProfile : AutoMapper.Profile
         .ForMember(dest => dest.SaveLogTurnOffSystem, act => act.MapFrom(src => src.SaveLogTurnOffSystem))
         .ForMember(dest => dest.SaveLogTurnOnSystem, act => act.MapFrom(src => src.SaveLogTurnOnSystem))
         .ForMember(dest => dest.IdEnvironmentType, act => act.MapFrom(src => src.IdEnvironment))
-        .ForMember(dest => dest.UpdateDate, act => act.MapFrom(src => DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()));
+        .ForMember(dest => dest.UpdatedAt, act => act.MapFrom(src => DateOnlyExtension.GetDateTimeNowFromBrazil()));
 
         CreateMap<EnvironmentTypeSettingsCreateRequestDTO, EnvironmentTypeSettings>()
         .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
         .ForMember(dest => dest.Description, act => act.MapFrom(src => src.EnvironmentDescription))
         .ForMember(dest => dest.Initials, act => act.MapFrom(src => src.EnvironmentInitial))
-        .ForMember(dest => dest.CreateDate, act => act.MapFrom(src => DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()))
-        .ForMember(dest => dest.Status, act => act.MapFrom(src => true));
+        .ForMember(dest => dest.CreatedAt, act => act.MapFrom(src => DateOnlyExtension.GetDateTimeNowFromBrazil()))
+        .ForMember(dest => dest.IsActive, act => act.MapFrom(src => true));
 
         CreateMap<EnvironmentTypeSettingsUpdateRequestDTO, EnvironmentTypeSettings>()
         .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
         .ForMember(dest => dest.Description, act => act.MapFrom(src => src.EnvironmentDescription))
         .ForMember(dest => dest.Initials, act => act.MapFrom(src => src.EnvironmentInitial))
-        .ForMember(dest => dest.UpdateDate, act => act.MapFrom(src => DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()));
+        .ForMember(dest => dest.UpdatedAt, act => act.MapFrom(src => DateOnlyExtension.GetDateTimeNowFromBrazil()));
 
         CreateMap<EmailDisplaySettingsCreateRequestDTO, EmailDisplay>()
         .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
@@ -172,8 +172,8 @@ public class MappingProfile : AutoMapper.Profile
         .ForMember(dest => dest.MessagePriority, act => act.MapFrom(src => src.MessagePriority))
         .ForMember(dest => dest.HasAttachment, act => act.MapFrom(src => src.HasAttachment))
         .ForMember(dest => dest.EmailTemplateId, act => act.MapFrom(src => src.IdEmailTemplate))
-        .ForMember(dest => dest.CreateDate, act => act.MapFrom(src => DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()))
-        .ForMember(dest => dest.Status, act => act.MapFrom(src => true));
+        .ForMember(dest => dest.CreatedAt, act => act.MapFrom(src => DateOnlyExtension.GetDateTimeNowFromBrazil()))
+        .ForMember(dest => dest.IsActive, act => act.MapFrom(src => true));
 
         CreateMap<EmailDisplaySettingsUpdateRequestDTO, EmailDisplay>()
         .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
@@ -183,7 +183,7 @@ public class MappingProfile : AutoMapper.Profile
         .ForMember(dest => dest.MessagePriority, act => act.MapFrom(src => src.MessagePriority))
         .ForMember(dest => dest.HasAttachment, act => act.MapFrom(src => src.HasAttachment))
         .ForMember(dest => dest.EmailTemplateId, act => act.MapFrom(src => src.IdEmailTemplate))
-        .ForMember(dest => dest.UpdateDate, act => act.MapFrom(src => DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()));
+        .ForMember(dest => dest.UpdatedAt, act => act.MapFrom(src => DateOnlyExtension.GetDateTimeNowFromBrazil()));
 
         CreateMap<EmailSettingsCreateRequestDTO, EmailSettings>()
         .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
@@ -194,8 +194,8 @@ public class MappingProfile : AutoMapper.Profile
         .ForMember(dest => dest.Password, act => act.MapFrom(src => CryptographyAesService.ApplyEncrypt(src.Password)))
         .ForMember(dest => dest.EnableSsl, act => act.MapFrom(src => src.EnableSsl))
         .ForMember(dest => dest.IdEnvironmentType, act => act.MapFrom(src => src.IdEnvironment))
-        .ForMember(dest => dest.CreateDate, act => act.MapFrom(src => DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()))
-        .ForMember(dest => dest.Status, act => act.MapFrom(src => true));
+        .ForMember(dest => dest.CreatedAt, act => act.MapFrom(src => DateOnlyExtension.GetDateTimeNowFromBrazil()))
+        .ForMember(dest => dest.IsActive, act => act.MapFrom(src => true));
 
         CreateMap<EmailSettingsUpdateRequestDTO, EmailSettings>()
         .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
@@ -206,7 +206,7 @@ public class MappingProfile : AutoMapper.Profile
         .ForMember(dest => dest.Password, act => act.MapFrom(src => CryptographyAesService.ApplyEncrypt(src.Password)))
         .ForMember(dest => dest.EnableSsl, act => act.MapFrom(src => src.EnableSsl))
         .ForMember(dest => dest.IdEnvironmentType, act => act.MapFrom(src => src.IdEnvironment))
-        .ForMember(dest => dest.UpdateDate, act => act.MapFrom(src => DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()));
+        .ForMember(dest => dest.UpdatedAt, act => act.MapFrom(src => DateOnlyExtension.GetDateTimeNowFromBrazil()));
 
         CreateMap<LayoutSettingsCreateRequestDTO, LayoutSettings>()
         .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
@@ -215,8 +215,8 @@ public class MappingProfile : AutoMapper.Profile
         .ForMember(dest => dest.MaxDocumentFileSize, act => act.MapFrom(src => src.MaxDocumentFileSize))
         .ForMember(dest => dest.MaxImageFileSize, act => act.MapFrom(src => src.MaxImageFileSize))
         .ForMember(dest => dest.IdEnvironmentType, act => act.MapFrom(src => src.IdEnvironment))
-        .ForMember(dest => dest.CreateDate, act => act.MapFrom(src => DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()))
-        .ForMember(dest => dest.Status, act => act.MapFrom(src => true));
+        .ForMember(dest => dest.CreatedAt, act => act.MapFrom(src => DateOnlyExtension.GetDateTimeNowFromBrazil()))
+        .ForMember(dest => dest.IsActive, act => act.MapFrom(src => true));
 
         CreateMap<LayoutSettingsUpdateRequestDTO, LayoutSettings>()
         .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
@@ -225,16 +225,15 @@ public class MappingProfile : AutoMapper.Profile
         .ForMember(dest => dest.MaxDocumentFileSize, act => act.MapFrom(src => src.MaxDocumentFileSize))
         .ForMember(dest => dest.MaxImageFileSize, act => act.MapFrom(src => src.MaxImageFileSize))
         .ForMember(dest => dest.IdEnvironmentType, act => act.MapFrom(src => src.IdEnvironment))
-        .ForMember(dest => dest.UpdateDate, act => act.MapFrom(src => DateOnlyExtensionMethods.GetDateTimeNowFromBrazil()));
+        .ForMember(dest => dest.UpdatedAt, act => act.MapFrom(src => DateOnlyExtension.GetDateTimeNowFromBrazil()));
 
         #region Mapeamentos do Funcionario
 
         CreateMap<EmployeeRequestDTO, Employee>()
         .BeforeMap((source, dest) =>
         {
-            dest.Id = source.GetId();
-            dest.CreateDate = source.GetId() is null ? DateOnlyExtensionMethods.GetDateTimeNowFromBrazil() : null;
-            dest.UpdateDate = source.GetId() is not null ? DateOnlyExtensionMethods.GetDateTimeNowFromBrazil() : null;
+            dest.CreatedAt = source.Id is null ? DateOnlyExtension.GetDateTimeNowFromBrazil() : null;
+            dest.UpdatedAt = source.Id is not null ? DateOnlyExtension.GetDateTimeNowFromBrazil() : null;
         })
         .ForMember(dest => dest.Name, act => act.MapFrom(src => src.Name.ApplyTrim()))
         .ForMember(dest => dest.Email, act => act.MapFrom(src => src.Email.ApplyTrim()))
@@ -268,5 +267,7 @@ public class MappingProfile : AutoMapper.Profile
         });
 
         #endregion
+
+        CreateMap<AddressData, AddressDataDTO>().ReverseMap();
     }
 }

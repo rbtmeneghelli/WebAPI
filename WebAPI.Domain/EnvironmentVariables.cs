@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Configuration;
 using WebAPI.Domain.Enums;
 using WebAPI.Domain.Models;
-using WebAPI.Domain.Models.EnvVarSettings;
 
 namespace WebAPI.Domain;
 

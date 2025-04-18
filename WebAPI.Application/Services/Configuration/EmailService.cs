@@ -1,16 +1,14 @@
 ﻿using MailKit.Security;
 using MimeKit.Text;
 using MimeKit;
-using WebAPI.Application.Generic;
 using WebAPI.Domain.Entities.Configuration;
-using WebAPI.Domain.Interfaces.Services.Tools;
 using WebAPI.Domain.Interfaces.Services.Configuration;
 using WebAPI.Domain.Interfaces.Factory;
 using WebAPI.Domain.Interfaces.Generic;
 
 namespace WebAPI.Application.Services.Configuration;
 
-public class EmailService : GenericService, IEmailService
+public sealed class EmailService : BaseHandlerService, IEmailService
 {
     private readonly IReadRepository<EmailSettings> _iEmailTypeRepository;
     private readonly IReadRepository<EmailDisplay> _iEmailDisplayRepository;
@@ -52,7 +50,7 @@ public class EmailService : GenericService, IEmailService
 
     private async Task SendEmailAsync(EmailConfig emailConfig, string appPath)
     {
-        _emailSettings = _iEmailTypeRepository.GetAll().Where(x => x.Status && x.IdEnvironmentType == (int)_environmentVariables.Environment).FirstOrDefault();
+        _emailSettings = _iEmailTypeRepository.GetAll().Where(x => x.IsActive.Value == true && x.IdEnvironmentType == (int)_environmentVariables.Environment).FirstOrDefault();
         var email = new MimeMessage();
         email.Sender = MailboxAddress.Parse(emailConfig.EmailFrom.Address);
         emailConfig.EmailTo.Split(';').ToList().ForEach(p => email.To.Add(MailboxAddress.Parse(p.Trim())));
@@ -93,10 +91,10 @@ public class EmailService : GenericService, IEmailService
         var emailDisplay = _iEmailDisplayRepository
                            .GetAll()
                            .Include(x => x.EmailTemplates)
-                           .Where(x => x.Status && x.Id == iEmailFactoryConfig.GetDisplayIdToSend())
+                           .Where(x => x.IsActive.Value && x.Id == iEmailFactoryConfig.GetDisplayIdToSend())
                            .FirstOrDefault();
 
-        if (GuardClauses.ObjectIsNotNull(emailDisplay))
+        if (GuardClauseExtension.IsNotNull(emailDisplay))
         {
             EmailConfig emailConfig = new(emailDisplay, userName);
             await SendEmailAsync(emailConfig, appPath);

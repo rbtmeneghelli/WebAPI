@@ -1,5 +1,4 @@
-﻿using FastPackForShare.Extensions;
-using KissLog;
+﻿using KissLog;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;

@@ -1,6 +1,4 @@
-﻿using FastPackForShare.Interfaces;
-using FastPackForShare.Services.Bases;
-using SendGrid;
+﻿using SendGrid;
 using SendGrid.Helpers.Mail;
 using WebAPI.Domain.Interfaces.Factory;
 using WebAPI.Domain.Interfaces.Services.Tools;

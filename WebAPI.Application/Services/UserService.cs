@@ -4,17 +4,10 @@ using WebAPI.Domain.DTO.ControlPanel;
 using WebAPI.Domain.Filters.ControlPanel;
 using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.Interfaces.Services;
-using WebAPI.Domain.Interfaces.Services.Tools;
-using FastPackForShare.Services.Bases;
-using FastPackForShare.Interfaces;
-using FastPackForShare.Extensions;
-using FastPackForShare.Default;
-using FastPackForShare.Models;
-using FastPackForShare.Cryptography;
 
 namespace WebAPI.Application.Services;
 
-public class UserService : BaseHandlerService, IUserService
+public sealed class UserService : BaseHandlerService, IUserService
 {
     private readonly IUserRepository _iUserRepository;
     private readonly IMapperService _iMapperService;

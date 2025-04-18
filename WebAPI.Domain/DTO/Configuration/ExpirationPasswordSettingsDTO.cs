@@ -1,10 +1,6 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
+﻿namespace WebAPI.Domain.DTO.Configuration;
 
-namespace WebAPI.Domain.DTO.Configuration;
-
-public record ExpirationPasswordSettingsExcelDTO
+public record ExpirationPasswordSettingsExcelDTO : GenericDTOModel
 {
     [DisplayName("EnvironmentDescription")]
     public string EnvironmentDescription { get; set; }
@@ -19,7 +15,7 @@ public record ExpirationPasswordSettingsExcelDTO
     public string StatusDescription { get; set; }
 }
 
-public record ExpirationPasswordSettingsResponseDTO
+public record ExpirationPasswordSettingsResponseDTO : GenericDTOModel
 {
     [Display(Name = "Id", Description = "Id do registro")]
     public long Id { get; set; }
@@ -37,7 +33,7 @@ public record ExpirationPasswordSettingsResponseDTO
     public string StatusDescription { get; set; }
 }
 
-public record ExpirationPasswordSettingsCreateRequestDTO
+public record ExpirationPasswordSettingsCreateRequestDTO : GenericDTOModel
 {
     [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
     [Display(Name = "Id", Description = "Id do registro")]
@@ -58,7 +54,7 @@ public record ExpirationPasswordSettingsCreateRequestDTO
     public long? IdEnvironment { get; set; }
 }
 
-public record ExpirationPasswordSettingsUpdateRequestDTO
+public record ExpirationPasswordSettingsUpdateRequestDTO : GenericDTOModel
 {
     [Required]
     [Display(Name = "Id", Description = "Id do registro")]
@@ -79,7 +75,7 @@ public record ExpirationPasswordSettingsUpdateRequestDTO
     public long? IdEnvironment { get; set; }
 }
 
-public record ExpirationPasswordSettingsReactiveRequestDTO
+public record ExpirationPasswordSettingsReactiveRequestDTO : GenericDTOModel
 {
     [Required]
     [Display(Name = "Id", Description = "Id do registro")]

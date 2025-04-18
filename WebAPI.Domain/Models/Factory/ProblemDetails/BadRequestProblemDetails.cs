@@ -5,7 +5,7 @@ using WebAPI.Domain.Interfaces.Factory;
 
 namespace WebAPI.Domain.Models.Factory.ProblemDetails;
 
-public sealed class BadRequestProblemDetails : IProblemDetailsConfigFactory
+public class BadRequestProblemDetails : IProblemDetailsConfigFactory
 {
     public BadRequestProblemDetails()
     {

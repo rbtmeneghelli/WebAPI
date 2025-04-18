@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace WebAPI.Domain.Enums;
+﻿namespace WebAPI.Domain.Enums;
 
 public enum EnumHierarchyLevel : byte
 {

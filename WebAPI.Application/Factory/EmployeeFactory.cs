@@ -35,9 +35,8 @@ public sealed class UserFactory : IEmployeeFactory
         {
             return EmployeeDefaultFactory[enumProfileType]();
         }
-        catch(GenericException ex)
+        catch(Exception ex)
         {
-            ex.ShowDefaultExceptionMessage();
             return EmployeeDefaultFactory[1]();
         }
     }

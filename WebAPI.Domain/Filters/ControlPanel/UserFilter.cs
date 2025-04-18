@@ -2,7 +2,7 @@
 
 namespace WebAPI.Domain.Filters.ControlPanel;
 
-public sealed record UserFilter : BaseFilterModel
+public record UserFilter : BaseFilterModel
 {
     public string Login { get; set; }
     public string Password { get; set; }

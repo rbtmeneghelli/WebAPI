@@ -1,5 +1,4 @@
-﻿using Dapper;
-using WebAPI.Domain.Models;
+﻿using FastPackForShare.Models;
 
 namespace WebAPI.Domain.Interfaces.Generic;
 
@@ -7,5 +6,5 @@ public interface IReadRepositoryDapper<TEntity> : IDisposable where TEntity : cl
 {
     Task<IEnumerable<TEntity>> GetAll(string sqlQuery);
     Task<TEntity> GetFirstResult(string sqlQuery);
-    Task<QueryResult<TEntity>> GetMultipleResult(string sqlQuery);
+    Task<QueryResultModel<TEntity>> GetMultipleResult(string sqlQuery);
 }

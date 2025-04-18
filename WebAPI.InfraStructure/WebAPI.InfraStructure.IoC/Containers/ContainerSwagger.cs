@@ -21,6 +21,9 @@ using System.Buffers.Text;
 using WebAPI.Domain.Cryptography;
 using WebAPI.Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Http;
+using FastPackForShare.Extensions;
+using FastPackForShare.Cryptography;
+using FastPackForShare.Constants;
 
 namespace WebAPI.InfraStructure.IoC.Containers;
 
@@ -230,7 +233,7 @@ public static class ContainerSwagger
                               var environmentVariables = context.HttpContext.RequestServices.GetRequiredService<EnvironmentVariables>();
                               var tokenAuthAPI = StringExtensionMethod.ReplaceStringText(tokenHeader.ToString(), "Bearer ", "");
 
-                              if (GuardClauses.IsNullOrWhiteSpace(tokenAuthAPI))
+                              if (GuardClauseExtension.IsNullOrWhiteSpace(tokenAuthAPI))
                               {
                                   return;
                               }
@@ -239,7 +242,7 @@ public static class ContainerSwagger
                               {
                                   try
                                   {
-                                      string tokenDecrypt = CryptographyTokenService.DecryptToken(tokenAuthAPI, environmentVariables.TokenSettings.Key);
+                                      string tokenDecrypt = CryptographyHashTokenManager.DecryptToken(tokenAuthAPI, environmentVariables.TokenSettings.Key);
                                       if (iGeneralService.ValidateToken(tokenDecrypt))
                                           context.Token = tokenDecrypt;
                                   }

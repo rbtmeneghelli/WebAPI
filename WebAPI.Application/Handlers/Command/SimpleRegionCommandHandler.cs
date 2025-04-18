@@ -2,7 +2,6 @@
 using FastPackForShare;
 using WebAPI.Domain.CQRS.Command;
 using WebAPI.Domain.Entities.Others;
-using WebAPI.Domain.Interfaces.Services.Tools;
 using WebAPI.Domain.Interfaces.Services;
 using FastPackForShare.SimpleMediator;
 

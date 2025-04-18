@@ -4,9 +4,9 @@ using WebAPI.Domain.Interfaces.Factory;
 
 namespace WebAPI.Domain.Models.Factory.Email;
 
-public sealed class EmailWelcomeConfig : IEmailConfigFactory
+public sealed class EmailWelcome : IEmailConfigFactory
 {
-    public EmailWelcomeConfig()
+    public EmailWelcome()
     {
     }
 

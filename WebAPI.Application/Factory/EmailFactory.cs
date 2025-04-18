@@ -9,9 +9,11 @@ public sealed class EmailFactory : IEmailFactory
     {
         return enumEmail switch
         {
-            EnumEmail.Welcome => new EmailWelcomeConfig(),
-            EnumEmail.ChangePassword => new EmailChangePasswordConfig(),
-            EnumEmail.ResetPassword => new EmailResetPasswordConfig(),
+            EnumEmail.Welcome => new EmailWelcome(),
+            EnumEmail.ChangePassword => new EmailChangePassword(),
+            EnumEmail.ResetPassword => new EmailResetPassword(),
+            EnumEmail.ForgetPassword => new EmailForgetPassword(),
+            EnumEmail.ConfirmPassword => new EmailConfirmPassword(),
             _ => throw new ApplicationException()
         };
     }     

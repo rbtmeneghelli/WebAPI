@@ -6,6 +6,7 @@ using WebAPI.Domain.Entities.Configuration;
 using WebAPI.Domain.Entities.Others;
 using FastPackForShare.Extensions;
 using WebAPI.Domain.Models.Factory.Email;
+using FastPackForShare.Cryptography;
 
 namespace WebAPI.InfraStructure.Data.Context;
 
@@ -20,64 +21,64 @@ public static class SeedContext
     private static void SeedEnvironmentType(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<EnvironmentTypeSettings>().HasData(
-           new EnvironmentTypeSettings() { Id = (int)EnumEnvironment.PRD, Description = "Ambiente Produção", CreateDate = _currentDate, Status = STATUS_TRUE, Initials = "PRD" },
-           new EnvironmentTypeSettings() { Id = (int)EnumEnvironment.PRE_PROD, Description = "Ambiente PréProdução", CreateDate = _currentDate, Status = STATUS_TRUE, Initials = "PREPRD" },
-           new EnvironmentTypeSettings() { Id = (int)EnumEnvironment.HML, Description = "Ambiente Homologação", CreateDate = _currentDate, Status = STATUS_TRUE, Initials = "HML" },
-           new EnvironmentTypeSettings() { Id = (int)EnumEnvironment.QA, Description = "Ambiente QA", CreateDate = _currentDate, Status = STATUS_TRUE, Initials = "QA" },
-           new EnvironmentTypeSettings() { Id = (int)EnumEnvironment.DEV, Description = "Ambiente DEV", CreateDate = _currentDate, Status = STATUS_TRUE, Initials = "DEV" }
+           new EnvironmentTypeSettings() { Id = (int)EnumEnvironment.PRD, Description = "Ambiente Produção", CreatedAt = _currentDate, IsActive = STATUS_TRUE, Initials = EnumEnvironment.PRD.GetDisplayName() },
+           new EnvironmentTypeSettings() { Id = (int)EnumEnvironment.PRE_PROD, Description = "Ambiente PréProdução", CreatedAt = _currentDate, IsActive = STATUS_TRUE, Initials = EnumEnvironment.PRE_PROD.GetDisplayName() },
+           new EnvironmentTypeSettings() { Id = (int)EnumEnvironment.HML, Description = "Ambiente Homologação", CreatedAt = _currentDate, IsActive = STATUS_TRUE, Initials = EnumEnvironment.HML.GetDisplayName() },
+           new EnvironmentTypeSettings() { Id = (int)EnumEnvironment.QA, Description = "Ambiente QA", CreatedAt = _currentDate, IsActive = STATUS_TRUE, Initials = EnumEnvironment.QA.GetDisplayName() },
+           new EnvironmentTypeSettings() { Id = (int)EnumEnvironment.DEV, Description = "Ambiente DEV", CreatedAt = _currentDate, IsActive = STATUS_TRUE, Initials = EnumEnvironment.DEV.GetDisplayName() }
         );
     }
 
     private static void SeedEmailSettings(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<EmailSettings>().HasData(
-           new EmailSettings() { Id = 1, Host = "Gmail", SmtpConfig = "smtp.gmail.com", PrimaryPort = 25, Email = "teste@gmail.com", Password = CryptographyAesService.ApplyEncrypt("123Mudar"), EnableSsl = true, CreateDate = _currentDate, Status = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.DEV },
-           new EmailSettings() { Id = 2, Host = "Outlook", SmtpConfig = "smtp.office365.com", PrimaryPort = 25, Email = "teste@gmail.com", Password = CryptographyAesService.ApplyEncrypt("123Mudar"), EnableSsl = true, CreateDate = _currentDate, Status = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.DEV },
-           new EmailSettings() { Id = 3, Host = "Hotmail", SmtpConfig = "smtp.live.com", PrimaryPort = 25, Email = "teste@gmail.com", Password = CryptographyAesService.ApplyEncrypt("123Mudar"), EnableSsl = true, CreateDate = _currentDate, Status = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.DEV }
+           new EmailSettings() { Id = 1, Host = "Gmail", SmtpConfig = "smtp.gmail.com", PrimaryPort = 25, Email = "teste@gmail.com", Password = new HashingManager().HashToString("123Mudar"), EnableSsl = true, CreatedAt = _currentDate, IsActive = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.DEV },
+           new EmailSettings() { Id = 2, Host = "Outlook", SmtpConfig = "smtp.office365.com", PrimaryPort = 25, Email = "teste@gmail.com", Password = new HashingManager().HashToString("123Mudar"), EnableSsl = true, CreatedAt = _currentDate, IsActive = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.DEV },
+           new EmailSettings() { Id = 3, Host = "Hotmail", SmtpConfig = "smtp.live.com", PrimaryPort = 25, Email = "teste@gmail.com", Password = new HashingManager().HashToString("123Mudar"), EnableSsl = true, CreatedAt = _currentDate, IsActive = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.DEV }
         );
     }
 
     private static void SeedAuthenticationSettings(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<AuthenticationSettings>().HasData(
-           new AuthenticationSettings() { Id = (int)EnumEnvironment.PRD, NumberOfTryToBlockUser = 3, BlockUserTime = 60, ApplyTwoFactoryValidation = false, CreateDate = _currentDate, Status = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.PRD },
-           new AuthenticationSettings() { Id = (int)EnumEnvironment.PRE_PROD, NumberOfTryToBlockUser = 3, BlockUserTime = 60, ApplyTwoFactoryValidation = false, CreateDate = _currentDate, Status = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.PRE_PROD },
-           new AuthenticationSettings() { Id = (int)EnumEnvironment.HML, NumberOfTryToBlockUser = 3, BlockUserTime = 60, ApplyTwoFactoryValidation = false, CreateDate = _currentDate, Status = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.HML },
-           new AuthenticationSettings() { Id = (int)EnumEnvironment.QA, NumberOfTryToBlockUser = 3, BlockUserTime = 60, ApplyTwoFactoryValidation = false, CreateDate = _currentDate, Status = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.QA },
-           new AuthenticationSettings() { Id = (int)EnumEnvironment.DEV, NumberOfTryToBlockUser = 3, BlockUserTime = 60, ApplyTwoFactoryValidation = false, CreateDate = _currentDate, Status = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.DEV }
+           new AuthenticationSettings() { Id = (int)EnumEnvironment.PRD, NumberOfTryToBlockUser = 3, BlockUserTime = 60, ApplyTwoFactoryValidation = false, CreatedAt = _currentDate, IsActive = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.PRD },
+           new AuthenticationSettings() { Id = (int)EnumEnvironment.PRE_PROD, NumberOfTryToBlockUser = 3, BlockUserTime = 60, ApplyTwoFactoryValidation = false, CreatedAt = _currentDate, IsActive = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.PRE_PROD },
+           new AuthenticationSettings() { Id = (int)EnumEnvironment.HML, NumberOfTryToBlockUser = 3, BlockUserTime = 60, ApplyTwoFactoryValidation = false, CreatedAt = _currentDate, IsActive = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.HML },
+           new AuthenticationSettings() { Id = (int)EnumEnvironment.QA, NumberOfTryToBlockUser = 3, BlockUserTime = 60, ApplyTwoFactoryValidation = false, CreatedAt = _currentDate, IsActive = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.QA },
+           new AuthenticationSettings() { Id = (int)EnumEnvironment.DEV, NumberOfTryToBlockUser = 3, BlockUserTime = 60, ApplyTwoFactoryValidation = false, CreatedAt = _currentDate, IsActive = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.DEV }
         );
     }
 
     private static void SeedExpirationPasswordSettings(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<ExpirationPasswordSettings>().HasData(
-           new ExpirationPasswordSettings() { Id = (int)EnumEnvironment.PRD, QtyDaysPasswordExpire = 90, NotifyExpirationDays = 5, CreateDate = _currentDate, Status = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.PRD },
-           new ExpirationPasswordSettings() { Id = (int)EnumEnvironment.PRE_PROD, QtyDaysPasswordExpire = 90, NotifyExpirationDays = 5, CreateDate = _currentDate, Status = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.PRE_PROD },
-           new ExpirationPasswordSettings() { Id = (int)EnumEnvironment.HML, QtyDaysPasswordExpire = 90, NotifyExpirationDays = 5, CreateDate = _currentDate, Status = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.HML },
-           new ExpirationPasswordSettings() { Id = (int)EnumEnvironment.QA, QtyDaysPasswordExpire = 90, NotifyExpirationDays = 5, CreateDate = _currentDate, Status = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.QA },
-           new ExpirationPasswordSettings() { Id = (int)EnumEnvironment.DEV, QtyDaysPasswordExpire = 90, NotifyExpirationDays = 5, CreateDate = _currentDate, Status = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.DEV }
+           new ExpirationPasswordSettings() { Id = (int)EnumEnvironment.PRD, QtyDaysPasswordExpire = 90, NotifyExpirationDays = 5, CreatedAt = _currentDate, IsActive = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.PRD },
+           new ExpirationPasswordSettings() { Id = (int)EnumEnvironment.PRE_PROD, QtyDaysPasswordExpire = 90, NotifyExpirationDays = 5, CreatedAt = _currentDate, IsActive = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.PRE_PROD },
+           new ExpirationPasswordSettings() { Id = (int)EnumEnvironment.HML, QtyDaysPasswordExpire = 90, NotifyExpirationDays = 5, CreatedAt = _currentDate, IsActive = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.HML },
+           new ExpirationPasswordSettings() { Id = (int)EnumEnvironment.QA, QtyDaysPasswordExpire = 90, NotifyExpirationDays = 5, CreatedAt = _currentDate, IsActive = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.QA },
+           new ExpirationPasswordSettings() { Id = (int)EnumEnvironment.DEV, QtyDaysPasswordExpire = 90, NotifyExpirationDays = 5, CreatedAt = _currentDate, IsActive = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.DEV }
         );
     }
 
     private static void SeedLogSettings(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<LogSettings>().HasData(
-           new LogSettings() { Id = (int)EnumEnvironment.PRD, SaveLogTurnOnSystem = false, SaveLogTurnOffSystem = false, SaveLogCreateData = true, SaveLogResearchData = true, SaveLogUpdateData = true, SaveLogDeleteData = true, CreateDate = _currentDate, Status = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.PRD },
-           new LogSettings() { Id = (int)EnumEnvironment.PRE_PROD, SaveLogTurnOnSystem = false, SaveLogTurnOffSystem = false, SaveLogCreateData = true, SaveLogResearchData = true, SaveLogUpdateData = true, SaveLogDeleteData = true, CreateDate = _currentDate, Status = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.PRE_PROD },
-           new LogSettings() { Id = (int)EnumEnvironment.HML, SaveLogTurnOnSystem = false, SaveLogTurnOffSystem = false, SaveLogCreateData = true, SaveLogResearchData = true, SaveLogUpdateData = true, SaveLogDeleteData = true, CreateDate = _currentDate, Status = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.HML },
-           new LogSettings() { Id = (int)EnumEnvironment.QA, SaveLogTurnOnSystem = false, SaveLogTurnOffSystem = false, SaveLogCreateData = true, SaveLogResearchData = true, SaveLogUpdateData = true, SaveLogDeleteData = true, CreateDate = _currentDate, Status = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.QA },
-           new LogSettings() { Id = (int)EnumEnvironment.DEV, SaveLogTurnOnSystem = false, SaveLogTurnOffSystem = false, SaveLogCreateData = true, SaveLogResearchData = true, SaveLogUpdateData = true, SaveLogDeleteData = true, CreateDate = _currentDate, Status = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.DEV }
+           new LogSettings() { Id = (int)EnumEnvironment.PRD, SaveLogTurnOnSystem = false, SaveLogTurnOffSystem = false, SaveLogCreateData = true, SaveLogResearchData = true, SaveLogUpdateData = true, SaveLogDeleteData = true, CreatedAt = _currentDate, IsActive = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.PRD },
+           new LogSettings() { Id = (int)EnumEnvironment.PRE_PROD, SaveLogTurnOnSystem = false, SaveLogTurnOffSystem = false, SaveLogCreateData = true, SaveLogResearchData = true, SaveLogUpdateData = true, SaveLogDeleteData = true, CreatedAt = _currentDate, IsActive = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.PRE_PROD },
+           new LogSettings() { Id = (int)EnumEnvironment.HML, SaveLogTurnOnSystem = false, SaveLogTurnOffSystem = false, SaveLogCreateData = true, SaveLogResearchData = true, SaveLogUpdateData = true, SaveLogDeleteData = true, CreatedAt = _currentDate, IsActive = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.HML },
+           new LogSettings() { Id = (int)EnumEnvironment.QA, SaveLogTurnOnSystem = false, SaveLogTurnOffSystem = false, SaveLogCreateData = true, SaveLogResearchData = true, SaveLogUpdateData = true, SaveLogDeleteData = true, CreatedAt = _currentDate, IsActive = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.QA },
+           new LogSettings() { Id = (int)EnumEnvironment.DEV, SaveLogTurnOnSystem = false, SaveLogTurnOffSystem = false, SaveLogCreateData = true, SaveLogResearchData = true, SaveLogUpdateData = true, SaveLogDeleteData = true, CreatedAt = _currentDate, IsActive = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.DEV }
         );
     }
 
     private static void SeedRequiredPasswordSettings(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<RequiredPasswordSettings>().HasData(
-           new RequiredPasswordSettings() { Id = (int)EnumEnvironment.PRD, MinimalOfChars = 10, MustHaveNumbers = true, MustHaveSpecialChars = true, MustHaveUpperCaseLetter = true, CreateDate = _currentDate, Status = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.PRD },
-           new RequiredPasswordSettings() { Id = (int)EnumEnvironment.PRE_PROD, MinimalOfChars = 10, MustHaveNumbers = true, MustHaveSpecialChars = true, MustHaveUpperCaseLetter = true, CreateDate = _currentDate, Status = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.PRE_PROD },
-           new RequiredPasswordSettings() { Id = (int)EnumEnvironment.HML, MinimalOfChars = 10, MustHaveNumbers = true, MustHaveSpecialChars = true, MustHaveUpperCaseLetter = true, CreateDate = _currentDate, Status = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.HML },
-           new RequiredPasswordSettings() { Id = (int)EnumEnvironment.QA, MinimalOfChars = 10, MustHaveNumbers = true, MustHaveSpecialChars = true, MustHaveUpperCaseLetter = true, CreateDate = _currentDate, Status = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.QA },
-           new RequiredPasswordSettings() { Id = (int)EnumEnvironment.DEV, MinimalOfChars = 10, MustHaveNumbers = true, MustHaveSpecialChars = true, MustHaveUpperCaseLetter = true, CreateDate = _currentDate, Status = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.DEV }
+           new RequiredPasswordSettings() { Id = (int)EnumEnvironment.PRD, MinimalOfChars = 10, MustHaveNumbers = true, MustHaveSpecialChars = true, MustHaveUpperCaseLetter = true, CreatedAt = _currentDate, IsActive = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.PRD },
+           new RequiredPasswordSettings() { Id = (int)EnumEnvironment.PRE_PROD, MinimalOfChars = 10, MustHaveNumbers = true, MustHaveSpecialChars = true, MustHaveUpperCaseLetter = true, CreatedAt = _currentDate, IsActive = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.PRE_PROD },
+           new RequiredPasswordSettings() { Id = (int)EnumEnvironment.HML, MinimalOfChars = 10, MustHaveNumbers = true, MustHaveSpecialChars = true, MustHaveUpperCaseLetter = true, CreatedAt = _currentDate, IsActive = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.HML },
+           new RequiredPasswordSettings() { Id = (int)EnumEnvironment.QA, MinimalOfChars = 10, MustHaveNumbers = true, MustHaveSpecialChars = true, MustHaveUpperCaseLetter = true, CreatedAt = _currentDate, IsActive = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.QA },
+           new RequiredPasswordSettings() { Id = (int)EnumEnvironment.DEV, MinimalOfChars = 10, MustHaveNumbers = true, MustHaveSpecialChars = true, MustHaveUpperCaseLetter = true, CreatedAt = _currentDate, IsActive = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.DEV }
         );
     }
 
@@ -91,22 +92,22 @@ public static class SeedContext
     private static void SeedEmailDisplay(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<EmailDisplay>().HasData(
-           new EmailDisplay() { Id = (int)EnumEmail.Welcome, Subject = "Bem vindo ao sistema {0}", Title = "Email de boas vindas", Body = new EmailWelcomeConfig().GetBodyText(), EmailTemplateId = 1, MessagePriority = MessagePriority.Normal, CreateDate = _currentDate, Status = STATUS_TRUE, HasAttachment = STATUS_FALSE },
-           new EmailDisplay() { Id = (int)EnumEmail.ChangePassword, Subject = "{0} - Solicitação de troca de senha", Title = "Email de troca de senha", Body = EmailDisplay.GetBodyTextTradePsw(), EmailTemplateId = 1, MessagePriority = MessagePriority.Normal, CreateDate = _currentDate, Status = STATUS_TRUE, HasAttachment = STATUS_FALSE },
-           new EmailDisplay() { Id = (int)EnumEmail.ResetPassword, Subject = "{0} - Esqueci a senha", Title = "Email de reset de senha", Body = EmailDisplay.GetBodyTextForgetPsw(), EmailTemplateId = 1, MessagePriority = MessagePriority.Normal, CreateDate = _currentDate, Status = STATUS_TRUE, HasAttachment = STATUS_FALSE },
-           new EmailDisplay() { Id = (int)EnumEmail.ConfirmPassword, Subject = "{0} - Confirmação de senha", Title = "Email de confirmação de senha", Body = EmailDisplay.GetBodyTextConfirmPsw(), EmailTemplateId = 1, MessagePriority = MessagePriority.Normal, CreateDate = _currentDate, Status = STATUS_TRUE, HasAttachment = STATUS_FALSE },
-           new EmailDisplay() { Id = (int)EnumEmail.Report, Subject = "{0} - Relatório", Title = "Email de relatório", Body = string.Empty, EmailTemplateId = 1, MessagePriority = MessagePriority.Normal, CreateDate = _currentDate, IsActive = STATUS_TRUE, HasAttachment = STATUS_FALSE }
+           new EmailDisplay() { Id = (int)EnumEmail.Welcome, Subject = "Bem vindo ao sistema {0}", Title = "Email de boas vindas", Body = new EmailWelcome().GetBodyText(), EmailTemplateId = 1, MessagePriority = MessagePriority.Normal, CreatedAt = _currentDate, IsActive = STATUS_TRUE, HasAttachment = STATUS_FALSE },
+           new EmailDisplay() { Id = (int)EnumEmail.ChangePassword, Subject = "{0} - Solicitação de troca de senha", Title = "Email de troca de senha", Body = new EmailChangePassword().GetBodyText(), EmailTemplateId = 1, MessagePriority = MessagePriority.Normal, CreatedAt = _currentDate, IsActive = STATUS_TRUE, HasAttachment = STATUS_FALSE },
+           new EmailDisplay() { Id = (int)EnumEmail.ResetPassword, Subject = "{0} - Esqueci a senha", Title = "Email de reset de senha", Body = new EmailResetPassword().GetBodyText(), EmailTemplateId = 1, MessagePriority = MessagePriority.Normal, CreatedAt = _currentDate, IsActive = STATUS_TRUE, HasAttachment = STATUS_FALSE },
+           new EmailDisplay() { Id = (int)EnumEmail.ConfirmPassword, Subject = "{0} - Confirmação de senha", Title = "Email de confirmação de senha", Body = new EmailConfirmPassword().GetBodyText(), EmailTemplateId = 1, MessagePriority = MessagePriority.Normal, CreatedAt = _currentDate, IsActive = STATUS_TRUE, HasAttachment = STATUS_FALSE },
+           new EmailDisplay() { Id = (int)EnumEmail.Report, Subject = "{0} - Relatório", Title = "Email de relatório", Body = string.Empty, EmailTemplateId = 1, MessagePriority = MessagePriority.Normal, CreatedAt = _currentDate, IsActive = STATUS_TRUE, HasAttachment = STATUS_FALSE }
         );
     }
 
     private static void SeedLayoutSettings(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<LayoutSettings>().HasData(
-           new LayoutSettings() { Id = (int)EnumEnvironment.PRD, CreateDate = _currentDate, DocumentFileContentToUpload = ".pdf,.doc,.docx", ImageFileContentToUpload = ".jpg,.jpeg,.png", MaxDocumentFileSize = 20, MaxImageFileSize = 20, IsActive = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.PRD },
-           new LayoutSettings() { Id = (int)EnumEnvironment.PRE_PROD, CreateDate = _currentDate, DocumentFileContentToUpload = ".pdf,.doc,.docx", ImageFileContentToUpload = ".jpg,.jpeg,.png", MaxDocumentFileSize = 20, MaxImageFileSize = 20, IsActive = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.PRE_PROD },
-           new LayoutSettings() { Id = (int)EnumEnvironment.HML, CreateDate = _currentDate, DocumentFileContentToUpload = ".pdf,.doc,.docx,.txt", ImageFileContentToUpload = ".jpg,.jpeg,.png", MaxDocumentFileSize = 20, MaxImageFileSize = 20, IsActive = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.HML },
-           new LayoutSettings() { Id = (int)EnumEnvironment.QA, CreateDate = _currentDate, DocumentFileContentToUpload = ".pdf,.doc,.docx,.txt", ImageFileContentToUpload = ".jpg,.jpeg,.png", MaxDocumentFileSize = 20, MaxImageFileSize = 20, IsActive = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.QA },
-           new LayoutSettings() { Id = (int)EnumEnvironment.DEV, CreateDate = _currentDate, DocumentFileContentToUpload = ".pdf,.doc,.docx,.txt", ImageFileContentToUpload = ".jpg,.jpeg,.png", MaxDocumentFileSize = 20, MaxImageFileSize = 20, IsActive = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.DEV }
+           new LayoutSettings() { Id = (int)EnumEnvironment.PRD, CreatedAt = _currentDate, DocumentFileContentToUpload = ".pdf,.doc,.docx", ImageFileContentToUpload = ".jpg,.jpeg,.png", MaxDocumentFileSize = 20, MaxImageFileSize = 20, IsActive = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.PRD },
+           new LayoutSettings() { Id = (int)EnumEnvironment.PRE_PROD, CreatedAt = _currentDate, DocumentFileContentToUpload = ".pdf,.doc,.docx", ImageFileContentToUpload = ".jpg,.jpeg,.png", MaxDocumentFileSize = 20, MaxImageFileSize = 20, IsActive = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.PRE_PROD },
+           new LayoutSettings() { Id = (int)EnumEnvironment.HML, CreatedAt = _currentDate, DocumentFileContentToUpload = ".pdf,.doc,.docx,.txt", ImageFileContentToUpload = ".jpg,.jpeg,.png", MaxDocumentFileSize = 20, MaxImageFileSize = 20, IsActive = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.HML },
+           new LayoutSettings() { Id = (int)EnumEnvironment.QA, CreatedAt = _currentDate, DocumentFileContentToUpload = ".pdf,.doc,.docx,.txt", ImageFileContentToUpload = ".jpg,.jpeg,.png", MaxDocumentFileSize = 20, MaxImageFileSize = 20, IsActive = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.QA },
+           new LayoutSettings() { Id = (int)EnumEnvironment.DEV, CreatedAt = _currentDate, DocumentFileContentToUpload = ".pdf,.doc,.docx,.txt", ImageFileContentToUpload = ".jpg,.jpeg,.png", MaxDocumentFileSize = 20, MaxImageFileSize = 20, IsActive = STATUS_TRUE, IdEnvironmentType = (int)EnumEnvironment.DEV }
         );
     }
 
@@ -123,8 +124,8 @@ public static class SeedContext
                Description = "Administrador Dev",
                HierarchyLevel = EnumHierarchyLevel.Development,
                Order = 0,
-               CreateDate = _currentDate,
-               Status = STATUS_TRUE
+               CreatedAt = _currentDate,
+               IsActive = STATUS_TRUE
            },
            new Area()
            {
@@ -132,8 +133,8 @@ public static class SeedContext
                Description = "Administrador Sistema",
                HierarchyLevel = EnumHierarchyLevel.Principal,
                Order = 0,
-               CreateDate = _currentDate,
-               Status = STATUS_TRUE
+               CreatedAt = _currentDate,
+               IsActive = STATUS_TRUE
            },
            new Area()
            {
@@ -141,8 +142,8 @@ public static class SeedContext
                Description = "Setor Operacional",
                HierarchyLevel = EnumHierarchyLevel.Areas,
                Order = 0,
-               CreateDate = _currentDate,
-               Status = STATUS_TRUE
+               CreatedAt = _currentDate,
+               IsActive = STATUS_TRUE
            },
            new Area()
            {
@@ -150,8 +151,8 @@ public static class SeedContext
                Description = "Setor Financeiro",
                HierarchyLevel = EnumHierarchyLevel.Areas,
                Order = 1,
-               CreateDate = _currentDate,
-               Status = STATUS_TRUE
+               CreatedAt = _currentDate,
+               IsActive = STATUS_TRUE
            },
            new Area()
            {
@@ -159,8 +160,8 @@ public static class SeedContext
                Description = "Setor Marketing",
                HierarchyLevel = EnumHierarchyLevel.Areas,
                Order = 2,
-               CreateDate = _currentDate,
-               Status = STATUS_TRUE
+               CreatedAt = _currentDate,
+               IsActive = STATUS_TRUE
            },
            new Area()
            {
@@ -168,8 +169,8 @@ public static class SeedContext
                Description = "Setor Relações Humanas",
                HierarchyLevel = EnumHierarchyLevel.Areas,
                Order = 3,
-               CreateDate = _currentDate,
-               Status = STATUS_TRUE
+               CreatedAt = _currentDate,
+               IsActive = STATUS_TRUE
            }
         );
     }
@@ -177,13 +178,13 @@ public static class SeedContext
     private static void SeedOperation(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Operation>().HasData(
-          new Operation() { Id = 1, Description = "Auditoria", Order = 1, CreateDate = _currentDate, Status = STATUS_TRUE },
-          new Operation() { Id = 2, Description = "Logs", Order = 2, CreateDate = _currentDate, Status = STATUS_TRUE },
-          new Operation() { Id = 3, Description = "Area", Order = 3, CreateDate = _currentDate, Status = STATUS_TRUE },
-          new Operation() { Id = 4, Description = "Operação", Order = 4, CreateDate = _currentDate, Status = STATUS_TRUE },
-          new Operation() { Id = 5, Description = "Perfil", Order = 5, CreateDate = _currentDate, Status = STATUS_TRUE },
-          new Operation() { Id = 6, Description = "Funcionario", Order = 6, CreateDate = _currentDate, Status = STATUS_TRUE },
-          new Operation() { Id = 7, Description = "Usuario", Order = 7, CreateDate = _currentDate, Status = STATUS_TRUE }
+          new Operation() { Id = 1, Description = "Auditoria", Order = 1, CreatedAt = _currentDate, IsActive = STATUS_TRUE },
+          new Operation() { Id = 2, Description = "Logs", Order = 2, CreatedAt = _currentDate, IsActive = STATUS_TRUE },
+          new Operation() { Id = 3, Description = "Area", Order = 3, CreatedAt = _currentDate, IsActive = STATUS_TRUE },
+          new Operation() { Id = 4, Description = "Operação", Order = 4, CreatedAt = _currentDate, IsActive = STATUS_TRUE },
+          new Operation() { Id = 5, Description = "Perfil", Order = 5, CreatedAt = _currentDate, IsActive = STATUS_TRUE },
+          new Operation() { Id = 6, Description = "Funcionario", Order = 6, CreatedAt = _currentDate, IsActive = STATUS_TRUE },
+          new Operation() { Id = 7, Description = "Usuario", Order = 7, CreatedAt = _currentDate, IsActive = STATUS_TRUE }
         );
     }
 
@@ -194,32 +195,32 @@ public static class SeedContext
            {
                Id = 1,
                Description = "Perfil Desenvolvedor",
-               CreateDate = _currentDate,
-               Status = STATUS_TRUE,
+               CreatedAt = _currentDate,
+               IsActive = STATUS_TRUE,
                IdArea = 1
            },
            new Profile()
            {
                Id = 2,
                Description = "Perfil Administrador",
-               CreateDate = _currentDate,
-               Status = STATUS_TRUE,
+               CreatedAt = _currentDate,
+               IsActive = STATUS_TRUE,
                IdArea = 2
            },
            new Profile()
            {
                Id = 3,
                Description = "Perfil Manager Operacional",
-               CreateDate = _currentDate,
-               Status = STATUS_TRUE,
+               CreatedAt = _currentDate,
+               IsActive = STATUS_TRUE,
                IdArea = 3
            },
            new Profile()
            {
                Id = 4,
                Description = "Perfil Manager Financeiro",
-               CreateDate = _currentDate,
-               Status = STATUS_TRUE,
+               CreatedAt = _currentDate,
+               IsActive = STATUS_TRUE,
                IdArea = 4
            }
         );
@@ -313,11 +314,11 @@ public static class SeedContext
         {
             Id = 1,
             Login = "admin@DefaultAPI.com.br",
-            CreateDate = _currentDate,
-            Status = STATUS_TRUE,
+            CreatedAt = _currentDate,
+            IsActive = STATUS_TRUE,
             IsAuthenticated = STATUS_TRUE,
-            Password = HashingManager.GetLoadHashingManager().HashToString("123mudar"),
-            LastPassword = StringExtensionMethod.GetEmptyString(),
+            Password = new HashingManager().HashToString("123mudar"),
+            LastPassword = string.Empty,
             HasTwoFactoryValidation = STATUS_FALSE,
         });
     }
@@ -334,8 +335,8 @@ public static class SeedContext
             CelPhone = "12999991234",
             IdProfile = 1,
             IdUser = 1,
-            CreateDate = _currentDate,
-            Status = STATUS_TRUE
+            CreatedAt = _currentDate,
+            IsActive = STATUS_TRUE
         }
         );
     }

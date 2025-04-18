@@ -1,14 +1,12 @@
-﻿using WebAPI.Application.Generic;
-using WebAPI.Domain.Constants;
+﻿using WebAPI.Domain.Constants;
 using WebAPI.Domain.Entities.Configuration;
 using WebAPI.Domain.DTO.Configuration;
 using WebAPI.Domain.Interfaces.Repository.Configuration;
 using WebAPI.Domain.Interfaces.Services.Configuration;
-using WebAPI.Domain.Interfaces.Services.Tools;
 
 namespace WebAPI.Application.Services.Configuration;
 
-public class ExpirationPasswordSettingsService : GenericService, IExpirationPasswordSettingsService
+public sealed class ExpirationPasswordSettingsService : BaseHandlerService, IExpirationPasswordSettingsService
 {
     private readonly IExpirationPasswordSettingsRepository _iExpirationPasswordSettingsRepository;
     private EnvironmentVariables _environmentVariables;
@@ -28,78 +26,42 @@ public class ExpirationPasswordSettingsService : GenericService, IExpirationPass
 
     public async Task<IEnumerable<ExpirationPasswordSettingsResponseDTO>> GetAllExpirationPasswordSettingsAsync()
     {
-        try
-        {
-            return await (from p in _iExpirationPasswordSettingsRepository.GetAllInclude("EnvironmentTypeSettings")
-                          orderby p.EnvironmentTypeSettings.Id ascending
-                          select new ExpirationPasswordSettingsResponseDTO()
-                          {
-                              Id = p.Id.Value,
-                              EnvironmentDescription = p.EnvironmentTypeSettings.Description,
-                              QtyDaysPasswordExpire = p.QtyDaysPasswordExpire,
-                              NotifyExpirationDays = p.NotifyExpirationDays,
-                              StatusDescription = p.GetStatusDescription()
-                          }).ToListAsync();
-        }
-        catch
-        {
-            Notify(FixConstants.ERROR_IN_GETALL);
-            return Enumerable.Empty<ExpirationPasswordSettingsResponseDTO>();
-        }
-        finally
-        {
-            await Task.CompletedTask;
-        }
+        return await (from p in _iExpirationPasswordSettingsRepository.GetAllInclude("EnvironmentTypeSettings")
+                      orderby p.EnvironmentTypeSettings.Id ascending
+                      select new ExpirationPasswordSettingsResponseDTO()
+                      {
+                          Id = p.Id.Value,
+                          EnvironmentDescription = p.EnvironmentTypeSettings.Description,
+                          QtyDaysPasswordExpire = p.QtyDaysPasswordExpire,
+                          NotifyExpirationDays = p.NotifyExpirationDays,
+                          StatusDescription = p.IsActive.GetDescriptionByBoolean()
+                      }).ToListAsync();
     }
 
     public async Task<ExpirationPasswordSettingsResponseDTO> GetExpirationPasswordSettingsByEnvironmentAsync()
     {
-        try
-        {
-            return await (from p in _iExpirationPasswordSettingsRepository.FindBy(x => x.IdEnvironmentType == (int)_environmentVariables.Environment).AsQueryable()
-                          select new ExpirationPasswordSettingsResponseDTO
-                          {
-                              Id = p.Id.Value,
-                              EnvironmentDescription = p.EnvironmentTypeSettings.Description,
-                              QtyDaysPasswordExpire = p.QtyDaysPasswordExpire,
-                              NotifyExpirationDays = p.NotifyExpirationDays,
-                              StatusDescription = p.GetStatusDescription()
-                          }).FirstOrDefaultAsync();
-        }
-        catch
-        {
-            Notify(FixConstants.ERROR_IN_GETID);
-            return default;
-        }
-        finally
-        {
-            await Task.CompletedTask;
-        }
+        return await (from p in _iExpirationPasswordSettingsRepository.FindBy(x => x.IdEnvironmentType == (int)_environmentVariables.Environment).AsQueryable()
+                      select new ExpirationPasswordSettingsResponseDTO
+                      {
+                          Id = p.Id.Value,
+                          EnvironmentDescription = p.EnvironmentTypeSettings.Description,
+                          QtyDaysPasswordExpire = p.QtyDaysPasswordExpire,
+                          NotifyExpirationDays = p.NotifyExpirationDays,
+                          StatusDescription = p.IsActive.GetDescriptionByBoolean()
+                      }).FirstOrDefaultAsync();
     }
 
     public async Task<ExpirationPasswordSettingsResponseDTO> GetExpirationPasswordSettingsByIdAsync(long id)
     {
-        try
-        {
-            return await (from p in _iExpirationPasswordSettingsRepository.FindBy(x => x.Id == id).AsQueryable()
-                          select new ExpirationPasswordSettingsResponseDTO
-                          {
-                              Id = p.Id.Value,
-                              EnvironmentDescription = p.EnvironmentTypeSettings.Description,
-                              QtyDaysPasswordExpire = p.QtyDaysPasswordExpire,
-                              NotifyExpirationDays = p.NotifyExpirationDays,
-                              StatusDescription = p.GetStatusDescription()
-                          }).FirstOrDefaultAsync();
-        }
-        catch
-        {
-            Notify(FixConstants.ERROR_IN_GETID);
-            return default;
-        }
-        finally
-        {
-            await Task.CompletedTask;
-        }
+        return await (from p in _iExpirationPasswordSettingsRepository.FindBy(x => x.Id == id).AsQueryable()
+                      select new ExpirationPasswordSettingsResponseDTO
+                      {
+                          Id = p.Id.Value,
+                          EnvironmentDescription = p.EnvironmentTypeSettings.Description,
+                          QtyDaysPasswordExpire = p.QtyDaysPasswordExpire,
+                          NotifyExpirationDays = p.NotifyExpirationDays,
+                          StatusDescription = p.IsActive.GetDescriptionByBoolean()
+                      }).FirstOrDefaultAsync();
     }
 
     public async Task<bool> ExistExpirationPasswordSettingsByEnvironmentAsync()
@@ -118,86 +80,50 @@ public class ExpirationPasswordSettingsService : GenericService, IExpirationPass
 
     public async Task<bool> CreateExpirationPasswordSettingsAsync(ExpirationPasswordSettingsCreateRequestDTO expirationPasswordSettingsCreateRequestDTO)
     {
-        try
-        {
-            ExpirationPasswordSettings expirationPasswordSettings = _iMapperService.ApplyMapToEntity<ExpirationPasswordSettingsCreateRequestDTO, ExpirationPasswordSettings>(expirationPasswordSettingsCreateRequestDTO);
-            _iExpirationPasswordSettingsRepository.Create(expirationPasswordSettings);
-            return true;
-        }
-        catch (Exception ex)
-        {
-            Notify(FixConstants.ERROR_IN_ADD);
-            return false;
-        }
-        finally
-        {
-            await Task.CompletedTask;
-        }
+        ExpirationPasswordSettings expirationPasswordSettings = _iMapperService.ApplyMapToEntity<ExpirationPasswordSettingsCreateRequestDTO, ExpirationPasswordSettings>(expirationPasswordSettingsCreateRequestDTO);
+        _iExpirationPasswordSettingsRepository.Create(expirationPasswordSettings);
+        return true;
     }
 
     public async Task<bool> UpdateExpirationPasswordSettingsAsync(ExpirationPasswordSettingsUpdateRequestDTO expirationPasswordSettingsUpdateRequestDTO)
     {
-        try
+        ExpirationPasswordSettings expirationPasswordSettings = _iMapperService.ApplyMapToEntity<ExpirationPasswordSettingsUpdateRequestDTO, ExpirationPasswordSettings>(expirationPasswordSettingsUpdateRequestDTO);
+        ExpirationPasswordSettings expirationPasswordSettingsDb = _iExpirationPasswordSettingsRepository.GetById(expirationPasswordSettings.Id.Value);
+
+        if (GuardClauseExtension.IsNotNull(expirationPasswordSettingsDb))
         {
-            ExpirationPasswordSettings expirationPasswordSettings = _iMapperService.ApplyMapToEntity<ExpirationPasswordSettingsUpdateRequestDTO, ExpirationPasswordSettings>(expirationPasswordSettingsUpdateRequestDTO);
-            ExpirationPasswordSettings expirationPasswordSettingsDb = _iExpirationPasswordSettingsRepository.GetById(expirationPasswordSettings.Id.Value);
-
-            if (GuardClauses.ObjectIsNotNull(expirationPasswordSettingsDb))
+            if (expirationPasswordSettingsDb.IsActive.Value)
             {
-                if (expirationPasswordSettingsDb.Status)
-                {
-                    expirationPasswordSettingsDb.UpdateDate = expirationPasswordSettings.UpdateDate;
-                    expirationPasswordSettingsDb.QtyDaysPasswordExpire = expirationPasswordSettings.QtyDaysPasswordExpire;
-                    expirationPasswordSettingsDb.NotifyExpirationDays = expirationPasswordSettings.NotifyExpirationDays;
-                    _iExpirationPasswordSettingsRepository.Update(expirationPasswordSettingsDb);
-                    return true;
-                }
-
-                Notify(FixConstants.ERROR_IN_UPDATE);
-                return false;
+                expirationPasswordSettingsDb.UpdatedAt = expirationPasswordSettings.UpdatedAt;
+                expirationPasswordSettingsDb.QtyDaysPasswordExpire = expirationPasswordSettings.QtyDaysPasswordExpire;
+                expirationPasswordSettingsDb.NotifyExpirationDays = expirationPasswordSettings.NotifyExpirationDays;
+                _iExpirationPasswordSettingsRepository.Update(expirationPasswordSettingsDb);
+                return true;
             }
 
             Notify(FixConstants.ERROR_IN_UPDATE);
             return false;
         }
-        catch (Exception ex)
-        {
-            Notify(FixConstants.ERROR_IN_UPDATE);
-            return false;
-        }
-        finally
-        {
-            await Task.CompletedTask;
-        }
+
+        Notify(FixConstants.ERROR_IN_UPDATE);
+        return false;
     }
 
     public async Task<bool> LogicDeleteExpirationPasswordSettingsByIdAsync(long id)
     {
-        try
-        {
-            ExpirationPasswordSettings expirationPasswordSettingsDb = _iExpirationPasswordSettingsRepository.GetById(id);
+        ExpirationPasswordSettings expirationPasswordSettingsDb = _iExpirationPasswordSettingsRepository.GetById(id);
 
-            if (GuardClauses.ObjectIsNotNull(expirationPasswordSettingsDb))
-            {
-                expirationPasswordSettingsDb.UpdateDate = expirationPasswordSettingsDb.GetNewUpdateDate();
-                expirationPasswordSettingsDb.Status = false;
-                _iExpirationPasswordSettingsRepository.Update(expirationPasswordSettingsDb);
-                return true;
-            }
-            else
-            {
-                Notify(FixConstants.ERROR_IN_DELETELOGIC);
-                return false;
-            }
+        if (GuardClauseExtension.IsNotNull(expirationPasswordSettingsDb))
+        {
+            expirationPasswordSettingsDb.UpdatedAt = DateOnlyExtension.GetDateTimeNowFromBrazil();
+            expirationPasswordSettingsDb.IsActive = false;
+            _iExpirationPasswordSettingsRepository.Update(expirationPasswordSettingsDb);
+            return true;
         }
-        catch (Exception)
+        else
         {
             Notify(FixConstants.ERROR_IN_DELETELOGIC);
             return false;
-        }
-        finally
-        {
-            await Task.CompletedTask;
         }
     }
 
@@ -207,10 +133,10 @@ public class ExpirationPasswordSettingsService : GenericService, IExpirationPass
         {
             ExpirationPasswordSettings expirationPasswordSettingsDb = _iExpirationPasswordSettingsRepository.GetById(id);
 
-            if (GuardClauses.ObjectIsNotNull(expirationPasswordSettingsDb))
+            if (GuardClauseExtension.IsNotNull(expirationPasswordSettingsDb))
             {
-                expirationPasswordSettingsDb.UpdateDate = expirationPasswordSettingsDb.GetNewUpdateDate();
-                expirationPasswordSettingsDb.Status = true;
+                expirationPasswordSettingsDb.UpdatedAt = DateOnlyExtension.GetDateTimeNowFromBrazil();
+                expirationPasswordSettingsDb.IsActive = true;
                 _iExpirationPasswordSettingsRepository.Update(expirationPasswordSettingsDb);
                 return true;
             }
@@ -242,7 +168,7 @@ public class ExpirationPasswordSettingsService : GenericService, IExpirationPass
                               EnvironmentDescription = p.EnvironmentTypeSettings.Description,
                               QtyDaysPasswordExpire = p.QtyDaysPasswordExpire,
                               NotifyExpirationDays = p.NotifyExpirationDays,
-                              StatusDescription = p.GetStatusDescription()
+                              StatusDescription = p.IsActive.GetDescriptionByBoolean()
                           }).ToListAsync();
         }
         catch

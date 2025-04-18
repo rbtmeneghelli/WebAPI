@@ -1,20 +1,20 @@
-﻿using MediatR;
-using WebAPI.Domain.Entities.Others;
+﻿using WebAPI.Domain.Entities.Others;
 using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.CQRS.Queries;
 using FastPackForShare;
 using FastPackForShare.Constants;
+using FastPackForShare.SimpleMediator;
 
 namespace WebAPI.Application.Handlers.Queries;
 
-public sealed class RegionQueryHandler :
-IRequestHandler<RegionQueryFilterRequest, CustomResponseModel>,
-IRequestHandler<RegionQueryByIdRequest, CustomResponseModel>
+public sealed class SimpleRegionQueryHandler :
+IRequestHandler<SimpleRegionQueryFilterRequest, CustomResponseModel>,
+IRequestHandler<SimpleRegionQueryByIdRequest, CustomResponseModel>
 {
     private readonly IRegionRepository _iRegionRepository;
     private readonly IMapperService _iMapperService;
 
-    public RegionQueryHandler(
+    public SimpleRegionQueryHandler(
         IRegionRepository iRegionRepository,
         IMapperService iMapperService)
     {
@@ -22,7 +22,7 @@ IRequestHandler<RegionQueryByIdRequest, CustomResponseModel>
         _iMapperService = iMapperService;
     }
 
-    public async Task<CustomResponseModel> Handle(RegionQueryFilterRequest request, CancellationToken cancellationToken)
+    public async Task<CustomResponseModel> Handle(SimpleRegionQueryFilterRequest request, CancellationToken cancellationToken)
     {
         List<RegionQueryFilterResponse> regionQueryFilterResponses = new();
         var result = _iRegionRepository.GetAll();
@@ -30,7 +30,7 @@ IRequestHandler<RegionQueryByIdRequest, CustomResponseModel>
         return new CustomResponseModel(ConstantHttpStatusCode.OK_CODE, data);
     }
 
-    public async Task<CustomResponseModel> Handle(RegionQueryByIdRequest request, CancellationToken cancellationToken)
+    public async Task<CustomResponseModel> Handle(SimpleRegionQueryByIdRequest request, CancellationToken cancellationToken)
     {
         var result = _iRegionRepository.GetById(request.Id.Value);
         var data = _iMapperService.ApplyMapToEntity<Region, RegionQueryByIdResponse>(result);

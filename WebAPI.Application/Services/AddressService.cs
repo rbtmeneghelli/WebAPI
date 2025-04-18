@@ -1,5 +1,4 @@
-﻿using FastPackForShare.Default;
-using WebAPI.Domain.Constants;
+﻿using WebAPI.Domain.DTO.Others;
 using WebAPI.Domain.Filters.Others;
 using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.Interfaces.Services;
@@ -10,10 +9,15 @@ namespace WebAPI.Application.Services;
 public sealed class AddressService : BaseHandlerService, IAddressService
 {
     private readonly IAddressRepository _iAddressRepository;
+    private readonly IMapperService _iMapperService;
 
-    public AddressService(IAddressRepository iAddressRepository, INotificationMessageService iNotificationMessageService) : base(iNotificationMessageService)
+    public AddressService(
+        IAddressRepository iAddressRepository, 
+        INotificationMessageService iNotificationMessageService,
+        IMapperService iMapperService) : base(iNotificationMessageService)
     {
         _iAddressRepository = iAddressRepository;
+        _iMapperService = iMapperService;
     }
 
     private async Task<IQueryable<Domain.ValueObject.AddressData>> GetAllWithFilterAsync(CepFilter filter)
@@ -37,7 +41,7 @@ public sealed class AddressService : BaseHandlerService, IAddressService
         if (GuardClauseExtension.IsNotNull(refreshCep.ModelCep))
         {
 
-            refreshCep.ModelCep = new Domain.ValueObject.AddressData(refreshCep.ModelCep.Id.Value, refreshCep.Cep, refreshCep.ModelCepAPI, refreshCep.ModelCep.StateId, refreshCep.ModelCep.CreateDate);
+            refreshCep.ModelCep = new Domain.ValueObject.AddressData(refreshCep.ModelCep.Id.Value, refreshCep.Cep, refreshCep.ModelCepAPI, refreshCep.ModelCep.StateId, refreshCep.ModelCep.CreatedAt);
             _iAddressRepository.Update(refreshCep.ModelCep);
         }
         else
@@ -71,7 +75,7 @@ public sealed class AddressService : BaseHandlerService, IAddressService
         return await _iAddressRepository.FindBy(x => EF.Functions.Like(x.Cep, $"%{parameter}%")).ToListAsync();
     }
 
-    public async Task<BasePagedResultModel<AddressData>> GetAllAddressWithPaginateAsync(CepFilter filter)
+    public async Task<BasePagedResultModel<AddressDataDTO>> GetAllAddressWithPaginateAsync(CepFilter filter)
     {
         var query = await GetAllWithFilterAsync(filter);
         var queryCount = await GetCountAsync(filter);
@@ -94,6 +98,7 @@ public sealed class AddressService : BaseHandlerService, IAddressService
                               IsActive = x.IsActive
                           };
 
-        return BasePagedResultService.GetPaged(queryResult, BasePagedResultService.GetDefaultPageIndex(filter.PageIndex), BasePagedResultService.GetDefaultPageSize(filter.PageSize));
+        var data = _iMapperService.ApplyMapToEntity<IEnumerable<AddressData>, IEnumerable<AddressDataDTO>>(queryResult);
+        return BasePagedResultService.GetPaged(data.AsQueryable(), BasePagedResultService.GetDefaultPageIndex(filter.PageIndex), BasePagedResultService.GetDefaultPageSize(filter.PageSize));
     }
 }

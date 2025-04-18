@@ -1,7 +1,4 @@
 ﻿using System.Text.Json;
-using FastPackForShare.Extensions;
-using FastPackForShare.Interfaces;
-using FastPackForShare.Services.Bases;
 using WebAPI.Domain.Constants;
 using WebAPI.Domain.Interfaces.Services.Tools;
 
@@ -71,7 +68,7 @@ public sealed class FirebaseService : BaseHandlerService, IFirebaseService
 
     public async Task SendPushNotification_V2(string deviceClientToken, string message)
     {
-        RequestData requestDataDto = new RequestData();
+        RequestDataModel requestDataDto = new RequestDataModel();
 
         string jsonData = JsonSerializer.Serialize(new
         {

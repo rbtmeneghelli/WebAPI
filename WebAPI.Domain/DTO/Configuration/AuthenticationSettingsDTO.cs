@@ -1,10 +1,6 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
+﻿namespace WebAPI.Domain.DTO.Configuration;
 
-namespace WebAPI.Domain.DTO.Configuration;
-
-public record AuthenticationSettingsExcelDTO
+public record AuthenticationSettingsExcelDTO : GenericDTOModel
 {
     [DisplayName("EnvironmentDescription")]
     public string EnvironmentDescription { get; set; }
@@ -22,7 +18,7 @@ public record AuthenticationSettingsExcelDTO
     public string StatusDescription { get; set; }
 }
 
-public record AuthenticationSettingsResponseDTO
+public record AuthenticationSettingsResponseDTO : GenericDTOModel
 {
     [Display(Name = "Id", Description = "Id do registro")]
     public long Id { get; set; }
@@ -43,7 +39,7 @@ public record AuthenticationSettingsResponseDTO
     public string StatusDescription { get; set; }
 }
 
-public record AuthenticationSettingsCreateRequestDTO
+public record AuthenticationSettingsCreateRequestDTO : GenericDTOModel
 {
     [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
     [Display(Name = "Id", Description = "Id do registro")]
@@ -68,7 +64,7 @@ public record AuthenticationSettingsCreateRequestDTO
     public long? IdEnvironment { get; set; }
 }
 
-public record AuthenticationSettingsUpdateRequestDTO
+public record AuthenticationSettingsUpdateRequestDTO : GenericDTOModel
 {
     [Required]
     [Display(Name = "Id", Description = "Id do registro")]
@@ -93,7 +89,7 @@ public record AuthenticationSettingsUpdateRequestDTO
     public long? IdEnvironment { get; set; }
 }
 
-public record AuthenticationSettingsReactiveRequestDTO
+public record AuthenticationSettingsReactiveRequestDTO : GenericDTOModel
 {
     [Required]
     [Display(Name = "Id", Description = "Id do registro")]

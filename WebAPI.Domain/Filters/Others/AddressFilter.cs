@@ -2,7 +2,7 @@
 
 namespace WebAPI.Domain.Filters.Others;
 
-public sealed record CepFilter : BaseFilterModel
+public record AddressFilter : BaseFilterModel
 {
     public string ZipPostalCode { get; set; }
 }

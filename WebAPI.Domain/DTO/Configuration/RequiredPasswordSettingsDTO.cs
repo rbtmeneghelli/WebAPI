@@ -1,10 +1,6 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
+﻿namespace WebAPI.Domain.DTO.Configuration;
 
-namespace WebAPI.Domain.DTO.Configuration;
-
-public record RequiredPasswordSettingsExcelDTO
+public record RequiredPasswordSettingsExcelDTO : GenericDTOModel
 {
     [DisplayName("EnvironmentDescription")]
     public string EnvironmentDescription { get; set; }
@@ -25,7 +21,7 @@ public record RequiredPasswordSettingsExcelDTO
     public string StatusDescription { get; set; }
 }
 
-public record RequiredPasswordSettingsResponseDTO
+public record RequiredPasswordSettingsResponseDTO : GenericDTOModel
 {
     [Display(Name = "Id", Description = "Id do registro")]
     public long Id { get; set; }
@@ -49,7 +45,7 @@ public record RequiredPasswordSettingsResponseDTO
     public string StatusDescription { get; set; }
 }
 
-public record RequiredPasswordSettingsCreateRequestDTO
+public record RequiredPasswordSettingsCreateRequestDTO : GenericDTOModel
 {
     [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
     [Display(Name = "Id", Description = "Id do registro")]
@@ -77,7 +73,7 @@ public record RequiredPasswordSettingsCreateRequestDTO
     public long? IdEnvironment { get; set; }
 }
 
-public record RequiredPasswordSettingsUpdateRequestDTO
+public record RequiredPasswordSettingsUpdateRequestDTO : GenericDTOModel
 {
     [Required]
     [Display(Name = "Id", Description = "Id do registro")]
@@ -105,7 +101,7 @@ public record RequiredPasswordSettingsUpdateRequestDTO
     public long? IdEnvironment { get; set; }
 }
 
-public record RequiredPasswordSettingsReactiveRequestDTO
+public record RequiredPasswordSettingsReactiveRequestDTO : GenericDTOModel
 {
     [Required]
     [Display(Name = "Id", Description = "Id do registro")]

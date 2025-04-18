@@ -1,6 +1,4 @@
-﻿using System.Net;
-
-namespace WebAPI.Domain.Constants;
+﻿namespace WebAPI.Domain.Constants;
 
 public static class FixConstants
 {
@@ -8,7 +6,7 @@ public static class FixConstants
     public const int HASH_SIZE = 20;
     public const string DEFAULT_PASSWORD = "123mudar";
 
-    public const string SERVER_API_KEY = "AIzaSyD2i3-nX8RkclUxWPFwirDHKN_D0x2h4Pc"; // Get this from your Firebase Developer Console Login  
+    public const string SERVER_API_KEY = "AIzaSyD2i3-nX8RkclUxWPFwirDHKN_D0x2h4Pc";  
     public const string SENDER_ID = "AAAANLjaZwE:APA91bFAfv1CviU_8WyiL971mnqBXi2m6qJax9VwWvmUOnMepnShnGeZmw_sBYAAe3YH5CW370xJm-LZrWCMNt5CMK_Hn8fhigbtc5OaJd0_rqubiHK4hEI4CFh179hfTmwMoHOk9QkW"; // Get this from your Firebase Developer Console Login  
 
     public const string SAVE_LOG = @"insert into ControlPanel_Logs(Class,Method,Error,UpdateDate,Object) values('{0}','{1}','{2}','{3}','{4}')";
@@ -58,13 +56,6 @@ public static class FixConstants
     public const string SUCCESS_IN_DDL = "Os dados de dropdownlist foram retornados com sucesso";
 
     public const string NO_AUTHORIZATION = "Caro usuário você não tem permissão para efetuar tal ação. Entre em contato com o Administrador";
-
-    public const string DEV_FIRSTNAME = "Dev";
-    public const string DEV_SECONDNAME = "WebAPI";
-    public const string CONSTANTE_COM_INTERPOLACAO = $"{DEV_FIRSTNAME}-{DEV_SECONDNAME}";
-
-    public const string STATUS_ACTIVE = "Ativo";
-    public const string STATUS_INACTIVE = "Inativo";
 
     public const string QUOTE = "\"";
 

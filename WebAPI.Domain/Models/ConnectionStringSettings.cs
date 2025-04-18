@@ -1,5 +1,5 @@
-﻿namespace WebAPI.Domain.Models.EnvVarSettings;
-public sealed record ConectionStringSettings
+﻿namespace WebAPI.Domain.Models;
+public record ConectionStringSettings
 {
     public string DefaultConnection { get; set; }
     public string DefaultConnectionLogs { get; set; }

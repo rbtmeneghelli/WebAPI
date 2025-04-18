@@ -7,10 +7,6 @@ using WebAPI.Domain.Filters.Others;
 using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.Interfaces.Services;
 using WebAPI.Domain.Interfaces.Generic;
-using FastPackForShare.Services.Bases;
-using FastPackForShare.Interfaces;
-using FastPackForShare.Extensions;
-using FastPackForShare.Default;
 
 
 namespace WebAPI.Application.Services;

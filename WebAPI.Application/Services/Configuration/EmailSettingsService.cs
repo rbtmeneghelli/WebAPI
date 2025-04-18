@@ -1,14 +1,12 @@
-﻿using WebAPI.Application.Generic;
-using WebAPI.Domain.Constants;
+﻿using WebAPI.Domain.Constants;
 using WebAPI.Domain.Entities.Configuration;
 using WebAPI.Domain.DTO.Configuration;
 using WebAPI.Domain.Interfaces.Repository.Configuration;
 using WebAPI.Domain.Interfaces.Services.Configuration;
-using WebAPI.Domain.Interfaces.Services.Tools;
 
 namespace WebAPI.Application.Services.Configuration;
 
-public class EmailSettingsService : GenericService, IEmailSettingsService
+public sealed class EmailSettingsService : BaseHandlerService, IEmailSettingsService
 {
     private readonly IEmailSettingsRepository _iEmailSettingsRepository;
     private EnvironmentVariables _environmentVariables;
@@ -28,87 +26,51 @@ public class EmailSettingsService : GenericService, IEmailSettingsService
 
     public async Task<IEnumerable<EmailSettingsResponseDTO>> GetAllEmailSettingsAsync()
     {
-        try
-        {
-            return await (from p in _iEmailSettingsRepository.GetAllInclude("EnvironmentTypeSettings")
-                          orderby p.EnvironmentTypeSettings.Id ascending
-                          select new EmailSettingsResponseDTO()
-                          {
-                              Id = p.Id.Value,
-                              EnvironmentDescription = p.EnvironmentTypeSettings.Description,
-                              Host = p.Host,
-                              SmtpConfig = p.SmtpConfig,
-                              PrimaryPort = p.PrimaryPort,
-                              Email = p.Email,
-                              EnableSslDescription = p.EnableSsl ? "SSL Habilitado" : "SSL não Habilitado",
-                              StatusDescription = p.GetStatusDescription()
-                          }).ToListAsync();
-        }
-        catch
-        {
-            Notify(FixConstants.ERROR_IN_GETALL);
-            return Enumerable.Empty<EmailSettingsResponseDTO>();
-        }
-        finally
-        {
-            await Task.CompletedTask;
-        }
+        return await (from p in _iEmailSettingsRepository.GetAllInclude("EnvironmentTypeSettings")
+                      orderby p.EnvironmentTypeSettings.Id ascending
+                      select new EmailSettingsResponseDTO()
+                      {
+                          Id = p.Id.Value,
+                          EnvironmentDescription = p.EnvironmentTypeSettings.Description,
+                          Host = p.Host,
+                          SmtpConfig = p.SmtpConfig,
+                          PrimaryPort = p.PrimaryPort,
+                          Email = p.Email,
+                          EnableSslDescription = p.EnableSsl ? "SSL Habilitado" : "SSL não Habilitado",
+                          StatusDescription = p.IsActive.GetDescriptionByBoolean()
+                      }).ToListAsync();
     }
 
     public async Task<EmailSettingsResponseDTO> GetEmailSettingsByEnvironmentAsync()
     {
-        try
-        {
-            return await (from p in _iEmailSettingsRepository.FindBy(x => x.IdEnvironmentType == (int)_environmentVariables.Environment).AsQueryable()
-                          select new EmailSettingsResponseDTO
-                          {
-                              Id = p.Id.Value,
-                              EnvironmentDescription = p.EnvironmentTypeSettings.Description,
-                              Host = p.Host,
-                              SmtpConfig = p.SmtpConfig,
-                              PrimaryPort = p.PrimaryPort,
-                              Email = p.Email,
-                              EnableSslDescription = p.EnableSsl ? "SSL Habilitado" : "SSL não Habilitado",
-                              StatusDescription = p.GetStatusDescription()
-                          }).FirstOrDefaultAsync();
-        }
-        catch
-        {
-            Notify(FixConstants.ERROR_IN_GETID);
-            return default;
-        }
-        finally
-        {
-            await Task.CompletedTask;
-        }
+        return await (from p in _iEmailSettingsRepository.FindBy(x => x.IdEnvironmentType == (int)_environmentVariables.Environment).AsQueryable()
+                      select new EmailSettingsResponseDTO
+                      {
+                          Id = p.Id.Value,
+                          EnvironmentDescription = p.EnvironmentTypeSettings.Description,
+                          Host = p.Host,
+                          SmtpConfig = p.SmtpConfig,
+                          PrimaryPort = p.PrimaryPort,
+                          Email = p.Email,
+                          EnableSslDescription = p.EnableSsl ? "SSL Habilitado" : "SSL não Habilitado",
+                          StatusDescription = p.IsActive.GetDescriptionByBoolean()
+                      }).FirstOrDefaultAsync();
     }
 
     public async Task<EmailSettingsResponseDTO> GetEmailSettingsByIdAsync(long id)
     {
-        try
-        {
-            return await (from p in _iEmailSettingsRepository.FindBy(x => x.Id == id).AsQueryable()
-                          select new EmailSettingsResponseDTO
-                          {
-                              Id = p.Id.Value,
-                              EnvironmentDescription = p.EnvironmentTypeSettings.Description,
-                              Host = p.Host,
-                              SmtpConfig = p.SmtpConfig,
-                              PrimaryPort = p.PrimaryPort,
-                              Email = p.Email,
-                              EnableSslDescription = p.EnableSsl ? "SSL Habilitado" : "SSL não Habilitado",
-                              StatusDescription = p.GetStatusDescription()
-                          }).FirstOrDefaultAsync();
-        }
-        catch
-        {
-            Notify(FixConstants.ERROR_IN_GETID);
-            return default;
-        }
-        finally
-        {
-            await Task.CompletedTask;
-        }
+        return await (from p in _iEmailSettingsRepository.FindBy(x => x.Id == id).AsQueryable()
+                      select new EmailSettingsResponseDTO
+                      {
+                          Id = p.Id.Value,
+                          EnvironmentDescription = p.EnvironmentTypeSettings.Description,
+                          Host = p.Host,
+                          SmtpConfig = p.SmtpConfig,
+                          PrimaryPort = p.PrimaryPort,
+                          Email = p.Email,
+                          EnableSslDescription = p.EnableSsl ? "SSL Habilitado" : "SSL não Habilitado",
+                          StatusDescription = p.IsActive.GetDescriptionByBoolean()
+                      }).FirstOrDefaultAsync();
     }
 
     public async Task<bool> ExistEmailSettingsByEnvironmentAsync()
@@ -127,148 +89,88 @@ public class EmailSettingsService : GenericService, IEmailSettingsService
 
     public async Task<bool> CreateEmailSettingsAsync(EmailSettingsCreateRequestDTO emailSettingsCreateRequestDTO)
     {
-        try
-        {
-            EmailSettings emailSettings = _iMapperService.ApplyMapToEntity<EmailSettingsCreateRequestDTO, EmailSettings>(emailSettingsCreateRequestDTO);
-            _iEmailSettingsRepository.Create(emailSettings);
-            return true;
-        }
-        catch (Exception ex)
-        {
-            Notify(FixConstants.ERROR_IN_ADD);
-            return false;
-        }
-        finally
-        {
-            await Task.CompletedTask;
-        }
+        EmailSettings emailSettings = _iMapperService.ApplyMapToEntity<EmailSettingsCreateRequestDTO, EmailSettings>(emailSettingsCreateRequestDTO);
+        _iEmailSettingsRepository.Create(emailSettings);
+        return true;
     }
 
     public async Task<bool> UpdateEmailSettingsAsync(EmailSettingsUpdateRequestDTO emailSettingsUpdateRequestDTO)
     {
-        try
+        EmailSettings emailSettings = _iMapperService.ApplyMapToEntity<EmailSettingsUpdateRequestDTO, EmailSettings>(emailSettingsUpdateRequestDTO);
+        EmailSettings emailSettingsDb = _iEmailSettingsRepository.GetById(emailSettings.Id.Value);
+
+        if (GuardClauseExtension.IsNotNull(emailSettingsDb))
         {
-            EmailSettings emailSettings = _iMapperService.ApplyMapToEntity<EmailSettingsUpdateRequestDTO, EmailSettings>(emailSettingsUpdateRequestDTO);
-            EmailSettings emailSettingsDb = _iEmailSettingsRepository.GetById(emailSettings.Id.Value);
-
-            if (GuardClauses.ObjectIsNotNull(emailSettingsDb))
+            if (emailSettingsDb.IsActive.Value)
             {
-                if (emailSettingsDb.Status)
-                {
-                    emailSettingsDb.UpdateDate = emailSettings.UpdateDate;
-                    emailSettingsDb.Host = emailSettings.Host;
-                    emailSettingsDb.SmtpConfig = emailSettings.SmtpConfig;
-                    emailSettingsDb.PrimaryPort = emailSettings.PrimaryPort;
-                    emailSettingsDb.Email = emailSettings.Email;
-                    emailSettingsDb.Password = emailSettings.Password;
-                    emailSettingsDb.EnableSsl = emailSettings.EnableSsl;
-                    _iEmailSettingsRepository.Update(emailSettingsDb);
-                    return true;
-                }
-
-                Notify(FixConstants.ERROR_IN_UPDATE);
-                return false;
+                emailSettingsDb.UpdatedAt = emailSettings.UpdatedAt;
+                emailSettingsDb.Host = emailSettings.Host;
+                emailSettingsDb.SmtpConfig = emailSettings.SmtpConfig;
+                emailSettingsDb.PrimaryPort = emailSettings.PrimaryPort;
+                emailSettingsDb.Email = emailSettings.Email;
+                emailSettingsDb.Password = emailSettings.Password;
+                emailSettingsDb.EnableSsl = emailSettings.EnableSsl;
+                _iEmailSettingsRepository.Update(emailSettingsDb);
+                return true;
             }
 
             Notify(FixConstants.ERROR_IN_UPDATE);
             return false;
         }
-        catch (Exception ex)
-        {
-            Notify(FixConstants.ERROR_IN_UPDATE);
-            return false;
-        }
-        finally
-        {
-            await Task.CompletedTask;
-        }
+
+        Notify(FixConstants.ERROR_IN_UPDATE);
+        return false;
     }
 
     public async Task<bool> LogicDeleteEmailSettingsByIdAsync(long id)
     {
-        try
-        {
-            EmailSettings emailSettingsDb = _iEmailSettingsRepository.GetById(id);
+        EmailSettings emailSettingsDb = _iEmailSettingsRepository.GetById(id);
 
-            if (GuardClauses.ObjectIsNotNull(emailSettingsDb))
-            {
-                emailSettingsDb.UpdateDate = emailSettingsDb.GetNewUpdateDate();
-                emailSettingsDb.Status = false;
-                _iEmailSettingsRepository.Update(emailSettingsDb);
-                return true;
-            }
-            else
-            {
-                Notify(FixConstants.ERROR_IN_DELETELOGIC);
-                return false;
-            }
+        if (GuardClauseExtension.IsNotNull(emailSettingsDb))
+        {
+            emailSettingsDb.UpdatedAt = DateOnlyExtension.GetDateTimeNowFromBrazil();
+            emailSettingsDb.IsActive = false;
+            _iEmailSettingsRepository.Update(emailSettingsDb);
+            return true;
         }
-        catch (Exception)
+        else
         {
             Notify(FixConstants.ERROR_IN_DELETELOGIC);
             return false;
-        }
-        finally
-        {
-            await Task.CompletedTask;
         }
     }
 
     public async Task<bool> ReactiveEmailSettingsByIdAsync(long id)
     {
-        try
-        {
-            EmailSettings emailSettingsDb = _iEmailSettingsRepository.GetById(id);
+        EmailSettings emailSettingsDb = _iEmailSettingsRepository.GetById(id);
 
-            if (GuardClauses.ObjectIsNotNull(emailSettingsDb))
-            {
-                emailSettingsDb.UpdateDate = emailSettingsDb.GetNewUpdateDate();
-                emailSettingsDb.Status = true;
-                _iEmailSettingsRepository.Update(emailSettingsDb);
-                return true;
-            }
-            else
-            {
-                Notify(FixConstants.ERROR_IN_UPDATESTATUS);
-                return false;
-            }
+        if (GuardClauseExtension.IsNotNull(emailSettingsDb))
+        {
+            emailSettingsDb.UpdatedAt = DateOnlyExtension.GetDateTimeNowFromBrazil();
+            emailSettingsDb.IsActive = true;
+            _iEmailSettingsRepository.Update(emailSettingsDb);
+            return true;
         }
-        catch (Exception)
+        else
         {
             Notify(FixConstants.ERROR_IN_UPDATESTATUS);
             return false;
-        }
-        finally
-        {
-            await Task.CompletedTask;
         }
     }
 
     public async Task<IEnumerable<EmailSettingsExcelDTO>> GetAllEmailSettingsExcelAsync()
     {
-        try
-        {
-            return await (from p in _iEmailSettingsRepository.GetAllInclude("EnvironmentTypeSettings")
-                          orderby p.EnvironmentTypeSettings.Id ascending
-                          select new EmailSettingsExcelDTO()
-                          {
-                              EnvironmentDescription = p.EnvironmentTypeSettings.Description,
-                              Host = p.Host,
-                              SmtpConfig = p.SmtpConfig,
-                              PrimaryPort = p.PrimaryPort,
-                              Email = p.Email,
-                              EnableSslDescription = p.EnableSsl ? "SSL Habilitado" : "SSL não Habilitado",
-                              StatusDescription = p.GetStatusDescription()
-                          }).ToListAsync();
-        }
-        catch
-        {
-            Notify(FixConstants.ERROR_IN_GETALL);
-            return Enumerable.Empty<EmailSettingsExcelDTO>();
-        }
-        finally
-        {
-            await Task.CompletedTask;
-        }
+        return await (from p in _iEmailSettingsRepository.GetAllInclude("EnvironmentTypeSettings")
+                      orderby p.EnvironmentTypeSettings.Id ascending
+                      select new EmailSettingsExcelDTO()
+                      {
+                          EnvironmentDescription = p.EnvironmentTypeSettings.Description,
+                          Host = p.Host,
+                          SmtpConfig = p.SmtpConfig,
+                          PrimaryPort = p.PrimaryPort,
+                          Email = p.Email,
+                          EnableSslDescription = p.EnableSsl ? "SSL Habilitado" : "SSL não Habilitado",
+                          StatusDescription = p.IsActive.GetDescriptionByBoolean()
+                      }).ToListAsync();
     }
 }

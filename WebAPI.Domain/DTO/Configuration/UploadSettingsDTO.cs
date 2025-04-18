@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
 namespace WebAPI.Domain.DTO.Configuration;
 
-public record UploadSettingsResponseDTO
+public record UploadSettingsResponseDTO : GenericDTOModel
 {
     [Display(Name = "Id", Description = "Id do registro")]
     public long Id { get; set; }
@@ -40,7 +38,7 @@ public record UploadSettingsResponseDTO
     public string StatusDescription { get; set; }
 }
 
-public record UploadSettingsCreateRequestDTO
+public record UploadSettingsCreateRequestDTO : GenericDTOModel
 {
     [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
     [Display(Name = "Id", Description = "Id do registro")]
@@ -63,7 +61,7 @@ public record UploadSettingsCreateRequestDTO
     public long? IdEnvironment { get; set; }
 }
 
-public record UploadSettingsUpdateRequestDTO
+public record UploadSettingsUpdateRequestDTO : GenericDTOModel
 {
     [Required]
     [Display(Name = "Id", Description = "Id do registro")]
@@ -86,7 +84,7 @@ public record UploadSettingsUpdateRequestDTO
     public long? IdEnvironment { get; set; }
 }
 
-public record UploadSettingsReactiveRequestDTO
+public record UploadSettingsReactiveRequestDTO : GenericDTOModel
 {
     [Required]
     [Display(Name = "Id", Description = "Id do registro")]

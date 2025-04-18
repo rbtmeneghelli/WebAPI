@@ -1,13 +1,17 @@
-﻿namespace WebAPI.Controllers.V1;
+﻿using FastPackForShare.Interfaces;
+using FastPackForShare.Models;
+using FastPackForShare.Services.Bases;
+
+namespace WebAPI.Controllers.V1;
 
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/[controller]")]
 [Authorize("Bearer")]
-public class AddressController : GenericController
+public class AddressController : BaseHandlerService
 {
     private readonly IAddressService _iAddressService;
     private readonly IStatesService _iStatesService;
-    private readonly IDataFromApiService<RequestData> _iDataFromApiService;
+    private readonly IDataFromApiService<RequestDataModel> _iDataFromApiService;
     private readonly IRegionService _iRegionService;
     private readonly ICityService _iCityService;
 
@@ -131,7 +135,7 @@ public class AddressController : GenericController
                         cities.AddRange(mesoRegions.Select(item => new City()
                         {
                             IBGE = (long)item.Id,
-                            Name = item.Nome,
+                            Name = item.Name,
                             StateId = state.Id.Value
                         }).ToList());
                     }
@@ -222,7 +226,7 @@ public class AddressController : GenericController
         }
     }
 
-    [EnableCors("EnableCORS")]
+    [EnableCors("APICORS")]
     [HttpPost("validateRegionData")]
     public async Task<IActionResult> ValidateRegionData(Region region)
     {
