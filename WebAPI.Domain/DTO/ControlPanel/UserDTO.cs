@@ -27,7 +27,23 @@ public record UserResponseDTO : BaseDTOModel
     public override string ToString() => $"Login: {Login}";
 }
 
-public record UserRequestDTO : BaseDTOModel
+public record UserRequestCreateDTO : BaseDTOModel
+{
+    [Required(ErrorMessage = "O campo Login é obrigatório")]
+    public string Login { get; set; }
+
+    [MinLength(8, ErrorMessage = "A senha tem que ter no minímo {0} caracteres"), MaxLength(16, ErrorMessage = "A senha tem que ter no máximo {0} caracteres")]
+    public string Password { get; set; }
+
+    [MinLength(8, ErrorMessage = "A senha tem que ter no minímo {0} caracteres"), MaxLength(16, ErrorMessage = "A senha tem que ter no máximo {0} caracteres")]
+    public string LastPassword { get; set; }
+
+    public bool IsAuthenticated { get; set; }
+
+    public override string ToString() => $"Login: {Login}";
+}
+
+public record UserRequestUpdateDTO : BaseDTOModel
 {
     [Required(ErrorMessage = "O campo Login é obrigatório")]
     public string Login { get; set; }

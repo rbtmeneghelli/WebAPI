@@ -18,7 +18,7 @@ public sealed class UserService : BaseHandlerService, IUserService
         IMapperService iMapperService) : base(iNotificationMessageService)
     {
         _iUserRepository = iUserRepository;
-        _iMapperService = iMapperService; ;
+        _iMapperService = iMapperService;
     }
 
     private IQueryable<User> GetAllUsers(UserFilter filter)
@@ -54,11 +54,11 @@ public sealed class UserService : BaseHandlerService, IUserService
 
     public async Task<IEnumerable<UserResponseDTO>> GetAllUserAsync()
     {
-        var data = await (from p in _iUserRepository.GetAll().Include(x => x.Employee).ThenInclude(x => x.Profile)
-                          orderby p.Login ascending
-                          select p).ToListAsync();
+        var data = await Task.FromResult(from p in _iUserRepository.GetAll().Include(x => x.Employee).ThenInclude(x => x.Profile)
+                                         orderby p.Login ascending
+                                         select p);
 
-        return _iMapperService.ApplyMapToEntity<IEnumerable<User>, IEnumerable<UserResponseDTO>>(data);
+        return _iMapperService.ApplyMapToEntity<IEnumerable<User>, IEnumerable<UserResponseDTO>>(data.AsEnumerable());
     }
 
     public async Task<BasePagedResultModel<UserResponseDTO>> GetAllUserPaginateAsync(UserFilter filter)
@@ -76,11 +76,12 @@ public sealed class UserService : BaseHandlerService, IUserService
 
     public async Task<UserResponseDTO> GetUserByIdAsync(long id)
     {
-        var data = await (from p in _iUserRepository.FindBy(x => x.Id == id).AsQueryable()
-                          orderby p.Login ascending
-                          select p).FirstOrDefaultAsync();
+        var data = await Task.FromResult(from p in _iUserRepository.FindBy(x => x.Id == id).AsQueryable()
+                                         orderby p.Login ascending
+                                         select p);
 
-        return _iMapperService.ApplyMapToEntity<User, UserResponseDTO>(data);
+        var user = _iMapperService.ApplyMapToEntity<User, UserResponseDTO>(data.FirstOrDefault());
+        return user;
     }
 
     public async Task<UserResponseDTO> GetUserByLoginAsync(string login)
@@ -125,9 +126,9 @@ public sealed class UserService : BaseHandlerService, IUserService
         return result;
     }
 
-    public async Task<bool> CreateUserAsync(UserRequestDTO userRequestDTO)
+    public async Task<bool> CreateUserAsync(UserRequestCreateDTO userRequestDTO)
     {
-        User user = _iMapperService.ApplyMapToEntity<UserRequestDTO, User>(userRequestDTO);
+        User user = _iMapperService.ApplyMapToEntity<UserRequestCreateDTO, User>(userRequestDTO);
 
         if (GuardClauseExtension.IsNullOrWhiteSpace(user.Login) || GuardClauseExtension.IsNullOrWhiteSpace(user.Password))
         {
@@ -146,9 +147,9 @@ public sealed class UserService : BaseHandlerService, IUserService
         return false;
     }
 
-    public async Task<bool> UpdateUserAsync(long id, UserRequestDTO userRequestDTO)
+    public async Task<bool> UpdateUserAsync(long id, UserRequestUpdateDTO userRequestDTO)
     {
-        User user = _iMapperService.ApplyMapToEntity<UserRequestDTO, User>(userRequestDTO);
+        User user = _iMapperService.ApplyMapToEntity<UserRequestUpdateDTO, User>(userRequestDTO);
         User userDb = _iUserRepository.GetById(id);
 
         if (GuardClauseExtension.IsNotNull(userDb))

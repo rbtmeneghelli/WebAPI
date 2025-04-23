@@ -17,11 +17,25 @@ public class MappingProfile : AutoMapper.Profile
     {
         #region Mapeamentos do Usuário
 
-        CreateMap<UserRequestDTO, User>()
+        CreateMap<UserRequestCreateDTO, User>()
         .BeforeMap((source, dest) =>
         {
-            dest.CreatedAt = source.Id is null ? DateOnlyExtension.GetDateTimeNowFromBrazil() : null;
-            dest.UpdatedAt = source.Id is not null ? DateOnlyExtension.GetDateTimeNowFromBrazil() : null;
+            dest.CreatedAt = DateOnlyExtension.GetDateTimeNowFromBrazil();
+            dest.UpdatedAt = null;
+        })
+        .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
+        .ForMember(dest => dest.IsActive, act => act.MapFrom(src => src.IsActive))
+        .ForMember(dest => dest.IsAuthenticated, act => act.MapFrom(src => src.IsAuthenticated))
+        .ForMember(dest => dest.LastPassword, act => act.MapFrom(src => src.LastPassword.ApplyTrim()))
+        .ForMember(dest => dest.Login, act => act.MapFrom(src => src.Login.ApplyTrim()))
+        .ForMember(dest => dest.Password, act => act.MapFrom(src => src.Password.ApplyTrim()))
+        .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id));
+
+        CreateMap<UserRequestUpdateDTO, User>()
+        .BeforeMap((source, dest) =>
+        {
+            dest.CreatedAt = null;
+            dest.UpdatedAt = DateOnlyExtension.GetDateTimeNowFromBrazil();
         })
         .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
         .ForMember(dest => dest.IsActive, act => act.MapFrom(src => src.IsActive))

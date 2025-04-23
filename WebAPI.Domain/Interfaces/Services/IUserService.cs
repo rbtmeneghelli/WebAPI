@@ -12,8 +12,8 @@ public interface IUserService
     Task<UserResponseDTO> GetUserByIdAsync(long id);
     Task<UserResponseDTO> GetUserByLoginAsync(string login);
     Task<IEnumerable<DropDownListModel>> GetUsersAsync();
-    Task<bool> CreateUserAsync(UserRequestDTO userRequestDTO);
-    Task<bool> UpdateUserAsync(long id, UserRequestDTO userRequestDTO);
+    Task<bool> CreateUserAsync(UserRequestCreateDTO userRequestCreateDTO);
+    Task<bool> UpdateUserAsync(long id, UserRequestUpdateDTO userRequestUpdateDTO);
     Task<bool> DeleteUserPhysicalAsync(long id);
     Task<bool> DeleteUserLogicAsync(long id);
     Task<bool> ExistUserByIdAsync(long id);
