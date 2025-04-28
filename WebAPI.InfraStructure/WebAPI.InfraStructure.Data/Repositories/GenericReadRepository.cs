@@ -89,6 +89,28 @@ public sealed class GenericReadRepository<TEntity> : IGenericReadRepository<TEnt
         return DbSet.AsNoTracking().LongCount(predicate);
     }
 
+    /// <summary>
+    /// Utilizar esse metodo quando fazemos uma busca Por um Id especifico por exemplo, 
+    /// e precisamos pegar uma propriedade da entidade relacionada a entidade principal
+    /// </summary>
+    /// <param name="entity"></param>
+    /// <param name="referenceName"></param>
+    public void GetExplicitLoadingReference(ref TEntity entity, string referenceName)
+    {
+        DbSet.Entry(entity).Reference(referenceName).LoadAsync();
+    }
+
+    /// <summary>
+    /// Utilizar esse metodo quando fazemos uma busca Por um Id especifico por exemplo, 
+    /// e precisamos pegar uma entidade de coleção relacionada a entidade principal
+    /// </summary>
+    /// <param name="entity"></param>
+    /// <param name="collectionName"></param>
+    public void GetExplicitLoadingCollection(ref TEntity entity, string collectionName)
+    {
+        DbSet.Entry(entity).Collection(collectionName).LoadAsync();
+    }
+
     public void Dispose()
     {
         _context?.Dispose();

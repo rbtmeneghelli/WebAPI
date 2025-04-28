@@ -13,4 +13,6 @@ public interface IGenericReadRepository<TEntity> : IDisposable where TEntity : c
     long GetCount(Expression<Func<TEntity, bool>> predicate);
     bool Exist(Expression<Func<TEntity, bool>> predicate);
     IQueryable<TEntity> GetAllBy(Expression<Func<TEntity, bool>> predicate, bool isTracking = false);
+    void GetExplicitLoadingReference(ref TEntity entity, string referenceName);
+    void GetExplicitLoadingCollection(ref TEntity entity, string collectionName);
 }
