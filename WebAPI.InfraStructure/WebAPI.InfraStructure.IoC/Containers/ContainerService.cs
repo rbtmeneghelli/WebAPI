@@ -47,6 +47,7 @@ using WebAPI.Infrastructure.CrossCutting.BackgroundMessageServices.RabbitMQ;
 using WebAPI.Domain.Interfaces.Services.Charts;
 using FastPackForShare.Extensions;
 using FastPackForShare.Models;
+using FluentValidation;
 
 namespace WebAPI.InfraStructure.IoC.Containers;
 
@@ -417,5 +418,11 @@ public static class ContainerService
             options.SaveTokens = true;
             // Configurações adicionais específicas do provedor OAuth
         });
+    }
+
+    public static void RegisterFluentValidation(this IServiceCollection services)
+    {
+        var myAssembly = AppDomain.CurrentDomain.Load("WebAPI.Domain");
+        services.AddValidatorsFromAssembly(myAssembly);
     }
 }

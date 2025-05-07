@@ -9,6 +9,10 @@ public class ClientValidation : BaseValidatorModel<ClientRequestDTO>
 {
     public ClientValidation()
     {
+        RuleFor(x => x)
+            .NotNull()
+            .WithMessage("Os parâmetros do objeto estão em branco, preencha seus dados e tente novamente");
+
         RuleFor(x => x.Id)
             .GreaterThan(0)
             .WithMessage("O valor '{PropertyValue}' para '{PropertyName}' é inválido.");

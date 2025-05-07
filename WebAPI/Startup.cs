@@ -67,25 +67,34 @@ public class Startup
 
         ContainerService.RegisterServices(services);
         ContainerService.RegisterConfigs(services, _configuration);
+        ContainerService.RegisterFluentValidation(services);
         ContainerSwagger.RegisterJwtTokenEncryptConfig(services, _configuration);
         ContainerSwagger.RegisterSwaggerConfig(services);
-        services.AddControllers();
+
+        services.AddControllers().AddViewOptions(options =>
+        {
+            options.HtmlHelperOptions.ClientValidationEnabled = true;
+        });
+
         services.AddApiVersioning(options =>
         {
             options.ReportApiVersions = true;
             options.AssumeDefaultVersionWhenUnspecified = true;
             options.DefaultApiVersion = new ApiVersion(1, 0);
         });
+
         services.AddVersionedApiExplorer(options =>
         {
             options.GroupNameFormat = "'v'VV";
             options.SubstituteApiVersionInUrl = true;
 
         });
+
         services.Configure<ApiBehaviorOptions>(options =>
         {
             options.SuppressModelStateInvalidFilter = true;
         });
+
         services.RegisterEnvironmentVariables(_configuration);
 
         services.AddExceptionHandler<GlobalExceptionHandler>();

@@ -22,12 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="FastPackForShare">
-      <HintPath>..\..\FastPackForShare\FastPackForShare\FastPackForShare\bin\Release\net8.0\FastPackForShare.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

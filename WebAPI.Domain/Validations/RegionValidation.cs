@@ -10,6 +10,10 @@ public class RegionValidation : AbstractValidator<Region>
 {
     public RegionValidation()
     {
+        RuleFor(x => x)
+            .NotNull()
+            .WithMessage("Os parâmetros do objeto estão em branco, preencha seus dados e tente novamente");
+
         // Id deve ser maior que 0
         RuleFor(x => x.Id)
             .GreaterThan(0)
