@@ -53,9 +53,12 @@ public class Startup
         // Add functionality to inject IOptions<T> (Fazer o IOptions<T> na controller)
         // services.AddOptions();
 
-        ContainerFastPackForShareServices.RegisterDbConnection<WebAPIContext>(services, EnvironmentVariablesExtension.GetDatabaseFromEnvVar(_configuration.GetConnectionString("DefaultConnection")));
+        ContainerFastPackForShareServices.RegisterDbConnection<WebAPIContext>(services, 
+                                                                              EnvironmentVariablesExtension.GetDatabaseFromEnvVar(_configuration.GetConnectionString("DefaultConnection")));
         ContainerFastPackForShareServices.RegisterServices(services);
-        ContainerFastPackForShareServices.RegisterCors(services, EnvironmentVariablesExtension.GetEnvironmentVariableToStringArray<string[]>(_configuration, "WebAPI_Settings:corsSettings"));
+        ContainerFastPackForShareServices.RegisterCors(services, 
+                                                       EnvironmentVariablesExtension.GetEnvironmentVariableToStringArray<string[]>(_configuration, "WebAPI_Settings:corsSettings"),
+                                                       "APICORS");
         ContainerFastPackForShareServices.RegisterHttpClient(services);
         ContainerFastPackForShareServices.RegisterHttpContextAccessor(services);
         ContainerFastPackForShareServices.RegisterProblemDetails(services);

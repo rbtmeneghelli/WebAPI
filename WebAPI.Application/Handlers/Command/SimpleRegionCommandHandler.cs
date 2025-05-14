@@ -4,6 +4,7 @@ using WebAPI.Domain.CQRS.Command;
 using WebAPI.Domain.Entities.Others;
 using WebAPI.Domain.Interfaces.Services;
 using FastPackForShare.SimpleMediator;
+using WebAPI.Domain.Constants;
 
 namespace WebAPI.Application.Handlers.Command;
 
@@ -13,6 +14,10 @@ IRequestHandler<SimpleUpdateRegionCommandRequest, CustomResponseModel>
 {
     private readonly IRegionService _iRegionService;
     private readonly IMapperService _iMapperService;
+    private readonly IRedisService _redisService;
+
+    private string cacheKeyId = $"{nameof(Region)}_{FixConstants.CACHE_KEY_ID}";
+    private string cacheKeyAll = $"{nameof(Region)}_{FixConstants.CACHE_KEY_ALL}";
 
     public SimpleRegionCommandHandler(IRegionService iRegionService, IMapperService iMapperService)
     {
@@ -23,7 +28,10 @@ IRequestHandler<SimpleUpdateRegionCommandRequest, CustomResponseModel>
     public async Task<CustomResponseModel> Handle(SimpleCreateRegionCommandRequest request, CancellationToken cancellationToken)
     {
         var region = _iMapperService.ApplyMapToEntity<SimpleCreateRegionCommandRequest, Region>(request);
+
         await _iRegionService.CreateRegion(region);
+        await _redisService.RemoveData(cacheKeyId);
+
         return new CustomResponseModel(ConstantHttpStatusCode.CREATE_CODE);
     }
 
@@ -38,6 +46,8 @@ IRequestHandler<SimpleUpdateRegionCommandRequest, CustomResponseModel>
         }
 
         await _iRegionService.UpdateRegion(region);
-        return new CustomResponseModel(ConstantHttpStatusCode.CREATE_CODE);
+        await _redisService.RemoveData(cacheKeyId);
+
+        return new CustomResponseModel(ConstantHttpStatusCode.NO_CONTENT_CODE);
     }
 }

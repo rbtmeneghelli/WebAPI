@@ -88,8 +88,12 @@ public class MappingProfile : AutoMapper.Profile
 
         CreateMap<Region, RegionQueryFilterResponse>().ReverseMap();
         CreateMap<Region, RegionQueryByIdResponse>().ReverseMap();
+        CreateMap<Region, SimpleRegionQueryByIdResponse>().ReverseMap();
+        CreateMap<Region, SimpleRegionQueryFilterResponse>().ReverseMap();
         CreateMap<Region, CreateRegionCommandRequest>().ReverseMap();
         CreateMap<Region, UpdateRegionCommandRequest>().ReverseMap();
+        CreateMap<Region, SimpleCreateRegionCommandRequest>().ReverseMap();
+        CreateMap<Region, SimpleUpdateRegionCommandRequest>().ReverseMap();
 
         CreateMap<AuthenticationSettingsCreateRequestDTO, AuthenticationSettings>()
         .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))

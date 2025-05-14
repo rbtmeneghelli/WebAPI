@@ -64,4 +64,7 @@ public static class FixConstants
     public const string MESSAGE_ERROR_FORB_EX = "Sua sessão expirou, faça login novamente!";
 
     public const string ID = "O Id não pode ser negativo";
+
+    public const string CACHE_KEY_ID = "{0}_Id";
+    public const string CACHE_KEY_ALL = "{0}_All";
 }
