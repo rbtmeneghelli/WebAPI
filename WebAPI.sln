@@ -8,8 +8,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. Presentation", "3. Presentation", "{7A63D73B-45AC-4B77-A8A3-31094071532D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2. InfraStructure", "2. InfraStructure", "{7B07CE38-7389-4879-BE39-4BE12B672E28}"
+	ProjectSection(SolutionItems) = preProject
+		DEV.bat = DEV.bat
+	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "6. WebAPI_DesignPatterns", "6. WebAPI_DesignPatterns", "{92061A33-FDF7-4D2B-906A-2E3D9F381349}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5. WebAPI_DesignPatterns", "5. WebAPI_DesignPatterns", "{92061A33-FDF7-4D2B-906A-2E3D9F381349}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4. Tests", "4. Tests", "{0BE3D199-9FE6-4B23-BDF2-B3C377003C8C}"
 EndProject
@@ -22,11 +25,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestsWebAPI", "TestsWebAPI\TestsWebAPI.csproj", "{0FABA153-0E00-4BE1-B1E2-27612203C5F7}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{C1B0BE22-EFD3-4BD8-90C0-6A785337867E}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5. Environment", "5. Environment", "{FC2A7367-72D6-4E3E-9530-EA0557CC8034}"
-	ProjectSection(SolutionItems) = preProject
-		DEV.bat = DEV.bat
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAPI_VerticalSliceArc", "WebAPI_VerticalSliceArc\WebAPI_VerticalSliceArc.csproj", "{31281BD1-D341-4275-86CD-DB59EA301BDB}"
 EndProject
