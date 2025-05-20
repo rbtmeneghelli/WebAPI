@@ -27,7 +27,7 @@ IRequestHandler<SimpleUpdateRegionCommandRequest, CustomResponseModel>
 
     public async Task<CustomResponseModel> Handle(SimpleCreateRegionCommandRequest request, CancellationToken cancellationToken)
     {
-        var region = _iMapperService.ApplyMapToEntity<SimpleCreateRegionCommandRequest, Region>(request);
+        var region = _iMapperService.MapDTOToEntity<SimpleCreateRegionCommandRequest, Region>(request);
 
         await _iRegionService.CreateRegion(region);
         await _redisService.RemoveData(cacheKeyId);

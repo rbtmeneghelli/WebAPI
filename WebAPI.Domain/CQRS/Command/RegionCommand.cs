@@ -1,12 +1,12 @@
 ﻿using MediatR;
-using WebAPI.Domain.Entities.Others;
+using WebAPI.Domain.DTO.Others;
 
 namespace WebAPI.Domain.CQRS.Command;
 
-public class CreateRegionCommandRequest : Region, IRequest<CustomResponseModel>
+public record CreateRegionCommandRequest : RegionCreateRequestDTO, IRequest<CustomResponseModel>
 {
 }
 
-public class UpdateRegionCommandRequest : Region, IRequest<CustomResponseModel>
+public record UpdateRegionCommandRequest : RegionUpdateRequestDTO, IRequest<CustomResponseModel>
 {
 }

@@ -66,14 +66,14 @@ public sealed class EmailDisplaySettingsService : BaseHandlerService, IEmailDisp
 
     public async Task<bool> CreateEmailDisplaySettingsAsync(EmailDisplaySettingsCreateRequestDTO emailDisplaySettingsCreateRequestDTO)
     {
-        EmailDisplay emailDisplay = _iMapperService.ApplyMapToEntity<EmailDisplaySettingsCreateRequestDTO, EmailDisplay>(emailDisplaySettingsCreateRequestDTO);
+        EmailDisplay emailDisplay = _iMapperService.MapDTOToEntity<EmailDisplaySettingsCreateRequestDTO, EmailDisplay>(emailDisplaySettingsCreateRequestDTO);
         _iEmailDisplaySettingsRepository.Create(emailDisplay);
         return true;
     }
 
     public async Task<bool> UpdateEmailDisplaySettingsAsync(EmailDisplaySettingsUpdateRequestDTO emailDisplaySettingsUpdateRequestDTO)
     {
-        EmailDisplay emailDisplay = _iMapperService.ApplyMapToEntity<EmailDisplaySettingsUpdateRequestDTO, EmailDisplay>(emailDisplaySettingsUpdateRequestDTO);
+        EmailDisplay emailDisplay = _iMapperService.MapDTOToEntity<EmailDisplaySettingsUpdateRequestDTO, EmailDisplay>(emailDisplaySettingsUpdateRequestDTO);
         EmailDisplay emailDisplayDb = _iEmailDisplaySettingsRepository.GetById(emailDisplay.Id.Value);
 
         if (GuardClauseExtension.IsNotNull(emailDisplayDb))

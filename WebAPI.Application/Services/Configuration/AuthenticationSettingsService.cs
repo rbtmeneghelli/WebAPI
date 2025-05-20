@@ -83,14 +83,14 @@ public sealed class AuthenticationSettingsService : BaseHandlerService, IAuthent
 
     public async Task<bool> CreateAuthenticationSettingsAsync(AuthenticationSettingsCreateRequestDTO authenticationSettingsCreateRequestDTO)
     {
-        AuthenticationSettings authenticationSettings = _iMapperService.ApplyMapToEntity<AuthenticationSettingsCreateRequestDTO, AuthenticationSettings>(authenticationSettingsCreateRequestDTO);
+        AuthenticationSettings authenticationSettings = _iMapperService.MapDTOToEntity<AuthenticationSettingsCreateRequestDTO, AuthenticationSettings>(authenticationSettingsCreateRequestDTO);
         _iAuthenticationSettingsRepository.Create(authenticationSettings);
         return true;
     }
 
     public async Task<bool> UpdateAuthenticationSettingsAsync(AuthenticationSettingsUpdateRequestDTO authenticationSettingsCreateRequestDTO)
     {
-        AuthenticationSettings authenticationSettings = _iMapperService.ApplyMapToEntity<AuthenticationSettingsUpdateRequestDTO, AuthenticationSettings>(authenticationSettingsCreateRequestDTO);
+        AuthenticationSettings authenticationSettings = _iMapperService.MapDTOToEntity<AuthenticationSettingsUpdateRequestDTO, AuthenticationSettings>(authenticationSettingsCreateRequestDTO);
         AuthenticationSettings authenticationSettingsDb = _iAuthenticationSettingsRepository.GetById(authenticationSettings.Id.Value);
 
         if (GuardClauseExtension.IsNotNull(authenticationSettingsDb))

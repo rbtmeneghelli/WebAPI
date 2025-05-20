@@ -86,14 +86,14 @@ public sealed class RequiredPasswordSettingsService : BaseHandlerService, IRequi
 
     public async Task<bool> CreateRequiredPasswordSettingsAsync(RequiredPasswordSettingsCreateRequestDTO requiredPasswordSettingsCreateRequestDTO)
     {
-        RequiredPasswordSettings requiredPasswordSettings = _iMapperService.ApplyMapToEntity<RequiredPasswordSettingsCreateRequestDTO, RequiredPasswordSettings>(requiredPasswordSettingsCreateRequestDTO);
+        RequiredPasswordSettings requiredPasswordSettings = _iMapperService.MapDTOToEntity<RequiredPasswordSettingsCreateRequestDTO, RequiredPasswordSettings>(requiredPasswordSettingsCreateRequestDTO);
         _iRequiredPasswordSettingsRepository.Create(requiredPasswordSettings);
         return true;
     }
 
     public async Task<bool> UpdateRequiredPasswordSettingsAsync(RequiredPasswordSettingsUpdateRequestDTO requiredPasswordSettingsUpdateRequestDTO)
     {
-        RequiredPasswordSettings requiredPasswordSettings = _iMapperService.ApplyMapToEntity<RequiredPasswordSettingsUpdateRequestDTO, RequiredPasswordSettings>(requiredPasswordSettingsUpdateRequestDTO);
+        RequiredPasswordSettings requiredPasswordSettings = _iMapperService.MapDTOToEntity<RequiredPasswordSettingsUpdateRequestDTO, RequiredPasswordSettings>(requiredPasswordSettingsUpdateRequestDTO);
         RequiredPasswordSettings requiredPasswordSettingsDb = _iRequiredPasswordSettingsRepository.GetById(requiredPasswordSettings.Id.Value);
 
         if (GuardClauseExtension.IsNotNull(requiredPasswordSettingsDb))

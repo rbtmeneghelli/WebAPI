@@ -1,4 +1,5 @@
 ﻿using FastPackForShare.SimpleMediator.Contracts;
+using WebAPI.Domain.DTO.Others;
 using WebAPI.Domain.Entities.Others;
 using WebAPI.Domain.Filters.Others;
 
@@ -10,7 +11,7 @@ public class SimpleRegionQueryFilterRequest : IRequest<CustomResponseModel>
 }
 
 
-public class SimpleRegionQueryFilterResponse : Region
+public record SimpleRegionQueryFilterResponse : RegionResponseDTO
 {
 }
 
@@ -18,6 +19,6 @@ public class SimpleRegionQueryByIdRequest : Region, IRequest<CustomResponseModel
 {
 }
 
-public class SimpleRegionQueryByIdResponse : Region
+public record SimpleRegionQueryByIdResponse : RegionResponseDTO
 {
 }

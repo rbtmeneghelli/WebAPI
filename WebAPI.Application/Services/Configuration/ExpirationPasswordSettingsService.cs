@@ -80,14 +80,14 @@ public sealed class ExpirationPasswordSettingsService : BaseHandlerService, IExp
 
     public async Task<bool> CreateExpirationPasswordSettingsAsync(ExpirationPasswordSettingsCreateRequestDTO expirationPasswordSettingsCreateRequestDTO)
     {
-        ExpirationPasswordSettings expirationPasswordSettings = _iMapperService.ApplyMapToEntity<ExpirationPasswordSettingsCreateRequestDTO, ExpirationPasswordSettings>(expirationPasswordSettingsCreateRequestDTO);
+        ExpirationPasswordSettings expirationPasswordSettings = _iMapperService.MapDTOToEntity<ExpirationPasswordSettingsCreateRequestDTO, ExpirationPasswordSettings>(expirationPasswordSettingsCreateRequestDTO);
         _iExpirationPasswordSettingsRepository.Create(expirationPasswordSettings);
         return true;
     }
 
     public async Task<bool> UpdateExpirationPasswordSettingsAsync(ExpirationPasswordSettingsUpdateRequestDTO expirationPasswordSettingsUpdateRequestDTO)
     {
-        ExpirationPasswordSettings expirationPasswordSettings = _iMapperService.ApplyMapToEntity<ExpirationPasswordSettingsUpdateRequestDTO, ExpirationPasswordSettings>(expirationPasswordSettingsUpdateRequestDTO);
+        ExpirationPasswordSettings expirationPasswordSettings = _iMapperService.MapDTOToEntity<ExpirationPasswordSettingsUpdateRequestDTO, ExpirationPasswordSettings>(expirationPasswordSettingsUpdateRequestDTO);
         ExpirationPasswordSettings expirationPasswordSettingsDb = _iExpirationPasswordSettingsRepository.GetById(expirationPasswordSettings.Id.Value);
 
         if (GuardClauseExtension.IsNotNull(expirationPasswordSettingsDb))

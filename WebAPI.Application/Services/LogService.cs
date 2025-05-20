@@ -37,7 +37,7 @@ public sealed class LogService : BaseHandlerService, ILogService
     public async Task<LogResponseDTO> GetLogByIdAsync(long id)
     {
         var data = await Task.FromResult(_iLogRepository.GetById(id));
-        return _iMapperService.ApplyMapToEntity<Log, LogResponseDTO>(data);
+        return _iMapperService.MapEntityToDTO<Log, LogResponseDTO>(data);
     }
 
     public async Task<IEnumerable<Log>> GetAllLogWithLikeAsync(string parameter) => await _iLogRepository.FindBy(x => EF.Functions.Like(x.Class, $"%{parameter}%")).ToListAsync();

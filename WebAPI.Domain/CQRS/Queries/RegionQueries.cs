@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using WebAPI.Domain.Filters.Others;
 using WebAPI.Domain.Entities.Others;
+using WebAPI.Domain.DTO.Others;
 
 namespace WebAPI.Domain.CQRS.Queries;
 
@@ -10,7 +11,7 @@ public record RegionQueryFilterRequest : IRequest<CustomResponseModel>
 }
 
 
-public class RegionQueryFilterResponse : Region
+public record RegionQueryFilterResponse : RegionResponseDTO
 {
 }
 
@@ -18,7 +19,7 @@ public class RegionQueryByIdRequest : Region, IRequest<CustomResponseModel>
 {
 }
 
-public class RegionQueryByIdResponse : Region
+public record RegionQueryByIdResponse : RegionResponseDTO
 {
 }
 

@@ -4,7 +4,6 @@ using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.CQRS.Queries;
 using FastPackForShare;
 using FastPackForShare.Constants;
-using Microsoft.Azure.Amqp.Framing;
 using WebAPI.Domain.Constants;
 
 namespace WebAPI.Application.Handlers.Queries;
@@ -43,7 +42,7 @@ IRequestHandler<RegionQueryByIdRequest, CustomResponseModel>
         else
         {
             var result = _iRegionRepository.GetAll();
-            data = _iMapperService.ApplyMapToEntity<IEnumerable<Region>, IEnumerable<RegionQueryFilterResponse>>(result);
+            data = _iMapperService.MapEntityToDTOList<IEnumerable<Region>, IEnumerable<RegionQueryFilterResponse>>(result);
             await _redisService.AddDataObject(cacheKey, data);
             return new CustomResponseModel(ConstantHttpStatusCode.OK_CODE, data);
         }
@@ -65,7 +64,7 @@ IRequestHandler<RegionQueryByIdRequest, CustomResponseModel>
         else
         {
             var result = _iRegionRepository.GetById(request.Id.Value);
-            data = _iMapperService.ApplyMapToEntity<Region, RegionQueryByIdResponse>(result);
+            data = _iMapperService.MapEntityToDTO<Region, RegionQueryByIdResponse>(result);
             await _redisService.AddDataObject(cacheKey, data);
             return new CustomResponseModel(ConstantHttpStatusCode.OK_CODE, data);
         }

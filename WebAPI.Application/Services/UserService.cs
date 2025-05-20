@@ -58,7 +58,7 @@ public sealed class UserService : BaseHandlerService, IUserService
                                          orderby p.Login ascending
                                          select p);
 
-        return _iMapperService.ApplyMapToEntity<IEnumerable<User>, IEnumerable<UserResponseDTO>>(data.AsEnumerable());
+        return _iMapperService.MapEntityToDTOList<IEnumerable<User>, IEnumerable<UserResponseDTO>>(data.AsEnumerable());
     }
 
     public async Task<BasePagedResultModel<UserResponseDTO>> GetAllUserPaginateAsync(UserFilter filter)
@@ -69,7 +69,7 @@ public sealed class UserService : BaseHandlerService, IUserService
                                                 orderby p.Login ascending
                                                 select p);
 
-        var data = _iMapperService.ApplyMapToEntity<IEnumerable<User>, IEnumerable<UserResponseDTO>>(queryResult);
+        var data = _iMapperService.MapEntityToDTOList<IEnumerable<User>, IEnumerable<UserResponseDTO>>(queryResult);
 
         return BasePagedResultService.GetPaged(data.AsQueryable(), BasePagedResultService.GetDefaultPageIndex(filter.PageIndex), BasePagedResultService.GetDefaultPageSize(filter.PageSize));
     }
@@ -80,7 +80,7 @@ public sealed class UserService : BaseHandlerService, IUserService
                                          orderby p.Login ascending
                                          select p);
 
-        var user = _iMapperService.ApplyMapToEntity<User, UserResponseDTO>(data.FirstOrDefault());
+        var user = _iMapperService.MapEntityToDTO<User, UserResponseDTO>(data.FirstOrDefault());
         return user;
     }
 
@@ -90,7 +90,7 @@ public sealed class UserService : BaseHandlerService, IUserService
                           orderby p.Login ascending
                           select p).FirstOrDefaultAsync();
 
-        return _iMapperService.ApplyMapToEntity<User, UserResponseDTO>(data);
+        return _iMapperService.MapEntityToDTO<User, UserResponseDTO>(data);
     }
 
     public async Task<IEnumerable<DropDownListModel>> GetUsersAsync()
@@ -128,7 +128,7 @@ public sealed class UserService : BaseHandlerService, IUserService
 
     public async Task<bool> CreateUserAsync(UserRequestCreateDTO userRequestDTO)
     {
-        User user = _iMapperService.ApplyMapToEntity<UserRequestCreateDTO, User>(userRequestDTO);
+        User user = _iMapperService.MapDTOToEntity<UserRequestCreateDTO, User>(userRequestDTO);
 
         if (GuardClauseExtension.IsNullOrWhiteSpace(user.Login) || GuardClauseExtension.IsNullOrWhiteSpace(user.Password))
         {
@@ -149,7 +149,7 @@ public sealed class UserService : BaseHandlerService, IUserService
 
     public async Task<bool> UpdateUserAsync(long id, UserRequestUpdateDTO userRequestDTO)
     {
-        User user = _iMapperService.ApplyMapToEntity<UserRequestUpdateDTO, User>(userRequestDTO);
+        User user = _iMapperService.MapDTOToEntity<UserRequestUpdateDTO, User>(userRequestDTO);
         User userDb = _iUserRepository.GetById(id);
 
         if (GuardClauseExtension.IsNotNull(userDb))
@@ -225,7 +225,7 @@ public sealed class UserService : BaseHandlerService, IUserService
 
         if (list?.Results?.Count() > 0)
         {
-            return _iMapperService.ApplyMapToEntity<IEnumerable<UserResponseDTO>, IEnumerable<UserExcelDTO>>(list.Results);
+            return _iMapperService.MapDTOToExcelList<IEnumerable<UserResponseDTO>, IEnumerable<UserExcelDTO>>(list.Results);
         }
 
         return Enumerable.Empty<UserExcelDTO>();

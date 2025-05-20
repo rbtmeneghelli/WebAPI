@@ -114,7 +114,7 @@ public sealed class RegionService : BaseHandlerService, IRegionService
                               IsActive = x.IsActive
                           };
 
-        var data = _iMapperService.ApplyMapToEntity<IEnumerable<Region>, IEnumerable<RegionResponseDTO>>(queryResult);
+        var data = _iMapperService.MapEntityToDTOList<IEnumerable<Region>, IEnumerable<RegionResponseDTO>>(queryResult);
 
         return BasePagedResultService.GetPaged(data.AsQueryable(), BasePagedResultService.GetDefaultPageIndex(filter.PageIndex), BasePagedResultService.GetDefaultPageSize(filter.PageSize));
     }

@@ -28,7 +28,7 @@ public sealed class EnvironmentTypeSettingsService : BaseHandlerService, IEnviro
                           orderby p.Id ascending
                           select p).ToListAsync();
 
-        return _iMapperService.ApplyMapToEntity<IEnumerable<EnvironmentTypeSettings>, IEnumerable<EnvironmentTypeSettingsResponseDTO>>(data);
+        return _iMapperService.MapEntityToDTOList<IEnumerable<EnvironmentTypeSettings>, IEnumerable<EnvironmentTypeSettingsResponseDTO>>(data);
     }
 
     public async Task<EnvironmentTypeSettingsResponseDTO> GetEnvironmentTypeSettingsByIdAsync(long id)
@@ -36,7 +36,7 @@ public sealed class EnvironmentTypeSettingsService : BaseHandlerService, IEnviro
         var data = await (from p in _iEnvironmentTypeSettingsRepository.FindBy(x => x.Id == id).AsQueryable()
                           select p).FirstOrDefaultAsync();
 
-        return _iMapperService.ApplyMapToEntity<EnvironmentTypeSettings, EnvironmentTypeSettingsResponseDTO>(data);
+        return _iMapperService.MapEntityToDTO<EnvironmentTypeSettings, EnvironmentTypeSettingsResponseDTO>(data);
     }
 
     public async Task<bool> ExistEnvironmentTypeSettingsByIdAsync(long id)
@@ -48,14 +48,14 @@ public sealed class EnvironmentTypeSettingsService : BaseHandlerService, IEnviro
 
     public async Task<bool> CreateEnvironmentTypeSettingsAsync(EnvironmentTypeSettingsCreateRequestDTO environmentTypeSettingsCreateRequestDTO)
     {
-        EnvironmentTypeSettings environmentTypeSettings = _iMapperService.ApplyMapToEntity<EnvironmentTypeSettingsCreateRequestDTO, EnvironmentTypeSettings>(environmentTypeSettingsCreateRequestDTO);
+        EnvironmentTypeSettings environmentTypeSettings = _iMapperService.MapDTOToEntity<EnvironmentTypeSettingsCreateRequestDTO, EnvironmentTypeSettings>(environmentTypeSettingsCreateRequestDTO);
         _iEnvironmentTypeSettingsRepository.Create(environmentTypeSettings);
         return true;
     }
 
     public async Task<bool> UpdateEnvironmentTypeSettingsAsync(EnvironmentTypeSettingsUpdateRequestDTO environmentTypeSettingsUpdateRequestDTO)
     {
-        EnvironmentTypeSettings environmentTypeSettings = _iMapperService.ApplyMapToEntity<EnvironmentTypeSettingsUpdateRequestDTO, EnvironmentTypeSettings>(environmentTypeSettingsUpdateRequestDTO);
+        EnvironmentTypeSettings environmentTypeSettings = _iMapperService.MapDTOToEntity<EnvironmentTypeSettingsUpdateRequestDTO, EnvironmentTypeSettings>(environmentTypeSettingsUpdateRequestDTO);
         EnvironmentTypeSettings environmentTypeSettingsDb = _iEnvironmentTypeSettingsRepository.GetById(environmentTypeSettings.Id.Value);
 
         if (GuardClauseExtension.IsNotNull(environmentTypeSettingsDb))
@@ -119,6 +119,6 @@ public sealed class EnvironmentTypeSettingsService : BaseHandlerService, IEnviro
                               orderby p.Id ascending
                               select p).ToListAsync();
 
-        return _iMapperService.ApplyMapToEntity<IEnumerable<EnvironmentTypeSettings>, IEnumerable<EnvironmentTypeSettingsExcelDTO>>(data);
+        return _iMapperService.MapEntityToExcelList<IEnumerable<EnvironmentTypeSettings>, IEnumerable<EnvironmentTypeSettingsExcelDTO>>(data);
     }
 }

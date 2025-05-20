@@ -98,7 +98,7 @@ public sealed class AddressService : BaseHandlerService, IAddressService
                               IsActive = x.IsActive
                           };
 
-        var data = _iMapperService.ApplyMapToEntity<IEnumerable<AddressData>, IEnumerable<AddressDataDTO>>(queryResult);
+        var data = _iMapperService.MapEntityToDTOList<IEnumerable<AddressData>, IEnumerable<AddressDataDTO>>(queryResult);
         return BasePagedResultService.GetPaged(data.AsQueryable(), BasePagedResultService.GetDefaultPageIndex(filter.PageIndex), BasePagedResultService.GetDefaultPageSize(filter.PageSize));
     }
 }

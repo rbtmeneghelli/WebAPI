@@ -96,7 +96,7 @@ public sealed class StatesService : BaseHandlerService, IStatesService
                               IsActive = x.IsActive
                           };
 
-        var data = _iMapperService.ApplyMapToEntity<IEnumerable<States>, IEnumerable<StatesResponseDTO>>(queryResult);
+        var data = _iMapperService.MapEntityToDTOList<IEnumerable<States>, IEnumerable<StatesResponseDTO>>(queryResult);
 
         return BasePagedResultService.GetPaged(data.AsQueryable(), BasePagedResultService.GetDefaultPageIndex(filter.PageIndex), BasePagedResultService.GetDefaultPageSize(filter.PageSize));
     }

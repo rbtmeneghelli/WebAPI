@@ -85,14 +85,14 @@ public sealed class LayoutSettingsService : BaseHandlerService, ILayoutSettingsS
 
     public async Task<bool> CreateLayoutSettingsAsync(LayoutSettingsCreateRequestDTO layoutSettingsCreateRequestDTO)
     {
-        LayoutSettings layoutSettings = _iMapperService.ApplyMapToEntity<LayoutSettingsCreateRequestDTO, LayoutSettings>(layoutSettingsCreateRequestDTO);
+        LayoutSettings layoutSettings = _iMapperService.MapDTOToEntity<LayoutSettingsCreateRequestDTO, LayoutSettings>(layoutSettingsCreateRequestDTO);
         _iLayoutSettingsRepository.Create(layoutSettings);
         return true;
     }
 
     public async Task<bool> UpdateLayoutSettingsAsync(LayoutSettingsUpdateRequestDTO layoutSettingsUpdateRequestDTO)
     {
-        LayoutSettings layoutSettings = _iMapperService.ApplyMapToEntity<LayoutSettingsUpdateRequestDTO, LayoutSettings>(layoutSettingsUpdateRequestDTO);
+        LayoutSettings layoutSettings = _iMapperService.MapDTOToEntity<LayoutSettingsUpdateRequestDTO, LayoutSettings>(layoutSettingsUpdateRequestDTO);
         LayoutSettings layoutSettingsDb = _iLayoutSettingsRepository.GetById(layoutSettings.Id.Value);
 
         if (GuardClauseExtension.IsNotNull(layoutSettingsDb))

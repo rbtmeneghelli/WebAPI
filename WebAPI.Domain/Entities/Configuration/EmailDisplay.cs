@@ -17,11 +17,11 @@ public class EmailDisplay : BaseEntityModel
 
     protected override void CreateEntityIsValid()
     {
-        BaseDomainException.When(GuardClauseExtension.IsNullOrWhiteSpace(Title), ConstantValidation.REQUIRED);
+        BaseDomainException.WhenIsInvalid(GuardClauseExtension.IsNullOrWhiteSpace(Title), ConstantValidation.REQUIRED);
     }
 
     protected override void UpdateEntityIsValid()
     {
-        BaseDomainException.When(GuardClauseExtension.IsNullOrWhiteSpace(Title), ConstantValidation.REQUIRED);
+        BaseDomainException.WhenIsInvalid(GuardClauseExtension.IsNullOrWhiteSpace(Title), ConstantValidation.REQUIRED);
     }
 }

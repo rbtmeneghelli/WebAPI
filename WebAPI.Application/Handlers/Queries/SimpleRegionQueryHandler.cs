@@ -42,7 +42,7 @@ IRequestHandler<SimpleRegionQueryByIdRequest, CustomResponseModel>
         else
         {
             var result = _iRegionRepository.GetAll();
-            data = _iMapperService.ApplyMapToEntity<IEnumerable<Region>, IEnumerable<SimpleRegionQueryFilterResponse>>(result);
+            data = _iMapperService.MapEntityToDTOList<IEnumerable<Region>, IEnumerable<SimpleRegionQueryFilterResponse>>(result);
             await _redisService.AddDataObject(cacheKey, data);
             return new CustomResponseModel(ConstantHttpStatusCode.OK_CODE, data);
         }
@@ -64,7 +64,7 @@ IRequestHandler<SimpleRegionQueryByIdRequest, CustomResponseModel>
         else
         {
             var result = _iRegionRepository.GetById(request.Id.Value);
-            data = _iMapperService.ApplyMapToEntity<Region, SimpleRegionQueryByIdResponse>(result);
+            data = _iMapperService.MapEntityToDTO<Region, SimpleRegionQueryByIdResponse>(result);
             await _redisService.AddDataObject(cacheKey, data);
             return new CustomResponseModel(ConstantHttpStatusCode.OK_CODE, data);
         }

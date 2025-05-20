@@ -89,14 +89,14 @@ public sealed class EmailSettingsService : BaseHandlerService, IEmailSettingsSer
 
     public async Task<bool> CreateEmailSettingsAsync(EmailSettingsCreateRequestDTO emailSettingsCreateRequestDTO)
     {
-        EmailSettings emailSettings = _iMapperService.ApplyMapToEntity<EmailSettingsCreateRequestDTO, EmailSettings>(emailSettingsCreateRequestDTO);
+        EmailSettings emailSettings = _iMapperService.MapDTOToEntity<EmailSettingsCreateRequestDTO, EmailSettings>(emailSettingsCreateRequestDTO);
         _iEmailSettingsRepository.Create(emailSettings);
         return true;
     }
 
     public async Task<bool> UpdateEmailSettingsAsync(EmailSettingsUpdateRequestDTO emailSettingsUpdateRequestDTO)
     {
-        EmailSettings emailSettings = _iMapperService.ApplyMapToEntity<EmailSettingsUpdateRequestDTO, EmailSettings>(emailSettingsUpdateRequestDTO);
+        EmailSettings emailSettings = _iMapperService.MapDTOToEntity<EmailSettingsUpdateRequestDTO, EmailSettings>(emailSettingsUpdateRequestDTO);
         EmailSettings emailSettingsDb = _iEmailSettingsRepository.GetById(emailSettings.Id.Value);
 
         if (GuardClauseExtension.IsNotNull(emailSettingsDb))

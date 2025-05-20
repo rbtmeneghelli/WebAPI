@@ -13,7 +13,7 @@ public static class MockMapper
     {
         mockMapperService = new Mock<IMapperService>();
 
-        mockMapperService.Setup(m => m.ApplyMapToEntity<UserRequestCreateDTO, User>(It.IsAny<UserRequestCreateDTO>()))
+        mockMapperService.Setup(m => m.MapDTOToEntity<UserRequestCreateDTO, User>(It.IsAny<UserRequestCreateDTO>()))
         .Returns(
         new User
         {
@@ -25,7 +25,7 @@ public static class MockMapper
             HasTwoFactoryValidation = false
         });
 
-        mockMapperService.Setup(m => m.ApplyMapToEntity<UserRequestUpdateDTO, User>(It.IsAny<UserRequestUpdateDTO>()))
+        mockMapperService.Setup(m => m.MapDTOToEntity<UserRequestUpdateDTO, User>(It.IsAny<UserRequestUpdateDTO>()))
         .Returns(
         new User
         {
@@ -38,7 +38,7 @@ public static class MockMapper
             HasTwoFactoryValidation = false
         });
 
-        mockMapperService.Setup(m => m.ApplyMapToEntity<User, UserResponseDTO>(It.IsAny<User>()))
+        mockMapperService.Setup(m => m.MapEntityToDTO<User, UserResponseDTO>(It.IsAny<User>()))
         .Returns(new UserResponseDTO
         {
             Id = 999999,
@@ -52,7 +52,7 @@ public static class MockMapper
         });
 
 
-        mockMapperService.Setup(m => m.ApplyMapToEntity<IEnumerable<User>, IEnumerable<UserResponseDTO>>(It.IsAny<IEnumerable<User>>()))
+        mockMapperService.Setup(m => m.MapEntityToDTOList<IEnumerable<User>, IEnumerable<UserResponseDTO>>(It.IsAny<IEnumerable<User>>()))
         .Returns(new List<UserResponseDTO>
         {
             new UserResponseDTO

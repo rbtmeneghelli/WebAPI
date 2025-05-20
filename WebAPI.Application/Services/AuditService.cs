@@ -49,7 +49,7 @@ public sealed class AuditService : BaseHandlerService, IAuditService
     public async Task<AuditResponseDTO> GetAuditByIdAsync(long id)
     {
         var data = await Task.FromResult(_iAuditRepository.GetById(id));
-        return _iMapperService.ApplyMapToEntity<Audit, AuditResponseDTO>(data);
+        return _iMapperService.MapEntityToDTO<Audit, AuditResponseDTO>(data);
     }
 
     public async Task<IEnumerable<Audit>> GetAllAuditWithLikeAsync(string parameter)

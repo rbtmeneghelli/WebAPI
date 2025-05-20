@@ -1,12 +1,12 @@
-﻿using WebAPI.Domain.Entities.Others;
-using FastPackForShare.SimpleMediator.Contracts;
+﻿using FastPackForShare.SimpleMediator.Contracts;
+using WebAPI.Domain.DTO.Others;
 
 namespace WebAPI.Domain.CQRS.Command;
 
-public class SimpleCreateRegionCommandRequest : Region, IRequest<CustomResponseModel>
+public record SimpleCreateRegionCommandRequest : RegionCreateRequestDTO, IRequest<CustomResponseModel>
 {
 }
 
-public class SimpleUpdateRegionCommandRequest : Region, IRequest<CustomResponseModel>
+public record SimpleUpdateRegionCommandRequest : RegionUpdateRequestDTO, IRequest<CustomResponseModel>
 {
 }

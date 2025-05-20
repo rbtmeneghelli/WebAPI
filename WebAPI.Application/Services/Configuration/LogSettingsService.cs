@@ -91,14 +91,14 @@ public sealed class LogSettingsService : BaseHandlerService, ILogSettingsService
 
     public async Task<bool> CreateLogSettingsAsync(LogSettingsCreateRequestDTO logSettingsCreateRequestDTO)
     {
-        LogSettings logSettings = _iMapperService.ApplyMapToEntity<LogSettingsCreateRequestDTO, LogSettings>(logSettingsCreateRequestDTO);
+        LogSettings logSettings = _iMapperService.MapDTOToEntity<LogSettingsCreateRequestDTO, LogSettings>(logSettingsCreateRequestDTO);
         _iLogSettingsRepository.Create(logSettings);
         return true;
     }
 
     public async Task<bool> UpdateLogSettingsAsync(LogSettingsUpdateRequestDTO logSettingsUpdateRequestDTO)
     {
-        LogSettings logSettings = _iMapperService.ApplyMapToEntity<LogSettingsUpdateRequestDTO, LogSettings>(logSettingsUpdateRequestDTO);
+        LogSettings logSettings = _iMapperService.MapDTOToEntity<LogSettingsUpdateRequestDTO, LogSettings>(logSettingsUpdateRequestDTO);
         LogSettings logSettingsDb = _iLogSettingsRepository.GetById(logSettings.Id.Value);
 
         if (GuardClauseExtension.IsNotNull(logSettingsDb))
