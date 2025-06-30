@@ -189,10 +189,8 @@ public static class ContainerSwagger
 
     #region Configuração de criptografia para autenticação do swagger
 
-    public static void RegisterJwtTokenEncryptConfig(this IServiceCollection services, IConfiguration configuration)
+    public static void RegisterJwtTokenEncryptConfig(this IServiceCollection services, EnvironmentVariables environmentVariables)
     {
-        var tokenSettings = JsonSerializer.Deserialize<JwtConfigModel>(Environment.GetEnvironmentVariable("WebAPI_Token"));
-
         services.AddAuthentication
               (x =>
               {
@@ -210,10 +208,10 @@ public static class ContainerSwagger
                       ValidateLifetime = true,
                       ValidateIssuerSigningKey = true,
                       ClockSkew = TimeSpan.Zero,
-                      ValidIssuer = tokenSettings.Issuer,
-                      ValidAudience = tokenSettings.Audience,
+                      ValidIssuer = environmentVariables.JwtConfigSettings.Issuer,
+                      ValidAudience = environmentVariables.JwtConfigSettings.Audience,
                       IssuerSigningKey = new SymmetricSecurityKey
-                      (Encoding.UTF8.GetBytes(tokenSettings.Key))
+                      (Encoding.UTF8.GetBytes(environmentVariables.JwtConfigSettings.Key))
                   };
                   options.Events = new JwtBearerEvents
                   {

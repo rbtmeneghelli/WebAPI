@@ -345,7 +345,7 @@ public static class ContainerService
         services.AddHostedService<FreshContextInstanceBackgroundService>();
     }
 
-    public static void RegisterHealthCheck(this IServiceCollection services, IConfiguration configuration)
+    public static void RegisterHealthCheck(this IServiceCollection services, EnvironmentVariables environmentVariables)
     {
         #region Itens que podem ser monitorados
 
@@ -360,8 +360,8 @@ public static class ContainerService
 
         var TAG_NAME = "PROD";
 
-        var connectionStringSQLServerLog = EnvironmentVariablesExtension.GetDatabaseFromEnvVar(configuration.GetConnectionString("DefaultConnectionLogs"));
-        var connectionServiceRabbitMQ = JsonSerializer.Deserialize<RabbitMQModel>(EnvironmentVariablesExtension.GetEnvironmentVariable("WebAPI_RabbitMQ"));
+        var connectionStringSQLServerLog = environmentVariables.ConnectionStringSettings.DefaultConnectionLogs;
+        var connectionServiceRabbitMQ = environmentVariables.RabbitMQSettings;
 
         services
        .AddHealthChecks()

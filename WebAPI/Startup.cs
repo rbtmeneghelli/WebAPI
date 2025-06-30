@@ -53,12 +53,16 @@ public class Startup
         // Add functionality to inject IOptions<T> (Fazer o IOptions<T> na controller)
         // services.AddOptions();
 
-        ContainerFastPackForShareServices.RegisterDbConnection<WebAPIContext>(services, 
-                                                                              EnvironmentVariablesExtension.GetDatabaseFromEnvVar(_configuration.GetConnectionString("DefaultConnection")));
+        EnvironmentVariables environmentVariables = new();
+
+        using (var tempProvider = services.BuildServiceProvider())
+        {
+            environmentVariables = tempProvider.GetService<EnvironmentVariables>();
+        }
+
+        ContainerFastPackForShareServices.RegisterDbConnection<WebAPIContext>(services, environmentVariables.ConnectionStringSettings.DefaultConnection);
         ContainerFastPackForShareServices.RegisterServices(services);
-        ContainerFastPackForShareServices.RegisterCors(services, 
-                                                       EnvironmentVariablesExtension.GetEnvironmentVariableToStringArray<string[]>(_configuration, "WebAPI_Settings:corsSettings"),
-                                                       "APICORS");
+        ContainerFastPackForShareServices.RegisterCors(services, environmentVariables.CorsSettings,"APICORS");
         ContainerFastPackForShareServices.RegisterHttpClient(services);
         ContainerFastPackForShareServices.RegisterHttpContextAccessor(services);
         ContainerFastPackForShareServices.RegisterProblemDetails(services);
@@ -71,7 +75,7 @@ public class Startup
         ContainerService.RegisterServices(services);
         ContainerService.RegisterConfigs(services, _configuration);
         ContainerService.RegisterFluentValidation(services);
-        ContainerSwagger.RegisterJwtTokenEncryptConfig(services, _configuration);
+        ContainerSwagger.RegisterJwtTokenEncryptConfig(services, environmentVariables);
         ContainerSwagger.RegisterSwaggerConfig(services);
 
         services.AddControllers().AddViewOptions(options =>
@@ -101,7 +105,7 @@ public class Startup
         services.RegisterEnvironmentVariables(_configuration);
 
         services.AddExceptionHandler<GlobalExceptionHandler>();
-        ContainerService.RegisterHealthCheck(services, _configuration);
+        ContainerService.RegisterHealthCheck(services, environmentVariables);
         ContainerService.RegisterHealthCheckDashboard(services);
         ContainerService.RegisterSignalR(services);
 

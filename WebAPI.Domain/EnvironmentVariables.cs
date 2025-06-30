@@ -19,6 +19,7 @@ public class EnvironmentVariables
     public string AzureConnectionStringStorage { get; set; } = "CONNECTION_STRING_STORAGE";
     public TwilioModel TwilioSettings { get; set; }
     public JwtConfigModel JwtConfigSettings { get; set; }
+    public string[] CorsSettings { get; set; }
 
     public EnvironmentVariables()
     {
@@ -63,7 +64,8 @@ public static class EnvironmentVariablesExtension
             { configuration.GetSection($"SendGridSettings:Data").Value, GetEnvironmentVariable(configuration.GetSection($"SendGridSettings:Data").Value).ToString() },
             { configuration.GetSection($"WebAPI_Settings:Version").Value, GetEnvironmentVariable(configuration.GetSection($"WebAPI_Settings:Version").Value).ToString() },
             { configuration.GetSection($"WebAPI_Settings:Environment").Value, GetEnvironmentVariable(configuration.GetSection($"WebAPI_Settings:Environment").Value).ToString() },
-             { configuration.GetSection($"WebAPI_Settings:Token").Value, GetEnvironmentVariable(configuration.GetSection($"WebAPI_Settings:Token").Value).ToString() },
+            { configuration.GetSection($"WebAPI_Settings:Token").Value, GetEnvironmentVariable(configuration.GetSection($"WebAPI_Settings:Token").Value).ToString() },
+            { configuration.GetSection($"WebAPI_Settings:CorsSettings").Value, GetEnvironmentVariable(configuration.GetSection($"WebAPI_Settings:CorsSettings").Value).ToString() },
         };
 
         return envVariables;
