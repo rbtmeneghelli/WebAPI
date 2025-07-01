@@ -8,6 +8,7 @@ namespace WebAPI.Domain.Interfaces.Services;
 public interface IGeneralService
 {
     string CreateJwtToken(AuthenticationModel authenticationModel);
+    Task<string> CreateJwtTokenByKeyCloak(LoginUser loginUser);
     Task<MemoryStream> Export2ZipAsync(string directory, EnumFile typeFile = EnumFile.Pdf);
     Task<bool> SendPushNotificationAsync(PushNotification notification, string tokenUser);
     string GenerateToken(IEnumerable<Claim> claims);

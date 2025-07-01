@@ -154,9 +154,9 @@ public static class ContainerSwagger
 
     #region Configuração padrão de autenticação do swagger
 
-    public static IServiceCollection RegisterJwtTokenConfig(this IServiceCollection services)
+    public static IServiceCollection RegisterJwtTokenConfig(this IServiceCollection services, EnvironmentVariables environmentVariables)
     {
-        var tokenSettings = JsonSerializer.Deserialize<JwtConfigModel>(Environment.GetEnvironmentVariable("WebAPI_Token"));
+        var tokenSettings = environmentVariables.JwtConfigSettings;
 
         services.AddAuthentication
               (x =>
@@ -307,6 +307,82 @@ public static class ContainerSwagger
     {
         return builder.UseMiddleware<SwaggerBasicAuthenticationMiddleware>();
     }
+
+    #region Configuração do swagger com o protocolo OAuth 2.0 e o KeyCloak
+    
+    /// <summary>
+    /// Exemplo com protocolo OAuth 2.0 e KeyCloak
+    /// </summary>
+    /// <param name="services"></param>
+    public static void RegisterJwtAuthToken(this IServiceCollection services)
+    {
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        .AddJwtBearer(options =>
+        {
+            options.Authority = "http://localhost:8080/realms/meu-realm";
+            options.Audience = "swagger-client"; // Client ID no Keycloak
+            options.RequireHttpsMetadata = false; // Para testes locais
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateAudience = true,          
+            };
+        });
+
+        // 2. Swagger com OAuth2.0 (Authorization Code)
+        services.AddSwaggerGen(options =>
+        {
+            options.SwaggerDoc("v1", new OpenApiInfo { Title = "Minha API com Keycloak", Version = "v1" });
+
+            options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+            {
+                Type = SecuritySchemeType.OAuth2,
+                Flows = new OpenApiOAuthFlows
+                {
+                    AuthorizationCode = new OpenApiOAuthFlow
+                    {
+                        AuthorizationUrl = new Uri("http://localhost:8080/realms/meu-realm/protocol/openid-connect/auth"),
+                        TokenUrl = new Uri("http://localhost:8080/realms/meu-realm/protocol/openid-connect/token"),
+                        Scopes = new Dictionary<string, string>
+                        {
+                            { "openid", "Login básico" },
+                            { "profile", "Perfil do usuário" },
+                            { "email", "E-mail do usuário" }
+                        }
+                    }
+                }
+            });
+
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "oauth2"
+                        }
+                    },
+                    new[] { "openid", "profile", "email" }
+                }
+            });
+        });
+    }
+
+    public static void UseSwaggerJwtAuthToken(this IApplicationBuilder builder)
+    {
+        builder.UseSwagger();
+        builder.UseSwaggerUI(options =>
+        {
+            options.SwaggerEndpoint("/swagger/v1/swagger.json", "Minha API com Keycloak V1");
+            options.OAuthClientId("swagger-client");
+            options.OAuthClientSecret("client-secret-aqui"); // Do Keycloak
+            options.OAuthUsePkce();
+            options.OAuthAppName("Swagger com Keycloak");
+        });
+    }
+
+    #endregion
 }
 
 public class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>

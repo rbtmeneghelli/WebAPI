@@ -3,6 +3,9 @@ using System.IdentityModel.Tokens.Jwt;
 using WebAPI.Domain.Constants;
 using WebAPI.Domain.Interfaces.Services;
 using FastPackForShare.Enums;
+using WebAPI.Domain.Entities.ControlPanel;
+using static System.Net.WebRequestMethods;
+using System.Text.Json;
 
 namespace WebAPI.Application.Services;
 
@@ -10,10 +13,12 @@ public sealed class GeneralService : BaseHandlerService, IGeneralService
 {
     private List<RefreshTokensModel> _refreshTokens = new List<RefreshTokensModel>();
     private EnvironmentVariables _environmentVariables { get; }
+    private readonly IHttpClientFactory _ihttpClientFactory;
 
-    public GeneralService(EnvironmentVariables environmentVariables, INotificationMessageService iNotificationMessageService) : base(iNotificationMessageService)
+    public GeneralService(EnvironmentVariables environmentVariables, INotificationMessageService iNotificationMessageService, IHttpClientFactory ihttpClientFactory) : base(iNotificationMessageService)
     {
         _environmentVariables = environmentVariables;
+        _ihttpClientFactory = ihttpClientFactory;
     }
 
     public string CreateJwtToken(AuthenticationModel credentials)
@@ -39,6 +44,32 @@ public sealed class GeneralService : BaseHandlerService, IGeneralService
         var tokenAuth = tokenHandler.WriteToken(token);
         tokenAuth = CryptographyHashTokenManager.EncryptToken(tokenAuth, _environmentVariables.JwtConfigSettings.Key);
         return tokenAuth;
+    }
+
+    public async Task<string> CreateJwtTokenByKeyCloak(LoginUser loginUser)
+    {
+        var httpClient = _ihttpClientFactory.CreateClient("Signed");
+        httpClient.DefaultRequestHeaders.Accept.Clear();
+        var tokenResponse = await httpClient.PostAsync("http://localhost:8080/realms/demo-realm/protocol/openid-connect/token",
+        new FormUrlEncodedContent(new Dictionary<string, string>
+        {
+            ["client_id"] = "clientId",
+            ["client_secret"] = "clientSecret",
+            ["grant_type"] = "password",
+            ["username"] = loginUser.Login,
+            ["password"] = loginUser.Password,
+            ["scope"] = "openid profile"
+        }));
+
+        if (tokenResponse.IsSuccessStatusCode)
+        {
+            using var doc = JsonDocument.Parse(await tokenResponse.Content.ReadAsStringAsync());
+            var token = doc.RootElement.GetProperty("access_token").GetString();
+            return token?.Substring(0, 25);
+        }
+
+        Notify($"Não foi possivel obter o token via keycloak");
+        return string.Empty;
     }
 
     public async Task<MemoryStream> Export2ZipAsync(string directory, EnumFile typeFile = EnumFile.Pdf)
