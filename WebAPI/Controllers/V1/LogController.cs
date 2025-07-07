@@ -22,8 +22,8 @@ public sealed class LogController : GenericController
     }
 
     [HttpGet("getById/{id:long}")]
-    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<LogResponseDTO>))]
-    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomValidResponseTypeModel<LogResponseDTO>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomValidResponseTypeModel<object>))]
     public async Task<IActionResult> GetById([FromRoute, Required, Range(ConstantValue.MIN_ID, ConstantValue.MAX_ID, ErrorMessage = FixConstants.ID)] long id)
     {
         if (await _iLogService.ExistLogByIdAsync(id))
@@ -36,7 +36,7 @@ public sealed class LogController : GenericController
     }
 
     [HttpPost("getAllPaginate")]
-    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<BasePagedResultModel<LogResponseDTO>>))]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomValidResponseTypeModel<BasePagedResultModel<LogResponseDTO>>))]
     public async Task<IActionResult> GetAllPaginate([FromBody, Required] LogFilter filter)
     {
         if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);

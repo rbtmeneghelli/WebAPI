@@ -24,7 +24,7 @@ public sealed class LayoutSettingsController : GenericController
     }
 
     [HttpGet("GetAll")]
-    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<IEnumerable<LayoutSettingsResponseDTO>>))]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomValidResponseTypeModel<IEnumerable<LayoutSettingsResponseDTO>>))]
     public async Task<IActionResult> GetAll()
     {
         var model = await _iGenericConfigurationService.LayoutSettingsService.GetAllLayoutSettingsAsync();
@@ -32,8 +32,8 @@ public sealed class LayoutSettingsController : GenericController
     }
 
     [HttpGet("GetByEnvironment")]
-    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<LayoutSettingsResponseDTO>))]
-    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomValidResponseTypeModel<LayoutSettingsResponseDTO>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomValidResponseTypeModel<object>))]
     public async Task<IActionResult> GetByEnvironment()
     {
         var existLayoutSettings = await _iGenericConfigurationService.LayoutSettingsService.ExistLayoutSettingsByEnvironmentAsync();
@@ -47,8 +47,8 @@ public sealed class LayoutSettingsController : GenericController
     }
 
     [HttpGet("GetById/{id:long}")]
-    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<LayoutSettingsResponseDTO>))]
-    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomValidResponseTypeModel<LayoutSettingsResponseDTO>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomValidResponseTypeModel<object>))]
     public async Task<IActionResult> GetById([FromRoute, Required, Range(ConstantValue.MIN_ID, ConstantValue.MAX_ID, ErrorMessage = FixConstants.ID)] long id)
     {
         var existLayoutSettings = await _iGenericConfigurationService.LayoutSettingsService.ExistLayoutSettingsByIdAsync(id);
@@ -62,7 +62,7 @@ public sealed class LayoutSettingsController : GenericController
     }
 
     [HttpPost("Create")]
-    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomValidResponseTypeModel<object>))]
     public async Task<IActionResult> Create([FromBody, Required] LayoutSettingsCreateRequestDTO layoutSettingsCreateRequestDTO)
     {
         if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
@@ -76,8 +76,8 @@ public sealed class LayoutSettingsController : GenericController
     }
 
     [HttpPut("Update")]
-    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
-    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomValidResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomValidResponseTypeModel<object>))]
     public async Task<IActionResult> Update([FromRoute, Required, Range(ConstantValue.MIN_ID, ConstantValue.MAX_ID, ErrorMessage = FixConstants.ID)] long id, [FromBody, Required] LayoutSettingsUpdateRequestDTO layoutSettingsUpdateRequestDTO)
     {
         if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
@@ -101,8 +101,8 @@ public sealed class LayoutSettingsController : GenericController
     }
 
     [HttpDelete("LogicDelete/{id:long}")]
-    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
-    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomValidResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomValidResponseTypeModel<object>))]
     public async Task<IActionResult> LogicDelete([FromRoute, Required, Range(ConstantValue.MIN_ID, ConstantValue.MAX_ID, ErrorMessage = FixConstants.ID)] long id)
     {
         if (await _iGenericConfigurationService.LayoutSettingsService.ExistLayoutSettingsByIdAsync(id))
@@ -118,7 +118,7 @@ public sealed class LayoutSettingsController : GenericController
     }
 
     [HttpPost("Reactive")]
-    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomValidResponseTypeModel<object>))]
     public async Task<IActionResult> Reactive([FromBody, Required] LayoutSettingsReactiveRequestDTO layoutSettingsReactiveRequestDTO)
     {
         if (await _iGenericConfigurationService.LayoutSettingsService.ExistLayoutSettingsByIdAsync(layoutSettingsReactiveRequestDTO.Id.GetValueOrDefault()))
@@ -134,7 +134,7 @@ public sealed class LayoutSettingsController : GenericController
     }
 
     [HttpPost("ExportData")]
-    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomValidResponseTypeModel<object>))]
     public async Task<IActionResult> ExportData()
     {
         if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);

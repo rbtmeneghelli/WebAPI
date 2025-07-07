@@ -1,5 +1,4 @@
 ﻿using SendGrid.Helpers.Mail;
-using WebAPI.Domain.Enums;
 
 namespace WebAPI.Domain.Interfaces.Services.Tools;
 

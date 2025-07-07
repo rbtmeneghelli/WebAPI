@@ -28,7 +28,7 @@ public sealed class UsersController : GenericController
     }
 
     [HttpGet("GetAll")]
-    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<IEnumerable<UserResponseDTO>>))]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomValidResponseTypeModel<IEnumerable<UserResponseDTO>>))]
     public async Task<IActionResult> GetAll()
     {
         var model = await _iUserService.GetAllUserAsync();
@@ -36,7 +36,7 @@ public sealed class UsersController : GenericController
     }
 
     [HttpPost("GetAllPaginate")]
-    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<BasePagedResultModel<UserResponseDTO>>))]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomValidResponseTypeModel<BasePagedResultModel<UserResponseDTO>>))]
     public async Task<IActionResult> GetAllPaginate([FromBody, Required] UserFilter userFilter)
     {
         if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
@@ -45,8 +45,8 @@ public sealed class UsersController : GenericController
     }
 
     [HttpGet("GetById/{id:long}")]
-    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<UserResponseDTO>))]
-    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomValidResponseTypeModel<UserResponseDTO>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomValidResponseTypeModel<object>))]
     public async Task<IActionResult> GetById([FromRoute, Required, Range(ConstantValue.MIN_ID, ConstantValue.MAX_ID, ErrorMessage = FixConstants.ID)] long id)
     {
         if (await _iUserService.ExistUserByIdAsync(id))
@@ -59,8 +59,8 @@ public sealed class UsersController : GenericController
     }
 
     [HttpGet("GetByLogin/{login: string}")]
-    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<UserResponseDTO>))]
-    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomValidResponseTypeModel<UserResponseDTO>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomValidResponseTypeModel<object>))]
     public async Task<IActionResult> GetByLogin([FromRoute, Required]  string login)
     {
         if (await _iUserService.ExistUserByLoginAsync(login))
@@ -73,7 +73,7 @@ public sealed class UsersController : GenericController
     }
 
     [HttpGet("GetUsers")]
-    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<IEnumerable<DropDownListModel>>))]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomValidResponseTypeModel<IEnumerable<DropDownListModel>>))]
     public async Task<IActionResult> GetUsers()
     {
         return CustomResponse(ConstantHttpStatusCode.OK_CODE, await _iUserService.GetUsersAsync(), FixConstants.SUCCESS_IN_DDL);
@@ -81,7 +81,7 @@ public sealed class UsersController : GenericController
 
 
     [HttpPost("Create")]
-    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomValidResponseTypeModel<object>))]
     public async Task<IActionResult> Create([FromBody, Required] UserRequestCreateDTO userRequestDTO)
     {
         if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
@@ -95,8 +95,8 @@ public sealed class UsersController : GenericController
     }
 
     [HttpPut("Update")]
-    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
-    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomValidResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomValidResponseTypeModel<object>))]
     public async Task<IActionResult> Update([FromRoute, Required, Range(ConstantValue.MIN_ID, ConstantValue.MAX_ID, ErrorMessage = FixConstants.ID)] long id, [FromBody, Required] UserRequestUpdateDTO userRequestDTO)
     {
         if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
@@ -120,8 +120,8 @@ public sealed class UsersController : GenericController
     }
 
     [HttpDelete("LogicDelete/{id:long}")]
-    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
-    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomValidResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomValidResponseTypeModel<object>))]
     public async Task<IActionResult> LogicDelete([FromRoute, Required, Range(ConstantValue.MIN_ID, ConstantValue.MAX_ID, ErrorMessage = FixConstants.ID)] long id)
     {
         if (await _iUserService.ExistUserByIdAsync(id))
@@ -142,8 +142,8 @@ public sealed class UsersController : GenericController
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpDelete("PhysicalDelete/{id:long}")]
-    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
-    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomValidResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomValidResponseTypeModel<object>))]
     public async Task<IActionResult> PhysicalDelete([FromRoute, Required, Range(ConstantValue.MIN_ID, ConstantValue.MAX_ID, ErrorMessage = FixConstants.ID)] long id)
     {
         var existId = await _iUserService.ExistUserByIdAsync(id);
@@ -164,7 +164,7 @@ public sealed class UsersController : GenericController
     }
 
     [HttpPost("ExportData")]
-    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomValidResponseTypeModel<object>))]
     public async Task<IActionResult> ExportData([FromBody, Required] UserFilter filter)
     {
         if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);

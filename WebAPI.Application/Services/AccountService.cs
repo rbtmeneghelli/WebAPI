@@ -52,6 +52,7 @@ public sealed class AccountService : BaseHandlerService, IAccountService
         {
             authenticationModel.Id = user.Id;
             authenticationModel.Login = user.Login;
+            authenticationModel.Initials = user.Login.GetInitialsByName();
             authenticationModel.Profile = user.Employee.Profile.Description;
             authenticationModel.Roles = Enumerable.Empty<Claim>().ToList();
             authenticationModel.AccessDate = DateOnlyExtension.GetDateTimeNowFromBrazil();

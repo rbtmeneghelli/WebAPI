@@ -1,7 +1,7 @@
 ﻿using SendGrid;
 using SendGrid.Helpers.Mail;
 using WebAPI.Domain.Interfaces.Factory;
-using WebAPI.Domain.Interfaces.Services.Tools;
+using ISendGridService = WebAPI.Domain.Interfaces.Services.Tools.ISendGridService;
 
 namespace WebAPI.Application.Services.Tools;
 

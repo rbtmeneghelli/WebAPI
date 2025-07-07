@@ -26,7 +26,7 @@ public sealed class AccountController : GenericController
     }
 
     [HttpPost("login")]
-    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomValidResponseTypeModel<object>))]
     public async Task<IActionResult> Login([FromBody, Required] LoginUser loginUser)
     {
         if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
@@ -47,7 +47,7 @@ public sealed class AccountController : GenericController
     }
 
     [HttpPost("confirmLogin")]
-    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomValidResponseTypeModel<object>))]
     public IActionResult ConfirmLogin([FromBody, Required] ConfirmLoginUser confirmLoginUser)
     {
         //if (!_iUserLoggedService.UserAuthenticated)
@@ -82,8 +82,8 @@ public sealed class AccountController : GenericController
     }
 
     [HttpGet("resetPassword/{email: string}")]
-    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
-    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomValidResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomValidResponseTypeModel<object>))]
     public async Task<IActionResult> ResetPassword([FromRoute, Required] string email)
     {
         var result = await _iGenericUnitOfWorkService.AccountService.ResetPasswordAsync(email);
@@ -95,7 +95,7 @@ public sealed class AccountController : GenericController
     }
 
     [HttpPost("loginRefresh")]
-    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomValidResponseTypeModel<Tokens>))]
     public async Task<IActionResult> LoginRefresh([FromBody, Required] LoginUser loginUser)
     {
         if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
@@ -108,7 +108,7 @@ public sealed class AccountController : GenericController
             string dataToken = _iGeneralService.CreateJwtToken(authenticationModel);
             var dataRefreshToken = _iGeneralService.GenerateRefreshToken();
             _iGeneralService.SaveRefreshToken(authenticationModel.Login, dataRefreshToken);
-            return CustomResponse(ConstantHttpStatusCode.OK_CODE, new { token = dataToken, refreshToken = dataRefreshToken });
+            return CustomResponse(ConstantHttpStatusCode.OK_CODE, new Tokens() { Token = dataToken, RefreshToken = dataRefreshToken });
         }
         else
         {
@@ -118,7 +118,7 @@ public sealed class AccountController : GenericController
     }
 
     [HttpPost("refreshToken")]
-    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomValidResponseTypeModel<Tokens>))]
     public IActionResult RefreshToken([FromBody, Required] Tokens tokens)
     {
         var principal = _iGeneralService.GetPrincipalFromExpiredToken(tokens.Token);

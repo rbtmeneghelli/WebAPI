@@ -20,14 +20,14 @@ public sealed class SimpleMediatorController : BaseSimpleMediatorController
     #region QUERIES
 
     [HttpPost("getAllPaginate")]
-    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<IEnumerable<SimpleRegionQueryFilterResponse>>))]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomValidResponseTypeModel<IEnumerable<SimpleRegionQueryFilterResponse>>))]
     public async Task<IActionResult> GetAllPaginate([FromBody, Required] SimpleRegionQueryFilterRequest simpleRegionQueryFilterRequest) =>
     ModelStateIsInvalid() ?
     CustomResponseModel(ModelState) :
     CustomResponse(await _iMediator.Send(simpleRegionQueryFilterRequest));
 
     [HttpPost("getById")]
-    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<SimpleRegionQueryByIdResponse>))]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomValidResponseTypeModel<SimpleRegionQueryByIdResponse>))]
     public async Task<IActionResult> GetById([FromBody, Required] SimpleRegionQueryByIdRequest simpleRegionQueryByIdRequest) =>
     ModelStateIsInvalid() ?
     CustomResponseModel(ModelState) :
@@ -38,15 +38,15 @@ public sealed class SimpleMediatorController : BaseSimpleMediatorController
     #region COMMANDS
 
     [HttpPost("insert")]
-    [ProducesResponseType(ConstantHttpStatusCode.CREATE_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.CREATE_CODE, Type = typeof(CustomValidResponseTypeModel<object>))]
     public async Task<IActionResult> Insert([FromBody, Required] SimpleCreateRegionCommandRequest simpleCreateRegionCommandRequest) =>
     ModelStateIsInvalid() ?
     CustomResponseModel(ModelState) :
     CustomResponse(await _iMediator.Send(simpleCreateRegionCommandRequest));
 
     [HttpPut("update")]
-    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
-    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomProduceResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomValidResponseTypeModel<object>))]
+    [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomValidResponseTypeModel<object>))]
     public async Task<IActionResult> Update([FromBody, Required] SimpleUpdateRegionCommandRequest simpleUpdateRegionCommandRequest) =>
     ModelStateIsInvalid() ?
     CustomResponseModel(ModelState) :

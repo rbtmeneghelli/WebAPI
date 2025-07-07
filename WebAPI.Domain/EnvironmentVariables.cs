@@ -11,7 +11,7 @@ public class EnvironmentVariables
     public RabbitMQModel RabbitMQSettings { get; set; }
     public KafkaModel KafkaSettings { get; set; }
     public ServiceBusSettings ServiceBusSettings { get; set; }
-    public SendGridModel SendGridSettings { get; set; }
+    public SendGridConfigModel SendGridSettings { get; set; }
     public EnumEnvironment Environment { get; set; }
     public string AzureFileShareAccountName { get; set; } = "Azure-FileShare-AccountName";
     public string AzureFileShareKeyValue { get; set; } = "Azure-FileShare-KeyValue";
@@ -27,7 +27,7 @@ public class EnvironmentVariables
         RabbitMQSettings = new RabbitMQModel();
         KafkaSettings = new KafkaModel();
         ServiceBusSettings = new ServiceBusSettings();
-        SendGridSettings = new SendGridModel();
+        SendGridSettings = new SendGridConfigModel();
         JwtConfigSettings = new();
     }
 

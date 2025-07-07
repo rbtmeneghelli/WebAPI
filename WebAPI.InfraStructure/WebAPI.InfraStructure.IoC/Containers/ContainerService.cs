@@ -327,7 +327,7 @@ public static class ContainerService
             }
             opt.KafkaSettings = JsonSerializer.Deserialize<KafkaModel>(data["WebAPI_Kafka"]);
             opt.ServiceBusSettings = JsonSerializer.Deserialize<ServiceBusSettings>(data["WebAPI_ServiceBus"]);
-            opt.SendGridSettings = JsonSerializer.Deserialize<SendGridModel>(data["WebAPI_SendGrid"]);
+            opt.SendGridSettings = JsonSerializer.Deserialize<SendGridConfigModel>(data["WebAPI_SendGrid"]);
             Enum.TryParse(data["WebAPI_Environment"], out EnumEnvironment environment);
             opt.Environment = environment;
             opt.JwtConfigSettings = JsonSerializer.Deserialize<JwtConfigModel>(data["WebAPI_Token"]);
