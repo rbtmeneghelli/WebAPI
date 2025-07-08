@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 using FastPackForShare.Controllers.Generics;
+using Microsoft.AspNetCore.Authentication.BearerToken;
 
 namespace WebAPI.V1.Controllers;
 
@@ -44,6 +46,34 @@ public sealed class AccountController : GenericController
             NotificationError("Autenticações de usuário são invalidas");
             return CustomResponse(ConstantHttpStatusCode.BAD_REQUEST_CODE);
         }
+    }
+
+    /// <summary>
+    /// Em caso de uso desse enpoint, deve-se registrar os serviços da classe ContainerFPFSwaggerOptional
+    /// Os demais serviços relacionados ao swagger, desativa-los.
+    /// </summary>
+    /// <param name="authenticationModel"></param>
+    /// <returns></returns>
+    [HttpPost("login-optional-swagger")]
+    [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomValidResponseTypeModel<object>))]
+    public async Task<IActionResult> LoginOptionalSwagger([FromBody] AuthenticationModel authenticationModel)
+    {
+        var claims = new[]
+        {
+            new Claim("Id", authenticationModel.Id.ToString()),
+            new Claim(ClaimTypes.Name, authenticationModel.Login ?? string.Empty),
+            new Claim("profile", authenticationModel.Profile ?? string.Empty),
+            new Claim(ClaimTypes.Role, string.Join(",", authenticationModel.Roles ?? Enumerable.Empty<Claim>().ToList())),
+            new Claim("access_date", authenticationModel.AccessDate.ToString("yyyy-MM-dd")),
+            new Claim("access_time", authenticationModel.AccessDate.ToString("HH:mm:ss"))
+        };
+
+        var claimsIdentity = new ClaimsIdentity(claims, BearerTokenDefaults.AuthenticationScheme);
+        var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+        await Task.CompletedTask;
+
+        return SignIn(claimsPrincipal);
     }
 
     [HttpPost("confirmLogin")]
