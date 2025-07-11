@@ -1,4 +1,6 @@
 ﻿using System.Security.Claims;
+using System.Threading.RateLimiting;
+using FastPackForShare;
 using FastPackForShare.Controllers.Generics;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 
@@ -12,6 +14,19 @@ public sealed class AccountController : GenericController
     private readonly IGeneralService _iGeneralService;
     private readonly IGenericUnitOfWorkService _iGenericUnitOfWorkService;
     private readonly IUserLoggedService _iUserLoggedService;
+    private static readonly PartitionedRateLimiter<string> _limiter =
+    PartitionedRateLimiter.Create<string, string>(_ =>
+        RateLimitPartition.GetTokenBucketLimiter(
+            partitionKey: "default",
+            factory: _ => new TokenBucketRateLimiterOptions
+            {
+                TokenLimit = 1,
+                TokensPerPeriod = 1,
+                ReplenishmentPeriod = TimeSpan.FromSeconds(120),
+                QueueLimit = 0,
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                AutoReplenishment = true
+            }));
 
     public AccountController(
         IGeneralService iGeneralService,
@@ -111,6 +126,15 @@ public sealed class AccountController : GenericController
     [HttpPost("changePassword")]
     public async Task<IActionResult> ChangePassword([FromBody, Required] User user)
     {
+        #region Validação para habilitar o uso desse endpoint, após primeira solicitação
+
+        using var lease = await _limiter.AcquireAsync("default");
+
+        if (!lease.IsAcquired)
+            return CustomResponse(new CustomResponseModel(ConstantHttpStatusCode.BAD_REQUEST_CODE, "Método já executado. Tente novamente após 120 segundos."));
+
+        #endregion
+
         if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
 
         var result = await _iGenericUnitOfWorkService.AccountService.ChangePasswordAsync(_iUserLoggedService.UserId, user);
