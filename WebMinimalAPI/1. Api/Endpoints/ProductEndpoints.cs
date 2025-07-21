@@ -1,4 +1,6 @@
-﻿using WebMinimalAPI._2._Application.Interfaces;
+﻿using FluentValidation;
+using WebMinimalAPI._2._Application.DTOS;
+using WebMinimalAPI._2._Application.Interfaces;
 
 namespace WebMinimalAPI._1._Api.Endpoints;
 
@@ -6,31 +8,44 @@ public static class ProductEndpoints
 {
     public static void Map(WebApplication app)
     {
-        app.MapPost("/products", async (string name, IProductService uc) =>
-        {
-            await uc.CreateAsync(name);
-            return Results.Created($"/products/{name}", new { name });
-        });
+        var productApi = app.MapGroup("/products").WithTags("Products");
 
-        app.MapGet("/products", async (IProductService uc) =>
+        productApi.MapPost("/", async (
+                    ProductDTO dto,
+                    IValidator<ProductDTO> validator,
+                    IProductService uc) =>
+        {
+            var validation = await validator.ValidateAsync(dto);
+            if (!validation.IsValid)
+                return Results.ValidationProblem(validation.ToDictionary());
+
+            await uc.CreateAsync(dto.Name);
+            return Results.Created($"/products/{dto.Name}", dto);
+        })
+        .WithSummary("Cria um novo produto")
+        .WithDescription("Endpoint para criar produto com validação de entrada.")
+        .Produces(201)
+        .ProducesValidationProblem();
+
+        productApi.MapGet("/", async (IProductService uc) =>
         {
             var list = await uc.GetByIdAsync(Guid.Empty); // simula recuperar todos via repository internamente
             return Results.Ok(list);
         });
 
-        app.MapGet("/products/{id:guid}", async (Guid id, IProductService uc) =>
+        productApi.MapGet("/{id:guid}", async (Guid id, IProductService uc) =>
         {
             var p = await uc.GetByIdAsync(id);
             return p is not null ? Results.Ok(p) : Results.NotFound();
         });
 
-        app.MapPut("/products/{id:guid}", async (Guid id, string name, IProductService uc) =>
+        productApi.MapPut("/{id:guid}", async (Guid id, string name, IProductService uc) =>
         {
             await uc.UpdateAsync(id, name);
             return Results.NoContent();
         });
 
-        app.MapDelete("/products/{id:guid}", async (Guid id, IProductService uc) =>
+        productApi.MapDelete("/{id:guid}", async (Guid id, IProductService uc) =>
         {
             await uc.DeleteAsync(id);
             return Results.NoContent();

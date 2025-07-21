@@ -1,4 +1,4 @@
-﻿namespace WebMinimalAPI_Aot._3._Domain.Entities;
+﻿namespace WebMinimalAPI._3._Domain.Entities;
 
 public class Product
 {

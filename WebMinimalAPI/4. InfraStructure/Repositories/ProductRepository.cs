@@ -1,7 +1,7 @@
-﻿using WebMinimalAPI_Aot._2._Application.Interfaces;
-using WebMinimalAPI_Aot._3._Domain.Entities;
+﻿using WebMinimalAPI._2._Application.Interfaces;
+using WebMinimalAPI._3._Domain.Entities;
 
-namespace WebMinimalAPI_Aot._4._InfraStructure.Repositories;
+namespace WebMinimalAPI._4._InfraStructure.Repositories;
 
 public sealed class ProductRepository : IProductRepository
 {

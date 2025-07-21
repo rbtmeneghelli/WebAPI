@@ -1,5 +1,4 @@
 ﻿using WebMinimalAPI._2._Application.Interfaces;
-using WebMinimalAPI_Aot._2._Application.Interfaces;
 
 namespace WebMinimalAPI._1._Api.Endpoints;
 

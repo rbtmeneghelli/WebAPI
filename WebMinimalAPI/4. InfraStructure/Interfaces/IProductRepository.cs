@@ -1,6 +1,6 @@
-﻿using WebMinimalAPI_Aot._3._Domain.Entities;
+﻿using WebMinimalAPI._3._Domain.Entities;
 
-namespace WebMinimalAPI_Aot._2._Application.Interfaces;
+namespace WebMinimalAPI._2._Application.Interfaces;
 
 public interface IProductRepository
 {

@@ -2,7 +2,7 @@
 
 namespace WebMinimalAPI._2._Application.Services;
 
-public class FileService : IFileService
+public sealed class FileService : IFileService
 {
     private readonly string _folder = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
 

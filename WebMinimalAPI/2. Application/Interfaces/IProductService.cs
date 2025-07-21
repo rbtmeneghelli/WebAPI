@@ -1,4 +1,4 @@
-﻿using WebMinimalAPI_Aot._3._Domain.Entities;
+﻿using WebMinimalAPI._3._Domain.Entities;
 
 namespace WebMinimalAPI._2._Application.Interfaces;
 
