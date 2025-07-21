@@ -1,3 +1,4 @@
+using WebMinimalAPI._1._Api;
 using WebMinimalAPI._1._Api.Endpoints;
 using WebMinimalAPI._4._InfraStructure;
 
@@ -21,6 +22,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
 ProductEndpoints.Map(app);
 FileEndpoints.Map(app);
