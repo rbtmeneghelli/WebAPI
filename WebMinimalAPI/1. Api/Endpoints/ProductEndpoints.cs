@@ -50,5 +50,17 @@ public static class ProductEndpoints
             await uc.DeleteAsync(id);
             return Results.NoContent();
         });
+
+        productApi.MapGet("/private", async () =>
+        {
+            return Results.NotFound();
+        })
+        .RequireAuthorization();
+
+        productApi.MapGet("/public", async () =>
+        {
+            return Results.NotFound();
+        })
+        .AllowAnonymous();
     }
 }
