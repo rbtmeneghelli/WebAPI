@@ -52,6 +52,7 @@ public static class ContainerSwagger
                 Contact = new OpenApiContact() { Name = "Dev", Email = "dev@test.com.br" },
                 License = new OpenApiLicense() { Name = "MIT", Url = new Uri("https://opensource.org/licenses/MIT") }
             });
+
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
                 In = ParameterLocation.Header,
@@ -61,6 +62,7 @@ public static class ContainerSwagger
                 Type = SecuritySchemeType.ApiKey,
                 BearerFormat = "JWT"
             });
+
             c.AddSecurityRequirement(new OpenApiSecurityRequirement {
                 { new OpenApiSecurityScheme
                     {
@@ -73,7 +75,10 @@ public static class ContainerSwagger
                     new string[] { }
                 }
             });
+
             c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "WebAPI.xml"));
+
+            c.OperationFilter<SwaggerDefaultValues>();
         });
     }
 
@@ -418,6 +423,10 @@ public class SwaggerDefaultValues : IOperationFilter
 {
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {
+        bool isAnonymous = context.MethodInfo.GetCustomAttributes(true).OfType<AllowAnonymousAttribute>().Any();
+        bool isProtected = context.MethodInfo.GetCustomAttributes(true).OfType<AuthorizeAttribute>().Any() ||
+                           context.MethodInfo.DeclaringType.GetCustomAttributes(true).OfType<AuthorizeAttribute>().Any();
+
         int[] arrHttpStatusCode = [
             ConstantHttpStatusCode.BAD_REQUEST_CODE,
             ConstantHttpStatusCode.UNAUTHORIZED_CODE,
@@ -465,6 +474,11 @@ public class SwaggerDefaultValues : IOperationFilter
             }
 
             parameter.Required |= !routeInfo.IsOptional;
+
+            if (isProtected)
+            {
+                operation.Summary = $"(Requer Token Autenticação)";
+            }
         }
     }
 }
