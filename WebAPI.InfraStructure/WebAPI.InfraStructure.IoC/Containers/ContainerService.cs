@@ -48,6 +48,9 @@ using WebAPI.Domain.Interfaces.Services.Charts;
 using FastPackForShare.Extensions;
 using FastPackForShare.Models;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using WebAPI.Domain.Entities.ControlPanel;
 
 namespace WebAPI.InfraStructure.IoC.Containers;
 
@@ -152,7 +155,7 @@ public static class ContainerService
         .AddScoped(typeof(IGenericReadRepository<>), typeof(GenericReadRepository<>))
         .AddScoped(typeof(IGenericWriteRepository<>), typeof(GenericWriteRepository<>))
         .AddScoped(typeof(IGenericReadDapperRepository<>), typeof(GenericReadDapperRepository<>))
-        .AddScoped<IGenericWriteDapperRepository,GenericWriteDapperRepository>()
+        .AddScoped<IGenericWriteDapperRepository, GenericWriteDapperRepository>()
         .AddTransient(typeof(IRabbitMQService<>), typeof(RabbitMQService<>));
 
         #endregion
@@ -424,5 +427,40 @@ public static class ContainerService
     {
         var myAssembly = AppDomain.CurrentDomain.Load("WebAPI.Domain");
         services.AddValidatorsFromAssembly(myAssembly);
+    }
+
+    /// <summary>
+    /// O metodo UseAsyncSeeding está disponivel, a partir do EF Core 9 somente!
+    /// </summary>
+    /// <typeparam name="TContext"></typeparam>
+    /// <param name="services"></param>
+    /// <param name="connectionString"></param>
+    public static void RegisterDbConnectionWithSeedData<TContext>(this IServiceCollection services, string connectionString) where TContext : DbContext
+    {
+        services.AddDbContextFactory<TContext>(delegate (DbContextOptionsBuilder opts)
+        {
+            opts.UseSqlServer(connectionString, delegate (SqlServerDbContextOptionsBuilder b)
+            {
+                b.MinBatchSize(5).MaxBatchSize(50).MigrationsAssembly(typeof(TContext).Assembly.FullName);
+            }).LogTo(Console.WriteLine, new EventId[1] { RelationalEventId.CommandExecuting }).EnableSensitiveDataLogging();
+        });
+
+        services
+        .AddDbContext<TContext>(delegate (DbContextOptionsBuilder opts)
+        {
+            opts.UseSqlServer(connectionString, delegate (SqlServerDbContextOptionsBuilder b)
+            {
+                b.MinBatchSize(5).MaxBatchSize(50).MigrationsAssembly(typeof(TContext).Assembly.FullName);
+            }).LogTo(Console.WriteLine, new EventId[1] { RelationalEventId.CommandExecuting }).EnableSensitiveDataLogging();
+
+            opts.UseAsyncSeeding((async (dbContext, _, cancellationToken) =>
+            {
+                if (!await dbContext.Set<Client>().AnyAsync(cancellationToken))
+                {
+                    dbContext.Set<Client>().AddRange(Enumerable.Empty<Client>());
+                    await dbContext.SaveChangesAsync(cancellationToken);
+                }
+            }));
+        });
     }
 }
