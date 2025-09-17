@@ -4,6 +4,7 @@ using WebAPI.Domain.Entities.ControlPanel;
 using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.Interfaces.Generic;
 using FastPackForShare.Extensions;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace WebAPI.InfraStructure.Data.Repositories.ControlPanel;
 
@@ -120,6 +121,8 @@ public class UserRepository : IUserRepository
                     }).ToListAsync();
     }
 
+    #region Aplicação do LEFT ou RIGHT JOIN, ANTES DO NET 10
+
     public async Task<IEnumerable<User>> UserProfileLeftJoinLinq()
     {
         return await (from _user in _iUserReadRepository.GetAll()
@@ -147,6 +150,44 @@ public class UserRepository : IUserRepository
                           Login = _userEmployeeResult.Login,
                       }).ToListAsync();
     }
+
+    #endregion
+
+    #region Aplicação do LEFT ou RIGHT JOIN, A PARTIR DO NET 10
+
+    public async Task<IEnumerable<User>> UserProfileLeftJoinLinqNET10()
+    {
+        var userSet = _iUserReadRepository.GetAll();
+        var employeeSet = _iEmployeeReadRepository.GetAll();
+
+        var query = await Task.FromResult(userSet
+                                          .LeftJoin(
+                                          employeeSet,
+                                          _user => _user.Id,
+                                          _employee => _employee.IdUser,
+                                          (_user, _employee) => new User { Id = _user.Id, Login = _user.Login }
+                                          ));
+
+        return query?.ToList() ?? Enumerable.Empty<User>();
+    }
+
+    public async Task<IEnumerable<User>> UserProfileRightJoinLinqNET10()
+    {
+        var userSet = _iUserReadRepository.GetAll();
+        var employeeSet = _iEmployeeReadRepository.GetAll();
+
+        var query = await Task.FromResult(employeeSet
+                                          .RightJoin(
+                                          userSet,
+                                          _employee => _employee.IdUser,
+                                          _user => _user.Id,
+                                          (_employee, _user) => new User { Id = _user?.Id, Login = _user?.Login }
+                                          ));
+
+        return query?.ToList() ?? Enumerable.Empty<User>();
+    }
+
+    #endregion
 
     public async Task<IEnumerable<User>> UserProfileFullJoinLinq()
     {
