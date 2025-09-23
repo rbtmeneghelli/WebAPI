@@ -1,4 +1,7 @@
-﻿using WebMinimalAPI._2._Application.Interfaces;
+﻿using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Net.Http.Headers;
+using System.IO.Pipelines;
+using WebMinimalAPI._2._Application.Interfaces;
 
 namespace WebMinimalAPI._1._Api.Endpoints;
 
@@ -29,5 +32,36 @@ public static class FileEndpoints
             var (stream, contentType) = await fs.GetFileAsync(product.FileName);
             return Results.File(stream, contentType, product.FileName);
         });
+
+        // Esse endpoint com IFormFile é recomendado para upload de arquivos até 100mb
+        app.MapPost("/upload/smallfiles", async (IFormFile file, IFileService fs) =>
+        {
+            await fs.SaveFileAsync(file);
+            return Results.Ok("Upload concluído!");
+        });
+
+        app.MapPost("/upload/bigfiles/pipereader", async (HttpRequest request, IFileService fs) =>
+        {
+            PipeReader reader = request.BodyReader;
+            await fs.SaveFileAsync(reader);
+            return Results.Ok(new { Mensagem = "Upload concluído com sucesso!" });
+        });
+
+        app.MapPost("/upload/bigfiles", async (HttpRequest request, IFileService fs) =>
+        {
+            if (!request.HasFormContentType ||
+                !MediaTypeHeaderValue.TryParse(request.ContentType, out var mediaType) ||
+                string.IsNullOrEmpty(mediaType.Boundary.Value))
+            {
+                return Results.BadRequest("Content-Type inválido.");
+            }
+
+            var reader = new MultipartReader(mediaType.Boundary.Value, request.BodyReader.AsStream());
+            await fs.SaveFileAsync(reader);
+
+            return Results.Ok("Upload concluído!");
+        });
+
+        app.Run();
     }
 }

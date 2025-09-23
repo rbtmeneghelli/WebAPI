@@ -1,6 +1,9 @@
 ﻿using FluentValidation;
+using System.IO.Pipelines;
+using System.Text.Json;
 using WebMinimalAPI._2._Application.DTOS;
 using WebMinimalAPI._2._Application.Interfaces;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace WebMinimalAPI._1._Api.Endpoints;
 
@@ -62,5 +65,27 @@ public static class ProductEndpoints
             return Results.NotFound();
         })
         .AllowAnonymous();
+
+        //// Processamento JSON de alto desempenho no ASP.NET Core
+        // O suporte a PipeReader no System.Text.Json é um divisor de águas para aplicações ASP.NET Core. Ele reduz alocações de memória e melhora o desempenho em cargas grandes:
+        // Ideal para trabalhar com mensageria ou fluxo de alto volume de dados que sao trafegados constantemente!
+        productApi.MapPost("/create", async (
+            PipeReader pipeReader,
+            IValidator<ProductDTO> validator,
+            IProductService uc) =>
+        {
+            // var dto = await JsonSerializer.DeserializeAsync<ProductDTO>(pipeReader);
+
+            //var validation = await validator.ValidateAsync(dto);
+            //if (!validation.IsValid)
+            //    return Results.ValidationProblem(validation.ToDictionary());
+
+            //await uc.CreateAsync(dto.Name);
+            //return Results.Created($"/products/{dto.Name}", dto);
+        })
+        .WithSummary("Cria um novo produto com PipeReader")
+        .WithDescription("Endpoint para criar produto com validação de entrada.")
+        .Produces(201)
+        .ProducesValidationProblem();
     }
 }
