@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.Interfaces.Services;
-using WebAPI.Domain.Interfaces.Services.Tools;
+using WebAPI.Domain.Interfaces.Services.Common;
 
 namespace TestsWebAPI.Controllers.Generic;
 

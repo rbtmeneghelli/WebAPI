@@ -1,6 +1,6 @@
-﻿using WebAPI.Domain.Interfaces.Services.Tools;
+﻿using WebAPI.Domain.Interfaces.Services.Common;
 
-namespace WebAPI.Application.Services.Tools;
+namespace WebAPI.Application.Services.Common;
 
 public sealed class TwilioService : BaseHandlerService, ITwilioService
 {

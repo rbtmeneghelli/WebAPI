@@ -2,9 +2,9 @@
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
-using WebAPI.Domain.Interfaces.Services.Tools;
+using WebAPI.Domain.Interfaces.Services.Common;
 
-namespace WebAPI.Application.Services.Tools;
+namespace WebAPI.Application.Services.Common;
 
 public sealed class GeneralLogService : IGeneralLogService
 {

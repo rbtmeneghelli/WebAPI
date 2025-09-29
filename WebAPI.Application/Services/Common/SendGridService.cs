@@ -1,9 +1,9 @@
 ﻿using SendGrid;
 using SendGrid.Helpers.Mail;
 using WebAPI.Domain.Interfaces.Factory;
-using ISendGridService = WebAPI.Domain.Interfaces.Services.Tools.ISendGridService;
+using ISendGridService = WebAPI.Domain.Interfaces.Services.Common.ISendGridService;
 
-namespace WebAPI.Application.Services.Tools;
+namespace WebAPI.Application.Services.Common;
 
 public sealed class SendGridService : BaseHandlerService, ISendGridService
 {

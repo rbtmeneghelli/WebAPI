@@ -1,8 +1,8 @@
 ﻿using System.Text.Json;
 using WebAPI.Domain.Constants;
-using WebAPI.Domain.Interfaces.Services.Tools;
+using WebAPI.Domain.Interfaces.Services.Common;
 
-namespace WebAPI.Application.Services.Tools;
+namespace WebAPI.Application.Services.Common;
 
 public sealed class FirebaseService : BaseHandlerService, IFirebaseService
 {

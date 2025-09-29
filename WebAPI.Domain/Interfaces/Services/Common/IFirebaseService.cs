@@ -1,6 +1,6 @@
 ﻿using WebAPI.Domain.Models;
 
-namespace WebAPI.Domain.Interfaces.Services.Tools;
+namespace WebAPI.Domain.Interfaces.Services.Common;
 
 public interface IFirebaseService : IDisposable
 {

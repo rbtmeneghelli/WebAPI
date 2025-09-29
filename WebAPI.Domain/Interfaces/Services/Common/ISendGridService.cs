@@ -1,6 +1,6 @@
 ﻿using SendGrid.Helpers.Mail;
 
-namespace WebAPI.Domain.Interfaces.Services.Tools;
+namespace WebAPI.Domain.Interfaces.Services.Common;
 
 public interface ISendGridService : IDisposable
 {

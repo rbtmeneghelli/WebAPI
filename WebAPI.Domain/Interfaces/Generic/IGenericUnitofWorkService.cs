@@ -1,7 +1,7 @@
 ﻿using FastPackForShare.Interfaces;
 using WebAPI.Domain.Interfaces.Services;
 using WebAPI.Domain.Interfaces.Services.Configuration;
-using WebAPI.Domain.Interfaces.Services.Tools;
+using WebAPI.Domain.Interfaces.Services.Common;
 
 namespace WebAPI.Domain.Interfaces.Repository;
 

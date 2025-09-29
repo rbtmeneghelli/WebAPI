@@ -155,37 +155,37 @@ public class UserRepository : IUserRepository
 
     #region Aplicação do LEFT ou RIGHT JOIN, A PARTIR DO NET 10
 
-    public async Task<IEnumerable<User>> UserProfileLeftJoinLinqNET10()
-    {
-        var userSet = _iUserReadRepository.GetAll();
-        var employeeSet = _iEmployeeReadRepository.GetAll();
+    //public async Task<IEnumerable<User>> UserProfileLeftJoinLinqNET10()
+    //{
+    //    var userSet = _iUserReadRepository.GetAll();
+    //    var employeeSet = _iEmployeeReadRepository.GetAll();
 
-        var query = await Task.FromResult(userSet
-                                          .LeftJoin(
-                                          employeeSet,
-                                          _user => _user.Id,
-                                          _employee => _employee.IdUser,
-                                          (_user, _employee) => new User { Id = _user.Id, Login = _user.Login }
-                                          ));
+    //    var query = await Task.FromResult(userSet
+    //                                      .LeftJoin(
+    //                                      employeeSet,
+    //                                      _user => _user.Id,
+    //                                      _employee => _employee.IdUser,
+    //                                      (_user, _employee) => new User { Id = _user.Id, Login = _user.Login }
+    //                                      ));
 
-        return query?.ToList() ?? Enumerable.Empty<User>();
-    }
+    //    return query?.ToList() ?? Enumerable.Empty<User>();
+    //}
 
-    public async Task<IEnumerable<User>> UserProfileRightJoinLinqNET10()
-    {
-        var userSet = _iUserReadRepository.GetAll();
-        var employeeSet = _iEmployeeReadRepository.GetAll();
+    //public async Task<IEnumerable<User>> UserProfileRightJoinLinqNET10()
+    //{
+    //    var userSet = _iUserReadRepository.GetAll();
+    //    var employeeSet = _iEmployeeReadRepository.GetAll();
 
-        var query = await Task.FromResult(employeeSet
-                                          .RightJoin(
-                                          userSet,
-                                          _employee => _employee.IdUser,
-                                          _user => _user.Id,
-                                          (_employee, _user) => new User { Id = _user?.Id, Login = _user?.Login }
-                                          ));
+    //    var query = await Task.FromResult(employeeSet
+    //                                      .RightJoin(
+    //                                      userSet,
+    //                                      _employee => _employee.IdUser,
+    //                                      _user => _user.Id,
+    //                                      (_employee, _user) => new User { Id = _user?.Id, Login = _user?.Login }
+    //                                      ));
 
-        return query?.ToList() ?? Enumerable.Empty<User>();
-    }
+    //    return query?.ToList() ?? Enumerable.Empty<User>();
+    //}
 
     #endregion
 

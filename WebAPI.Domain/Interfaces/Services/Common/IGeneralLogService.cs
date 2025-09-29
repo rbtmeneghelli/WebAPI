@@ -1,6 +1,6 @@
 ﻿using WebAPI.Domain.Enums;
 
-namespace WebAPI.Domain.Interfaces.Services.Tools;
+namespace WebAPI.Domain.Interfaces.Services.Common;
 
 public interface IGeneralLogService
 {
