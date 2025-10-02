@@ -22,6 +22,7 @@ using FastPackForShare.Extensions;
 using FastPackForShare.Cryptography;
 using FastPackForShare.Constants;
 using FastPackForShare.Models;
+using FastPackForShare.Enums;
 
 namespace WebAPI.InfraStructure.IoC.Containers;
 
@@ -79,6 +80,12 @@ public static class ContainerSwagger
             c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "WebAPI.xml"));
 
             c.OperationFilter<SwaggerDefaultValues>();
+
+            c.MapType<EnumStatus>(() => new OpenApiSchema
+            {
+                Type = "string",
+                Enum = Enum.GetNames(typeof(EnumStatus)).Select(x => (IOpenApiAny)new OpenApiString(x)).ToList()
+            });
         });
     }
 
@@ -370,6 +377,12 @@ public static class ContainerSwagger
                     },
                     new[] { "openid", "profile", "email" }
                 }
+            });
+
+            options.MapType<EnumStatus>(() => new OpenApiSchema
+            {
+                Type = "string",
+                Enum = Enum.GetNames(typeof(EnumStatus)).Select(x => (IOpenApiAny)new OpenApiString(x)).ToList()
             });
         });
     }

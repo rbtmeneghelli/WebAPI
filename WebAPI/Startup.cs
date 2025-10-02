@@ -65,7 +65,7 @@ public class Startup
         ContainerFastPackForShareServices.RegisterCors(services, environmentVariables.CorsSettings,"APICORS");
         ContainerFastPackForShareServices.RegisterHttpClient(services);
         ContainerFastPackForShareServices.RegisterHttpContextAccessor(services);
-        ContainerFastPackForShareServices.RegisterProblemDetails(services);
+        ContainerFastPackForShareServices.RegisterGlobalExceptionHandler(services);
         ContainerFastPackForShareServices.RegisterMemoryCache(services);
         ContainerFastPackForShareServices.RegisterMediator(services, "WebAPI.Application");
         ContainerFastPackForShareServices.RegisterSimpleMediator(services, "WebAPI.Application");

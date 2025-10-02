@@ -1,10 +1,12 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using WebAPI_VerticalSlice.Features.Products;
 using WebAPI_VerticalSlice.InfraStructure.Context;
+using WebAPI_VerticalSliceArc.Domain.Enum;
 using WebAPI_VerticalSliceArc.Domain.Generics;
 using WebAPI_VerticalSliceArc.Domain.Generics.Interfaces;
 using WebAPI_VerticalSliceArc.Features.Products;
@@ -35,6 +37,12 @@ namespace WebAPI_VerticalSliceArc
                 {
                     Title = "Vertical Slice API",
                     Version = "v1"
+                });
+
+                p.MapType<EnumTicketDescount>(() => new OpenApiSchema
+                {
+                    Type = "string",
+                    Enum = Enum.GetNames(typeof(EnumTicketDescount)).Select(x => (IOpenApiAny)new OpenApiString(x)).ToList()
                 });
             });
 

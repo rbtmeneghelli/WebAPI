@@ -6,6 +6,7 @@ using FastPackForShare.Enums;
 using WebAPI.Domain.Entities.ControlPanel;
 using static System.Net.WebRequestMethods;
 using System.Text.Json;
+using FastPackForShare.Helpers;
 
 namespace WebAPI.Application.Services;
 
@@ -75,7 +76,7 @@ public sealed class GeneralService : BaseHandlerService, IGeneralService
     public async Task<MemoryStream> Export2ZipAsync(string directory, EnumFile typeFile = EnumFile.Pdf)
     {
         List<string> archives = new List<string>();
-        var memoryStreamResult = SharedExtension.GetMemoryStreamType(typeFile);
+        var memoryStreamResult = HelperFile.GetMemoryStreamType(typeFile);
         int count = 0;
 
         foreach (string arquivo in Directory.GetFiles(directory, $"*.{memoryStreamResult.Type}"))

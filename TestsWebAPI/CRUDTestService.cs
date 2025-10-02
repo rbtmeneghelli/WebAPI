@@ -9,7 +9,7 @@ using Moq.AutoMock;
 using WebAPI.Application.Services;
 using WebAPI.Domain.DTO.ControlPanel;
 using WebAPI.Domain.Entities.ControlPanel;
-using WebAPI.Domain.Filters.ControlPanel;
+using WebAPI.Domain.Filters.ControlPanel.Users;
 using WebAPI.Domain.Interfaces.Repository;
 
 namespace TestsWebAPI;
@@ -239,7 +239,7 @@ public sealed class CRUDTestService
     public async Task GetAllUserPaginateAsync()
     {
         // Arrange 
-        UserFilter userFilter = new UserFilter
+        UserPaginateFilter userFilter = new UserPaginateFilter
         {
             IsActive = true,
             PageIndex = 0,

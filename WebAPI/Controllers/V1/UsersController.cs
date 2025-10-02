@@ -1,8 +1,9 @@
 ﻿using WebAPI.Domain.DTO.ControlPanel;
-using WebAPI.Domain.Filters.ControlPanel;
 using FastPackForShare.Controllers.Generics;
 using FastPackForShare.Enums;
 using FastPackForShare.Default;
+using WebAPI.Domain.Filters.ControlPanel.Users;
+using FastPackForShare.Helpers;
 
 namespace WebAPI.V1.Controllers;
 
@@ -37,7 +38,7 @@ public sealed class UsersController : GenericController
 
     [HttpPost("GetAllPaginate")]
     [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomValidResponseTypeModel<BasePagedResultModel<UserResponseDTO>>))]
-    public async Task<IActionResult> GetAllPaginate([FromBody, Required] UserFilter userFilter)
+    public async Task<IActionResult> GetAllPaginate([FromBody, Required] UserPaginateFilter userFilter)
     {
         if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
         var model = await _iUserService.GetAllUserPaginateAsync(userFilter);
@@ -61,7 +62,7 @@ public sealed class UsersController : GenericController
     [HttpGet("GetByLogin/{login: string}")]
     [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomValidResponseTypeModel<UserResponseDTO>))]
     [ProducesResponseType(ConstantHttpStatusCode.NOT_FOUND_CODE, Type = typeof(CustomValidResponseTypeModel<object>))]
-    public async Task<IActionResult> GetByLogin([FromRoute, Required]  string login)
+    public async Task<IActionResult> GetByLogin([FromRoute, Required] string login)
     {
         if (await _iUserService.ExistUserByLoginAsync(login))
         {
@@ -72,11 +73,13 @@ public sealed class UsersController : GenericController
         return CustomResponse(ConstantHttpStatusCode.NOT_FOUND_CODE);
     }
 
-    [HttpGet("GetUsers")]
+    [HttpPost("GetUsers")]
     [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomValidResponseTypeModel<IEnumerable<DropDownListModel>>))]
-    public async Task<IActionResult> GetUsers()
+    public async Task<IActionResult> GetUsers([FromBody, Required] UserFilter userFilter)
     {
-        return CustomResponse(ConstantHttpStatusCode.OK_CODE, await _iUserService.GetUsersAsync(), FixConstants.SUCCESS_IN_DDL);
+        if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
+        var result = await _iUserService.GetUsersAsync(userFilter);
+        return CustomResponse(ConstantHttpStatusCode.OK_CODE, result, FixConstants.SUCCESS_IN_DDL);
     }
 
 
@@ -165,12 +168,12 @@ public sealed class UsersController : GenericController
 
     [HttpPost("ExportData")]
     [ProducesResponseType(ConstantHttpStatusCode.OK_CODE, Type = typeof(CustomValidResponseTypeModel<object>))]
-    public async Task<IActionResult> ExportData([FromBody, Required] UserFilter filter)
+    public async Task<IActionResult> ExportData([FromBody, Required] UserPaginateFilter filter)
     {
         if (ModelStateIsInvalid()) return CustomResponseModel(ModelState);
 
         var excelData = await _iUserService.ExportData(filter);
-        var memoryStreamResult = SharedExtension.GetMemoryStreamType(EnumFile.Excel);
+        var memoryStreamResult = HelperFile.GetMemoryStreamType(EnumFile.Excel);
         var excelName = $"Users._{GuidExtension.GetGuidDigits("N")}.{memoryStreamResult.Extension}";
         var memoryStreamExcel = await _iFileWriteService.CreateExcelFileEPPLUS(excelData, excelName);
         return File(memoryStreamExcel.ToArray(), memoryStreamResult.Type, excelName);

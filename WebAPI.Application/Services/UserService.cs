@@ -1,9 +1,10 @@
 ﻿using WebAPI.Domain.Constants;
 using WebAPI.Domain.Entities.ControlPanel;
 using WebAPI.Domain.DTO.ControlPanel;
-using WebAPI.Domain.Filters.ControlPanel;
 using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.Interfaces.Services;
+using WebAPI.Domain.Filters.ControlPanel.Users;
+using FastPackForShare.Enums;
 
 namespace WebAPI.Application.Services;
 
@@ -21,7 +22,7 @@ public sealed class UserService : BaseHandlerService, IUserService
         _iMapperService = iMapperService;
     }
 
-    private IQueryable<User> GetAllUsers(UserFilter filter)
+    private IQueryable<User> GetAllUsers(UserPaginateFilter filter)
     {
         // Exemplo Utilizando SimpleFactory
         // var obj = UserFactory.GetData(EnumProfileType.Admin);
@@ -32,7 +33,7 @@ public sealed class UserService : BaseHandlerService, IUserService
             return _iUserRepository.GetAll().Include(x => x.Employee).ThenInclude(x => x.Profile).Where(GetPredicate(filter)).AsQueryable();
     }
 
-    private Expression<Func<User, bool>> GetPredicate(UserFilter filter)
+    private Expression<Func<User, bool>> GetPredicate(UserPaginateFilter filter)
     {
         if (filter.IsActive.HasValue)
             return p =>
@@ -61,7 +62,7 @@ public sealed class UserService : BaseHandlerService, IUserService
         return _iMapperService.MapEntityToDTOList<IEnumerable<User>, IEnumerable<UserResponseDTO>>(data.AsEnumerable());
     }
 
-    public async Task<BasePagedResultModel<UserResponseDTO>> GetAllUserPaginateAsync(UserFilter filter)
+    public async Task<BasePagedResultModel<UserResponseDTO>> GetAllUserPaginateAsync(UserPaginateFilter filter)
     {
         var query = GetAllUsers(filter);
 
@@ -93,14 +94,26 @@ public sealed class UserService : BaseHandlerService, IUserService
         return _iMapperService.MapEntityToDTO<User, UserResponseDTO>(data);
     }
 
-    public async Task<IEnumerable<DropDownListModel>> GetUsersAsync()
+    public async Task<IEnumerable<DropDownListModel>> GetUsersAsync(UserFilter userFilter)
     {
-        var result = _iUserRepository.FindBy(x => x.IsAuthenticated == true)
-                     .Select(x => new DropDownListModel()
-                     {
-                         Id = x.Id.Value,
-                         Description = x.Login
-                     }).AsEnumerable();
+        IQueryable<User> query = null;
+        bool? isActive = userFilter.EnumStatus.Equals(EnumStatus.Active) ? true :
+                         userFilter.EnumStatus.Equals(EnumStatus.Inactive) ? false : null;
+
+        if (userFilter.EnumStatus.Equals(EnumStatus.All))
+        {
+            query = _iUserRepository.FindBy(x => (userFilter.IsAuthenticated == null || x.IsAuthenticated == userFilter.IsAuthenticated));
+        }
+        else
+        {
+            query = _iUserRepository.FindBy(x => (userFilter.IsAuthenticated == null || x.IsAuthenticated == userFilter.IsAuthenticated) && x.IsActive == isActive);
+        }
+
+        var result = query.Select(x => new DropDownListModel()
+        {
+            Id = x.Id.Value,
+            Description = x.Login
+        }).AsEnumerable();
 
         await Task.CompletedTask;
 
@@ -219,7 +232,7 @@ public sealed class UserService : BaseHandlerService, IUserService
         return false;
     }
 
-    public async Task<IEnumerable<UserExcelDTO>> ExportData(UserFilter filter)
+    public async Task<IEnumerable<UserExcelDTO>> ExportData(UserPaginateFilter filter)
     {
         var list = await GetAllUserPaginateAsync(filter);
 

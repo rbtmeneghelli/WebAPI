@@ -1,6 +1,7 @@
 ﻿using WebAPI.Domain.DTO.Configuration;
 using FastPackForShare.Controllers.Generics;
 using FastPackForShare.Enums;
+using FastPackForShare.Helpers;
 
 namespace WebAPI.Controllers.V1.Configuration;
 
@@ -141,7 +142,7 @@ public sealed class LogSettingsController : GenericController
         var excelData = await _iGenericConfigurationService.LogSettingsService.GetAllLogSettingsExcelAsync();
         if (excelData?.Count() > 0)
         {
-            var memoryStreamResult = SharedExtension.GetMemoryStreamType(EnumFile.Excel);
+            var memoryStreamResult = HelperFile.GetMemoryStreamType(EnumFile.Excel);
             var excelName = $"LogSettings_{GuidExtension.GetGuidDigits("N")}.{memoryStreamResult.Extension}";
             var memoryStreamExcel = await _iFileWriteService.CreateExcelFileEPPLUS(excelData, excelName);
             return File(memoryStreamExcel.ToArray(), memoryStreamResult.Type, excelName);

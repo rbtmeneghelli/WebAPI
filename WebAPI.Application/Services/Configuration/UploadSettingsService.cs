@@ -4,6 +4,7 @@ using WebAPI.Domain.Entities.Configuration;
 using WebAPI.Domain.DTO.Configuration;
 using WebAPI.Domain.Interfaces.Repository.Configuration;
 using WebAPI.Domain.Interfaces.Services.Configuration;
+using FastPackForShare.Helpers;
 
 namespace WebAPI.Application.Services.Configuration;
 
@@ -95,10 +96,10 @@ public sealed class UploadSettingsService : BaseHandlerService, IUploadSettingsS
         string[] arrExtensions = layoutSettings.ImageFileContentToUpload.Split(',');
         double maxSizeFile = layoutSettings.MaxImageFileSize;
 
-        bool LogoWebValidation = SharedExtension.ValidateFile(uploadSettingsCreateRequestDTO.LogoWeb, arrExtensions, maxSizeFile);
-        bool LogoMobileValidation = SharedExtension.ValidateFile(uploadSettingsCreateRequestDTO.LogoMobile, arrExtensions, maxSizeFile);
-        bool BannerWebValidation = SharedExtension.ValidateFile(uploadSettingsCreateRequestDTO.BannerWeb, arrExtensions, maxSizeFile);
-        bool BannerMobileValidation = SharedExtension.ValidateFile(uploadSettingsCreateRequestDTO.BannerMobile, arrExtensions, maxSizeFile);
+        bool LogoWebValidation = HelperFile.ValidateFile(uploadSettingsCreateRequestDTO.LogoWeb, arrExtensions, maxSizeFile);
+        bool LogoMobileValidation = HelperFile.ValidateFile(uploadSettingsCreateRequestDTO.LogoMobile, arrExtensions, maxSizeFile);
+        bool BannerWebValidation = HelperFile.ValidateFile(uploadSettingsCreateRequestDTO.BannerWeb, arrExtensions, maxSizeFile);
+        bool BannerMobileValidation = HelperFile.ValidateFile(uploadSettingsCreateRequestDTO.BannerMobile, arrExtensions, maxSizeFile);
 
         if (!LogoWebValidation)
         {
@@ -124,10 +125,10 @@ public sealed class UploadSettingsService : BaseHandlerService, IUploadSettingsS
             return false;
         }
 
-        byte[] arrLogoWeb = await SharedExtension.SetFileToByteArray(uploadSettingsCreateRequestDTO.LogoWeb);
-        byte[] arrLogoMobile = await SharedExtension.SetFileToByteArray(uploadSettingsCreateRequestDTO.LogoMobile);
-        byte[] arrBannerWeb = await SharedExtension.SetFileToByteArray(uploadSettingsCreateRequestDTO.BannerWeb);
-        byte[] arrBannerMobile = await SharedExtension.SetFileToByteArray(uploadSettingsCreateRequestDTO.BannerMobile);
+        byte[] arrLogoWeb = await HelperFile.SetFileToByteArray(uploadSettingsCreateRequestDTO.LogoWeb);
+        byte[] arrLogoMobile = await HelperFile.SetFileToByteArray(uploadSettingsCreateRequestDTO.LogoMobile);
+        byte[] arrBannerWeb = await HelperFile.SetFileToByteArray(uploadSettingsCreateRequestDTO.BannerWeb);
+        byte[] arrBannerMobile = await HelperFile.SetFileToByteArray(uploadSettingsCreateRequestDTO.BannerMobile);
 
         UploadSettings uploadSettings = new UploadSettings()
         {
@@ -171,25 +172,25 @@ public sealed class UploadSettingsService : BaseHandlerService, IUploadSettingsS
                     string[] arrExtensions = layoutSettings.ImageFileContentToUpload.Split(',');
                     double maxSizeFile = layoutSettings.MaxImageFileSize;
 
-                    bool existLogoWeb = SharedExtension.ExistFile(uploadSettingsUpdateRequestDTO.LogoWeb);
-                    bool existLogoMobile = SharedExtension.ExistFile(uploadSettingsUpdateRequestDTO.LogoMobile);
-                    bool existBannerWeb = SharedExtension.ExistFile(uploadSettingsUpdateRequestDTO.BannerWeb);
-                    bool existBannerMobile = SharedExtension.ExistFile(uploadSettingsUpdateRequestDTO.BannerMobile);
+                    bool existLogoWeb = HelperFile.ExistFile(uploadSettingsUpdateRequestDTO.LogoWeb);
+                    bool existLogoMobile = HelperFile.ExistFile(uploadSettingsUpdateRequestDTO.LogoMobile);
+                    bool existBannerWeb = HelperFile.ExistFile(uploadSettingsUpdateRequestDTO.BannerWeb);
+                    bool existBannerMobile = HelperFile.ExistFile(uploadSettingsUpdateRequestDTO.BannerMobile);
 
                     bool LogoWebValidation = existLogoWeb ?
-                                             SharedExtension.ValidateFile(uploadSettingsUpdateRequestDTO.LogoWeb, arrExtensions, maxSizeFile) :
+                                             HelperFile.ValidateFile(uploadSettingsUpdateRequestDTO.LogoWeb, arrExtensions, maxSizeFile) :
                                              true;
 
                     bool LogoMobileValidation = existLogoMobile ?
-                                                 SharedExtension.ValidateFile(uploadSettingsUpdateRequestDTO.LogoMobile, arrExtensions, maxSizeFile) :
+                                                 HelperFile.ValidateFile(uploadSettingsUpdateRequestDTO.LogoMobile, arrExtensions, maxSizeFile) :
                                                 true;
 
                     bool BannerWebValidation = existBannerWeb ?
-                                                SharedExtension.ValidateFile(uploadSettingsUpdateRequestDTO.BannerWeb, arrExtensions, maxSizeFile) :
+                                                HelperFile.ValidateFile(uploadSettingsUpdateRequestDTO.BannerWeb, arrExtensions, maxSizeFile) :
                                                true;
 
                     bool BannerMobileValidation = existBannerMobile ?
-                                                   SharedExtension.ValidateFile(uploadSettingsUpdateRequestDTO.BannerMobile, arrExtensions, maxSizeFile) :
+                                                   HelperFile.ValidateFile(uploadSettingsUpdateRequestDTO.BannerMobile, arrExtensions, maxSizeFile) :
                                                   true;
 
                     if (!LogoWebValidation)
@@ -307,7 +308,7 @@ public sealed class UploadSettingsService : BaseHandlerService, IUploadSettingsS
 
         if (fileValidation)
         {
-            arrByteFile = await SharedExtension.SetFileToByteArray(formFile);
+            arrByteFile = await HelperFile.SetFileToByteArray(formFile);
             return arrByteFile;
         }
 
