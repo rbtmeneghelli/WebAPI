@@ -15,3 +15,4 @@ global using TestsWebAPI.Data.Repositories;
 global using Microsoft.Extensions.DependencyInjection;
 global using DefaultWebApiTest.Services;
 global using System.Text.Json;
+global using FluentAssertions;

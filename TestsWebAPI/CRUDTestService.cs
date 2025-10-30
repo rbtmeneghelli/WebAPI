@@ -4,6 +4,7 @@ using FastPackForShare.Default;
 using FastPackForShare.Enums;
 using FastPackForShare.Extensions;
 using FastPackForShare.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Moq.AutoMock;
 using WebAPI.Application.Services;
@@ -11,6 +12,8 @@ using WebAPI.Domain.DTO.ControlPanel;
 using WebAPI.Domain.Entities.ControlPanel;
 using WebAPI.Domain.Filters.ControlPanel.Users;
 using WebAPI.Domain.Interfaces.Repository;
+using WebAPI.Domain.Interfaces.Services;
+using WebAPI.V1.Controllers;
 
 namespace TestsWebAPI;
 
@@ -251,5 +254,53 @@ public sealed class CRUDTestService
 
         // Assert
         Assert.Equal(1, result.TotalRecords);
+    }
+
+    [Fact(DisplayName = "Validar os parametros do payload enviado ou objeto criado")]
+    public void ValidatePayload()
+    {
+        // Arrange
+        UserRequestCreateDTO userRequestCreateDTO = new UserRequestCreateDTO
+        {
+            Login = "XPTO",
+            Password = "1234Mudar",
+            IsActive = true,
+            IsAuthenticated = true,
+        };
+
+        userRequestCreateDTO.Login.Should().NotBeNullOrWhiteSpace();
+        userRequestCreateDTO.Login.Should().Be("XPTO");
+        userRequestCreateDTO.Password.Should().NotBeNullOrWhiteSpace();
+        userRequestCreateDTO.Password.Should().Be("1234Mudar");
+        userRequestCreateDTO.IsActive.Should().Be(true);
+        userRequestCreateDTO.IsAuthenticated.Should().Be(true);
+    }
+
+    [Fact(DisplayName = "Exemplo para testar uma condição de Throw exception ao criar o objeto")]
+    public void GenerateThrowError()
+    {
+        Action act = () => new UserRequestCreateDTO();
+        act.Should().Throw<InvalidOperationException>();
+    }
+
+    [Fact(DisplayName = "Testando o metodo pela controller")]
+    public async Task TestController()
+    {
+        // Arrange
+        UserRequestCreateDTO userRequestCreateDTO = new UserRequestCreateDTO
+        {
+            Login = "XPTO",
+            Password = "1234Mudar",
+            IsActive = true,
+            IsAuthenticated = true,
+        };
+
+        // Act
+        _mocker.GetMock<IUserService>().Setup(p => p.CreateUserAsync(It.IsAny<UserRequestCreateDTO>())).ReturnsAsync(true);
+        var userController = _mocker.CreateInstance<UsersController>();
+        var result = await userController.Create(userRequestCreateDTO);
+
+        // Assert
+        result.Should().BeOfType<CreatedAtActionResult>();
     }
 }
