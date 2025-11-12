@@ -11,6 +11,12 @@ namespace WebAPI.InfraStructure.Data.Repositories;
 public sealed class GenericSqlRepository : IGenericSqlRepository
 {
     private readonly WebAPIContext _context;
+    private static readonly Dictionary<Type, SqlDbType> dictionary = new Dictionary<Type, SqlDbType>
+    {
+        { typeof(int), SqlDbType.Int },
+        { typeof(string), SqlDbType.VarChar },
+        { typeof(DateTime), SqlDbType.DateTime }
+    };
 
     public GenericSqlRepository(WebAPIContext context)
     {
@@ -137,12 +143,6 @@ public sealed class GenericSqlRepository : IGenericSqlRepository
 
     private SqlDbType GetSqlDbType(Type type)
     {
-        Dictionary<Type, SqlDbType> dictionary = new Dictionary<Type, SqlDbType>
-        {
-            { typeof(int), SqlDbType.Int },
-            { typeof(string), SqlDbType.VarChar },
-            { typeof(DateTime), SqlDbType.DateTime }
-        };
         return dictionary[type];
     }
 
