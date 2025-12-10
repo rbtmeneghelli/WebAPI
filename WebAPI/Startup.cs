@@ -53,6 +53,8 @@ public class Startup
         // Add functionality to inject IOptions<T> (Fazer o IOptions<T> na controller)
         // services.AddOptions();
 
+        services.RegisterEnvironmentVariables(_configuration);
+
         EnvironmentVariables environmentVariables = new();
 
         using (var tempProvider = services.BuildServiceProvider())
@@ -101,8 +103,6 @@ public class Startup
         {
             options.SuppressModelStateInvalidFilter = true;
         });
-
-        services.RegisterEnvironmentVariables(_configuration);
 
         services.AddExceptionHandler<GlobalExceptionHandler>();
         ContainerService.RegisterHealthCheck(services, environmentVariables);
