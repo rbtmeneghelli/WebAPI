@@ -7,14 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WebAPI.InfraStructure.Data\WebAPI.InfraStructure.Data.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="BackgroundMessageServices\Kafka\Consumers\" />
     <Folder Include="BackgroundMessageServices\Kafka\Publishers\" />
     <Folder Include="BackgroundMessageServices\ServiceBus\Consumers\" />
     <Folder Include="BackgroundMessageServices\ServiceBus\Publishers\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\WebAPI.Application\WebAPI.Application.csproj" />
   </ItemGroup>
 
 </Project>

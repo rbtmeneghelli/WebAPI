@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WebAPI.Domain\WebAPI.Domain.csproj" />
+    <ProjectReference Include="..\WebAPI.InfraStructure\WebAPI.InfraStructure.Data\WebAPI.InfraStructure.Data.csproj" />
   </ItemGroup>
 
 </Project>
