@@ -1,0 +1,60 @@
+﻿using Carter;
+using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel;
+using System.Net;
+using WebMinimalCarterAPI.Entities;
+using WebMinimalCarterAPI.Repository.Interfaces;
+
+namespace WebMinimalCarterAPI.Modules;
+
+public class ProductsModule : ICarterModule
+{
+    public void AddRoutes(IEndpointRouteBuilder app)
+    {
+        app.MapPost("/products/create", CreateProduct).WithSummary("Criar Produto").WithDescription("Endpoint responsável por adicionar novos produtos");
+        app.MapGet("/products/", GetAllProducts).WithSummary("Obter Produtos").WithDescription("Endpoint responsável por obter os produtos da base de dados");
+        app.MapGet("/products/{id}", GetProductById).WithSummary("Obter Produto").WithDescription("Endpoint responsável por obter o produto existente pelo ID");
+        app.MapPut("/products/update/{id}", UpdateProduct).WithSummary("Atualizar Produto").WithDescription("Endpoint responsável por atualizar produto existente pelo ID");
+        app.MapDelete("/products/delete/{id}", DeleteProduct).WithSummary("Deletar Produto").WithDescription("Endpoint responsável por deletar produto existente pelo ID");
+    }
+
+    [ProducesResponseType((int)HttpStatusCode.OK, Description = "Produtos obtidos com sucesso", Type = typeof(IEnumerable<Product>))]
+    private IResult GetAllProducts(IProductRepository productsRepo)
+    {
+        var products = productsRepo.GetProducts();
+        return Results.Ok(products);
+    }
+
+    [ProducesResponseType((int)HttpStatusCode.OK, Description = "Produto criado com sucesso")]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest, Description = "Não foi possivel criar o produto com o payload informado")]
+    private IResult CreateProduct(Product product, IProductRepository productsRepo)
+    {
+        if (!product.IsValid()) return Results.BadRequest();
+        productsRepo.CreateProduct(product);
+        return Results.StatusCode(201);
+    }
+
+    [ProducesResponseType((int)HttpStatusCode.OK, Description = "Produto obtido com sucesso")]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest, Description = "Produto não encontrado para o ID informado")]
+    private IResult GetProductById([Description("ID do produto")] int id, IProductRepository repo)
+    {
+        if (id <= 0) return Results.BadRequest();
+        return Results.Ok(repo.GetProductById(id));
+    }
+
+    [ProducesResponseType((int)HttpStatusCode.OK, Description = "Produto atualizado com sucesso")]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest, Description = "Não foi possivel atualizar o produto com o payload informado")]
+    private IResult UpdateProduct(int id, Product product, IProductRepository productRepo)
+    {
+        if (!product.IsValid()) return Results.BadRequest();
+        productRepo.UpdateProduct(id, product);
+        return Results.Ok();
+    }
+
+    [ProducesResponseType((int)HttpStatusCode.OK, Description = "Produto excluido com sucesso", Type = typeof(bool))]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest, Description = "Não foi possivel deletar o produto para o ID informado", Type = typeof(bool))]
+    private bool DeleteProduct(int id, IProductRepository repo)
+    {
+        return repo.DeleteProduct(id);
+    }
+}

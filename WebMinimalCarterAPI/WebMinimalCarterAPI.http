@@ -1,0 +1,6 @@
+@WebMinimalCarterAPI_HostAddress = http://localhost:5048
+
+GET {{WebMinimalCarterAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
