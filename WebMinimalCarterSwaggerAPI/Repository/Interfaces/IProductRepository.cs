@@ -1,6 +1,6 @@
-﻿using WebMinimalCarterScalarAPI.Entities;
+﻿using WebMinimalCarterSwaggerAPI.Entities;
 
-namespace WebMinimalCarterScalarAPI.Repository.Interfaces;
+namespace WebMinimalCarterSwaggerAPI.Repository.Interfaces;
 
 public interface IProductRepository
 {

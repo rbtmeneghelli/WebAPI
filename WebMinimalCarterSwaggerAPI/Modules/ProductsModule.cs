@@ -2,10 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel;
 using System.Net;
-using WebMinimalCarterScalarAPI.Entities;
-using WebMinimalCarterScalarAPI.Repository.Interfaces;
+using WebMinimalCarterSwaggerAPI.Entities;
+using WebMinimalCarterSwaggerAPI.Repository.Interfaces;
 
-namespace WebMinimalCarterScalarAPI.Modules;
+namespace WebMinimalCarterSwaggerAPI.Modules;
 
 public sealed class ProductsModule : ICarterModule
 {

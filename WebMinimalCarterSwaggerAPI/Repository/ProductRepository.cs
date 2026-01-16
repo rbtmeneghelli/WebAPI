@@ -1,8 +1,8 @@
 ﻿using Bogus;
-using WebMinimalCarterScalarAPI.Entities;
-using WebMinimalCarterScalarAPI.Repository.Interfaces;
+using WebMinimalCarterSwaggerAPI.Entities;
+using WebMinimalCarterSwaggerAPI.Repository.Interfaces;
 
-namespace WebMinimalCarterScalarAPI.Repository;
+namespace WebMinimalCarterSwaggerAPI.Repository;
 
 public sealed class ProductRepository : IProductRepository
 {

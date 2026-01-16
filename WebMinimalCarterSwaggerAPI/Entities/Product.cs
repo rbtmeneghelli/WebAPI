@@ -1,4 +1,4 @@
-﻿namespace WebMinimalCarterScalarAPI.Entities;
+﻿namespace WebMinimalCarterSwaggerAPI.Entities;
 
 public class Product
 {
