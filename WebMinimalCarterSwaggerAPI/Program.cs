@@ -10,6 +10,14 @@ builder.Services.RegistrarAutenticacaoSwagger();
 builder.Services.RegistrarServicos();
 builder.Services.AddCarter();
 builder.Services.AddAuthorization();
+builder.Services.AddOutputCache(p =>
+{
+    p.AddPolicy("listMethods", builder =>
+    {
+        builder.Expire(TimeSpan.FromSeconds(60));
+        builder.Tag("produtos");
+    });
+});
 
 var app = builder.Build();
 
@@ -31,4 +39,5 @@ app.MapCarter();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseOutputCache();
 app.Run();
