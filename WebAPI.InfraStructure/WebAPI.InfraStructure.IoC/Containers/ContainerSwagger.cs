@@ -1,28 +1,29 @@
-﻿using Microsoft.AspNetCore.Mvc.ApiExplorer;
+﻿using FastPackForShare.Constants;
+using FastPackForShare.Cryptography;
+using FastPackForShare.Enums;
+using FastPackForShare.Extensions;
+using FastPackForShare.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Builder;
-using WebAPI.Domain;
-using WebAPI.Infrastructure.CrossCutting.Middleware.Swagger;
-using WebAPI.Domain.Constants;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
+using System.Buffers.Text;
+using System.Collections.Frozen;
 using System.Text;
 using System.Text.Json;
-using Microsoft.AspNetCore.Http.Features;
-using System.Buffers.Text;
+using WebAPI.Domain;
+using WebAPI.Domain.Constants;
 using WebAPI.Domain.Interfaces.Services;
-using Microsoft.AspNetCore.Http;
-using FastPackForShare.Extensions;
-using FastPackForShare.Cryptography;
-using FastPackForShare.Constants;
-using FastPackForShare.Models;
-using FastPackForShare.Enums;
+using WebAPI.Infrastructure.CrossCutting.Middleware.Swagger;
 
 namespace WebAPI.InfraStructure.IoC.Containers;
 
@@ -359,7 +360,7 @@ public static class ContainerSwagger
                             { "openid", "Login básico" },
                             { "profile", "Perfil do usuário" },
                             { "email", "E-mail do usuário" }
-                        }
+                        }.ToFrozenDictionary()
                     }
                 }
             });

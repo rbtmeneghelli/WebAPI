@@ -1,6 +1,7 @@
 ﻿using FastPackForShare.Extensions;
 using FastPackForShare.Models;
 using Microsoft.Extensions.Configuration;
+using System.Collections.Frozen;
 using WebAPI.Domain.Models;
 
 namespace WebAPI.Domain;
@@ -50,9 +51,9 @@ public class EnvironmentVariables
 
 public static class EnvironmentVariablesExtension
 {
-    public static Dictionary<string, string> GetEnvironmentVariablesList(IConfiguration configuration)
+    public static FrozenDictionary<string, string> GetEnvironmentVariablesList(IConfiguration configuration)
     {
-        Dictionary<string, string> envVariables = new Dictionary<string, string>
+        var envVariables = new Dictionary<string, string>
         {
             { configuration.GetSection($"ConnectionStrings:DefaultConnection").Value, GetDatabaseFromEnvVar(configuration.GetSection($"ConnectionStrings:DefaultConnection").Value).ToString() },
             { configuration.GetSection($"ConnectionStrings:DefaultConnectionLogs").Value, GetDatabaseFromEnvVar(configuration.GetSection($"ConnectionStrings:DefaultConnectionLogs").Value).ToString() },
@@ -66,7 +67,7 @@ public static class EnvironmentVariablesExtension
             { configuration.GetSection($"WebAPI_Settings:Environment").Value, GetEnvironmentVariable(configuration.GetSection($"WebAPI_Settings:Environment").Value).ToString() },
             { configuration.GetSection($"WebAPI_Settings:Token").Value, GetEnvironmentVariable(configuration.GetSection($"WebAPI_Settings:Token").Value).ToString() },
             { configuration.GetSection($"WebAPI_Settings:CorsSettings").Value, GetEnvironmentVariable(configuration.GetSection($"WebAPI_Settings:CorsSettings").Value).ToString() },
-        };
+        }.ToFrozenDictionary();
 
         return envVariables;
     }

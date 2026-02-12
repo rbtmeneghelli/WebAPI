@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Collections.Frozen;
+using System.Globalization;
 
 namespace WebAPI_VerticalSlice.Domain.ExtensionsMethods;
 
@@ -33,9 +34,12 @@ public sealed class DateOnlyExtensionMethods
         try
         {
             // Caso tenha feriado nacional ou internacional, fazer uma consulta no BD pra isso...depois um IF para validar e somar 1 dia...
-            Dictionary<DayOfWeek, DateTime> dictionary = new Dictionary<DayOfWeek, DateTime>();
-            dictionary.Add(DayOfWeek.Saturday, dateTime.AddDays(2));
-            dictionary.Add(DayOfWeek.Sunday, dateTime.AddDays(1));
+            var dictionary = new Dictionary<DayOfWeek, DateTime>
+            {
+                { DayOfWeek.Saturday, dateTime.AddDays(2) },
+                { DayOfWeek.Sunday, dateTime.AddDays(1) }
+            }.ToFrozenDictionary();
+
             return dictionary.TryGetValue(dateTime.DayOfWeek, out var dtResult) ? dtResult : dateTime;
         }
         catch (Exception ex)

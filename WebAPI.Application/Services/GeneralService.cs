@@ -1,12 +1,13 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using WebAPI.Domain.Constants;
-using WebAPI.Domain.Interfaces.Services;
-using FastPackForShare.Enums;
-using WebAPI.Domain.Entities.ControlPanel;
-using static System.Net.WebRequestMethods;
-using System.Text.Json;
+﻿using FastPackForShare.Enums;
 using FastPackForShare.Helpers;
+using Microsoft.IdentityModel.Tokens;
+using System.Collections.Frozen;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text.Json;
+using WebAPI.Domain.Constants;
+using WebAPI.Domain.Entities.ControlPanel;
+using WebAPI.Domain.Interfaces.Services;
+using static System.Net.WebRequestMethods;
 
 namespace WebAPI.Application.Services;
 
@@ -60,7 +61,7 @@ public sealed class GeneralService : BaseHandlerService, IGeneralService
             ["username"] = loginUser.Login,
             ["password"] = loginUser.Password,
             ["scope"] = "openid profile"
-        }));
+        }.ToFrozenDictionary()));
 
         if (tokenResponse.IsSuccessStatusCode)
         {
