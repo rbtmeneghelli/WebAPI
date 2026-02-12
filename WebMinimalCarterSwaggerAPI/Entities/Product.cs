@@ -34,10 +34,14 @@ public class Product
         if (IsInvalidPrice())
             ErrorMessages.Add("Preço do produto é invalido");
 
+        if (IsInvalidCreatedOn())
+            ErrorMessages.Add("A data de criação é invalida");
+
         return ErrorMessages;
     }
 
     private bool IsInvalidProductId() => !ProductId.HasValue && ProductId.GetValueOrDefault(0) <= 0;
     private bool IsinvalidProductName() => string.IsNullOrWhiteSpace(ProductName);
     private bool IsInvalidPrice() => Price <= 0;
+    private bool IsInvalidCreatedOn() => !CreatedOn.HasValue;
 }

@@ -6,25 +6,21 @@ namespace WebMinimalCarterSwaggerAPI.Mappings;
 
 public static class ProductMapping
 {
-    public static Product TransformToEntity(ProductCreateDTO productCreateDTO)
+    public static Product MapToProduct(ProductCreateDTO productCreateDTO)
     {
         ArgumentNullException.ThrowIfNull(productCreateDTO, nameof(productCreateDTO));
 
-        return ProductCreateBuilder
+        return ProductBuilder
         .Create()
-        .SetProductName(productCreateDTO.ProductName)
-        .SetPrice(productCreateDTO.Price)
+        .Configure(productCreateDTO)
         .Build();
     }
 
-    public static Product TransformToEntity(ProductUpdateDTO productUpdateDTO)
+    public static Product MapToProduct(ProductUpdateDTO productUpdateDTO)
     {
-        ArgumentNullException.ThrowIfNull(productUpdateDTO, nameof(productUpdateDTO));
-
-        return ProductCreateBuilder
+        return ProductBuilder
         .Create()
-        .SetProductName(productUpdateDTO.ProductName)
-        .SetPrice(productUpdateDTO.Price)
+        .Configure(productUpdateDTO)
         .Build();
     }
 }

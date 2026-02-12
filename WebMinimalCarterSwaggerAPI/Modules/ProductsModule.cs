@@ -32,13 +32,13 @@ public sealed class ProductsModule : ICarterModule
 
     [ProducesResponseType((int)HttpStatusCode.Created, Description = "Produto criado com sucesso")]
     [ProducesResponseType((int)HttpStatusCode.BadRequest, Description = "Não foi possivel criar o produto com o payload informado")]
-    private IResult CreateProduct([FromBody, Required] ProductCreateDTO productCreateDTO, [FromServices] IProductRepository productsRepo, IOutputCacheStore outputCacheStore)
+    private async Task<IResult> CreateProduct([FromBody, Required] ProductCreateDTO productCreateDTO, [FromServices] IProductRepository productsRepo, IOutputCacheStore outputCacheStore)
     {
-        var product = ProductMapping.TransformToEntity(productCreateDTO);
+        var product = ProductMapping.MapToProduct(productCreateDTO);
         var productValidation = product.ValidateProductCreation();
         if (productValidation.Count() > 0) return Results.BadRequest(string.Join(",", productValidation));
         productsRepo.CreateProduct(product);
-        outputCacheStore.EvictByTagAsync("produtos", CancellationToken.None);
+        await outputCacheStore.EvictByTagAsync("produtos", CancellationToken.None);
         return Results.StatusCode((int)HttpStatusCode.Created);
     }
 
@@ -54,9 +54,10 @@ public sealed class ProductsModule : ICarterModule
     [ProducesResponseType((int)HttpStatusCode.BadRequest, Description = "Não foi possivel atualizar o produto com o payload informado")]
     private IResult UpdateProduct([FromRoute, Description("ID do produto"), Required] int id, [FromBody, Required] ProductUpdateDTO productUpdateDTO, [FromServices] IProductRepository productRepo, IOutputCacheStore outputCacheStore)
     {
-        var product = ProductMapping.TransformToEntity(productUpdateDTO);
+        var product = ProductMapping.MapToProduct(productUpdateDTO);
         var productValidation = product.ValidateProductUpdate();
         if (productValidation.Count() > 0) return Results.BadRequest(string.Join(",", productValidation));
+        if (id != product.ProductId) return Results.BadRequest();
         productRepo.UpdateProduct(id, product);
         outputCacheStore.EvictByTagAsync("produtos", CancellationToken.None);
         return Results.Ok();
