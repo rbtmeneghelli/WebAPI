@@ -6,6 +6,7 @@ namespace WebAPI.Domain.Interfaces.Repository;
 public interface IUserRepository
 {
     IQueryable<User> GetAll(bool hasTracking = false);
+    IQueryable<User> GetAllInclude(string includeData, bool hasTracking = false);
     IQueryable<User> GetAllIgnoreQueryFilter(bool hasTracking = false);
     IQueryable<User> FindBy(Expression<Func<User, bool>> predicate);
     IQueryable<User> FindByIgnoreQueryFilter(Expression<Func<User, bool>> predicate);

@@ -63,9 +63,9 @@ public sealed class GenericReadRepository<TEntity> : IGenericReadRepository<TEnt
     public IQueryable<TEntity> GetAllInclude(string includeData, bool hasTracking = false)
     {
         if (hasTracking)
-            return DbSet.AsSplitQuery().Include(includeData);
+            return DbSet.Include(includeData).AsSplitQuery();
 
-        return DbSet.AsNoTracking().AsSplitQuery().Include(includeData);
+        return DbSet.AsNoTrackingWithIdentityResolution().Include(includeData).AsSplitQuery();
     }
 
     public IQueryable<TEntity> GetByPredicate(Expression<Func<TEntity, bool>> predicate, bool hasTracking = false)

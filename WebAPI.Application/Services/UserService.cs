@@ -30,7 +30,7 @@ public sealed class UserService : BaseHandlerService, IUserService
         if (filter.IsActive.HasValue)
             return _iUserRepository.GetAllIgnoreQueryFilter().Include(x => x.Employee).ThenInclude(x => x.Profile).Where(GetPredicate(filter)).AsQueryable();
         else
-            return _iUserRepository.GetAll().Include(x => x.Employee).ThenInclude(x => x.Profile).Where(GetPredicate(filter)).AsQueryable();
+            return _iUserRepository.GetAllInclude("Employee.Profile").Where(GetPredicate(filter)).AsQueryable();
     }
 
     private Expression<Func<User, bool>> GetPredicate(UserPaginateFilter filter)
@@ -55,7 +55,7 @@ public sealed class UserService : BaseHandlerService, IUserService
 
     public async Task<IEnumerable<UserResponseDTO>> GetAllUserAsync()
     {
-        var data = await Task.FromResult(from p in _iUserRepository.GetAll().Include(x => x.Employee).ThenInclude(x => x.Profile)
+        var data = await Task.FromResult(from p in _iUserRepository.GetAllInclude("Employee.Profile")
                                          orderby p.Login ascending
                                          select p);
 

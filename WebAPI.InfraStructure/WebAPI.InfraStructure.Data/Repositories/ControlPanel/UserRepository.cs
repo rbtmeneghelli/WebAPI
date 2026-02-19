@@ -1,10 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FastPackForShare.Extensions;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using WebAPI.Domain.Entities.ControlPanel;
-using WebAPI.Domain.Interfaces.Repository;
 using WebAPI.Domain.Interfaces.Generic;
-using FastPackForShare.Extensions;
-using Microsoft.EntityFrameworkCore.Internal;
+using WebAPI.Domain.Interfaces.Repository;
 
 namespace WebAPI.InfraStructure.Data.Repositories.ControlPanel;
 
@@ -32,6 +31,11 @@ public class UserRepository : IUserRepository
     public IQueryable<User> GetAll(bool hasTracking = false)
     {
         return _iUserReadRepository.GetAll(hasTracking);
+    }
+
+    public IQueryable<User> GetAllInclude(string includeData, bool hasTracking = false)
+    {
+        return _iUserReadRepository.GetAllInclude(includeData, hasTracking);
     }
 
     public IQueryable<User> GetAllIgnoreQueryFilter(bool hasTracking = false)
