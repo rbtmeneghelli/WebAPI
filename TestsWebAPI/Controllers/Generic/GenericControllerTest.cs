@@ -58,11 +58,19 @@ public abstract class GenericControllerTest : IClassFixture<BuilderServiceProvid
 
     protected async Task<HttpResponseMessage> GetAsync(string url)
     {
-        return await _httpClientAuthentication.GetAsync(url);
+        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(90));
+
+        var requestTask = await _httpClientAuthentication.GetAsync(url, cts.Token);
+
+        return requestTask;
     }
 
     protected async Task<HttpResponseMessage> PostAsync(string url, StringContent bodyContent)
     {
-        return await _httpClientAuthentication.PostAsync(url, bodyContent);
+        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(90));
+
+        var requestTask = await _httpClientAuthentication.PostAsync(url, bodyContent, cts.Token);
+
+        return requestTask;
     }
 }

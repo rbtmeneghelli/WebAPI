@@ -16,7 +16,9 @@ public class CustomWebAppHealthCheck : IHealthCheck
     {
         using (var httpClient = _iHttpClientFactory.CreateClient())
         {
-            var response = await httpClient.GetAsync("https://localhost:8999");
+            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(60));
+
+            var response = await httpClient.GetAsync("https://localhost:8999", cts.Token);
 
             if (response.IsSuccessStatusCode)
             {

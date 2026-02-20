@@ -18,7 +18,9 @@ public sealed class AuthenticateTestControllerTest : GenericControllerTest
 
         var login = new Login(user, password);
 
-        var response = await _httpClient.PostAsync(ConstantsURL.URL_AUTHENTICATE, GetParamsToBase64<Login>(login));
+        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(90));
+
+        var response = await _httpClient.PostAsync(ConstantsURL.URL_AUTHENTICATE, GetParamsToBase64<Login>(login), cts.Token);
 
         if (response.IsSuccessStatusCode)
         {

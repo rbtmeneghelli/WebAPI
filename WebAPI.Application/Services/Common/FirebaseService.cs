@@ -89,7 +89,10 @@ public sealed class FirebaseService : BaseHandlerService, IFirebaseService
         client.DefaultRequestHeaders.Accept.Clear();
         client.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer " + "SERVER_KEY");
         client.Timeout = TimeSpan.FromMinutes(1);
-        var response = await client.PostAsync(FixConstantsUrl.URL_TO_GET_FIREBASE, content);
+
+        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(60));
+
+        var response = await client.PostAsync(FixConstantsUrl.URL_TO_GET_FIREBASE, content, cts.Token);
 
         if (response.IsSuccessStatusCode)
         {
