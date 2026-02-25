@@ -1,7 +1,27 @@
-﻿namespace WebAPI.Infrastructure.CrossCutting.BackgroundMessageServices.Kafka;
+﻿using Confluent.Kafka;
+using WebAPI.Domain;
 
-public interface IKafkaService<TEntity> : IDisposable where TEntity : class
+namespace WebAPI.Infrastructure.CrossCutting.BackgroundMessageServices.Kafka;
+
+public abstract class IKafkaService<TEntity> where TEntity : class
 {
-    Task SendMessageToQueue(string topicName, TEntity entity);
-    Task ReceiveMessageFromQueue(string topicName, string consumerGroup);
+    protected ProducerConfig _ProducerConfig { get; init; }
+
+    protected IKafkaService(EnvironmentVariables environmentVariables)
+    {
+        _ProducerConfig = new ProducerConfig { BootstrapServers = environmentVariables.KafkaSettings.BootstrapServers };
+    }
+
+    protected virtual ConsumerConfig GetSetConsumer(string consumerGroup)
+    {
+        return new ConsumerConfig
+        {
+            BootstrapServers = _ProducerConfig.BootstrapServers,
+            GroupId = consumerGroup,
+            AutoOffsetReset = AutoOffsetReset.Earliest
+        };
+    }
+
+    public abstract Task SendMessageToQueue(string topicName, TEntity entity);
+    public abstract Task ReceiveMessageFromQueue(string topicName, string consumerGroup);
 }

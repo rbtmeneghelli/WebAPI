@@ -47,8 +47,7 @@ public sealed class QueueExcelFileConsumer
     /// 
     public async Task RunQueueExcelFileConsumer(RabbitMQConsumer rabbitMQConsumer)
     {
-        var factory = _rabbitMQService.ConfigConnectionFactory();
-        var connection = factory.CreateConnection();
+        var connection = _rabbitMQService._ConnectionFactory.CreateConnection();
         var channel = connection.CreateModel();
 
         channel.QueueDeclare(queue: rabbitMQConsumer.QueueName,

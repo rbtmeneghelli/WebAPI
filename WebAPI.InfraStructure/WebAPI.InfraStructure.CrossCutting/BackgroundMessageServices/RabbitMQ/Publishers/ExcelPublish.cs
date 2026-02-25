@@ -16,8 +16,7 @@ public sealed class QueueExcelFilePublish
 
     public async Task RunQueueExcelFilePublish<T>(string QueueName, T ObjectValue, bool QueueIsDurable)
     {
-        var factory = _rabbitMQService.ConfigConnectionFactory();
-        var connection = factory.CreateConnection();
+        var connection = _rabbitMQService._ConnectionFactory.CreateConnection();
         var channel = connection.CreateModel();
 
         channel.QueueDeclare(queue: QueueName,

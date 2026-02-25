@@ -9,8 +9,8 @@
   <ItemGroup>
     <Folder Include="BackgroundMessageServices\Kafka\Consumers\" />
     <Folder Include="BackgroundMessageServices\Kafka\Publishers\" />
-    <Folder Include="BackgroundMessageServices\ServiceBus\Consumers\" />
-    <Folder Include="BackgroundMessageServices\ServiceBus\Publishers\" />
+    <Folder Include="BackgroundMessageServices\AzureBusService\Consumers\" />
+    <Folder Include="BackgroundMessageServices\AzureBusService\Publishers\" />
   </ItemGroup>
 
   <ItemGroup>

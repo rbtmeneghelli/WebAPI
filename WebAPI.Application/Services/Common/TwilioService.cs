@@ -1,4 +1,7 @@
-﻿using WebAPI.Domain.Interfaces.Services.Common;
+﻿using Twilio;
+using Twilio.Rest.Api.V2010.Account;
+using Twilio.Types;
+using WebAPI.Domain.Interfaces.Services.Common;
 
 namespace WebAPI.Application.Services.Common;
 
@@ -15,24 +18,24 @@ public sealed class TwilioService : BaseHandlerService, ITwilioService
 
     private async Task SendMessageAsync(string numberTo, string bodyMessage, bool isWhatsApp)
     {
-        //TwilioClient.Init(_environmentVariables.TwilioSettings.AccountSid, _environmentVariables.TwilioSettings.AuthToken);
+        TwilioClient.Init(_environmentVariables.TwilioSettings.AccountSid, _environmentVariables.TwilioSettings.AuthToken);
 
-        //if (isWhatsApp)
-        //{
-        //    await MessageResource.CreateAsync(
-        //        body: bodyMessage,
-        //        from: new PhoneNumber($@"whatsapp:{_environmentVariables.TwilioSettings.TwilioNumber}"),
-        //        to: new PhoneNumber($@"whatsapp:{numberTo}")
-        //    );
-        //}
-        //else
-        //{
-        //    await MessageResource.CreateAsync(
-        //        body: bodyMessage,
-        //        from: new PhoneNumber(_environmentVariables.TwilioSettings.TwilioNumber),
-        //        to: new PhoneNumber(numberTo)
-        //    );
-        //}
+        if (isWhatsApp)
+        {
+            await MessageResource.CreateAsync(
+                body: bodyMessage,
+                from: new PhoneNumber($@"whatsapp:{_environmentVariables.TwilioSettings.TwilioNumber}"),
+                to: new PhoneNumber($@"whatsapp:{numberTo}")
+            );
+        }
+        else
+        {
+            await MessageResource.CreateAsync(
+                body: bodyMessage,
+                from: new PhoneNumber(_environmentVariables.TwilioSettings.TwilioNumber),
+                to: new PhoneNumber(numberTo)
+            );
+        }
 
         await Task.CompletedTask;
     }

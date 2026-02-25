@@ -6,31 +6,13 @@ namespace WebAPI.Infrastructure.CrossCutting.BackgroundMessageServices.Kafka;
 
 public sealed class KafkaService<TEntity> : IKafkaService<TEntity> where TEntity : class
 {
-    private EnvironmentVariables _EnvironmentVariables { get; }
-
-    public KafkaService(EnvironmentVariables environmentVariables)
+    public KafkaService(EnvironmentVariables environmentVariables): base(environmentVariables)
     {
-        _EnvironmentVariables = environmentVariables;
     }
 
-    private ProducerConfig GetProducerConfig()
+    public override async Task SendMessageToQueue(string topicName, TEntity entity)
     {
-        return new ProducerConfig { BootstrapServers = _EnvironmentVariables.KafkaSettings.BootstrapServers };
-    }
-
-    private ConsumerConfig GetConsumerConfig(string consumerGroup)
-    {
-        return new ConsumerConfig
-        {
-            BootstrapServers = _EnvironmentVariables.KafkaSettings.BootstrapServers,
-            GroupId = consumerGroup,
-            AutoOffsetReset = AutoOffsetReset.Earliest
-        };
-    }
-
-    public async Task SendMessageToQueue(string topicName, TEntity entity)
-    {
-        var producerConfig = GetProducerConfig();
+        var producerConfig = _ProducerConfig;
         using var producer = new ProducerBuilder<Null, string>(producerConfig).Build();
 
         try
@@ -59,9 +41,9 @@ public sealed class KafkaService<TEntity> : IKafkaService<TEntity> where TEntity
         }
     }
 
-    public async Task ReceiveMessageFromQueue(string topicName, string consumerGroup)
+    public override async Task ReceiveMessageFromQueue(string topicName, string consumerGroup)
     {
-        var consumerConfig = GetConsumerConfig(consumerGroup);
+        var consumerConfig = GetSetConsumer(consumerGroup);
 
         using var consumer = new ConsumerBuilder<Ignore, string>(consumerConfig).Build();
 
@@ -80,10 +62,5 @@ public sealed class KafkaService<TEntity> : IKafkaService<TEntity> where TEntity
         {
             consumer.Close();
         }
-    }
-
-    public void Dispose()
-    {
-        GC.SuppressFinalize(this);
     }
 }

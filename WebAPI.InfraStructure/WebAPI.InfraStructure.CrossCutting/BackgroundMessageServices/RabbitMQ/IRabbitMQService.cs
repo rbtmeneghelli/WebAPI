@@ -1,20 +1,28 @@
 ﻿using RabbitMQ.Client;
+using WebAPI.Domain;
 
 namespace WebAPI.Infrastructure.CrossCutting.BackgroundMessageServices.RabbitMQ;
 
-public interface IRabbitMQService<TEntity> where TEntity : class
+public abstract class IRabbitMQService<T> where T : class
 {
-    ConnectionFactory ConfigConnectionFactory();
+    public ConnectionFactory _ConnectionFactory { get; init; }
 
-    Task SendMessageToWorkQueue(string QueueName, TEntity ObjectValue);
+    protected IRabbitMQService(EnvironmentVariables environmentVariables)
+    {
+        _ConnectionFactory = new ConnectionFactory 
+        {
+            HostName = environmentVariables.RabbitMQSettings.HostName,
+            UserName = environmentVariables.RabbitMQSettings.UserName,
+            Password = environmentVariables.RabbitMQSettings.Password,
+            DispatchConsumersAsync = true
+        };
+    }
 
-    Task ReceiveMessageFromWorkQueue(string QueueName);
+    public abstract Task SendMessageToQueueInSameTime(string ExchangeName, T ObjectValue);
 
-    Task SendMessageToQueueInSameTime(string ExchangeName, TEntity ObjectValue);
+    public abstract Task ReceiveMessageToQueueInSameTime(string ExchangeName);
 
-    Task ReceiveMessageToQueueInSameTime(string ExchangeName);
+    public abstract Task SendMessageToQueueRouting(string ExchangeName, string RoutingKey, T ObjectValue);
 
-    Task SendMessageToQueueRouting(string ExchangeName, string RoutingKey, TEntity ObjectValue);
-
-    Task ReceiveMessageToQueueRouting(string ExchangeName, string RoutingKey);
+    public abstract Task ReceiveMessageToQueueRouting(string ExchangeName, string RoutingKey);
 }
