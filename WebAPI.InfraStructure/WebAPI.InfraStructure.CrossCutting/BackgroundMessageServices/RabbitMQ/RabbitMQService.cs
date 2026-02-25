@@ -12,8 +12,6 @@ public sealed class RabbitMQService<T> : IRabbitMQService<T> where T : class
     {
     }
 
-    public ConnectionFactory GetConnectionFactory() => _ConnectionFactory;
-
     /// <summary>
     /// Publisher FanOut to send same message from queues in sameTime. ExchangeName must be the same in SendandReceive
     /// </summary>
