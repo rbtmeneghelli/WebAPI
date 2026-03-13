@@ -11,12 +11,16 @@ public sealed class ProductsModule : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        var produtos = app.MapGroup("/Produtos").WithTags("Produtos");
-        produtos.MapPost("criar", CreateProduct).WithSummary("Criar Produto").WithDescription("Endpoint responsável por adicionar novos produtos").RequireAuthorization();
-        produtos.MapGet("", GetAllProducts).WithSummary("Obter Produtos").WithDescription("Endpoint responsável por obter os produtos da base de dados");
-        produtos.MapGet("{id:int}", GetProductById).WithSummary("Obter Produto").WithDescription("Endpoint responsável por obter o produto existente pelo ID");
-        produtos.MapPut("{id:int}", UpdateProduct).WithSummary("Atualizar Produto").WithDescription("Endpoint responsável por atualizar produto existente pelo ID").RequireAuthorization();
-        produtos.MapDelete("{id:int}", DeleteProduct).WithSummary("Deletar Produto").WithDescription("Endpoint responsável por deletar produto existente pelo ID").RequireAuthorization();
+        var api_v1 = app.MapGroup("/v1").WithGroupName("v1").WithTags("Produtos");
+        api_v1.MapPost("criar", CreateProduct).WithSummary("Criar Produto").WithDescription("Endpoint responsável por adicionar novos produtos").RequireAuthorization();
+        api_v1.MapGet("", GetAllProducts).WithSummary("Obter Produtos").WithDescription("Endpoint responsável por obter os produtos da base de dados");
+        api_v1.MapGet("{id:int}", GetProductById).WithSummary("Obter Produto").WithDescription("Endpoint responsável por obter o produto existente pelo ID");
+        api_v1.MapPut("{id:int}", UpdateProduct).WithSummary("Atualizar Produto").WithDescription("Endpoint responsável por atualizar produto existente pelo ID").RequireAuthorization();
+        api_v1.MapDelete("{id:int}", DeleteProduct).WithSummary("Deletar Produto").WithDescription("Endpoint responsável por deletar produto existente pelo ID").RequireAuthorization();
+
+        var api_v2 = app.MapGroup("/v2").WithGroupName("v2").WithTags("Produtos");
+        api_v2.MapGet("", GetAllProducts).WithSummary("Obter Produtos").WithDescription("Endpoint responsável por obter os produtos da base de dados");
+        api_v2.MapGet("{id:int}", GetProductById).WithSummary("Obter Produto").WithDescription("Endpoint responsável por obter o produto existente pelo ID");
     }
 
     [ProducesResponseType((int)HttpStatusCode.OK, Description = "Produtos obtidos com sucesso", Type = typeof(IEnumerable<Product>))]

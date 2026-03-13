@@ -41,3 +41,4 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseOutputCache();
 app.Run();
+
