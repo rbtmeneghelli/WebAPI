@@ -66,8 +66,13 @@ public class AddressData : BaseEntityModel, IEquatable<AddressData>
         Street = street;
         Complement = complement;
         District = district;
-        City = city;
-        State = state;
+        Location = location;
+        Uf = uf;
+        Ibge = ibge;
+        Gia = gia;
+        Ddd = ddd;
+        Siafi = siafi;
+        StateId = stateId;
     }
 
     public static AddressData Create(
@@ -75,23 +80,24 @@ public class AddressData : BaseEntityModel, IEquatable<AddressData>
         string street,
         string complement,
         string district,
-        City city,
-        States state)
+        string location,
+        string uf,
+        string ibge,
+        string gia,
+        string ddd,
+        string siafi,
+        long stateId)
     {
-        if (string.IsNullOrWhiteSpace(cep))
-            throw new ArgumentException("Logradouro é obrigatório.");
-
-        if (string.IsNullOrWhiteSpace(street))
-            throw new ArgumentException("Número é obrigatório.");
-
-        if (string.IsNullOrWhiteSpace(complement))
-            throw new ArgumentException("Bairro é obrigatório.");
-
-        if (string.IsNullOrWhiteSpace(district))
-            throw new ArgumentException("Cidade é obrigatória.");
-
-        ArgumentNullException.ThrowIfNull(city, "Cidade é obrigatória.");
-        ArgumentNullException.ThrowIfNull(state, "Estado é obrigatório.");
+        ArgumentException.ThrowIfNullOrWhiteSpace(cep, "Cep é obrigatório.");
+        ArgumentException.ThrowIfNullOrWhiteSpace(street, "Rua é obrigatório.");
+        ArgumentException.ThrowIfNullOrWhiteSpace(complement, "Complemento é obrigatório.");
+        ArgumentException.ThrowIfNullOrWhiteSpace(district, "Distrito é obrigatório.");
+        ArgumentException.ThrowIfNullOrWhiteSpace(location, "Localização é obrigatório.");
+        ArgumentException.ThrowIfNullOrWhiteSpace(uf, "Uf é obrigatório.");
+        ArgumentException.ThrowIfNullOrWhiteSpace(ibge, "Ibge é obrigatório.");
+        ArgumentException.ThrowIfNullOrWhiteSpace(gia, "Gia é obrigatório.");
+        ArgumentException.ThrowIfNullOrWhiteSpace(ddd, "Ddd é obrigatório.");
+        ArgumentException.ThrowIfNullOrWhiteSpace(siafi, "Siafi é obrigatório.");
 
         var cepNormalizado = NormalizarCep(cep);
 
@@ -103,8 +109,13 @@ public class AddressData : BaseEntityModel, IEquatable<AddressData>
             street.Trim(),
             complement.Trim(),
             district.Trim(),
-            city,
-            state
+            location.Trim(),
+            uf.Trim(),
+            ibge.Trim(),
+            gia.Trim(),
+            ddd.Trim(),
+            siafi.Trim(),
+            stateId
         );
     }
 
@@ -126,8 +137,12 @@ public class AddressData : BaseEntityModel, IEquatable<AddressData>
                Street == other.Street &&
                Complement == other.Complement &&
                District == other.District &&
-               City == other.City &&
-               State == other.State;
+               Location == other.Location &&
+               Uf == other.Uf &&
+               Ibge == other.Ibge &&
+               Gia == other.Gia &&
+               Ddd == other.Ddd &&
+               Siafi == other.Siafi;
     }
 
     public override bool Equals(object obj) => Equals(obj as AddressData);
@@ -137,16 +152,18 @@ public class AddressData : BaseEntityModel, IEquatable<AddressData>
         return HashCode.Combine(
             Cep,
             Street,
-            Complement,
             District,
-            City,
-            State
+            Location,
+            Uf,
+            Ibge,
+            Gia,
+            Siafi
         );
     }
 
     public override string ToString()
     {
-        return $"{Cep}, {Complement} - {Street}, {District} - {City?.Name} - {State?.Name}";
+        return $"{Cep}, {Complement} - {Street}, {District}";
     }
 
     protected override void CreateEntityIsValid()
