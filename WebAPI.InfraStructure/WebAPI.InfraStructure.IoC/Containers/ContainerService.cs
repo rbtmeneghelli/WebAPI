@@ -189,7 +189,8 @@ public static class ContainerService
         .AddScoped<IEmailService, EmailService>()
         .AddScoped<IEmailDisplaySettingsService, EmailDisplaySettingsService>()
         .AddScoped<IEmailSettingsService, EmailSettingsService>()
-        .AddScoped<IUploadSettingsService, UploadSettingsService>();
+        .AddScoped<IUploadSettingsService, UploadSettingsService>()
+        .AddScoped<IMetaService, MetaService>();
 
         services
        .AddScoped<IAuthenticationSettingsRepository, AuthenticationSettingsRepository>()
